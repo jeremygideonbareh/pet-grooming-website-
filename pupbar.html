@@ -354,6 +354,9 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
 .stagger.active > *:nth-child(6){transition-delay:.6s}
 @media(min-width:480px){.hero h1{font-size:3.4rem}.section-title{font-size:2.2rem}}
 @media(max-width:480px){
+  .hero{padding:0 16px}
+  .hero h1{font-size:1.8rem}
+  .hero p{font-size:.85rem;margin:12px auto 20px}
   .stats-row{flex-direction:column;gap:8px}
   .reviews-grid{flex-direction:column;align-items:stretch}
   .review-card{padding:24px 20px}
@@ -362,6 +365,9 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   .serv-heading{font-size:1.8rem}
   .hours-card{grid-template-columns:1fr;gap:6px;padding:18px}
   .hours-card .day,.hours-card .time{text-align:left;font-size:.85rem}
+  .section{padding:40px 16px}
+  .about-image-wrap .welcome-text p{font-size:.78rem;line-height:1.45;margin-bottom:12px}
+  .about-image-wrap .welcome-text{padding:24px 18px 20px}
 }
 </style>
 </head>
@@ -398,7 +404,7 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
     <div class="about-image-wrap reveal reveal-left" style="position:relative">
       <img src="images/welcome.jpeg" alt="A-1Pet Shop" loading="lazy">
       <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,10,8,.55) 0%,transparent 40%,rgba(14,10,8,.75) 100%)"></div>
-      <div style="position:absolute;bottom:0;left:0;right:0;padding:36px 28px 28px;color:#fff">
+      <div class="welcome-text" style="position:absolute;bottom:0;left:0;right:0;padding:36px 28px 28px;color:#fff">
         <h2 class="section-title" style="color:#fff;border:none;margin-bottom:8px;font-size:1.6rem">WELCOME</h2>
         <p style="font-size:.85rem;line-height:1.5;color:rgba(255,255,255,.85);max-width:480px;margin-bottom:20px">A-1Pet Shop And Grooming in Nongkynrih, Shillong is a top destination for pet grooming services. Every pet receives expert care in a welcoming environment. Conveniently located in Nongkynrih for pet owners across Shillong.</p>
         <div class="hours-card" id="hoursCard" style="background:rgba(255,255,255,.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);padding:20px 20px;border-radius:28px;display:grid;grid-template-columns:1fr 1fr;gap:6px 16px">
