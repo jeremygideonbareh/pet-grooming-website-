@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>A-1Pet Shop And Grooming — Shillong</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:#FFF9F0;
+  color:#2E241F;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img{display:block;width:100%;height:auto}
+
+/* ── LOADING ── */
+.loading-overlay{
+  position:fixed;inset:0;background:#0E0A08;z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;
+  transition:opacity .7s ease,visibility .7s ease;
+}
+.loading-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.loading-brand{
+  font-size:2.4rem;font-weight:900;text-align:center;line-height:1.2;
+  background:linear-gradient(135deg,#fff 0%,#EAA172 25%,#F2C6A8 50%,#EAA172 75%,#fff 100%);
+  background-size:300% 300%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:gradientShift 3s ease-in-out infinite, floatUp 2.5s ease-in-out infinite;
+}
+.loading-brand small{
+  display:block;font-size:.7rem;font-weight:500;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:8px;
+  background:none;-webkit-background-clip:unset;
+  animation:fadeSlideIn .8s .3s both;
+}
+.paw-loader{display:flex;align-items:center;gap:8px;animation:scaleIn .5s .6s both}
+.paw-loader .bar{
+  width:4px;height:24px;border-radius:4px;
+  background:linear-gradient(to top,#EAA172,#F2C6A8);
+  animation:barGrow .6s ease-in-out infinite alternate;
+}
+.paw-loader .bar:nth-child(1){animation-delay:0s;height:16px}
+.paw-loader .bar:nth-child(2){animation-delay:.1s;height:28px}
+.paw-loader .bar:nth-child(3){animation-delay:.2s;height:36px}
+.paw-loader .bar:nth-child(4){animation-delay:.3s;height:28px}
+.paw-loader .bar:nth-child(5){animation-delay:.4s;height:16px}
+.paw-dots{
+  display:flex;gap:10px;
+  animation:scaleIn .5s .8s both;
+}
+.paw-dots div{
+  width:14px;height:14px;border-radius:50%;
+  background:#EAA172;opacity:.2;
+  animation:pawPulse .8s ease-in-out infinite alternate;
+}
+.paw-dots div:nth-child(1){animation-delay:0s}
+.paw-dots div:nth-child(2){animation-delay:.15s;background:#D98E5B}
+.paw-dots div:nth-child(3){animation-delay:.3s;background:#C26A3C}
+.paw-dots div:nth-child(4){animation-delay:.45s;background:#A85A30}
+.paw-dots div:nth-child(5){animation-delay:.6s;background:#8A4A26}
+.loading-bg-shapes{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.loading-bg-shapes .shape{
+  position:absolute;border-radius:50%;
+  background:rgba(234,161,114,.04);animation:shapeFloat 4s ease-in-out infinite;
+}
+.loading-bg-shapes .shape:nth-child(1){width:180px;height:180px;top:-40px;left:-40px;animation-delay:0s}
+.loading-bg-shapes .shape:nth-child(2){width:120px;height:120px;bottom:-30px;right:-30px;animation-delay:1s;background:rgba(242,198,168,.03)}
+.loading-bg-shapes .shape:nth-child(3){width:80px;height:80px;top:50%;left:50%;animation-delay:2s;background:rgba(200,160,130,.03)}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+@keyframes barGrow{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
+@keyframes pawPulse{0%{opacity:.2;transform:scale(.8)}100%{opacity:1;transform:scale(1.2)}}
+@keyframes shapeFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(20px,-20px) scale(1.1)}66%{transform:translate(-10px,10px) scale(.95)}}
+
+/* ── HERO ── */
+.hero{
+  position:relative;height:100dvh;width:100%;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;padding:0 24px;
+  text-align:center;
+}
+.hero-bg{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;
+  pointer-events:none;
+  animation:heroZoom 5s 1.3s ease both;
+}
+@keyframes heroZoom{from{transform:scale(1.08);opacity:.7}to{transform:scale(1);opacity:1}}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(14,10,8,.25) 0%,rgba(14,10,8,.85) 100%);
+}
+.hero-content{position:relative;z-index:2;max-width:480px;width:100%;margin:0 auto}
+.hero-content>*{opacity:0;animation:heroFadeUp .7s cubic-bezier(.16,1,.3,1) forwards}
+.hero-content .hero-badge{animation-delay:1.4s}
+.hero-content h1{animation-delay:1.7s}
+.hero-content p{animation-delay:2s}
+.hero-content .btn-primary{animation-delay:2.3s}
+@keyframes heroFadeUp{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.12);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.15);
+  padding:8px 18px;border-radius:60px;font-size:.75rem;font-weight:600;
+  color:#fff;letter-spacing:.04em;text-transform:uppercase;margin-bottom:20px;
+}
+.hero h1{
+  font-size:2.6rem;font-weight:900;line-height:1.1;letter-spacing:-.03em;
+  color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.3);
+  animation:heroFadeUp .7s cubic-bezier(.16,1,.3,1) forwards, fadePulse 4s ease-in-out 4s infinite;
+}
+@keyframes fadePulse{0%,100%{opacity:1}45%{opacity:.5}55%{opacity:.5}}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,#F2C6A8,#EAA172);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{
+  font-size:1rem;line-height:1.5;color:rgba(255,255,255,.8);
+  margin:16px auto 28px;max-width:380px;
+}
+
+/* ── SECTIONS ── */
+.section{padding:60px 24px;max-width:640px;margin:0 auto}
+.section-title{font-size:1.8rem;font-weight:900;letter-spacing:-.02em;margin-bottom:12px}
+.section-sub{font-size:.95rem;color:#5C4535;margin-bottom:32px;line-height:1.5}
+
+.about-image-wrap{
+  border-radius:40px;overflow:hidden;
+  box-shadow:0 20px 40px -12px rgba(0,0,0,.15);
+}
+.about-image-wrap img{width:100%;height:auto;display:block}
+
+/* ── HOURS ── */
+.hours-card{
+  background:#FFF2E5;border-radius:40px;padding:28px 24px;
+  display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;
+}
+.hours-card .day{font-weight:700;font-size:.9rem}
+.hours-card .time{font-size:.9rem;color:#5C4535;text-align:right}
+.hours-card .today{color:#C26A3C;font-weight:800}
+.stats-row{display:flex;gap:12px;margin-top:28px}
+.stat-item{
+  flex:1;background:#FFF2E5;padding:18px 12px;border-radius:24px;text-align:center;
+}
+.stat-item .num{font-size:1.6rem;font-weight:900;color:#C26A3C}
+.stat-item .label{font-size:.75rem;color:#5C4535;margin-top:4px;font-weight:500}
+
+/* ── SERVICES ── */
+.services-wrap{
+  background:#efeae3;padding:80px 24px;
+}
+.services-wrap .container{
+  max-width:1200px;margin:0 auto;
+}
+.services-header{
+  display:flex;flex-direction:column;gap:32px;margin-bottom:52px;
+}
+.serv-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#fff;border:1px solid #d4cfc9;padding:8px 18px;border-radius:60px;
+  font-size:.75rem;font-weight:600;color:#5C4535;text-transform:uppercase;letter-spacing:.04em;
+}
+.serv-badge svg{width:14px;height:14px;color:#8a7a6b}
+.serv-heading{
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:2.4rem;font-weight:800;line-height:1.2;letter-spacing:-.02em;
+  color:#2E241F;margin-top:16px;
+}
+.serv-right{
+  margin-top:8px;
+}
+.serv-desc{
+  font-size:.95rem;color:#7a6a5a;line-height:1.6;max-width:440px;
+}
+.serv-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  background:#d4b896;border:none;padding:14px 28px;border-radius:60px;
+  font-weight:600;font-size:.9rem;color:#2E241F;cursor:pointer;
+  transition:all .3s ease;margin-top:24px;
+}
+.serv-btn:hover{background:#c4a884;transform:translateY(-2px)}
+.serv-btn .arrow-circle{
+  width:32px;height:32px;border-radius:50%;background:#2E241F;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.serv-btn .arrow-circle svg{width:14px;height:14px;color:#fff}
+.serv-cards{
+  display:flex;flex-direction:column;gap:20px;padding:8px 0 16px;
+}
+.serv-card{
+  width:100%;height:420px;border-radius:24px;
+  overflow:hidden;position:relative;flex-shrink:0;
+  transition:transform .4s ease,box-shadow .4s ease;cursor:pointer;
+}
+.serv-card:hover{transform:translateY(-4px);box-shadow:0 24px 48px -12px rgba(0,0,0,.2)}
+.serv-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.serv-card:hover img{transform:scale(1.08)}
+.serv-card .gradient{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 30%,rgba(14,10,8,.8) 100%);
+}
+.serv-card .card-arrow{
+  position:absolute;top:16px;right:16px;
+  width:36px;height:36px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.5);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .3s ease,border-color .3s ease;
+}
+.serv-card:hover .card-arrow{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.8)}
+.serv-card .card-arrow svg{width:14px;height:14px;color:#fff}
+.serv-card .card-label{
+  position:absolute;bottom:0;left:0;right:0;padding:24px 20px;
+  color:#fff;font-size:1rem;font-weight:700;letter-spacing:.01em;
+}
+@media(min-width:768px){
+  .services-header{flex-direction:row;align-items:flex-end;justify-content:space-between}
+  .serv-left{flex-shrink:0}
+  .serv-heading{font-size:3rem;max-width:360px}
+  .serv-right{text-align:left}
+  .serv-cards{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .serv-cards::-webkit-scrollbar{display:none}
+  .serv-card{min-width:240px;max-width:280px;height:380px;flex-shrink:0;scroll-snap-align:start}
+}
+
+/* ── DIVIDER ── */
+.cinematic-divider{
+  position:relative;height:55vh;min-height:320px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.cinematic-divider img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.4);
+}
+.cinematic-divider .overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(14,10,8,.6) 0%,transparent 50%,rgba(14,10,8,.3) 100%);
+}
+.cinematic-divider .content{position:relative;z-index:2;text-align:center;padding:0 24px;color:#fff}
+.cinematic-divider .content h2{font-size:2rem;font-weight:900;letter-spacing:-.02em}
+.cinematic-divider .content p{font-size:.95rem;color:rgba(255,255,255,.7);margin-top:12px;max-width:360px;margin-inline:auto}
+
+/* ── REVIEWS ── */
+.reviews-section{
+  position:relative;min-height:420px;display:flex;align-items:center;
+  background:linear-gradient(135deg,#1A1310,#2A1D17);
+  overflow:hidden;
+}
+.reviews-section .bg-img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:.35;pointer-events:none;
+}
+.reviews-section .overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(26,19,16,.7) 0%,rgba(26,19,16,.85) 100%);
+}
+.reviews-section .container{
+  position:relative;z-index:1;max-width:1200px;margin:0 auto;
+  padding:80px 24px;width:100%;
+}
+.reviews-header{text-align:center;margin-bottom:40px}
+.reviews-header .badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.08);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.15);padding:8px 20px;border-radius:60px;
+  font-size:.7rem;font-weight:700;color:rgba(255,255,255,.85);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:16px;
+}
+.reviews-header .badge svg{width:13px;height:13px;color:#F2B279}
+.reviews-header h2{
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:2.6rem;font-weight:800;letter-spacing:-.02em;
+  color:#fff;margin-bottom:10px;
+}
+.reviews-header .sub{font-size:.9rem;color:rgba(255,255,255,.65)}
+.reviews-grid{
+  display:flex;gap:24px;flex-wrap:wrap;justify-content:center;
+}
+.review-card{
+  flex:1;min-width:0;max-width:400px;width:100%;
+  border-radius:28px;padding:32px 28px;
+  background:rgba(255,255,255,.06);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.08);
+}
+.review-card .name{font-weight:700;font-size:1rem;color:#fff}
+.review-card .stars{color:#F2B279;letter-spacing:2px;margin:10px 0 12px;font-size:1rem}
+.review-card .text{font-size:.9rem;color:rgba(255,255,255,.75);line-height:1.55;font-style:italic}
+
+/* ── CTA ── */
+.cta{padding:80px 24px;text-align:center;background:linear-gradient(135deg,#1A1310,#2A1D17)}
+.cta h2{font-size:2rem;font-weight:900;color:#fff;letter-spacing:-.02em}
+.cta p{font-size:1rem;color:rgba(255,255,255,.7);margin:14px 0 28px;max-width:360px;margin-inline:auto}
+.btn-primary{
+  position:relative;display:inline-flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.18);
+  padding:16px 36px;border-radius:60px;
+  font-weight:700;font-size:1rem;color:#fff;cursor:pointer;overflow:hidden;
+  transition:all .3s ease;box-shadow:0 8px 32px rgba(0,0,0,.25);
+  isolation:isolate;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);
+  background-size:200% 100%;
+  animation:liquidSheen 3s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes liquidSheen{0%,100%{background-position:200% 0}50%{background-position:-200% 0}}
+.btn-primary:active{transform:scale(.96)}
+
+/* ── FOOTER ── */
+footer{padding:40px 24px;text-align:center;color:#5C4535;font-size:.85rem}
+footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
+
+/* ── IMAGE AUTO SLIDER ── */
+@keyframes scrollRight{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.slider-section{
+  background:#0E0A08;padding:60px 0;overflow:hidden;
+}
+.slider-section .section-title{color:#fff}
+.slider-section .section-sub{color:rgba(255,255,255,.6)}
+.slider-track{animation:scrollRight 30s linear infinite;display:flex;gap:20px;width:max-content}
+.slider-mask{
+  mask:linear-gradient(90deg,transparent 0%,#000 10%,#000 90%,transparent 100%);
+  -webkit-mask:linear-gradient(90deg,transparent 0%,#000 10%,#000 90%,transparent 100%);
+}
+.slider-item{
+  flex-shrink:0;width:180px;height:240px;border-radius:24px;overflow:hidden;
+  transition:transform .3s ease,filter .3s ease;
+}
+.slider-item:hover{transform:scale(1.06);filter:brightness(1.1)}
+.slider-item img{width:100%;height:100%;object-fit:cover;object-position:center 25%}
+@media(min-width:640px){.slider-item{width:240px;height:320px}}
+@media(min-width:1024px){.slider-item{width:280px;height:370px}}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transition:all .7s cubic-bezier(.2,.9,.3,1.1)}
+.reveal-up{transform:translateY(36px)}
+.reveal-left{transform:translateX(-40px)}
+.reveal-right{transform:translateX(40px)}
+.reveal-scale{transform:scale(.88)}
+.reveal.active{opacity:1;transform:translateY(0) translateX(0) scale(1)}
+
+/* Staggered children */
+.stagger > *{opacity:0;transform:translateY(24px);transition:all .6s cubic-bezier(.2,.9,.3,1.1)}
+.stagger.active > *{opacity:1;transform:translateY(0)}
+.stagger.active > *:nth-child(1){transition-delay:0s}
+.stagger.active > *:nth-child(2){transition-delay:.12s}
+.stagger.active > *:nth-child(3){transition-delay:.24s}
+.stagger.active > *:nth-child(4){transition-delay:.36s}
+.stagger.active > *:nth-child(5){transition-delay:.48s}
+.stagger.active > *:nth-child(6){transition-delay:.6s}
+@media(min-width:480px){.hero h1{font-size:3.4rem}.section-title{font-size:2.2rem}}
+@media(max-width:480px){
+  .stats-row{flex-direction:column;gap:8px}
+  .reviews-grid{flex-direction:column;align-items:stretch}
+  .review-card{padding:24px 20px}
+  .reviews-header h2{font-size:2rem}
+  .serv-card{height:320px}
+  .serv-heading{font-size:1.8rem}
+  .hours-card{grid-template-columns:1fr;gap:6px;padding:18px}
+  .hours-card .day,.hours-card .time{text-align:left;font-size:.85rem}
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-bg-shapes"><div class="shape"></div><div class="shape"></div><div class="shape"></div></div>
+  <div class="loading-brand">
+    A-1Pet Shop<br>And Grooming
+    <small>Nongkynrih, Shillong</small>
+  </div>
+  <div class="paw-loader"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+  <div class="paw-dots"><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
+<div class="app-content" id="appContent">
+
+  <!-- HERO — full-screen with video background -->
+  <section class="hero">
+    <video class="hero-bg" autoplay muted loop playsinline poster="images/herosection.jpg">
+      <source src="images/herosectionvideo.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge">★ 5.0 · 20 Ratings</div>
+      <h1>A-1Pet Shop<br><em>And Grooming</em></h1>
+      <p>Nongkynrih, Shillong — Professional pet grooming services your furry friend will love.</p>
+      <button class="btn-primary" id="heroBtn">📞 CONTACT NOW</button>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="about-image-wrap reveal reveal-left" style="position:relative">
+      <img src="images/welcome.jpeg" alt="A-1Pet Shop" loading="lazy">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,10,8,.55) 0%,transparent 40%,rgba(14,10,8,.75) 100%)"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:36px 28px 28px;color:#fff">
+        <h2 class="section-title" style="color:#fff;border:none;margin-bottom:8px;font-size:1.6rem">WELCOME</h2>
+        <p style="font-size:.85rem;line-height:1.5;color:rgba(255,255,255,.85);max-width:480px;margin-bottom:20px">A-1Pet Shop And Grooming in Nongkynrih, Shillong is a top destination for pet grooming services. Every pet receives expert care in a welcoming environment. Conveniently located in Nongkynrih for pet owners across Shillong.</p>
+        <div class="hours-card" id="hoursCard" style="background:rgba(255,255,255,.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);padding:20px 20px;border-radius:28px;display:grid;grid-template-columns:1fr 1fr;gap:6px 16px">
+          <span class="day" style="font-weight:600;font-size:.8rem;color:rgba(255,255,255,.9)">Monday</span><span class="time" style="font-size:.8rem;color:rgba(255,255,255,.7);text-align:right">Closed</span>
+          <span class="day" style="font-weight:600;font-size:.8rem;color:rgba(255,255,255,.9)">Tuesday</span><span class="time" style="font-size:.8rem;color:rgba(255,255,255,.7);text-align:right">10:00 am – 7:00 pm</span>
+          <span class="day" style="font-weight:600;font-size:.8rem;color:rgba(255,255,255,.9)">Wednesday</span><span class="time" style="font-size:.8rem;color:rgba(255,255,255,.7);text-align:right">10:00 am – 7:00 pm</span>
+          <span class="day" style="font-weight:600;font-size:.8rem;color:rgba(255,255,255,.9)">Thursday</span><span class="time" style="font-size:.8rem;color:rgba(255,255,255,.7);text-align:right">10:00 am – 7:00 pm</span>
+          <span class="day" style="font-weight:600;font-size:.8rem;color:rgba(255,255,255,.9)">Friday</span><span class="time" style="font-size:.8rem;color:rgba(255,255,255,.7);text-align:right">10:00 am – 7:00 pm</span>
+          <span class="day" style="font-weight:600;font-size:.8rem;color:rgba(255,255,255,.9)">Saturday</span><span class="time" style="font-size:.8rem;color:rgba(255,255,255,.7);text-align:right">10:00 am – 7:00 pm</span>
+          <span class="day" style="font-weight:600;font-size:.8rem;color:rgba(255,255,255,.9)">Sunday</span><span class="time" style="font-size:.8rem;color:rgba(255,255,255,.7);text-align:right">11:00 am – 5:00 pm</span>
+        </div>
+      </div>
+    </div>
+    <div class="stats-row reveal stagger">
+      <div class="stat-item"><div class="num">5.0</div><div class="label">Rating</div></div>
+      <div class="stat-item"><div class="num">20</div><div class="label">Reviews</div></div>
+      <div class="stat-item"><div class="num">🐾</div><div class="label">Grooming</div></div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services-wrap" id="services">
+    <div class="container">
+      <div class="services-header reveal">
+        <div class="serv-left">
+          <div class="serv-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Our services
+          </div>
+          <h2 class="serv-heading">What we can do<br>for your pet</h2>
+        </div>
+        <div class="serv-right">
+          <p class="serv-desc">From baths to full grooming, we provide quality pet care tailored to your furry friend's needs.</p>
+          <button class="serv-btn" id="servicesBtn">
+            See our services
+            <span class="arrow-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+            </span>
+          </button>
+        </div>
+      </div>
+      <div class="serv-cards reveal stagger">
+        <div class="serv-card">
+          <img src="images/4081455907607392.jpg" alt="Full Grooming" loading="lazy">
+          <div class="gradient"></div>
+          <div class="card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="card-label">Full grooming</div>
+        </div>
+        <div class="serv-card">
+          <img src="images/prevent-mats.jpg" alt="Bath & Brush" loading="lazy">
+          <div class="gradient"></div>
+          <div class="card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="card-label">Bath &amp; brush</div>
+        </div>
+        <div class="serv-card">
+          <img src="images/2533343538804035.jpg" alt="Nail & Ear Care" loading="lazy">
+          <div class="gradient"></div>
+          <div class="card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="card-label">Nail &amp; ear care</div>
+        </div>
+        <div class="serv-card">
+          <img src="images/7177680652812423.jpg" alt="Spa & Shine" loading="lazy">
+          <div class="gradient"></div>
+          <div class="card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="card-label">Spa &amp; shine</div>
+        </div>
+        <div class="serv-card">
+          <img src="images/review1.png" alt="Pet Styling" loading="lazy">
+          <div class="gradient"></div>
+          <div class="card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="card-label">Pet styling</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMAGE AUTO SLIDER -->
+  <section class="slider-section" id="gallery">
+    <div style="max-width:640px;margin:0 auto;padding:0 24px" class="reveal">
+      <h2 class="section-title">📸 OUR GALLERY</h2>
+      <p class="section-sub">A glimpse into the A-1Pet Shop And Grooming experience — happy pets, expert care.</p>
+    </div>
+    <div class="slider-mask reveal" style="margin-top:32px">
+      <div class="slider-track">
+        <div class="slider-item"><img src="images/review1.png" alt="Gallery 1" loading="lazy"></div>
+        <div class="slider-item"><img src="images/review2.png" alt="Gallery 2" loading="lazy"></div>
+        <div class="slider-item"><img src="images/review3.png" alt="Gallery 3" loading="lazy"></div>
+        <div class="slider-item"><img src="images/review4.png" alt="Gallery 4" loading="lazy"></div>
+        <div class="slider-item"><img src="images/review5.png" alt="Gallery 5" loading="lazy"></div>
+        <div class="slider-item"><img src="images/review1.png" alt="Gallery 1" loading="lazy"></div>
+        <div class="slider-item"><img src="images/review2.png" alt="Gallery 2" loading="lazy"></div>
+        <div class="slider-item"><img src="images/review3.png" alt="Gallery 3" loading="lazy"></div>
+        <div class="slider-item"><img src="images/review4.png" alt="Gallery 4" loading="lazy"></div>
+        <div class="slider-item"><img src="images/review5.png" alt="Gallery 5" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="reviews-section" id="reviews">
+    <img class="bg-img" src="images/7177680652812423.jpg" alt="" loading="lazy" aria-hidden="true">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="reviews-header reveal">
+        <div class="badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Reviews
+        </div>
+        <h2>What clients say</h2>
+        <p class="sub">Rated 5.0 out of 20 reviews on JustDial.</p>
+      </div>
+      <div class="reviews-grid reveal stagger">
+        <div class="review-card">
+          <div class="name">HAPPY CLIENT</div>
+          <div class="stars">★★★★★</div>
+          <div class="text">"Absolutely love this place! My dog always comes out looking and feeling amazing."</div>
+        </div>
+        <div class="review-card">
+          <div class="name">PET PARENT</div>
+          <div class="stars">★★★★★</div>
+          <div class="text">"Professional groomers who genuinely care. The best in Nongkynrih."</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="contact">
+    <div class="content reveal">
+      <h2>Ready to spoil<br>your fur baby?</h2>
+      <p>Book an appointment at A-1Pet Shop And Grooming today.</p>
+      <button class="btn-primary" id="ctaBtn">📞 CONTACT NOW</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="fb">A-1Pet Shop And Grooming</div>
+    <p>📍 Nongkynrih, Shillong, Meghalaya</p>
+    <p style="margin-top:6px">🕐 Tue–Sat 10–7 · Sun 11–5 · Mon Closed</p>
+    <p style="margin-top:12px;font-size:.75rem;opacity:.6">Listed on JustDial</p>
+  </footer>
+</div>
+
+<script>
+// ── START AT TOP ──
+history.scrollRestoration='manual';window.scrollTo(0,0);
+
+// ── LOADER ──
+const overlay=document.getElementById('loadingOverlay'),app=document.getElementById('appContent');
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    overlay.classList.add('hidden');
+    app.classList.add('visible');
+    setTimeout(activateReveals,100);
+  },1200);
+});
+
+// ── REVEAL ──
+const reveals=document.querySelectorAll('.reveal');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('active');observer.unobserve(e.target)}});
+},{threshold:.12});
+function activateReveals(){reveals.forEach(el=>{if(el.getBoundingClientRect().top<window.innerHeight-80)el.classList.add('active');else observer.observe(el)})}
+reveals.forEach(el=>observer.observe(el));
+window.addEventListener('resize',()=>{if(app.classList.contains('visible'))activateReveals()});
+
+// ── TODAY HOURS HIGHLIGHT ──
+(function(){const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];const t=days[new Date().getDay()];const card=document.getElementById('hoursCard');if(card){const spans=card.querySelectorAll('.day');spans.forEach(e=>{if(e.textContent.trim()===t){e.style.color='#EAA172';e.nextElementSibling.style.color='#EAA172'}})}})();
+
+// ── BUTTONS ──
+const msg="📞 Thank you for your interest! Please call A-1Pet Shop And Grooming during business hours or find the number on JustDial to book an appointment.";
+document.getElementById('heroBtn')?.addEventListener('click',e=>{e.preventDefault();alert(msg)});
+document.getElementById('ctaBtn')?.addEventListener('click',e=>{e.preventDefault();alert(msg)});
+document.getElementById('servicesBtn')?.addEventListener('click',e=>{e.preventDefault();alert("✨ Our services include: Full grooming, Bath & brush, Nail & ear care, Spa & shine, and Pet styling — all with premium products and expert care!")});
+</script>
+</body>
+</html>
