@@ -286,6 +286,20 @@ img{display:block;width:100%;height:auto}
 .review-card .stars{color:#F2B279;letter-spacing:2px;margin:10px 0 12px;font-size:1rem}
 .review-card .text{font-size:.9rem;color:rgba(255,255,255,.75);line-height:1.55;font-style:italic}
 
+/* ── FLOATING HOME BUTTON ── */
+.float-home{
+  position:fixed;bottom:24px;right:24px;z-index:500;
+  display:flex;align-items:center;gap:8px;
+  background:#2E241F;color:#fff;padding:12px 20px;border-radius:60px;
+  font-size:.82rem;font-weight:600;text-decoration:none;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+  font-family:'Inter',sans-serif;
+}
+.float-home:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,.35);background:#1A1310}
+.float-home:active{transform:scale(.95)}
+.float-home svg{width:18px;height:18px;flex-shrink:0}
+
 /* ── CTA ── */
 .cta{padding:80px 24px;text-align:center;background:linear-gradient(135deg,#1A1310,#2A1D17)}
 .cta h2{font-size:2rem;font-weight:900;color:#fff;letter-spacing:-.02em}
@@ -545,11 +559,48 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   </section>
 
   <!-- FOOTER -->
-  <footer>
-    <div class="fb">A-1Pet Shop And Grooming</div>
-    <p>📍 Nongkynrih, Shillong, Meghalaya</p>
-    <p style="margin-top:6px">🕐 Tue–Sat 10–7 · Sun 11–5 · Mon Closed</p>
-    <p style="margin-top:12px;font-size:.75rem;opacity:.6">Listed on JustDial</p>
+  <footer style="background:#2C2420;color:rgba(255,255,255,.7);padding:48px 24px 28px;font-size:.82rem;line-height:1.6">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between">
+      <div style="max-width:280px">
+        <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:1.1rem;color:#fff;margin-bottom:10px">A-1 Enterprises</div>
+        <p style="color:rgba(255,255,255,.5);font-size:.8rem">Building the future of pet and working dog services in Northeast India.</p>
+        <div style="display:flex;gap:10px;margin-top:14px">
+          <a href="https://www.facebook.com/SANGPRETI/" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.6);transition:.3s">📘</a>
+          <a href="https://instagram.com/boxerfosterhome" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.6);transition:.3s">📸</a>
+          <a href="https://youtu.be/Lgpqqi8ZEQI" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.6);transition:.3s">▶️</a>
+          <a href="https://g.co/kgs/knmDPK" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.6);transition:.3s">📍</a>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;margin-bottom:14px">Links</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+          <li><a href="index.html" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;transition:.3s">Home</a></li>
+          <li><a href="training.html" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;transition:.3s">Training</a></li>
+          <li><a href="boarding.html" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;transition:.3s">Boarding</a></li>
+          <li><a href="store.html" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;transition:.3s">Pet Store</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;margin-bottom:14px">Grooming</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+          <li style="color:rgba(255,255,255,.5);font-size:.8rem">A-1Pet Shop And Grooming</li>
+          <li style="color:rgba(255,255,255,.5);font-size:.8rem">Nongkynrih, Shillong</li>
+          <li style="color:rgba(255,255,255,.5);font-size:.8rem">Tue–Sat 10–7 · Sun 11–5</li>
+          <li style="color:rgba(255,255,255,.5);font-size:.8rem">Mon Closed</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;margin-bottom:14px">Contact</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+          <li><a href="https://wa.me/918891000000" target="_blank" rel="noopener" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem">WhatsApp</a></li>
+          <li><a href="mailto:a1.enterprises8891@gmail.com" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem">Email Us</a></li>
+          <li><a href="admin.html" style="color:rgba(255,255,255,.3);text-decoration:none;font-size:.75rem">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="max-width:1200px;margin:24px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.75rem;color:rgba(255,255,255,.35)">
+      <span>© 2026 A-1 Enterprises. Passion Turned Profession.</span>
+    </div>
   </footer>
 </div>
 
@@ -585,5 +636,10 @@ document.getElementById('heroBtn')?.addEventListener('click',e=>{e.preventDefaul
 document.getElementById('ctaBtn')?.addEventListener('click',e=>{e.preventDefault();alert(msg)});
 document.getElementById('servicesBtn')?.addEventListener('click',e=>{e.preventDefault();alert("✨ Our services include: Full grooming, Bath & brush, Nail & ear care, Spa & shine, and Pet styling — all with premium products and expert care!")});
 </script>
+
+<a href="index.html" class="float-home">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  Home
+</a>
 </body>
 </html>

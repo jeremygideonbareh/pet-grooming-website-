@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet Store — A1-Enterprises | Shillong</title>
+  <meta name="description" content="Browse premium pet products at A1-Enterprises in Shillong. Dog food, treats, toys, accessories, grooming supplies, and health products.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{
+  font-family:'Inter',-apple-system,sans-serif;
+  background:#FBF7F2;color:#1A1412;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{display:block;max-width:100%;height:auto}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+:root{
+  --cream:#FBF7F2;--cream-dark:#F5EDE4;--charcoal:#1A1412;
+  --charcoal-soft:#2C2420;--gold:#C9A05C;--gold-light:#E8C88A;
+  --gold-dark:#A77F3E;--muted:#7A6B5E;--border:#E3D9CE;--white:#FFFFFF;
+  --whatsapp:#25D366;--whatsapp-dark:#1DA851;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(251,247,242,.88);backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(227,217,206,.5);
+  transition:box-shadow .3s ease;
+}
+nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
+.nav-inner{
+  max-width:1200px;margin:0 auto;padding:0 24px;
+  display:flex;align-items:center;justify-content:space-between;height:72px;
+}
+.nav-logo{
+  display:flex;align-items:center;gap:12px;
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:800;font-size:1.3rem;color:var(--charcoal);flex-shrink:0;
+}
+.nav-logo img{width:40px;height:40px;border-radius:50%;object-fit:cover}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{
+  font-size:.85rem;font-weight:500;color:var(--muted);
+  position:relative;transition:color .3s ease;padding:4px 0;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;
+  background:var(--gold);transition:width .3s cubic-bezier(.16,1,.3,1);
+  border-radius:2px;
+}
+.nav-links a:hover{color:var(--charcoal)}
+.nav-links a:hover::after{width:100%}
+.nav-links a.active{color:var(--charcoal);font-weight:600}
+.nav-links a.active::after{width:100%}
+.nav-actions{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.btn-whatsapp{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--whatsapp);color:var(--white);padding:10px 22px;border-radius:60px;
+  font-weight:600;font-size:.85rem;transition:all .3s ease;border:none;cursor:pointer;
+  font-family:inherit;
+}
+.btn-whatsapp:hover{background:var(--whatsapp-dark);transform:translateY(-2px)}
+
+/* Hamburger */
+.hamburger{
+  display:none;flex-direction:column;gap:5px;cursor:pointer;
+  background:none;border:none;padding:4px;
+}
+.hamburger span{
+  width:24px;height:2px;background:var(--charcoal);border-radius:2px;
+  transition:all .3s ease;transform-origin:center;
+}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-nav{
+  position:fixed;top:72px;left:0;right:0;bottom:0;
+  background:var(--cream);z-index:999;
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:32px;
+}
+.mobile-nav.open{display:flex}
+.mobile-nav a{font-size:1.4rem;font-weight:600;color:var(--charcoal)}
+.mobile-nav .btn-whatsapp{margin-top:16px}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-actions .btn-whatsapp{display:none}
+  .hamburger{display:flex}
+}
+
+/* ── STORE HERO ── */
+.store-hero{
+  padding:120px 24px 60px;text-align:center;
+  background:linear-gradient(135deg,var(--cream),var(--cream-dark));
+  border-bottom:1px solid var(--border);
+}
+.store-hero h1{
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:clamp(2rem,5vw,3.2rem);font-weight:900;letter-spacing:-.02em;
+  color:var(--charcoal);
+}
+.store-hero p{
+  font-size:1rem;color:var(--muted);line-height:1.6;
+  margin:12px auto 0;max-width:500px;
+}
+
+/* ── SEARCH & FILTERS ── */
+.controls{
+  max-width:1200px;margin:0 auto;padding:32px 24px 8px;
+  display:flex;flex-direction:column;gap:20px;
+}
+.search-wrap{position:relative;max-width:480px}
+.search-wrap input{
+  width:100%;padding:14px 20px 14px 48px;border-radius:60px;
+  border:1.5px solid var(--border);background:var(--white);
+  font-family:'Inter',sans-serif;font-size:.9rem;color:var(--charcoal);
+  outline:none;transition:border-color .3s ease;
+}
+.search-wrap input:focus{border-color:var(--gold)}
+.search-wrap .icon{
+  position:absolute;left:18px;top:50%;transform:translateY(-50%);
+  color:var(--muted);font-size:1.1rem;pointer-events:none;
+}
+.categories{display:flex;flex-wrap:wrap;gap:10px}
+.cat-btn{
+  padding:8px 20px;border-radius:60px;border:1.5px solid var(--border);
+  background:var(--white);font-family:'Inter',sans-serif;
+  font-size:.8rem;font-weight:500;color:var(--muted);cursor:pointer;
+  transition:all .3s ease;
+}
+.cat-btn:hover{border-color:var(--gold);color:var(--charcoal)}
+.cat-btn.active{background:var(--gold);border-color:var(--gold);color:var(--charcoal);font-weight:600}
+
+/* ── PRODUCT GRID ── */
+.products-section{padding:16px 0 80px}
+.products-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+}
+.prod-card{
+  background:var(--white);border-radius:24px;overflow:hidden;
+  border:1px solid var(--border);
+  transition:all .4s cubic-bezier(.16,1,.3,1);
+  display:flex;flex-direction:column;
+}
+.prod-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 20px 40px -12px rgba(26,20,18,.1);
+  border-color:var(--gold);
+}
+.prod-img{
+  width:100%;aspect-ratio:1;overflow:hidden;
+  background:var(--cream-dark);
+  position:relative;
+}
+.prod-img img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .6s ease;
+}
+.prod-card:hover .prod-img img{transform:scale(1.08)}
+.prod-cat{
+  position:absolute;top:12px;left:12px;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+  padding:4px 12px;border-radius:60px;
+  font-size:.65rem;font-weight:600;color:var(--charcoal-soft);
+  letter-spacing:.03em;
+}
+.prod-body{padding:16px 18px 20px;flex:1;display:flex;flex-direction:column}
+.prod-body h3{
+  font-size:.95rem;font-weight:700;color:var(--charcoal);
+  line-height:1.3;margin-bottom:4px;
+}
+.prod-body .price{
+  font-size:1.1rem;font-weight:800;color:var(--gold-dark);
+  margin-bottom:12px;
+}
+.prod-body .desc{
+  font-size:.8rem;color:var(--muted);line-height:1.5;flex:1;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.prod-inquire{
+  margin-top:14px;padding:10px 0;border-radius:60px;
+  background:var(--cream);border:1px solid var(--border);
+  font-family:'Inter',sans-serif;font-weight:600;font-size:.8rem;
+  color:var(--charcoal);cursor:pointer;transition:all .3s ease;
+  width:100%;text-align:center;
+}
+.prod-inquire:hover{background:var(--gold);border-color:var(--gold);color:var(--charcoal)}
+
+/* ── INQUIRY MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:2000;
+  background:rgba(26,20,18,.6);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;
+  padding:24px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--white);border-radius:28px;max-width:520px;width:100%;
+  max-height:90vh;overflow-y:auto;padding:36px 32px;
+  animation:modalIn .3s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal h2{
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:1.4rem;font-weight:800;letter-spacing:-.01em;
+  margin-bottom:4px;
+}
+.modal .modal-prod{margin:12px 0 20px}
+.modal .modal-prod .label{font-size:.75rem;color:var(--muted);font-weight:500}
+.modal .modal-prod .val{font-weight:700;font-size:.95rem;color:var(--charcoal);margin-top:2px}
+.modal .close-btn{
+  float:right;background:none;border:none;font-size:1.5rem;
+  cursor:pointer;color:var(--muted);transition:color .3s;line-height:1;
+}
+.modal .close-btn:hover{color:var(--charcoal)}
+.form-group{margin-bottom:16px}
+.form-group label{
+  display:block;font-size:.8rem;font-weight:600;color:var(--charcoal);
+  margin-bottom:6px;
+}
+.form-group input,.form-group textarea{
+  width:100%;padding:12px 16px;border-radius:14px;
+  border:1.5px solid var(--border);background:var(--cream);
+  font-family:'Inter',sans-serif;font-size:.9rem;color:var(--charcoal);
+  outline:none;transition:border-color .3s ease;
+}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--gold)}
+.form-group textarea{resize:vertical;min-height:90px}
+.modal-send{
+  width:100%;padding:14px;border-radius:60px;border:none;
+  background:var(--whatsapp);color:var(--white);
+  font-family:'Inter',sans-serif;font-weight:700;font-size:.95rem;
+  cursor:pointer;transition:background .3s ease,transform .2s ease;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.modal-send:hover{background:var(--whatsapp-dark)}
+.modal-send:active{transform:scale(.97)}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  grid-column:1/-1;text-align:center;padding:80px 24px;
+}
+.empty-state .icon{font-size:3rem;margin-bottom:16px}
+.empty-state h3{font-size:1.2rem;font-weight:700;margin-bottom:8px}
+.empty-state p{color:var(--muted);font-size:.9rem}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--charcoal-soft);padding:64px 0 32px;
+  color:rgba(255,255,255,.7);font-size:.85rem;line-height:1.6;
+}
+.footer-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:40px;
+  padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.footer-brand .footer-logo{
+  display:flex;align-items:center;gap:12px;
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:800;font-size:1.2rem;color:var(--white);margin-bottom:16px;
+}
+.footer-brand .footer-logo img{width:36px;height:36px;border-radius:50%;object-fit:cover}
+.footer-brand p{max-width:320px;color:rgba(255,255,255,.55)}
+.footer-col h4{
+  font-weight:700;font-size:.85rem;color:var(--white);
+  margin-bottom:20px;letter-spacing:.04em;text-transform:uppercase;
+}
+.footer-col ul li{margin-bottom:12px}
+.footer-col ul li a{transition:color .3s ease}
+.footer-col ul li a:hover{color:var(--gold)}
+.footer-col .contact-item{
+  display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;
+}
+.footer-col .contact-item .icon{flex-shrink:0;font-size:1rem;margin-top:1px}
+.footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:28px;font-size:.8rem;color:rgba(255,255,255,.4);
+}
+.footer-bottom-links{display:flex;gap:24px}
+.footer-bottom-links a{transition:color .3s ease}
+.footer-bottom-links a:hover{color:var(--gold)}
+@media(max-width:900px){
+  .products-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:640px){
+  .products-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+}
+@media(max-width:400px){
+  .products-grid{grid-template-columns:1fr;max-width:300px;margin:0 auto}
+}
+@media(max-width:768px){
+  .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .footer-brand{grid-column:1/-1}
+}
+@media(max-width:480px){
+  .footer-grid{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:12px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="images/a1logo.jpeg" alt="A1-Enterprises" loading="lazy">
+      A1-Enterprises
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="grooming.html">Grooming</a></li>
+      <li><a href="index.html#services">Training</a></li>
+      <li><a href="store.html" class="active">Store</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        WhatsApp Us
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Home</a>
+  <a href="grooming.html">Grooming</a>
+  <a href="index.html#services">Training</a>
+  <a href="store.html">Store</a>
+  <a href="index.html#contact">Contact</a>
+  <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp">WhatsApp Us</a>
+</div>
+
+<!-- STORE HERO -->
+<section class="store-hero">
+  <h1>Premium Pet Store</h1>
+  <p>Curated products for your furry friends — from premium food and treats to toys, accessories, and wellness essentials.</p>
+</section>
+
+<!-- SEARCH & FILTERS -->
+<div class="controls">
+  <div class="search-wrap">
+    <span class="icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search products..." autocomplete="off">
+  </div>
+  <div class="categories" id="categoryFilters">
+    <button class="cat-btn active" data-cat="all">All</button>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="products-section">
+  <div class="container">
+    <div class="products-grid" id="productGrid"></div>
+  </div>
+</section>
+
+<!-- INQUIRY MODAL -->
+<div class="modal-overlay" id="inquiryModal">
+  <div class="modal">
+    <button class="close-btn" id="modalClose">&times;</button>
+    <h2>Inquire About Product</h2>
+    <div class="modal-prod">
+      <div class="label">Product</div>
+      <div class="val" id="modalProdName">—</div>
+    </div>
+    <form id="inquiryForm">
+      <div class="form-group">
+        <label for="inqName">Your Name</label>
+        <input type="text" id="inqName" required autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label for="inqPhone">Phone Number</label>
+        <input type="tel" id="inqPhone" required autocomplete="tel">
+      </div>
+      <div class="form-group">
+        <label for="inqMsg">Message</label>
+        <textarea id="inqMsg" required placeholder="I'm interested in this product. Please send me more details..."></textarea>
+      </div>
+      <button type="submit" class="modal-send">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Send Inquiry via WhatsApp
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="images/a1logo.jpeg" alt="A-1 Enterprises" loading="lazy">
+          A-1 Enterprises
+        </div>
+        <p>Premium pet care services and supplies in Shillong, Meghalaya. Certified trainers, professional groomers, and top-quality pet products — all under one roof.</p>
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <a href="https://www.facebook.com/SANGPRETI/" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--brown);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">📘</a>
+          <a href="https://instagram.com/boxerfosterhome" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--brown);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">📸</a>
+          <a href="https://youtu.be/Lgpqqi8ZEQI" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--brown);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">▶️</a>
+          <a href="https://g.co/kgs/knmDPK" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--brown);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">📍</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="training.html">Training</a></li>
+          <li><a href="grooming.html">Grooming</a></li>
+          <li><a href="boarding.html">Boarding</a></li>
+          <li><a href="store.html">Pet Store</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Shop Categories</h4>
+        <ul>
+          <li><a href="#" data-cat="dog-food">Dog Food</a></li>
+          <li><a href="#" data-cat="treats">Treats & Snacks</a></li>
+          <li><a href="#" data-cat="toys">Toys & Play</a></li>
+          <li><a href="#" data-cat="accessories">Accessories</a></li>
+          <li><a href="#" data-cat="health">Health & Wellness</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <div class="contact-item"><span class="icon">📍</span><span>Shillong, Meghalaya</span></div>
+        <div class="contact-item"><span class="icon">✉️</span><a href="mailto:a1.enterprises8891@gmail.com">a1.enterprises8891@gmail.com</a></div>
+        <div class="contact-item"><span class="icon">📞</span><a href="https://wa.me/918891000000" target="_blank" rel="noopener">WhatsApp: +91 8891 000 000</a></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 A-1 Enterprises. Passion Turned Profession.</span>
+      <div class="footer-bottom-links">
+        <a href="index.html">Home</a>
+        <a href="training.html">Training</a>
+        <a href="grooming.html">Grooming</a>
+        <a href="boarding.html">Boarding</a>
+        <a href="store.html">Store</a>
+        <a href="admin.html" style="opacity:0.3;font-size:0.75rem">Admin</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Products data (from localStorage, seeded if empty) ──
+const STORE_KEY='a1_store_products';
+const DEFAULT_PRODUCTS=[
+  {id:'p1',name:'Premium Adult Dog Food (Chicken & Rice)',price:'₹1,850',cat:'dog-food',catLabel:'Dog Food',img:'https://images.unsplash.com/photo-1565708097881-bbf4f5c7b6d0?w=400&q=80',desc:'High-protein, grain-free formula with real chicken. Supports healthy joints and a shiny coat.'},
+  {id:'p2',name:'Puppy Starter Kit Food Pack',price:'₹1,200',cat:'dog-food',catLabel:'Dog Food',img:'https://images.unsplash.com/photo-1628009368231-3bb7e3b2a688?w=400&q=80',desc:'Specially formulated for growing puppies. Rich in DHA for brain development.'},
+  {id:'p3',name:'Grain-Free Salmon & Sweet Potato',price:'₹2,100',cat:'dog-food',catLabel:'Dog Food',img:'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400&q=80',desc:'Limited ingredient diet for sensitive stomachs. Omega-3 rich salmon formula.'},
+  {id:'p4',name:'Natural Chicken Jerky Treats',price:'₹350',cat:'treats',catLabel:'Treats',img:'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&q=80',desc:'Oven-baked, single-ingredient chicken jerky. No preservatives or fillers.'},
+  {id:'p5',name:'Peanut Butter Training Bites',price:'₹280',cat:'treats',catLabel:'Treats',img:'https://images.unsplash.com/photo-1544568100-847a948585b9?w=400&q=80',desc:'Soft, chewy training treats made with real peanut butter. Perfect size for rewards.'},
+  {id:'p6',name:'Dental Chew Bones (6-Pack)',price:'₹450',cat:'treats',catLabel:'Treats',img:'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&q=80',desc:'Helps reduce plaque and tartar. Long-lasting chews that freshen breath.'},
+  {id:'p7',name:'Rope Tug Toy with Knots',price:'₹320',cat:'toys',catLabel:'Toys',img:'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=400&q=80',desc:'Durable cotton rope for interactive play. Great for tug-of-war and dental health.'},
+  {id:'p8',name:'Squeaky Plush Bear Toy',price:'₹260',cat:'toys',catLabel:'Toys',img:'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400&q=80',desc:'Soft plush toy with squeaker inside. Machine washable and non-toxic.'},
+  {id:'p9',name:'Interactive Treat Dispenser Ball',price:'₹550',cat:'toys',catLabel:'Toys',img:'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&q=80',desc:'Stimulates mental engagement. Dispenses treats as your dog plays. Adjustable difficulty.'},
+  {id:'p10',name:'Adjustable Reflective Dog Vest',price:'₹890',cat:'accessories',catLabel:'Accessories',img:'https://images.unsplash.com/photo-1591946614720-90a587da4a36?w=400&q=80',desc:'High-visibility reflective harness. Padded for comfort. Multiple size adjustments.'},
+  {id:'p11',name:'Premium Leather Dog Collar',price:'₹650',cat:'accessories',catLabel:'Accessories',img:'https://images.unsplash.com/photo-1551830820-330a71b99659?w=400&q=80',desc:'Genuine leather with brass hardware. Engravable nameplate included. Available in 3 colors.'},
+  {id:'p12',name:'Double-Sided Grooming Brush',price:'₹340',cat:'grooming',catLabel:'Grooming',img:'https://images.unsplash.com/photo-1583337130417-3346a1be9de2?w=400&q=80',desc:'Stainless steel pins on one side, soft bristles on the other. Reduces shedding.'},
+  {id:'p13',name:'Nail Grinder & File Kit',price:'₹720',cat:'grooming',catLabel:'Grooming',img:'https://images.unsplash.com/photo-1518288774672-b94e808873ff?w=400&q=80',desc:'Quiet, cordless nail grinder with 2 speeds. Safety guard prevents over-grinding.'},
+  {id:'p14',name:'Omega-3 Fish Oil Supplement',price:'₹480',cat:'health',catLabel:'Health',img:'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80',desc:'Pure wild salmon oil. Promotes healthy skin, coat, joints, and heart health.'},
+  {id:'p15',name:'Joint Support Chews (Glucosamine)',price:'₹620',cat:'health',catLabel:'Health',img:'https://images.unsplash.com/photo-1596201253717-1cdb2ef05d1a?w=400&q=80',desc:'Tasty chews with glucosamine, chondroitin & MSM. Supports hip and joint mobility.'},
+  {id:'p16',name:'Flea & Tick Prevention Collar',price:'₹1,100',cat:'health',catLabel:'Health',img:'https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?w=400&q=80',desc:'8-month protection against fleas, ticks, and mosquitoes. Water-resistant and adjustable.'},
+];
+
+function getProducts(){
+  const raw=localStorage.getItem(STORE_KEY);
+  if(!raw){
+    localStorage.setItem(STORE_KEY,JSON.stringify(DEFAULT_PRODUCTS));
+    return DEFAULT_PRODUCTS;
+  }
+  try{return JSON.parse(raw)}catch{return DEFAULT_PRODUCTS}
+}
+
+function saveProducts(products){
+  localStorage.setItem(STORE_KEY,JSON.stringify(products));
+}
+
+// ── Render ──
+const ALL_CATEGORIES=[
+  {id:'dog-food',label:'Dog Food'},
+  {id:'treats',label:'Treats'},
+  {id:'toys',label:'Toys'},
+  {id:'accessories',label:'Accessories'},
+  {id:'grooming',label:'Grooming'},
+  {id:'health',label:'Health'},
+];
+
+// Populate category buttons
+const catContainer=document.getElementById('categoryFilters');
+ALL_CATEGORIES.forEach(c=>{
+  const btn=document.createElement('button');
+  btn.className='cat-btn';
+  btn.dataset.cat=c.id;
+  btn.textContent=c.label;
+  catContainer.appendChild(btn);
+});
+
+let currentCategory='all';
+let currentQuery='';
+
+function filterProducts(products){
+  let filtered=products;
+  if(currentCategory!=='all')filtered=filtered.filter(p=>p.cat===currentCategory);
+  if(currentQuery){
+    const q=currentQuery.toLowerCase();
+    filtered=filtered.filter(p=>p.name.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)||p.catLabel.toLowerCase().includes(q));
+  }
+  return filtered;
+}
+
+function render(){
+  const products=getProducts();
+  const filtered=filterProducts(products);
+  const grid=document.getElementById('productGrid');
+  grid.innerHTML='';
+  if(filtered.length===0){
+    grid.innerHTML='<div class="empty-state"><div class="icon">🔍</div><h3>No products found</h3><p>Try adjusting your search or filters.</p></div>';
+    return;
+  }
+  filtered.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='prod-card';
+    card.innerHTML=`
+      <div class="prod-img">
+        <span class="prod-cat">${p.catLabel}</span>
+        <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'">
+      </div>
+      <div class="prod-body">
+        <h3>${p.name}</h3>
+        <div class="price">${p.price}</div>
+        <div class="desc">${p.desc}</div>
+        <button class="prod-inquire" data-id="${p.id}">Inquire Now</button>
+      </div>
+    `;
+    card.querySelector('.prod-inquire').addEventListener('click',()=>openInquiry(p));
+    grid.appendChild(card);
+  });
+}
+
+// ── Category clicks ──
+document.querySelectorAll('.cat-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCategory=btn.dataset.cat;
+    render();
+  });
+});
+
+// ── Search ──
+document.getElementById('searchInput').addEventListener('input',e=>{
+  currentQuery=e.target.value;
+  render();
+});
+
+// ── Inquiry Modal ──
+let inquiryProduct=null;
+const modal=document.getElementById('inquiryModal');
+const modalName=document.getElementById('modalProdName');
+
+function openInquiry(product){
+  inquiryProduct=product;
+  modalName.textContent=product.name;
+  document.getElementById('inqName').value='';
+  document.getElementById('inqPhone').value='';
+  document.getElementById('inqMsg').value='';
+  modal.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeInquiry(){
+  modal.classList.remove('open');
+  document.body.style.overflow='';
+  inquiryProduct=null;
+}
+
+document.getElementById('modalClose').addEventListener('click',closeInquiry);
+modal.addEventListener('click',e=>{if(e.target===modal)closeInquiry()});
+
+document.getElementById('inquiryForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  if(!inquiryProduct)return;
+  const name=document.getElementById('inqName').value.trim();
+  const phone=document.getElementById('inqPhone').value.trim();
+  const msg=document.getElementById('inqMsg').value.trim();
+  const text=`Hi A1-Enterprises! I'd like to inquire about: *${inquiryProduct.name}* (${inquiryProduct.price})%0A%0AMy Name: ${name}%0APhone: ${phone}%0A%0A${msg}`;
+  window.open(`https://wa.me/918891000000?text=${encodeURIComponent(text)}`,'_blank');
+  closeInquiry();
+});
+
+// ── Footer category links ──
+document.querySelectorAll('[data-cat]').forEach(link=>{
+  link.addEventListener('click',e=>{
+    e.preventDefault();
+    const cat=link.dataset.cat;
+    document.querySelectorAll('.cat-btn').forEach(b=>{
+      b.classList.toggle('active',b.dataset.cat===cat);
+    });
+    currentCategory=cat;
+    document.getElementById('searchInput').value='';
+    currentQuery='';
+    render();
+    window.scrollTo({top:document.querySelector('.store-hero').offsetHeight-60,behavior:'smooth'});
+  });
+});
+
+// ── Nav scroll ──
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>20));
+
+// ── Mobile nav ──
+const hamburger=document.getElementById('hamburger');
+const mobileNav=document.getElementById('mobileNav');
+hamburger.addEventListener('click',()=>{
+  hamburger.classList.toggle('active');
+  mobileNav.classList.toggle('open');
+  document.body.style.overflow=mobileNav.classList.contains('open')?'hidden':'';
+});
+mobileNav.querySelectorAll('a').forEach(link=>{
+  link.addEventListener('click',()=>{
+    hamburger.classList.remove('active');
+    mobileNav.classList.remove('open');
+    document.body.style.overflow='';
+  });
+});
+
+// ── Init ──
+render();
+</script>
+</body>
+</html>

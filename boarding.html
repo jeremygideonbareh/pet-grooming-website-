@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boarding & Kennels — A-1 Enterprises | Shillong</title>
+  <meta name="description" content="Safe, comfortable pet boarding and kennel facilities by A-1 Enterprises in Shillong, Meghalaya. 24/7 supervision, care, and professional attention.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:'Inter',-apple-system,sans-serif;background:#FBF7F2;color:#1A1412;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%;height:auto}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+:root{--cream:#FBF7F2;--cream-dark:#F5EDE4;--charcoal:#1A1412;--charcoal-soft:#2C2420;--gold:#C9A05C;--gold-light:#E8C88A;--gold-dark:#A77F3E;--muted:#7A6B5E;--border:#E3D9CE;--white:#FFFFFF;--whatsapp:#25D366}
+.section-label{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:12px}
+.section-title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.15;color:var(--charcoal)}
+.section-sub{font-size:.95rem;line-height:1.7;color:var(--muted);margin-top:14px;max-width:600px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:60px;font-weight:600;font-size:.9rem;cursor:pointer;transition:all .35s cubic-bezier(.16,1,.3,1);border:none;font-family:inherit}
+.btn-primary{background:var(--gold);color:var(--charcoal);box-shadow:0 4px 20px rgba(201,160,92,.35)}
+.btn-primary:hover{background:var(--gold-dark);transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,160,92,.4)}
+.reveal{opacity:0;transform:translateY(36px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+.reveal.active{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s;}.reveal-delay-2{transition-delay:.2s}
+
+.page-hero{background:linear-gradient(135deg,rgba(26,20,18,.8),rgba(26,20,18,.5)),url('https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;padding:120px 24px 80px;text-align:center;color:#fff}
+.page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:900;letter-spacing:-.02em}
+.page-hero p{font-size:1rem;color:rgba(255,255,255,.7);max-width:560px;margin:14px auto 0;line-height:1.6}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(251,247,242,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(227,217,206,.5);transition:box-shadow .3s ease}
+nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-weight:800;font-size:1.2rem;color:var(--charcoal);flex-shrink:0}
+.nav-logo img{width:38px;height:38px;border-radius:50%;object-fit:cover}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-links a{font-size:.8rem;font-weight:500;color:var(--muted);position:relative;transition:color .3s ease;padding:4px 0}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:var(--gold);transition:width .3s ease;border-radius:2px}
+.nav-links a:hover{color:var(--charcoal)}
+.nav-links a:hover::after{width:100%}
+.nav-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{width:24px;height:2px;background:var(--charcoal);border-radius:2px;transition:all .3s ease;transform-origin:center}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-nav{position:fixed;top:72px;left:0;right:0;bottom:0;background:var(--cream);z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:40px 24px}
+.mobile-nav.open{display:flex}
+.mobile-nav a{font-size:1.2rem;font-weight:600;color:var(--charcoal)}
+.mobile-nav .btn-whatsapp{margin-top:16px}
+@media(max-width:1024px){.nav-links{display:none}.nav-actions .btn-whatsapp{display:none}.hamburger{display:flex}}
+
+/* ── CONTENT ── */
+.content-section{padding:80px 0}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.feature-card{background:var(--white);border-radius:24px;padding:32px 24px;border:1px solid var(--border);transition:all .4s ease}
+.feature-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(0,0,0,.1);border-color:var(--gold)}
+.feature-card .icon{font-size:2rem;margin-bottom:16px}
+.feature-card h3{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:10px}
+.feature-card p{font-size:.85rem;line-height:1.6;color:var(--muted)}
+.details-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:40px}
+.details-image{border-radius:28px;overflow:hidden;aspect-ratio:4/3;background:var(--cream-dark)}
+.details-image img{width:100%;height:100%;object-fit:cover}
+.details-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.details-list li{display:flex;align-items:center;gap:10px;font-size:.85rem;padding:10px 14px;background:var(--cream);border-radius:12px}
+.details-list li .ck{color:var(--gold);font-weight:700}
+
+/* ── CTA ── */
+.cta-section{padding:80px 0;background:var(--charcoal);text-align:center;color:var(--white)}
+.cta-section h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800}
+.cta-section p{color:rgba(255,255,255,.65);margin-top:12px;max-width:440px;margin-inline:auto}
+.cta-section .btn-whatsapp{margin-top:28px;background:var(--whatsapp);color:var(--white);box-shadow:0 4px 16px rgba(37,211,102,.3)}
+
+/* ── FOOTER ── */
+footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,255,.7);font-size:.82rem;line-height:1.6}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-inner .links{display:flex;gap:20px}
+.footer-inner a{transition:color .3s ease;color:rgba(255,255,255,.5)}
+.footer-inner a:hover{color:var(--gold)}
+
+@media(max-width:768px){.features-grid{grid-template-columns:1fr}.details-grid{grid-template-columns:1fr}.details-list{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav id="navbar"><div class="nav-inner">
+  <a href="index.html" class="nav-logo"><img src="images/a1logo.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="training.html">Training</a></li>
+    <li><a href="grooming.html">Grooming</a></li>
+    <li><a href="store.html">Store</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp" style="display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);padding:10px 20px;border-radius:60px;font-weight:600;font-size:.8rem;transition:all .3s ease;text-decoration:none">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      WhatsApp
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</div></nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Home</a>
+  <a href="index.html#about">About</a>
+  <a href="training.html">Training</a>
+  <a href="grooming.html">Grooming</a>
+  <a href="store.html">Store</a>
+  <a href="index.html#contact">Contact</a>
+  <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp" style="display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);padding:12px 28px;border-radius:60px;font-weight:600;font-size:.9rem;text-decoration:none">WhatsApp Us</a>
+</div>
+
+<section class="page-hero">
+  <h1>Boarding &amp; Kennels</h1>
+  <p>A safe, comfortable, and loving home away from home for your pet with round-the-clock professional care.</p>
+</section>
+
+<section class="content-section">
+  <div class="container">
+    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto">
+      <span class="section-label">Boarding Facilities</span>
+      <h2 class="section-title">A Home Away<br>from Home</h2>
+      <p class="section-sub" style="margin-inline:auto">Whether you're traveling, busy at work, or need temporary care, our boarding facility provides a clean, safe, and loving environment for your pet with professional supervision at all times.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="icon">🏠</div>
+        <h3>Comfortable Kennels</h3>
+        <p>Clean, spacious, and well-ventilated kennels designed for your pet's comfort. Each kennel is sanitized daily and equipped with comfortable bedding.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="icon">👁️</div>
+        <h3>24/7 Supervision</h3>
+        <p>Round-the-clock monitoring by our trained staff. Your pet is never alone, and any health or behavioral changes are addressed immediately.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="icon">🎾</div>
+        <h3>Exercise &amp; Playtime</h3>
+        <p>Regular exercise sessions, playtime, and walks to keep your pet active, stimulated, and happy throughout their stay with us.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="icon">🍗</div>
+        <h3>Nutritious Meals</h3>
+        <p>Balanced, nutritious meals provided according to your pet's dietary requirements. We also accommodate special diets and feeding schedules.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="icon">🩺</div>
+        <h3>Medical Care</h3>
+        <p>Regular health check-ups during the stay. We have protocols in place for any medical needs and coordinate with veterinarians when required.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="icon">🚗</div>
+        <h3>Pick-up &amp; Drop-off</h3>
+        <p>Convenient pick-up and drop-off services available to make the boarding process hassle-free for pet parents across Shillong.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content-section" style="background:var(--cream-dark)">
+  <div class="container">
+    <div class="details-grid">
+      <div class="details-image reveal">
+        <img src="images/7177680652812423.jpg" alt="Boarding facility" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'">
+      </div>
+      <div class="reveal reveal-delay-2">
+        <span class="section-label">Why Board with Us</span>
+        <h2 class="section-title">Peace of Mind<br>While You're Away</h2>
+        <p class="section-sub">We understand that leaving your pet can be stressful. That's why we've built a facility and team that prioritizes safety, comfort, and happiness above everything else.</p>
+        <ul class="details-list">
+          <li><span class="ck">✓</span> Clean, sanitized facilities</li>
+          <li><span class="ck">✓</span> Trained &amp; caring staff</li>
+          <li><span class="ck">✓</span> Individual &amp group play</li>
+          <li><span class="ck">✓</span> Regular photo updates</li>
+          <li><span class="ck">✓</span> Medication administration</li>
+          <li><span class="ck">✓</span> Flexible booking options</li>
+        </ul>
+        <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:28px;display:inline-flex">Book a Stay</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container reveal">
+    <h2>Need a Safe Place for<br>Your Pet to Stay?</h2>
+    <p>Contact us to check availability, pricing, and book your pet's stay.</p>
+    <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn btn-whatsapp" style="display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:60px;font-weight:600;font-size:.9rem;border:none;cursor:pointer;text-decoration:none">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      Book via WhatsApp
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span>© 2026 A-1 Enterprises. Passion Turned Profession.</span>
+      <div class="links">
+        <a href="index.html">Home</a>
+        <a href="training.html">Training</a>
+        <a href="grooming.html">Grooming</a>
+        <a href="store.html">Store</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const hamburger=document.getElementById('hamburger');
+const mobileNav=document.getElementById('mobileNav');
+hamburger.addEventListener('click',()=>{
+  hamburger.classList.toggle('active');
+  mobileNav.classList.toggle('open');
+  document.body.style.overflow=mobileNav.classList.contains('open')?'hidden':'';
+});
+mobileNav.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{
+  hamburger.classList.remove('active');
+  mobileNav.classList.remove('open');
+  document.body.style.overflow='';
+}));
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>20));
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('active');observer.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
