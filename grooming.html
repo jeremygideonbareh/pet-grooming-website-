@@ -15,7 +15,7 @@ body{
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
 }
-img{display:block;width:100%;height:auto}
+img{display:block;max-width:100%;height:auto}
 
 /* ── LOADING ── */
 .loading-overlay{
@@ -376,6 +376,26 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   .serv-heading{font-size:1.8rem}
   .hours-card{grid-template-columns:1fr;gap:6px;padding:18px}
   .hours-card .day,.hours-card .time{text-align:left;font-size:.85rem}
+  .section{padding:40px 16px}
+  .hero h1{font-size:2rem}
+}
+@media(max-width:360px){
+  .hero h1{font-size:1.6rem}
+  .hero-sub{font-size:.85rem}
+  .section{padding:32px 14px}
+  .section-title{font-size:1.6rem}
+  .reviews-header h2{font-size:1.6rem}
+  .review-card{padding:18px 14px}
+  .review-card blockquote{font-size:.82rem}
+  .cinematic-divider{height:40vh;min-height:240px}
+  .services-wrap{padding:50px 16px}
+  .serv-heading{font-size:1.4rem}
+  .serv-card{height:280px;padding:20px 16px}
+  .cta{padding:50px 16px}
+  .cta h2{font-size:1.5rem}
+  .hours-card{padding:14px}
+  .hours-card .day,.hours-card .time{font-size:.78rem}
+  .float-home{bottom:16px;right:16px;width:42px;height:42px;font-size:1rem}
 }
 </style>
 </head>

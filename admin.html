@@ -88,13 +88,13 @@ input,textarea,select,button{font-family:inherit}
 .dashboard{min-height:100vh}
 .dash-header{
   background:var(--charcoal);padding:20px 24px;
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
 }
 .dash-header h2{
   font-family:'Playfair Display',Georgia,serif;
   font-size:1.2rem;font-weight:800;color:var(--white);
 }
-.dash-header .dash-actions{display:flex;align-items:center;gap:12px}
+.dash-header .dash-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .dash-header .dash-actions span{color:rgba(255,255,255,.5);font-size:.8rem}
 .dash-btn{
   padding:8px 18px;border-radius:60px;border:none;
@@ -164,6 +164,22 @@ input,textarea,select,button{font-family:inherit}
 @media(max-width:480px){
   .prod-table th:nth-child(3),.prod-table td:nth-child(3){display:none}
   .dash-stats{grid-template-columns:1fr}
+  .dash-header{padding:16px;flex-direction:column;align-items:stretch;text-align:center}
+  .dash-header .dash-actions{justify-content:center}
+  .dash-body{padding:20px 16px}
+  .modal{padding:24px 20px}
+  .login-card{padding:32px 24px}
+}
+@media(max-width:360px){
+  .dash-header h2{font-size:1rem}
+  .dash-header .dash-actions span{display:none}
+  .dash-btn{padding:6px 14px;font-size:.75rem}
+  .dash-btn-sm{padding:5px 10px;font-size:.7rem}
+  .modal{padding:20px 14px}
+  .modal h2{font-size:1.05rem}
+  .form-group input,.form-group textarea{padding:10px 12px;font-size:.8rem}
+  .login-card{padding:28px 18px}
+  .login-card input{padding:12px 14px;font-size:.85rem}
 }
 
 /* ── MODAL ── */

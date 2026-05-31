@@ -81,7 +81,40 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
 .footer-inner a{transition:color .3s ease;color:rgba(255,255,255,.5)}
 .footer-inner a:hover{color:var(--gold)}
 
-@media(max-width:768px){.features-grid{grid-template-columns:1fr}.details-grid{grid-template-columns:1fr}.details-list{grid-template-columns:1fr}}
+@media(max-width:768px){
+  .features-grid{grid-template-columns:1fr}
+  .details-grid{grid-template-columns:1fr}
+  .details-list{grid-template-columns:1fr}
+  .content-section{padding:60px 0}
+  .page-hero{padding:100px 24px 60px}
+}
+@media(max-width:640px){
+  .page-hero{padding:90px 20px 50px}
+  .page-hero h1{font-size:clamp(1.6rem,5vw,2.2rem)}
+  .page-hero p{font-size:.9rem}
+  .content-section{padding:50px 0}
+  .feature-card{padding:24px 18px}
+  .features-grid{gap:16px}
+  .cta-section{padding:60px 0}
+  .cta-section h2{font-size:clamp(1.4rem,5vw,1.8rem)}
+}
+@media(max-width:480px){
+  .page-hero{padding:80px 16px 40px}
+  .content-section{padding:40px 0}
+  .section-title{font-size:clamp(1.4rem,5vw,1.6rem)}
+  .section-sub{font-size:.85rem}
+  .feature-card h3{font-size:1rem}
+  .feature-card p{font-size:.8rem}
+  .details-list li{font-size:.8rem;padding:8px 12px}
+  .cta-section{padding:50px 0}
+  .btn{padding:12px 24px;font-size:.82rem}
+}
+@media(max-width:360px){
+  .page-hero{padding:72px 14px 32px}
+  .page-hero h1{font-size:clamp(1.4rem,5vw,1.6rem)}
+  .content-section{padding:32px 0}
+  .feature-card{padding:20px 14px}
+}
 </style>
 </head>
 <body>

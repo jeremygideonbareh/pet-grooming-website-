@@ -289,19 +289,49 @@ footer{
 @media(max-width:900px){
   .products-grid{grid-template-columns:repeat(3,1fr)}
 }
-@media(max-width:640px){
-  .products-grid{grid-template-columns:repeat(2,1fr);gap:16px}
-}
-@media(max-width:400px){
-  .products-grid{grid-template-columns:1fr;max-width:300px;margin:0 auto}
-}
 @media(max-width:768px){
+  .products-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .nav-links{display:none}
+  .nav-actions .btn-whatsapp{display:none}
+  .hamburger{display:flex}
   .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
   .footer-brand{grid-column:1/-1}
+  .store-hero{padding:100px 20px 50px}
+}
+@media(max-width:640px){
+  .products-grid{grid-template-columns:repeat(2,1fr);gap:14px}
+  .store-hero{padding:90px 16px 40px}
+  .store-hero h1{font-size:clamp(1.6rem,5vw,2rem)}
+  .store-hero p{font-size:.9rem}
+  .controls{padding:24px 16px 4px}
+  .categories{gap:8px}
+  .cat-btn{padding:6px 14px;font-size:.72rem}
+  .products-section{padding-bottom:50px}
 }
 @media(max-width:480px){
+  .products-grid{grid-template-columns:1fr;max-width:340px;margin:0 auto}
+  .store-hero{padding:80px 14px 36px}
+  .store-hero h1{font-size:clamp(1.4rem,5vw,1.8rem)}
+  .controls{padding:20px 14px 4px}
+  .search-wrap input{padding:10px 14px 10px 38px;font-size:.82rem}
+  .cat-btn{padding:5px 12px;font-size:.7rem}
+  .products-section{padding-bottom:40px}
+  .modal{padding:24px 20px}
   .footer-grid{grid-template-columns:1fr}
   .footer-bottom{flex-direction:column;gap:12px;text-align:center}
+  .footer-bottom-links{justify-content:center}
+}
+@media(max-width:360px){
+  .store-hero{padding:72px 12px 28px}
+  .store-hero h1{font-size:clamp(1.2rem,5vw,1.4rem)}
+  .products-grid{max-width:280px;gap:12px}
+  .product-card{padding:16px}
+  .product-card h3{font-size:.85rem}
+  .product-card .price{font-size:.9rem}
+  .product-card .desc{font-size:.75rem}
+  .modal{padding:20px 16px}
+  .modal h2{font-size:1.1rem}
+  .form-group input,.form-group textarea{padding:10px 12px;font-size:.82rem}
 }
 </style>
 </head>
@@ -408,10 +438,10 @@ footer{
         </div>
         <p>Premium pet care services and supplies in Shillong, Meghalaya. Certified trainers, professional groomers, and top-quality pet products — all under one roof.</p>
         <div style="display:flex;gap:10px;margin-top:16px">
-          <a href="https://www.facebook.com/SANGPRETI/" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--brown);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">📘</a>
-          <a href="https://instagram.com/boxerfosterhome" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--brown);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">📸</a>
-          <a href="https://youtu.be/Lgpqqi8ZEQI" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--brown);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">▶️</a>
-          <a href="https://g.co/kgs/knmDPK" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--brown);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">📍</a>
+          <a href="https://www.facebook.com/SANGPRETI/" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--charcoal-soft);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">📘</a>
+          <a href="https://instagram.com/boxerfosterhome" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--charcoal-soft);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">📸</a>
+          <a href="https://youtu.be/Lgpqqi8ZEQI" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--charcoal-soft);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">▶️</a>
+          <a href="https://g.co/kgs/knmDPK" target="_blank" rel="noopener" style="width:34px;height:34px;border-radius:50%;background:var(--charcoal-soft);display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;color:rgba(255,255,255,.7);transition:.3s">📍</a>
         </div>
       </div>
       <div class="footer-col">
