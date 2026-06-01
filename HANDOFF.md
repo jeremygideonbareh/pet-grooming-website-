@@ -11,7 +11,7 @@ A complete multi-page pet services website for **A-1 Enterprises** based in **Sh
 - **WhatsApp:** +91 8891 000 000
 - **Business Hours:** Mon–Sat 10:00 AM – 6:00 PM
 - **Address:** Block-C, Nongrimmaw, Laitumkhrah, Shillong, Meghalaya 793011
-- **Google Maps:** https://g.co/kgs/knmDPK
+- **Google Maps:** https://g.co/kg/knmDPK
 - **YouTube Video:** https://youtu.be/Lgpqqi8ZEQI ("SHILLONG MYNTA || DOG TRAINING AS AN ALTERNATE CAREER OPTION")
 - **Founder:** Mrs. Francisca S. Sangma (acknowledged in founder's note)
 
@@ -21,7 +21,7 @@ A complete multi-page pet services website for **A-1 Enterprises** based in **Sh
 | Facebook | https://www.facebook.com/SANGPRETI/ |
 | Instagram | https://instagram.com/boxerfosterhome |
 | YouTube | https://youtu.be/Lgpqqi8ZEQI |
-| Google Business | https://g.co/kgs/knmDPK |
+| Google Business | https://g.co/kg/knmDPK |
 
 ---
 
@@ -29,287 +29,375 @@ A complete multi-page pet services website for **A-1 Enterprises** based in **Sh
 
 ```
 aiwebsite/
-├── index.html        ─ Main homepage (all sections, branding, gallery)
-├── training.html     ─ Training & Rehabilitation detail page
-├── grooming.html     ─ Grooming detail page (pre-existing, updated)
-├── boarding.html     ─ Boarding & Kennels detail page
-├── store.html        ─ Pet store with product grid & inquiry modal
-├── admin.html        ─ Password-protected admin CRUD dashboard
+├── index.html            ─ Main homepage (all sections, branding, gallery)
+├── training.html         ─ Training & Rehabilitation detail page
+├── grooming.html         ─ Grooming detail page
+├── boarding.html         ─ Boarding & Kennels detail page
+├── store.html            ─ Pet store with product grid & inquiry modal
+├── admin.html            ─ Password-protected admin dashboard (Products + Content + Training + Grooming + Boarding tabs)
+├── content-loader.js     ─ Shared JS: reads localStorage content and applies to every page
 ├── images/
-│   ├── a1logo.jpeg         ─ Company logo
-│   ├── welcome.jpeg        ─ Welcome/facility image
-│   ├── review1.png         ─ Google review screenshots
+│   ├── a1logo.jpeg              ─ Company logo
+│   ├── welcome.jpeg             ─ Welcome/facility image
+│   ├── review1.png              ─ Google review screenshots
 │   ├── review2.png
 │   ├── review3.png
 │   ├── review4.png
 │   ├── review5.png
-│   ├── 4081455907607392.jpg  ─ Training/facility photos
+│   ├── 4081455907607392.jpg     ─ Training/facility photos
 │   ├── 2533343538804035.jpg
 │   ├── 7177680652812423.jpg
-│   ├── herosection.jpg       ─ Hero section image
-│   ├── prevent-mats.jpg      ─ Grooming mat image
-│   └── frames/               ─ Video frames folder
-├── HANDOFF.md        ─ THIS FILE
-└── pupbar.html       ─ DELETED (was old redundant page)
+│   ├── herosection.jpg          ─ Hero section image
+│   ├── herosectionvideo.mp4     ─ Hero section background video
+│   ├── prevent-mats.jpg         ─ Grooming mat image
+│   └── frames/                  ─ Video frames folder
+├── .cloudflareignore            ─ Excludes .git/ and dev files from deployment
+├── wrangler.jsonc               ─ Cloudflare Workers config (auto-generated)
+├── .gitignore
+├── .nojekyll
+├── HANDOFF.md                   ─ THIS FILE
+└── base.html                    ─ Intended template, unused (empty)
 ```
 
 ---
 
 ## Page-by-Page Breakdown
 
-### `index.html` — Homepage
-The main landing page. Contains **all sections inline** (no partial loading). Sections in order:
+### `index.html` — Homepage (957 lines)
+The main landing page. Sections in order:
 
-1. **Nav** — Fixed top bar with logo, links (About, Services, Grooming, Store, Gallery, Contact), WhatsApp CTA button, hamburger mobile menu
-2. **Hero** — Full-viewport dark gradient overlay on background image. Badge "Since 2020 · Shillong, Meghalaya". Tagline "Passion Turned Profession". H1: "Building the Future of Pet & Working Dog Services in Northeast India". CTA buttons + service keywords list
-3. **About** — Split layout: text (journey story + quote) on left, image + founder's note card on right. Mentions Mrs. Francisca S. Sangma
-4. **Services** — 3-column grid of 6 service cards (Training, Grooming, Boarding, Pet Store, Rehabilitation, Working Dog Development). Each links to relevant detail page
-5. **Training & Rehab** — Split layout with image. Feature list (6 items). Links to `training.html`
-6. **Grooming Overview** — Split layout with image. Links to `grooming.html`
-7. **Boarding** — Split layout with image. Feature checklist (6 items). Links to `boarding.html`
-8. **Gallery** — Dynamic masonry grid populated by JS from `GALLERY_IMAGES[]` array. Lightbox on click. Uses local `images/` files
-9. **Vision · Mission · Goals** — 3-card grid. Vision paragraph, Mission bullet list, Goals short/long-term
-10. **USP** — Dark section. 6 unique selling points in cards
-11. **Social Responsibility** — 4 cards (Cleanliness Drives, Dustbin Campaigns, Awareness Programs, Ethical Practices)
-12. **Testimonials** — Dark section. 3 testimonial cards with star ratings
-13. **Future Expansion** — 2 cards (Vet Clinic "Coming Soon", Eco Stay "Coming Soon") with styled badges
-14. **CTA / Contact** — WhatsApp button + social link row
-15. **Footer** — 4-column grid: brand + social icons, quick links, services, contact info
+1. **Nav** — Fixed top bar with logo, links (About, Services, Dog Training, Grooming, Store, Gallery), WhatsApp CTA, hamburger mobile menu
+2. **Page Loader** — Logo + brand name + gold spinner, min 1.2s display, fades out on load
+3. **Hero** — Full-viewport dark gradient overlay on background image. Headline "A-1 Enterprises", badge "Since 2020 · Shillong, Meghalaya", "About Us" CTA
+4. **Services** — 6-card grid (Training, Grooming, Boarding, Pet Store, Rehabilitation, Working Dog). Section label: "Passion Turned Profession"
+5. **About** — Split layout: text (journey story, quote, founder note) + image. Mentions Mrs. Francisca S. Sangma
+6. **Gallery** — Dynamic masonry grid populated by JS from `GALLERY_IMAGES[]` array. Lightbox on click
+7. **Why Us** — Vision, Mission, Goals (3 cards) + 6 USP cards + 4 Social Responsibility cards
+8. **Testimonials** — 3 testimonial cards with star ratings
+9. **Future Expansion** — 2 cards (Vet Clinic "Coming Soon", Eco Stay "Coming Soon")
+10. **CTA / Contact** — WhatsApp button + social link row
+11. **Footer** — 4-column grid: brand + social icons, quick links, services, contact info
 
-### `training.html` — Training Detail Page
-Full detail page for dog training & rehabilitation services. Includes:
-- Hero section with training-specific background
-- Programs grid (Obedience, Behavioral, Rehabilitation, Protection, Detection, Puppy Socialization, Working Dog)
-- Approach/Methodology section
-- Why Choose Us section
-- CTA section with WhatsApp button
-- Footer with social links and site navigation
+### `training.html` — Training Detail Page (360 lines)
+Full detail page with:
+- Hero section (heading, subtext, background image)
+- **Our Programs** — 6 program cards (image, icon, title, description) — managed via admin
+- **Training Gallery** — 6-image gallery grid — managed via admin
+- **How It Works** — 4-step process (Assessment → Custom Plan → Training Sessions → Ongoing Support) — managed via admin
+- **Approach** — Split layout: text + benefits list + image — managed via admin
+- CTA section — WhatsApp button
+- Footer
 
-### `grooming.html` — Grooming Detail Page
-Pre-existing grooming detail page that was updated with:
-- Updated navigation links
-- Social media buttons
-- New unified footer matching the rest of the site
-- Floating Home button (bottom-right corner)
+### `grooming.html` — Grooming Detail Page (665 lines)
+Pre-existing grooming page, updated with:
+- Loading overlay with brand text
+- Hero with video background + badge + heading + CTA
+- **About** — Image, welcome text, hours card (7 days), stats row (3 items) — managed via admin
+- **Services** — Image cards (5 items) — managed via admin
+- **Gallery** — Auto-scrolling image slider (5 images duplicated) — managed via admin
+- **Reviews** — Background image + 2 review cards — managed via admin
+- CTA section, Footer, Floating Home button
 
-### `boarding.html` — Boarding Detail Page
-Full detail page for boarding & kennels services. Includes:
-- Hero section with kennel imagery
-- Features grid (secure facility, 24/7 care, exercise, nutrition, medical, pickup/drop)
-- Details section (daily routine, what to bring)
-- CTA with WhatsApp
-- Footer with social links
+### `boarding.html` — Boarding Detail Page (265 lines)
+Full detail page with:
+- Hero section (heading, subtext, background image)
+- **Facilities** — 6 feature cards (icon, title, description) — managed via admin
+- **Details** — Split layout: image + text + details list — managed via admin
+- CTA section — WhatsApp button
+- Footer
 
-### `store.html` — Pet Store Page
-Product catalog page with:
-- **Nav** — Links to Home, Training, Grooming, Boarding, Store, Admin
-- **Search bar** — Filters products in real-time
-- **Category filters** — Dog Food, Treats, Toys, Accessories, Grooming, Health
-- **Product grid** — Responsive cards with image, name, price, description, "Inquire" button
-- **Inquiry modal** — Form with product name (auto-filled), customer name, phone, message. On submit, opens WhatsApp with pre-filled message
-- **Footer** — Brand + social, quick links, shop categories, contact info
-- **Data source:** `localStorage` key `a1_store_products`
+### `store.html` — Pet Store Page (676 lines)
+Product catalog with:
+- Nav + search bar + category filters
+- Product grid with Inquire modal
+- Data source: `localStorage` key `a1_store_products`
+- Footer
 
-### `admin.html` — Admin Dashboard
-Password-protected product management CRUD. See dedicated section below.
+### `admin.html` — Admin Dashboard (extended, ~1400+ lines)
+**Tabs:** Products | Content | Training | Grooming | Boarding
+
+See dedicated Admin System section below.
+
+### `content-loader.js` — Shared Content Loader
+A centralized JS file loaded on every page. On `DOMContentLoaded`:
+1. Reads `a1_site_content` from `localStorage`
+2. Detects current page via `<body data-page="...">` attribute
+3. Applies only the relevant section of data to that page's DOM
+4. For repeaters: clears container and rebuilds from data (handles variable item counts)
+5. For images: updates `src` attributes with `onerror` fallbacks
+6. If no saved data exists, hardcoded HTML displays as-is (silent fallback)
 
 ---
 
 ## Admin System — Complete Technical Details
 
 ### Architecture
-Entirely **client-side**. No backend server, no database, no API. All data lives in the browser's `localStorage`. The admin authentication is simulated via SHA-256 hashing.
+Client-side only. No backend server. All data in `localStorage`. Two keys:
+- `a1_store_products` — Product catalog data
+- `a1_site_content` — All site content (Hero, About, Services, WhyUs, Gallery, Testimonials, Footer + Training + Grooming + Boarding sections)
 
-### Authentication Flow
-
-1. **Login screen** overlays the page on load (if no valid session)
-2. User enters password, clicks "Sign In"
-3. JavaScript appends a **static salt** (`A1-ENTERPRISES::2026`) to the password
-4. Computes **SHA-256 hash** of `password + salt` using the **Web Crypto API** (`crypto.subtle.digest`)
-5. Compares against the hardcoded hash `3a39e22d9cc93390556fcc5ba1014374fb56195337fd6b6dd5e2af25af9bdd6c`
-6. On match: creates a **session token** (32 random bytes → hex string) stored in `sessionStorage` with a **24-hour expiry** (`SESSION_KEY = 'a1_admin_session'`)
-7. On mismatch: increments a **lockout counter** in `sessionStorage` (`LOCKOUT_KEY = 'a1_admin_lockout'`)
-8. After **5 failed attempts**, login is locked with **exponential backoff** (60s, 120s, 240s, max 300s)
-
-### Security Notes (Important!)
-**This is not real security.** Everything is client-side:
-- The password hash is visible in the source code
-- Anyone can read `admin.html`, extract the hash, and attempt offline brute force
-- The salt is visible in plaintext
-- Session tokens are stored in `sessionStorage` (cleared when browser tab closes)
-- A motivated user can bypass the login entirely by setting `sessionStorage` manually
-- **For production, replace this with a real backend** (PHP, Node.js, Firebase, Supabase, etc.)
-
-### Admin Password
+### Authentication
 - **Password:** `admin123`
 - **Salt:** `A1-ENTERPRISES::2026`
 - **Stored Hash:** `3a39e22d9cc93390556fcc5ba1014374fb56195337fd6b6dd5e2af25af9bdd6c`
+- SHA-256 via Web Crypto API, session token in `sessionStorage` (24h expiry)
+- Lockout after 5 failed attempts (exponential backoff)
 
-### CRUD — Product Management
-
-**Storage Key:** `a1_store_products` (same key used by `store.html`)
+### Tab: Products — CRUD
+**Storage Key:** `a1_store_products`
 
 **Product Schema:**
 ```javascript
 {
-  id: 'p' + Date.now() + randomString,   // unique ID
-  name: string,                           // product name (max 100 chars)
-  price: string,                          // e.g. "₹1,200" (any format)
-  cat: string,                            // category ID (e.g. "dog-food")
-  catLabel: string,                       // display name (e.g. "Dog Food")
-  desc: string,                           // product description (max 300 chars)
-  img: string                             // image URL or data URI ('' if none)
+  id: 'p' + Date.now() + randomString,
+  name: string,
+  price: string,        // e.g. "₹1,200"
+  cat: string,           // category ID (e.g. "dog-food")
+  catLabel: string,      // display name (e.g. "Dog Food")
+  desc: string,          // max 300 chars
+  img: string            // URL or data URI
 }
 ```
 
-**Categories:**
-| ID | Label |
+**Categories:** Dog Food, Treats, Toys, Accessories, Grooming, Health
+
+**Dashboard:** Stats row, search, table (Image, Name, Price, Category, Description, Actions), Add/Edit/Delete modals. Image upload converts to data URI.
+
+### Tab: Content — Homepage Editor
+Editable sections (all stored under `a1_site_content`):
+
+| Section | Fields |
 |---|---|
-| `dog-food` | Dog Food |
-| `treats` | Treats |
-| `toys` | Toys |
-| `accessories` | Accessories |
-| `grooming` | Grooming |
-| `health` | Health |
+| Hero | headline, badge, bgImage URL, btnText |
+| About | label, heading, para1–para4, image URL, quoteText, quoteCite, founderNote, founderSub, founderSign |
+| Services | label, heading, subtext, repeater (icon, title, desc, link) |
+| Why Us | label, heading, subtext, repeater (icon, title, desc) |
+| Social Responsibility | repeater (icon, title, desc) |
+| Gallery | textarea (one URL per line) |
+| Testimonials | repeater (stars number, name, quote) |
+| Footer | copyright, tagline, social URLs (fb, ig, yt, gm), email, whatsapp |
 
-**Dashboard Features:**
-- **Stats row** — Total products, categories count, total value, food items count
-- **Search** — Filters products by name, category, or description (case-insensitive)
-- **Table** — Columns: Image, Name, Price, Category, Description, Actions (Edit/Delete)
-- **Add Product** — Form modal with: image upload (converted to data URI), name, price, category dropdown, description
-- **Edit Product** — Same form pre-filled. Preserves existing image unless a new one is uploaded
-- **Delete Product** — Confirmation modal before deletion
+### Tab: Training — Training Page Editor
+Editable sections (nested under `a1_site_content.training`):
 
-### Default Product Seed Data
-On first load, if `localStorage` key `a1_store_products` is empty, the store page seeds **16 default products** across all 6 categories.
+| Section | Fields |
+|---|---|
+| Hero | heading, subtext, bgImage URL |
+| Programs Header | label, title, subtext |
+| Program Cards | repeater (img URL, icon, title, desc) — 6 items |
+| Gallery Header | label, title, subtext |
+| Gallery Images | textarea (one URL per line) |
+| Process Header | label, title, subtext |
+| Process Steps | repeater (num, title, desc) — 4 items |
+| Approach | label, title, para1, para2, benefits (textarea, one per line), image URL |
+| CTA | heading, subtext, btnText, btnLink |
+| Footer | copyright |
+
+### Tab: Grooming — Grooming Page Editor
+Editable sections (nested under `a1_site_content.grooming`):
+
+| Section | Fields |
+|---|---|
+| Loading Overlay | brand, brandSmall |
+| Hero | badge, headingMain, headingEm, subtext, btnText, posterUrl, videoUrl |
+| About | image URL, welcomeHeading, welcomePara, hours (7 day/time pairs), stats (3 items with num + label) |
+| Services | badge, heading, desc, btnText, image cards repeater (img URL, label) — 5 items |
+| Gallery | title, subtext, images (textarea, one per line) |
+| Reviews | badge, heading, subtext, bgImage URL, review cards repeater (name, stars, text) — 2 items |
+| CTA | heading, subtext, btnText |
+| Footer | brand, tagline, copyright, social URLs (fb, ig, yt, gm), address lines (3), contact links (whatsApp URL, email) |
+
+### Tab: Boarding — Boarding Page Editor
+Editable sections (nested under `a1_site_content.boarding`):
+
+| Section | Fields |
+|---|---|
+| Hero | heading, subtext, bgImage URL |
+| Features Header | label, title, subtext |
+| Feature Cards | repeater (icon, title, desc) — 6 items |
+| Details | label, title, paragraph, image URL, detailsList (textarea, one per line), btnText |
+| CTA | heading, subtext, btnText, btnLink |
+| Footer | copyright |
+
+### Save/Load Mechanism
+- **Save button** (single "Save All Changes"): collects all fields from all 4 content tabs, merges into one `a1_site_content` object, writes to localStorage
+- **Tab switch**: when switching to Content/Training/Grooming/Boarding, the form is populated from the saved data in localStorage (if any)
+- **Products tab**: separate save button that writes to `a1_store_products`
 
 ---
 
-## Technical Architecture
+## Content-Loader Architecture
 
-### Design System
-- **CSS Custom Properties** (`--cream`, `--charcoal`, `--gold`, etc.) for consistent theming
+### How It Works
+
+```
+Admin saves → localStorage.setItem('a1_site_content', JSON.stringify(allData))
+                    ↓
+Page loads → localStorage.getItem('a1_site_content')
+                    ↓
+             content-loader.js parses data
+                    ↓
+             Checks <body data-page="index|training|grooming|boarding|store">
+                    ↓
+             Applies only relevant sections to that page's DOM
+                    ↓
+             If no data → hardcoded HTML stays unchanged
+```
+
+### `a1_site_content` Data Structure (top-level keys)
+```javascript
+{
+  hero: { ... },              // Used by: index.html
+  about: { ... },             // Used by: index.html
+  services: { ... },          // Used by: index.html
+  whyUs: { ... },             // Used by: index.html
+  social: [ ... ],            // Used by: index.html
+  gallery: [ ... ],           // Used by: index.html
+  testimonials: [ ... ],      // Used by: index.html
+  footer: { ... },            // Used by: index.html
+  training: { ... },          // Used by: training.html
+  grooming: { ... },          // Used by: grooming.html
+  boarding: { ... }           // Used by: boarding.html
+}
+```
+
+### Page Detection
+Each page has `<body data-page="train">` (short code). In `content-loader.js`:
+```javascript
+const page = document.body.dataset.page; // "home" | "train" | "groom" | "board" | "store"
+```
+
+### Loading Behavior
+- **index.html** (`data-page="home"`): loads hero, about, services, whyUs, social, gallery, testimonials, footer
+- **training.html** (`data-page="train"`): loads training.{hero, programs, gallery, process, approach, cta, footer}
+- **grooming.html** (`data-page="groom"`): loads grooming.{hero, about, services, gallery, reviews, cta, footer}
+- **boarding.html** (`data-page="board"`): loads boarding.{hero, features, details, cta, footer}
+- **store.html** (`data-page="store"`): currently no content sections (only product data which is separate)
+- If no saved data: does nothing, hardcoded HTML displays as-is
+- If a specific section is missing from saved data: skips that section, hardcoded content remains
+
+### Repeater Handling
+For repeatable items (service cards, program cards, feature cards, etc.), the script:
+1. Clears the container element's children
+2. Loops over the data array
+3. Creates new DOM elements matching the original HTML template structure
+4. Appends them to the container
+
+This ensures variable item counts are handled correctly (unlike in-place text replacement).
+
+---
+
+## Security & Deployment
+
+### `.cloudflareignore`
+```
+.git/
+.gitignore
+.wrangler/
+*.md
+scrolling efffect/
+```
+Prevents `.git/` folder and dev files from being uploaded to Cloudflare deployment.
+
+### Deployment to Cloudflare Pages
+1. Go to **Cloudflare Dashboard** → **Workers & Pages** → **Create** → **Pages**
+2. **Connect to Git** → select this GitHub repo → **Begin setup**
+3. **Build settings:** leave everything blank (no build command, output directory: default)
+4. Click **Deploy**
+5. (Optional) Add custom domain in Pages dashboard
+
+### Current Cloudflare Worker (Legacy)
+A Worker deployment exists at `aenterprisewebsite.cloudlyconfusing.workers.dev` from a previous `wrangler deploy` command. Once Cloudflare Pages is set up, the Worker deployment should be deleted from the Cloudflare dashboard to avoid confusion.
+
+---
+
+## Design System
+
+- **CSS Custom Properties:** `--cream`, `--cream-dark`, `--charcoal`, `--charcoal-soft`, `--gold`, `--gold-light`, `--gold-dark`, `--muted`, `--border`, `--white`, `--whatsapp`, `--whatsapp-dark`
 - **Fonts:** Inter (body), Playfair Display (headings) via Google Fonts
-- **Animations:** `IntersectionObserver`-based scroll reveal (`.reveal` class), fade-up with staggered delays (`.reveal-delay-1` through `-4`)
-- **Responsive breakpoints:**
-  - `1024px` — Desktop nav → hamburger menu
-  - `900px` — Multi-column grids → single column
-  - `768px` — Section padding reduced (100px→60px), footer collapses
-  - `640px` — Hero padding reduced, headings smaller, gallery 2-col
-  - `480px` — Hero padding further reduced, sections 40px padding, buttons full-width, footers 1-col
-  - `360px` — iPhone SE support: tightest padding, smallest headings, gallery 1-col, admin session info hidden
+- **Animations:** `IntersectionObserver`-based scroll reveal (`.reveal`), fade-up with staggered delays
+- **Page Loader:** Logo + brand + gold spinner, min 1.2s, fades out on `window.onload`
 
-### Navigation Pattern
-- Fixed top nav with `backdrop-filter: blur(20px)` for frosted glass effect
-- Mobile: hamburger toggle → full-screen overlay menu
-- Scroll shadow added via `.scrolled` class
-
-### Image Handling
-- Images sourced from `images/` folder (local files)
-- All images have `onerror` fallbacks (hide element or show gradient background)
-- Gallery uses hardcoded array `GALLERY_IMAGES` in index.html JS
-- Product images can be either URLs or data URIs (from admin upload)
-
-### Lightbox
-- Simple JS lightbox for gallery (click to open, click backdrop or × to close)
-- Body scroll locked when open
-
-### Inquiry Flow (Store)
-1. User clicks "Inquire" on a product card
-2. Modal opens with product name pre-filled
-3. User fills name, phone, message
-4. Submit opens WhatsApp with pre-composed message containing product name, name, phone, and message
-5. Format: `Hi A-1 Enterprises! I'm interested in: [product name]. Name: [name], Phone: [phone]. [message]`
-
----
-
-## Hybrid Architecture Decision
-
-The site uses a **hybrid approach**:
-- **Homepage (`index.html`)** — Contains overview/summary of every service section
-- **Detail pages** (`training.html`, `grooming.html`, `boarding.html`) — Deep-dive into each service
-- **Store** (`store.html`) — Standalone product catalog page
-- **Admin** (`admin.html`) — Standalone management page
-
-Each detail page links back to `index.html` and to other pages. The footer on every page includes links to all other pages + social media.
+### Responsive Breakpoints
+| Breakpoint | Changes |
+|---|---|
+| 1024px | Desktop nav → hamburger menu |
+| 900px | Multi-column grids → single column |
+| 768px | Section padding 100px→60px, footer collapses |
+| 640px | Hero padding reduced, headings smaller, gallery 2-col |
+| 480px | Sections 40px padding, buttons full-width, footers 1-col |
+| 360px | Tightest padding, gallery 1-col, admin session info hidden |
 
 ---
 
 ## Mobile Responsiveness
-
-The site was professionally audited and optimized for mobile with the following applied across all 6 pages:
-
-### Breakpoints Added
-
-| Page | Before | After |
-|------|--------|-------|
-| **index.html** | 1024, 900, 768, 640, 480 (out of order) | 1024, 900, 768, 640, 480, **360** (sequential) |
-| **training.html** | 1024, 768 | 1024, 768, 640, 480, **360** |
-| **boarding.html** | 1024, 768 | 1024, 768, 640, 480, **360** |
-| **grooming.html** | min/max 480 + slider bp | Added **360**, fixed `img{width:100%}` bug |
-| **store.html** | 900, 768, 640, 400 | 900, 768, 640, 480, **360** |
-| **admin.html** | 768, 480 | 768, 480, **360** |
-
-### Key Optimizations
-- **Section padding** reduced from 100px→50px at 640px, 40px at 480px (was never responsive before)
-- **Hero top padding** reduced from 120px→80px at 640px, 60px at 480px
-- **Headings** use `clamp()` to scale down at every breakpoint smoothly
-- **Buttons** go full-width on mobile (easier tap targets)
-- **Modal padding** reduced at 480px/360px to maximize content area
-- **Admin dashboard** header now wraps (`flex-wrap:wrap`), session info hidden at 360px
-- **Bug fix:** `--brown` undefined CSS variable in store.html replaced with `--charcoal-soft`
-- **Bug fix:** grooming.html `img{width:100%}` changed to `img{max-width:100%}` to prevent stretching
-- **Gallery** collapses to 2 columns at 640px, 1 column at 360px
-- **Floating home button** in grooming.html repositioned at 360px
+All pages have been professionally audited and optimized across 360px–1200px. Key fixes applied:
+- Section padding responsive at every breakpoint
+- Hero top padding adjusted per breakpoint
+- Headings use `clamp()` for smooth scaling
+- Buttons full-width on mobile
+- Gallery collapses 3-col → 2-col → 1-col
+- Admin dashboard header wraps, session info hidden at 360px
+- Bug fixes: `--brown` → `--charcoal-soft`, `img{width:100%}` → `max-width:100%`
 
 ---
 
-## Future Considerations
+## Known Issues & Future Improvements
 
-### Known Improvements Needed for Production
-1. **Backend authentication** — Replace client-side SHA-256 with real server-side auth
-2. **Database** — Replace `localStorage` with a real database (Firebase, Supabase, custom API)
-3. **Image hosting** — Upload product images to cloud storage instead of data URIs (which are inefficient)
-4. **Contact form** — Replace WhatsApp-only inquiries with email/backend form processing
-5. **Analytics** — Add Google Analytics or similar to track page views and conversions
-6. **SEO** — meta tags are present but could be improved; consider sitemap.xml
-7. **Performance** — Consider lazy-loading off-screen sections, image optimization, `font-display:swap`
-8. **HTTPS** — Ensure deployment uses HTTPS for security (especially for admin page)
+### Security (Critical)
+- Client-side authentication is **not real security** — the password hash is visible in source code
+- **For production:** replace with real backend (Supabase, Firebase, or custom API with server-side auth)
 
-### Fixed Items (no longer needed)
-- ❌ Mobile responsiveness: Added 360px breakpoint + reduced padding across all pages
-- ❌ `--brown` undefined CSS variable in store.html footer
-- ❌ grooming.html `img{width:100%}` → `max-width:100%`
-- ❌ admin dashboard header overflow on small screens
-- ❌ Media queries out of order in index.html
+### Future Enhancements
+1. **Real database** — Replace `localStorage` with cloud database for persistent cross-device data
+2. **Image hosting** — Upload images to Cloudflare Images, Cloudinary, or similar instead of data URIs
+3. **Contact form** — Replace WhatsApp-only with email/backend form processing
+4. **SEO** — Add sitemap.xml, structured data (JSON-LD), Open Graph tags
+5. **Analytics** — Add Google Analytics or Cloudflare Web Analytics
+6. **Performance** — Lazy-load off-screen images, optimize image sizes, `font-display: swap`
+7. **Vet Clinic page** — Currently "Coming Soon" on homepage
+8. **Eco Stay page** — Currently "Coming Soon" on homepage
+9. **Working Dog Development** — Full detail page yet to be created
+10. **Admin export/import** — Allow exporting `localStorage` data as JSON file for backup
 
-### Pages That Need Future Content
-- **training.html** — Currently has good structure but real program details/pricing
-- **boarding.html** — Add actual boarding rates, availability calendar
-- **Vet Clinic** section on homepage — Currently "Coming Soon"
-- **Eco Stay** section on homepage — Currently "Coming Soon"
-- **Working Dog Development** — Full detail page yet to be created
-
----
-
-## Deployment Notes
-- All files are static HTML/CSS/JS — deploy to any static hosting (Netlify, Vercel, GitHub Pages, Firebase Hosting, etc.)
-- No build step needed — just upload the files
-- Ensure the `images/` folder is included in deployment
-- The site is fully self-contained (no external dependencies besides Google Fonts CDN)
+### Items Already Fixed
+- ❌ Mobile responsiveness at 360px — DONE across all pages
+- ❌ Undefined `--brown` CSS variable — FIXED
+- ❌ `img{width:100%}` stretching in grooming.html — FIXED to `max-width:100%`
+- ❌ Admin dashboard header overflow — FIXED
+- ❌ Media queries out of order — FIXED
+- ❌ No content editing for detail pages — FIXED (Training/Grooming/Boarding tabs added to admin)
+- ❌ Admin edits not reflected on live site — FIXED (content-loader.js reads localStorage on all pages)
+- ❌ .git folder exposed on Cloudflare — FIXED (.cloudflareignore added)
 
 ---
 
-## Files to Delete Before Deployment
-- `pupbar.html` — Already deleted (was an old redundant copy of the original index)
-- `HANDOFF.md` — Should not be deployed (this file)
+## Dev Workflow
+
+```bash
+# Local development: edit HTML/JS/CSS in any editor, preview by opening file in browser
+# or using VS Code Live Server
+
+# Commit changes
+git add .
+git commit -m "describe what changed"
+
+# Deploy (auto if Cloudflare Pages connected to GitHub)
+git push
+
+# Manual deploy via wrangler (alternative)
+npx wrangler deploy
+```
+
+No build step, no framework — pure static HTML/CSS/JS.
 
 ---
 
 ## Contact for Questions
 
-If any part of this system is unclear, the next developer should:
+If any part of this system is unclear:
 1. Read this document thoroughly
-2. Open each `.html` file and read through the JavaScript sections (especially the admin auth and product CRUD logic)
-3. Check `localStorage` in browser DevTools → Application → Local Storage to see product data
+2. Open each `.html` file and read through the JavaScript sections
+3. Check `localStorage` in browser DevTools → Application → Local Storage
 4. Test the admin login with password `admin123`
+5. Check `content-loader.js` for the page-to-section mapping logic

@@ -334,8 +334,9 @@ footer{
   .form-group input,.form-group textarea{padding:10px 12px;font-size:.82rem}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
+<body data-page="store">
 
 <!-- NAV -->
 <nav id="navbar">
@@ -487,7 +488,6 @@ footer{
 
 <script>
 // ── Products data (from localStorage, seeded if empty) ──
-const STORE_KEY='a1_store_products';
 const DEFAULT_PRODUCTS=[
   {id:'p1',name:'Premium Adult Dog Food (Chicken & Rice)',price:'₹1,850',cat:'dog-food',catLabel:'Dog Food',img:'https://images.unsplash.com/photo-1565708097881-bbf4f5c7b6d0?w=400&q=80',desc:'High-protein, grain-free formula with real chicken. Supports healthy joints and a shiny coat.'},
   {id:'p2',name:'Puppy Starter Kit Food Pack',price:'₹1,200',cat:'dog-food',catLabel:'Dog Food',img:'https://images.unsplash.com/photo-1628009368231-3bb7e3b2a688?w=400&q=80',desc:'Specially formulated for growing puppies. Rich in DHA for brain development.'},
@@ -507,17 +507,13 @@ const DEFAULT_PRODUCTS=[
   {id:'p16',name:'Flea & Tick Prevention Collar',price:'₹1,100',cat:'health',catLabel:'Health',img:'https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?w=400&q=80',desc:'8-month protection against fleas, ticks, and mosquitoes. Water-resistant and adjustable.'},
 ];
 
-function getProducts(){
-  const raw=localStorage.getItem(STORE_KEY);
-  if(!raw){
-    localStorage.setItem(STORE_KEY,JSON.stringify(DEFAULT_PRODUCTS));
+async function loadProducts(){
+  var products=await DB.getProducts();
+  if(!products||products.length===0){
+    await DB.saveAllProducts(DEFAULT_PRODUCTS);
     return DEFAULT_PRODUCTS;
   }
-  try{return JSON.parse(raw)}catch{return DEFAULT_PRODUCTS}
-}
-
-function saveProducts(products){
-  localStorage.setItem(STORE_KEY,JSON.stringify(products));
+  return products;
 }
 
 // ── Render ──
@@ -553,8 +549,8 @@ function filterProducts(products){
   return filtered;
 }
 
-function render(){
-  const products=getProducts();
+async function render(){
+  const products=await loadProducts();
   const filtered=filterProducts(products);
   const grid=document.getElementById('productGrid');
   grid.innerHTML='';
@@ -584,18 +580,18 @@ function render(){
 
 // ── Category clicks ──
 document.querySelectorAll('.cat-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.addEventListener('click',async function(){
+    document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('active')});
     btn.classList.add('active');
     currentCategory=btn.dataset.cat;
-    render();
+    await render();
   });
 });
 
 // ── Search ──
-document.getElementById('searchInput').addEventListener('input',e=>{
-  currentQuery=e.target.value;
-  render();
+document.getElementById('searchInput').addEventListener('input',function(){
+  currentQuery=this.value;
+  render().then(function(){});
 });
 
 // ── Inquiry Modal ──
@@ -635,16 +631,16 @@ document.getElementById('inquiryForm').addEventListener('submit',e=>{
 
 // ── Footer category links ──
 document.querySelectorAll('[data-cat]').forEach(link=>{
-  link.addEventListener('click',e=>{
+  link.addEventListener('click',async function(e){
     e.preventDefault();
     const cat=link.dataset.cat;
-    document.querySelectorAll('.cat-btn').forEach(b=>{
+    document.querySelectorAll('.cat-btn').forEach(function(b){
       b.classList.toggle('active',b.dataset.cat===cat);
     });
     currentCategory=cat;
     document.getElementById('searchInput').value='';
     currentQuery='';
-    render();
+    await render();
     window.scrollTo({top:document.querySelector('.store-hero').offsetHeight-60,behavior:'smooth'});
   });
 });
@@ -670,7 +666,9 @@ mobileNav.querySelectorAll('a').forEach(link=>{
 });
 
 // ── Init ──
-render();
+(async function(){ await render(); })();
 </script>
+<script src="db.js"></script>
+<script src="content-loader.js"></script>
 </body>
 </html>

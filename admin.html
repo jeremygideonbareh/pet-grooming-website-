@@ -258,6 +258,49 @@ input,textarea,select,button{font-family:inherit}
 }
 .modal-actions .btn-cancel:hover{background:var(--cream);color:var(--charcoal)}
 
+/* ── TABS ── */
+.dash-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:2px solid var(--border)}
+.tab-btn{padding:12px 24px;border:none;background:none;font-weight:600;font-size:.85rem;color:var(--muted);cursor:pointer;transition:all .3s;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab-btn:hover{color:var(--charcoal)}
+.tab-btn.active{color:var(--charcoal);border-bottom-color:var(--gold)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ── CONTENT EDITOR ── */
+.content-section{margin-bottom:28px;background:var(--white);border-radius:24px;border:1px solid var(--border);overflow:hidden}
+.content-section .sec-hd{padding:18px 24px;background:var(--cream);cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:.9rem;user-select:none;transition:background .3s}
+.content-section .sec-hd:hover{background:var(--cream-dark)}
+.content-section .sec-hd .arrow{transition:transform .3s;font-size:.75rem}
+.content-section .sec-hd.open .arrow{transform:rotate(180deg)}
+.content-section .sec-bd{padding:24px;display:none}
+.content-section .sec-bd.open{display:block}
+.cf-group{margin-bottom:16px}
+.cf-group label{display:block;font-size:.8rem;font-weight:600;color:var(--charcoal);margin-bottom:5px}
+.cf-group input,.cf-group textarea{width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--cream);font-size:.85rem;color:var(--charcoal);outline:none;transition:border-color .3s;font-family:inherit}
+.cf-group input:focus,.cf-group textarea:focus{border-color:var(--gold)}
+.cf-group textarea{resize:vertical;min-height:60px;line-height:1.5}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cf-rpt-item{background:var(--cream);border-radius:16px;padding:16px;margin-bottom:10px;border:1px solid var(--border)}
+.cf-rpt-item .rpt-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:600;font-size:.8rem}
+.cf-rpt-item .rpt-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:.75rem;font-weight:600;padding:4px 8px;border-radius:8px;transition:background .3s}
+.cf-rpt-item .rpt-del:hover{background:rgba(231,76,60,.1)}
+.cf-add{padding:8px 16px;border-radius:60px;border:1.5px dashed var(--border);background:transparent;color:var(--muted);font-weight:600;font-size:.8rem;cursor:pointer;transition:all .3s;width:100%;font-family:inherit;margin-top:6px}
+.cf-add:hover{border-color:var(--gold);color:var(--gold-dark);background:rgba(201,160,92,.05)}
+.cf-save{width:100%;padding:16px;border-radius:60px;border:none;background:var(--charcoal);color:var(--white);font-weight:700;font-size:1rem;cursor:pointer;transition:all .3s;font-family:inherit;margin-top:8px}
+.cf-save:hover{background:var(--charcoal-soft)}
+.cf-save:active{transform:scale(.98)}
+.cf-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:12px 24px;border-radius:60px;font-weight:600;font-size:.85rem;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
+.cf-toast.show{opacity:1}
+.cf-img-preview{width:80px;height:80px;border-radius:12px;overflow:hidden;background:var(--cream-dark);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--muted);text-align:center;flex-shrink:0}
+.cf-img-preview img{width:100%;height:100%;object-fit:cover}
+
+@media(max-width:768px){
+  .cf-row{grid-template-columns:1fr}
+  .content-section .sec-hd{padding:14px 18px;font-size:.85rem}
+  .content-section .sec-bd{padding:18px}
+  .tab-btn{padding:10px 16px;font-size:.8rem}
+}
+
 /* ── DELETE CONFIRM ── */
 .confirm-box{text-align:center}
 .confirm-box .icon{font-size:3rem;margin-bottom:12px}
@@ -272,6 +315,7 @@ input,textarea,select,button{font-family:inherit}
 .confirm-actions .btn-no{background:var(--cream-dark);color:var(--charcoal)}
 .confirm-actions .btn-no:hover{background:var(--border)}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -302,28 +346,55 @@ input,textarea,select,button{font-family:inherit}
     </div>
   </div>
   <div class="dash-body">
-    <div class="dash-stats" id="statsRow"></div>
-    <div class="dash-top">
-      <h3>Product Inventory</h3>
-      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-        <input type="text" class="dash-search" id="dashSearch" placeholder="Search products...">
-        <button class="dash-btn dash-btn-primary" id="addBtn">+ Add Product</button>
+    <div class="dash-tabs">
+      <button class="tab-btn active" data-tab="products">📦 Products</button>
+      <button class="tab-btn" data-tab="content">✏️ Content</button>
+      <button class="tab-btn" data-tab="training">🐕 Training</button>
+      <button class="tab-btn" data-tab="grooming">✂️ Grooming</button>
+      <button class="tab-btn" data-tab="boarding">🏠 Boarding</button>
+    </div>
+
+    <div id="tabProducts" class="tab-content active">
+      <div class="dash-stats" id="statsRow"></div>
+      <div class="dash-top">
+        <h3>Product Inventory</h3>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <input type="text" class="dash-search" id="dashSearch" placeholder="Search products...">
+          <button class="dash-btn dash-btn-primary" id="addBtn">+ Add Product</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="prod-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="prodTableBody"></tbody>
+        </table>
       </div>
     </div>
-    <div class="table-wrap">
-      <table class="prod-table">
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="prodTableBody"></tbody>
-      </table>
+
+    <div id="tabContent" class="tab-content">
+      <div class="content-editor" id="contentEditor"></div>
+      <button class="cf-save" id="saveContentBtn">💾 Save All Changes</button>
+    </div>
+
+    <div id="tabTraining" class="tab-content">
+      <div class="content-editor" id="trainingEditor"></div>
+    </div>
+
+    <div id="tabGrooming" class="tab-content">
+      <div class="content-editor" id="groomingEditor"></div>
+    </div>
+
+    <div id="tabBoarding" class="tab-content">
+      <div class="content-editor" id="boardingEditor"></div>
     </div>
   </div>
 </div>
@@ -392,73 +463,21 @@ input,textarea,select,button{font-family:inherit}
   </div>
 </div>
 
+<script src="auth.js"></script>
+<script src="upload.js"></script>
+<script src="db.js"></script>
 <script>
 // ═══════════════════════════════════════════════
-// SECURITY CONFIG
+// AUTH (delegated to auth.js)
 // ═══════════════════════════════════════════════
-const ADMIN_HASH='3a39e22d9cc93390556fcc5ba1014374fb56195337fd6b6dd5e2af25af9bdd6c';
-const SALT='A1-ENTERPRISES::2026';
-const SESSION_KEY='a1_admin_session';
-const LOCKOUT_KEY='a1_admin_lockout';
-const MAX_ATTEMPTS=5;
-
-// ── SHA-256 via Web Crypto API ──
-async function sha256(text){
-  const enc=new TextEncoder().encode(text+SALT);
-  const buf=await crypto.subtle.digest('SHA-256',enc);
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-// ── Session token ──
-function generateToken(){
-  const arr=new Uint8Array(32);
-  crypto.getRandomValues(arr);
-  return Array.from(arr).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-// ── Lockout ──
-function getLockout(){
-  try{
-    const raw=sessionStorage.getItem(LOCKOUT_KEY);
-    if(!raw)return{attempts:0,lockedUntil:0};
-    return JSON.parse(raw);
-  }catch{return{attempts:0,lockedUntil:0}}
-}
-
-function setLockout(data){
-  sessionStorage.setItem(LOCKOUT_KEY,JSON.stringify(data));
-}
-
-function checkLocked(){
-  const lock=getLockout();
-  if(lock.attempts>=MAX_ATTEMPTS){
-    const wait=Math.min(60000*Math.pow(2,lock.attempts-MAX_ATTEMPTS),300000);
-    const elapsed=Date.now()-lock.lockedUntil;
-    if(elapsed<wait)return wait-elapsed;
-    setLockout({attempts:0,lockedUntil:0});
-  }
-  return 0;
-}
-
-// ── Auth ──
-function isAuthenticated(){
-  const raw=sessionStorage.getItem(SESSION_KEY);
-  if(!raw)return false;
-  try{
-    const data=JSON.parse(raw);
-    return data&&data.token&&data.expiry>Date.now();
-  }catch{return false}
-}
-
 function requireAuth(){
-  if(!isAuthenticated()){
+  if(!Auth.isAuthenticated()){
     document.getElementById('loginOverlay').classList.remove('hidden');
     document.getElementById('dashboard').style.display='none';
     return false;
   }
   document.getElementById('loginOverlay').classList.add('hidden');
   document.getElementById('dashboard').style.display='block';
-  const data=JSON.parse(sessionStorage.getItem(SESSION_KEY));
   document.getElementById('sessionInfo').textContent='Session active';
   return true;
 }
@@ -470,39 +489,20 @@ async function handleLogin(){
   const lockoutEl=document.getElementById('lockoutMsg');
   const btn=document.getElementById('loginBtn');
 
-  // Check lockout
-  const remaining=checkLocked();
-  if(remaining>0){
-    const secs=Math.ceil(remaining/1000);
-    lockoutEl.textContent=`Too many attempts. Try again in ${secs}s.`;
-    return;
-  }
-
   btn.disabled=true;
   btn.classList.add('loading');
   errorEl.textContent='';
   lockoutEl.textContent='';
 
   try{
-    const hash=await sha256(pass);
-    if(hash===ADMIN_HASH){
-      // Success — create session
-      const token=generateToken();
-      sessionStorage.setItem(SESSION_KEY,JSON.stringify({token,expiry:Date.now()+86400000}));
-      setLockout({attempts:0,lockedUntil:0});
+    const result=await Auth.attemptLogin(pass);
+    if(result.success){
       requireAuth();
-      renderDashboard();
+      await renderDashboard();
     }else{
-      // Failed attempt
-      const lock=getLockout();
-      lock.attempts++;
-      lock.lockedUntil=Date.now();
-      setLockout(lock);
-      const remaining2=lock.attempts>=MAX_ATTEMPTS?60000:0;
-      if(remaining2>0){
-        lockoutEl.textContent='Too many attempts. Try again in 60s.';
-      }else{
-        errorEl.textContent=`Invalid password. ${MAX_ATTEMPTS-lock.attempts} attempt(s) remaining.`;
+      lockoutEl.textContent=result.error||'';
+      if(!result.locked){
+        errorEl.textContent=(result.remaining?`Invalid password. ${result.remaining} attempt(s) remaining.`:'Invalid password.');
       }
       document.getElementById('adminPass').value='';
       document.getElementById('adminPass').focus();
@@ -517,7 +517,7 @@ async function handleLogin(){
 
 // ── Logout ──
 function logout(){
-  sessionStorage.removeItem(SESSION_KEY);
+  Auth.logout();
   document.getElementById('dashboard').style.display='none';
   document.getElementById('loginOverlay').classList.remove('hidden');
   document.getElementById('adminPass').value='';
@@ -528,7 +528,6 @@ function logout(){
 // ═══════════════════════════════════════════════
 // PRODUCT CRUD
 // ═══════════════════════════════════════════════
-const STORE_KEY='a1_store_products';
 const CATEGORIES=[
   {id:'dog-food',label:'Dog Food'},
   {id:'treats',label:'Treats'},
@@ -543,15 +542,12 @@ function getCatLabel(id){
   return c?c.label:'Unknown';
 }
 
-function getProducts(){
-  try{
-    const raw=localStorage.getItem(STORE_KEY);
-    return raw?JSON.parse(raw):[];
-  }catch{return[]}
+async function loadProducts(){
+  return await DB.getProducts();
 }
 
-function saveProducts(products){
-  localStorage.setItem(STORE_KEY,JSON.stringify(products));
+async function saveProducts(products){
+  await DB.saveAllProducts(products);
 }
 
 function generateId(){
@@ -561,9 +557,9 @@ function generateId(){
 // ── Render Dashboard ──
 let dashQuery='';
 
-function renderDashboard(){
+async function renderDashboard(){
   if(!isAuthenticated())return;
-  const products=getProducts();
+  const products=await loadProducts();
   const filtered=products.filter(p=>{
     if(!dashQuery)return true;
     const q=dashQuery.toLowerCase();
@@ -633,8 +629,8 @@ function openAdd(){
   document.getElementById('formModal').classList.add('open');
 }
 
-function openEdit(id){
-  const products=getProducts();
+async function openEdit(id){
+  const products=await loadProducts();
   const p=products.find(x=>x.id===id);
   if(!p)return;
   editProductId=id;
@@ -660,21 +656,24 @@ function closeFormModal(){
 
 // ── Image upload ──
 let uploadedImageData=null;
-document.getElementById('imgInput').addEventListener('change',function(){
+document.getElementById('imgInput').addEventListener('change',async function(){
   const file=this.files[0];
   if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(e){
-    uploadedImageData=e.target.result;
-    document.getElementById('imgPreview').innerHTML=`<img src="${uploadedImageData}" alt="Preview">`;
-  };
-  reader.readAsDataURL(file);
+  const preview=document.getElementById('imgPreview');
+  preview.innerHTML='<span style="font-size:.6rem;padding:4px">Uploading...</span>';
+  try{
+    const url=await window.uploadImageToCloud(file);
+    uploadedImageData=url;
+    preview.innerHTML=`<img src="${url}" alt="Preview">`;
+  }catch(e){
+    preview.innerHTML='<span style="font-size:.6rem;padding:4px">Upload failed</span>';
+  }
 });
 
 // ── Save product ──
-document.getElementById('productForm').addEventListener('submit',function(e){
+document.getElementById('productForm').addEventListener('submit',async function(e){
   e.preventDefault();
-  const products=getProducts();
+  const products=await loadProducts();
   const name=document.getElementById('prodName').value.trim();
   const price=document.getElementById('prodPrice').value.trim();
   const cat=document.getElementById('prodCat').value;
@@ -709,17 +708,17 @@ document.getElementById('productForm').addEventListener('submit',function(e){
     });
   }
 
-  saveProducts(products);
+  await saveProducts(products);
   uploadedImageData=null;
   closeFormModal();
-  renderDashboard();
+  await renderDashboard();
 });
 
 // ── Delete ──
 let deleteProductId=null;
-function openDelete(id){
+async function openDelete(id){
   deleteProductId=id;
-  const products=getProducts();
+  const products=await loadProducts();
   const p=products.find(x=>x.id===id);
   document.getElementById('deleteProdName').textContent=p?`Delete "${p.name}"? This cannot be undone.`:'Delete this product?';
   document.getElementById('deleteModal').classList.add('open');
@@ -730,13 +729,13 @@ function closeDeleteModal(){
   deleteProductId=null;
 }
 
-document.getElementById('deleteConfirm').addEventListener('click',()=>{
+document.getElementById('deleteConfirm').addEventListener('click',async function(){
   if(!deleteProductId)return;
-  let products=getProducts();
-  products=products.filter(x=>x.id!==deleteProductId);
-  saveProducts(products);
+  let products=await loadProducts();
+  products=products.filter(function(x){return x.id!==deleteProductId});
+  await saveProducts(products);
   closeDeleteModal();
-  renderDashboard();
+  await renderDashboard();
 });
 
 // ── Keyboard shortcuts ──
@@ -762,17 +761,867 @@ document.getElementById('deleteModal').addEventListener('click',e=>{if(e.target=
 
 document.getElementById('dashSearch').addEventListener('input',function(){
   dashQuery=this.value;
-  renderDashboard();
+  renderDashboard().then(function(){});
+});
+
+// ═══════════════════════════════════════════════
+// CONTENT EDITOR
+// ═══════════════════════════════════════════════
+
+const DEFAULT_CONTENT={
+  hero:{headline:'A-1 Enterprises',badge:'Since 2020 · Shillong, Meghalaya',bgImage:'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80',btnText:'About Us'},
+  about:{label:'About A-1 Enterprises',heading:'Passion Turned Profession',para1:'A-1 Enterprises was founded from pure passion, dedication, and a lifelong connection with dogs. What began as a hobby during college days gradually transformed into a professional venture with a vision to elevate pet care and canine training standards in Meghalaya and across Northeast India.',para2:'From a small dream driven by love for dogs to becoming one of Meghalaya\'s growing canine service providers, A-1 Enterprises is committed to building a complete ecosystem for pets, training, grooming, boarding, rehabilitation, and future working dog development.',para3:'The founders personally experienced the challenges faced by pet parents, including housing limitations and the lack of professional canine facilities in the region. Instead of allowing those struggles to become obstacles, they became the motivation behind building something meaningful for the pet community.',para4:'Professionally established in 2020, A-1 Enterprises has steadily grown into a trusted name in dog training, grooming, rehabilitation, and pet services while continuously expanding its long-term vision of creating a complete pet ecosystem.',image:'images/welcome.jpeg',quoteText:'"We started as college students and passionate pet parents who were often thrown out of rental houses for having too many dogs. What began as an obsession and passion for dogs eventually turned into a profession, and later into a larger vision for the Northeast."',quoteCite:'— Founder, A-1 Enterprises',founderNote:'"A-1 Enterprises was built from passion, struggle, and dedication towards dogs. What started as a personal obsession gradually evolved into a profession, and today, into a larger vision of creating a complete ecosystem for pets and working dogs in the Northeast."',founderSub:'Mrs. Francisca S. Sangma',founderSign:'— Founder, A-1 Enterprises'},
+  services:{label:'Passion Turned Profession',heading:'Complete Canine Care Ecosystem',subtext:'Professional, ethical, and result-oriented canine services under one trusted brand.',items:[{icon:'🐕',title:'Dog Training & Rehabilitation',desc:'Obedience training, behavioral correction, and rehabilitation tailored to each dog\'s unique temperament.',link:'training.html'},{icon:'✂️',title:'Professional Grooming',desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments.',link:'grooming.html'},{icon:'🏠',title:'Boarding & Kennels',desc:'Safe, comfortable boarding facilities with round-the-clock care and professional supervision.',link:'boarding.html'},{icon:'🛒',title:'Premium Pet Store',desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products.',link:'store.html'},{icon:'🔄',title:'Rehabilitation & Correction',desc:'Specialized programs for dogs with behavioral challenges, anxiety, or trauma.',link:'training.html'},{icon:'🎖️',title:'Working Dog Development',desc:'Future-ready working dog programs for security, detection, and public service sectors.',link:'training.html'}]},
+  whyUs:{label:'Why Choose Us',heading:'Vision · Strengths · Purpose',subtext:'To build a complete professional ecosystem for pets and working dogs in Northeast India — combining modern training, grooming, rehabilitation, veterinary support, and responsible pet care under one trusted platform.',items:[{icon:'🏔️',title:'Regional Pioneers',desc:'One of the few professionally growing canine-focused brands in Meghalaya and Northeast India.'},{icon:'🧠',title:'Personalized Approach',desc:'Every training program is customized based on each dog\'s unique temperament and needs.'},{icon:'🔄',title:'Complete Ecosystem',desc:'Training, grooming, rehabilitation, boarding, and pet store — all under one brand for seamless care.'},{icon:'🔭',title:'Long-Term Vision',desc:'Ecosystem focused on both companion pets and future working dog development.'},{icon:'❤️',title:'Passion-Driven',desc:'Founded from genuine love for dogs, backed by real hands-on experience and dedication.'},{icon:'🤝',title:'Community Trust',desc:'Built on professionalism, transparency, and quality care that pet owners trust.'}]},
+  social:[{icon:'🧹',title:'Cleanliness Drives',desc:'Regular drives in dog walking areas for hygienic public spaces.'},{icon:'🗑️',title:'Dustbin Campaigns',desc:'Promoting dustbin installation in public pet walking zones.'},{icon:'📢',title:'Awareness Programs',desc:'Spreading awareness on responsible pet ownership and welfare.'},{icon:'🤲',title:'Ethical Practices',desc:'Encouraging humane training practices throughout our services.'}],
+  gallery:['images/review1.png','images/review2.png','images/review3.png','images/review4.png','images/review5.png','images/4081455907607392.jpg','images/2533343538804035.jpg','images/7177680652812423.jpg','images/welcome.jpeg','images/prevent-mats.jpg'],
+  testimonials:[{stars:5,quote:'"My German Shepherd went through the training program and the transformation has been incredible. The trainers are patient, knowledgeable, and truly care about the dogs."',name:'Arjun S., Shillong'},{stars:5,quote:'"The grooming service is outstanding! My Golden Retriever always comes back looking like a show dog. The team is gentle and my dog absolutely loves going there."',name:'Priya M., Nongkynrih'},{stars:5,quote:'"Finally found a place that has quality pet supplies AND expert services. The staff always gives great advice. Highly recommend to every pet owner."',name:'David K., Meghalaya'}],
+  footer:{copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.',tagline:'Building the future of pet and working dog services in Northeast India. Professional training, grooming, boarding, and pet care under one trusted brand.',fb:'https://www.facebook.com/SANGPRETI/',ig:'https://instagram.com/boxerfosterhome',yt:'https://youtu.be/Lgpqqi8ZEQI',gm:'https://g.co/kgs/knmDPK',email:'a1.enterprises8891@gmail.com',whatsapp:'https://wa.me/918891000000'}
+};
+
+async function loadContent(){
+  const data=await DB.getSiteContent();
+  return data||DEFAULT_CONTENT;
+}
+
+async function saveContent(data){
+  await DB.saveSiteContent(data);
+}
+
+async function renderContentEditor(){
+  const data=await loadContent();
+  const editor=document.getElementById('contentEditor');
+  editor.innerHTML=`
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secHero">Hero Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secHero">
+        <div class="cf-group"><label>Headline</label><input id="cHeroHeadline" value="${escHtml(data.hero.headline)}"></div>
+        <div class="cf-group"><label>Badge Text</label><input id="cHeroBadge" value="${escHtml(data.hero.badge)}"></div>
+        <div class="cf-group"><label>Background Image URL</label><input id="cHeroBg" value="${escHtml(data.hero.bgImage)}"></div>
+        <div class="cf-group"><label>Button Text</label><input id="cHeroBtn" value="${escHtml(data.hero.btnText)}"></div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secAbout">About Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secAbout">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="cAboutLabel" value="${escHtml(data.about.label)}"></div>
+          <div class="cf-group"><label>Heading</label><input id="cAboutHeading" value="${escHtml(data.about.heading)}"></div>
+        </div>
+        <div class="cf-group"><label>Paragraph 1</label><textarea id="cAboutPara1" rows="3">${escHtml(data.about.para1)}</textarea></div>
+        <div class="cf-group"><label>Paragraph 2</label><textarea id="cAboutPara2" rows="3">${escHtml(data.about.para2)}</textarea></div>
+        <div class="cf-group"><label>Paragraph 3</label><textarea id="cAboutPara3" rows="3">${escHtml(data.about.para3)}</textarea></div>
+        <div class="cf-group"><label>Paragraph 4</label><textarea id="cAboutPara4" rows="3">${escHtml(data.about.para4)}</textarea></div>
+        <div class="cf-group"><label>About Image URL</label><input id="cAboutImage" value="${escHtml(data.about.image)}"></div>
+        <div class="cf-group"><label>Quote Text</label><textarea id="cAboutQuote" rows="2">${escHtml(data.about.quoteText)}</textarea></div>
+        <div class="cf-group"><label>Quote Attribution</label><input id="cAboutCite" value="${escHtml(data.about.quoteCite)}"></div>
+        <div class="cf-group"><label>Founder's Note</label><textarea id="cFounderNote" rows="3">${escHtml(data.about.founderNote)}</textarea></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Founder Sub (e.g. Mrs. Francisca)</label><input id="cFounderSub" value="${escHtml(data.about.founderSub)}"></div>
+          <div class="cf-group"><label>Founder Sign-off</label><input id="cFounderSign" value="${escHtml(data.about.founderSign)}"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secServices">Services <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secServices">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="cServLabel" value="${escHtml(data.services.label)}"></div>
+          <div class="cf-group"><label>Heading</label><input id="cServHeading" value="${escHtml(data.services.heading)}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="cServSub" rows="2">${escHtml(data.services.subtext)}</textarea></div>
+        <div id="servRepeater">${data.services.items.map((item,i)=>renderService(item,i)).join('')}</div>
+        <button class="cf-add" onclick="addService()">+ Add Service</button>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secWhy">Why Us (USP) <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secWhy">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="cWhyLabel" value="${escHtml(data.whyUs.label)}"></div>
+          <div class="cf-group"><label>Heading</label><input id="cWhyHeading" value="${escHtml(data.whyUs.heading)}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="cWhySub" rows="2">${escHtml(data.whyUs.subtext)}</textarea></div>
+        <div id="whyRepeater">${data.whyUs.items.map((item,i)=>renderWhyItem(item,i)).join('')}</div>
+        <button class="cf-add" onclick="addWhyItem()">+ Add USP Item</button>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secSocial">Social Responsibility <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secSocial">
+        <div id="socialRepeater">${data.social.map((item,i)=>renderSocialItem(item,i)).join('')}</div>
+        <button class="cf-add" onclick="addSocialItem()">+ Add Item</button>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secGallery">Gallery Images <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secGallery">
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Each image URL on its own line.</p>
+        <div class="cf-group"><textarea id="cGallery" rows="6">${data.gallery.map(s=>escHtml(s)).join('\n')}</textarea></div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secTesti">Testimonials <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secTesti">
+        <div id="testiRepeater">${data.testimonials.map((item,i)=>renderTestiItem(item,i)).join('')}</div>
+        <button class="cf-add" onclick="addTestiItem()">+ Add Testimonial</button>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secFooter">Footer <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secFooter">
+        <div class="cf-group"><label>Copyright Text</label><input id="cFootCopyright" value="${escHtml(data.footer.copyright)}"></div>
+        <div class="cf-group"><label>Tagline / Brand Description</label><textarea id="cFootTagline" rows="2">${escHtml(data.footer.tagline)}</textarea></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Facebook URL</label><input id="cFootFb" value="${escHtml(data.footer.fb)}"></div>
+          <div class="cf-group"><label>Instagram URL</label><input id="cFootIg" value="${escHtml(data.footer.ig)}"></div>
+        </div>
+        <div class="cf-row">
+          <div class="cf-group"><label>YouTube URL</label><input id="cFootYt" value="${escHtml(data.footer.yt)}"></div>
+          <div class="cf-group"><label>Google Maps URL</label><input id="cFootGm" value="${escHtml(data.footer.gm)}"></div>
+        </div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Email</label><input id="cFootEmail" value="${escHtml(data.footer.email)}"></div>
+          <div class="cf-group"><label>WhatsApp URL</label><input id="cFootWa" value="${escHtml(data.footer.whatsapp)}"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Collapse handlers
+  document.querySelectorAll('.sec-hd').forEach(hd=>{
+    hd.addEventListener('click',()=>{
+      hd.classList.toggle('open');
+      document.getElementById(hd.dataset.target).classList.toggle('open');
+    });
+  });
+}
+
+function escHtml(t){
+  const d=document.createElement('div');
+  d.textContent=t||'';
+  return d.innerHTML;
+}
+
+// Service repeater
+function renderService(item,i){
+  return `<div class="cf-rpt-item">
+    <div class="rpt-hd"><span>Service ${i+1}</span><button class="rpt-del" onclick="removeRepeater(this,'servRepeater')">✕ Remove</button></div>
+    <div class="cf-row">
+      <div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="${escHtml(item.icon)}"></div>
+      <div class="cf-group"><label>Title</label><input class="r-title" value="${escHtml(item.title)}"></div>
+    </div>
+    <div class="cf-row">
+      <div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">${escHtml(item.desc)}</textarea></div>
+      <div class="cf-group"><label>Link (e.g. training.html)</label><input class="r-link" value="${escHtml(item.link||'')}"></div>
+    </div>
+  </div>`;
+}
+function addService(){
+  const d=document.getElementById('servRepeater');
+  d.insertAdjacentHTML('beforeend',renderService({icon:'🐾',title:'New Service',desc:'Service description',link:''},d.children.length));
+}
+
+// Why Us repeater
+function renderWhyItem(item,i){
+  return `<div class="cf-rpt-item">
+    <div class="rpt-hd"><span>USP ${i+1}</span><button class="rpt-del" onclick="removeRepeater(this,'whyRepeater')">✕ Remove</button></div>
+    <div class="cf-row">
+      <div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="${escHtml(item.icon)}"></div>
+      <div class="cf-group"><label>Title</label><input class="r-title" value="${escHtml(item.title)}"></div>
+    </div>
+    <div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">${escHtml(item.desc)}</textarea></div>
+  </div>`;
+}
+function addWhyItem(){
+  const d=document.getElementById('whyRepeater');
+  d.insertAdjacentHTML('beforeend',renderWhyItem({icon:'⭐',title:'New USP',desc:'USP description'},d.children.length));
+}
+
+// Social Responsibility repeater
+function renderSocialItem(item,i){
+  return `<div class="cf-rpt-item">
+    <div class="rpt-hd"><span>Social ${i+1}</span><button class="rpt-del" onclick="removeRepeater(this,'socialRepeater')">✕ Remove</button></div>
+    <div class="cf-row">
+      <div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="${escHtml(item.icon)}"></div>
+      <div class="cf-group"><label>Title</label><input class="r-title" value="${escHtml(item.title)}"></div>
+    </div>
+    <div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">${escHtml(item.desc)}</textarea></div>
+  </div>`;
+}
+function addSocialItem(){
+  const d=document.getElementById('socialRepeater');
+  d.insertAdjacentHTML('beforeend',renderSocialItem({icon:'🤝',title:'New Item',desc:'Item description'},d.children.length));
+}
+
+// Testimonials repeater
+function renderTestiItem(item,i){
+  return `<div class="cf-rpt-item">
+    <div class="rpt-hd"><span>Testimonial ${i+1}</span><button class="rpt-del" onclick="removeRepeater(this,'testiRepeater')">✕ Remove</button></div>
+    <div class="cf-row">
+      <div class="cf-group"><label>Stars (1-5)</label><input class="r-stars" value="${item.stars}"></div>
+      <div class="cf-group"><label>Name / Attribution</label><input class="r-name" value="${escHtml(item.name)}"></div>
+    </div>
+    <div class="cf-group"><label>Quote</label><textarea class="r-quote" rows="2">${escHtml(item.quote)}</textarea></div>
+  </div>`;
+}
+function addTestiItem(){
+  const d=document.getElementById('testiRepeater');
+  d.insertAdjacentHTML('beforeend',renderTestiItem({stars:5,quote:'"Great service!"',name:'Happy Client'},d.children.length));
+}
+
+function removeRepeater(btn,containerId){
+  btn.closest('.cf-rpt-item').remove();
+}
+
+function collectRepeaterData(containerId,fieldMap){
+  const items=[];
+  document.getElementById(containerId).querySelectorAll('.cf-rpt-item').forEach(el=>{
+    const obj={};
+    for(const [key,cls] of Object.entries(fieldMap)){
+      const input=el.querySelector(cls);
+      if(input)obj[key]=input.value;
+    }
+    items.push(obj);
+  });
+  return items;
+}
+
+// ── Training Editor ──
+async function renderTrainingEditor(){
+  const content=await loadContent();
+  const data=content.training||{};
+  const defaults={
+    hero:{heading:'Dog Training & Rehabilitation',subtext:'Professional, ethical, and result-oriented training programs tailored to each dog\'s unique temperament and needs.',bgImage:'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80'},
+    programs:{label:'Our Programs',title:'Comprehensive Training<br>for Every Dog',subtext:'From basic obedience to advanced working dog development — we offer a full spectrum of training programs.',items:[
+      {icon:'🎯',title:'Obedience & Behavioral Training',desc:'Foundation training covering sit, stay, heel, recall, and basic manners for a well-behaved companion.',img:'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80'},
+      {icon:'🔄',title:'Rehabilitation & Correction',desc:'Specialized programs for dogs with trauma, fear, aggression, or anxiety issues — using patient, science-based methods.',img:'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80'},
+      {icon:'🛡️',title:'Protection & Detection Training',desc:'Advanced training for personal protection, scent detection, and specialized working roles.',img:'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80'},
+      {icon:'🐾',title:'Puppy Socialization',desc:'Early socialization and basic manners for puppies — building confidence and positive behaviors from day one.',img:'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80'},
+      {icon:'🎖️',title:'Working Dog Development',desc:'Future-ready programs for security, detection, and public service working dog roles.',img:'https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=800&q=80'},
+      {icon:'👨‍👩‍👧‍👦',title:'Owner-Centric Training',desc:'We train the owner alongside the dog — ensuring long-lasting results and a stronger bond between you and your pet.',img:'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80'}
+    ]},
+    gallery:{label:'Gallery',title:'Training in Action',subtext:'Real moments from our training sessions — building skills, trust, and lasting bonds.',images:[
+      'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80'
+    ]},
+    process:{label:'How It Works',title:'Our Training Process',subtext:'A structured step-by-step approach to ensure the best results for you and your dog.',steps:[
+      {num:'1',title:'Assessment',desc:'We evaluate your dog\'s temperament, behavior, and needs through a thorough initial consultation.'},
+      {num:'2',title:'Custom Plan',desc:'A tailored training program is designed specifically for your dog\'s unique personality and goals.'},
+      {num:'3',title:'Training Sessions',desc:'Structured one-on-one sessions using positive reinforcement and proven canine science methods.'},
+      {num:'4',title:'Ongoing Support',desc:'Post-training guidance and follow-ups to ensure lasting results and continued progress.'}
+    ]},
+    approach:{label:'Our Approach',title:'Built on Trust,<br>Backed by Experience',para1:'Our training philosophy combines modern canine science with real-world experience. Every dog is unique, and we treat them as individuals — not as cases.',para2:'Every training program is customized based on each dog\'s unique temperament, learning style, and specific behavioral needs.',benefits:['Personalized training plans','Positive reinforcement methods','Temperament-based approach','Owner involvement & education','Progress tracking & updates','Post-training support'],image:'images/4081455907607392.jpg'},
+    cta:{heading:'Ready to Transform<br>Your Dog\'s Behavior?',subtext:'Get in touch with us today to discuss your dog\'s training needs.',btnText:'Chat on WhatsApp',btnLink:'https://wa.me/918891000000'},
+    footer:{copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.'}
+  };
+  const s=Object.keys(data).length?data:defaults;
+  const ed=document.getElementById('trainingEditor');
+  ed.innerHTML=`
+    <div class="content-section">
+      <div class="sec-hd open" data-target="trHero">Hero Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="trHero">
+        <div class="cf-group"><label>Heading</label><input id="trHeroHead" value="${escHtml(s.hero.heading)}"></div>
+        <div class="cf-group"><label>Subtext</label><textarea id="trHeroSub" rows="2">${escHtml(s.hero.subtext)}</textarea></div>
+        <div class="cf-group"><label>Background Image URL</label><input id="trHeroBg" value="${escHtml(s.hero.bgImage)}"></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="trProg">Programs Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="trProg">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="trProgLabel" value="${escHtml(s.programs.label)}"></div>
+          <div class="cf-group"><label>Title</label><input id="trProgTitle" value="${escHtml(s.programs.title)}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="trProgSub" rows="2">${escHtml(s.programs.subtext)}</textarea></div>
+        <div id="trProgRepeater">${s.programs.items.map(function(item,i){return renderTrProgItem(item,i)}).join('')}</div>
+        <button class="cf-add" onclick="addTrProgItem()">+ Add Program</button>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="trGal">Gallery Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="trGal">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="trGalLabel" value="${escHtml(s.gallery.label)}"></div>
+          <div class="cf-group"><label>Title</label><input id="trGalTitle" value="${escHtml(s.gallery.title)}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="trGalSub" rows="2">${escHtml(s.gallery.subtext)}</textarea></div>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Each image URL on its own line.</p>
+        <div class="cf-group"><textarea id="trGalImgs" rows="6">${s.gallery.images.map(function(u){return escHtml(u)}).join('\n')}</textarea></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="trProc">Process Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="trProc">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="trProcLabel" value="${escHtml(s.process.label)}"></div>
+          <div class="cf-group"><label>Title</label><input id="trProcTitle" value="${escHtml(s.process.title)}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="trProcSub" rows="2">${escHtml(s.process.subtext)}</textarea></div>
+        <div id="trStepRepeater">${s.process.steps.map(function(item,i){return renderTrStepItem(item,i)}).join('')}</div>
+        <button class="cf-add" onclick="addTrStepItem()">+ Add Step</button>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="trAppr">Approach Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="trAppr">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="trApprLabel" value="${escHtml(s.approach.label)}"></div>
+          <div class="cf-group"><label>Title</label><input id="trApprTitle" value="${escHtml(s.approach.title)}"></div>
+        </div>
+        <div class="cf-group"><label>Paragraph 1</label><textarea id="trApprPara1" rows="3">${escHtml(s.approach.para1)}</textarea></div>
+        <div class="cf-group"><label>Paragraph 2</label><textarea id="trApprPara2" rows="3">${escHtml(s.approach.para2)}</textarea></div>
+        <div class="cf-group"><label>Benefits (one per line)</label><textarea id="trApprBenefits" rows="5">${s.approach.benefits.map(function(b){return escHtml(b)}).join('\n')}</textarea></div>
+        <div class="cf-group"><label>Image URL</label><input id="trApprImage" value="${escHtml(s.approach.image)}"></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="trCta">CTA Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="trCta">
+        <div class="cf-group"><label>Heading</label><input id="trCtaHead" value="${escHtml(s.cta.heading)}"></div>
+        <div class="cf-group"><label>Subtext</label><textarea id="trCtaSub" rows="2">${escHtml(s.cta.subtext)}</textarea></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Button Text</label><input id="trCtaBtn" value="${escHtml(s.cta.btnText)}"></div>
+          <div class="cf-group"><label>Button Link</label><input id="trCtaLink" value="${escHtml(s.cta.btnLink)}"></div>
+        </div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="trFoot">Footer <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="trFoot">
+        <div class="cf-group"><label>Copyright Text</label><input id="trFootCopyright" value="${escHtml(s.footer.copyright)}"></div>
+      </div>
+    </div>
+    <button class="cf-save" id="saveAllBtn" style="margin-top:0">💾 Save All Changes</button>
+  `;
+  document.querySelectorAll('#trainingEditor .sec-hd').forEach(function(hd){
+    hd.addEventListener('click',function(){
+      hd.classList.toggle('open');
+      document.getElementById(hd.dataset.target).classList.toggle('open');
+    });
+  });
+}
+
+function renderTrProgItem(item,i){
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Program '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'trProgRepeater\')">✕ Remove</button></div><div class="cf-group"><label>Image URL</label><input class="r-img" value="'+escHtml(item.img)+'"></div><div class="cf-row"><div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="'+escHtml(item.icon)+'"></div><div class="cf-group"><label>Title</label><input class="r-title" value="'+escHtml(item.title)+'"></div></div><div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
+}
+function addTrProgItem(){
+  var d=document.getElementById('trProgRepeater');
+  d.insertAdjacentHTML('beforeend',renderTrProgItem({icon:'🐾',title:'New Program',desc:'Program description',img:''},d.children.length));
+}
+function renderTrStepItem(item,i){
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Step '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'trStepRepeater\')">✕ Remove</button></div><div class="cf-row"><div class="cf-group"><label>Step Number</label><input class="r-num" value="'+escHtml(item.num)+'"></div><div class="cf-group"><label>Title</label><input class="r-title" value="'+escHtml(item.title)+'"></div></div><div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
+}
+function addTrStepItem(){
+  var d=document.getElementById('trStepRepeater');
+  d.insertAdjacentHTML('beforeend',renderTrStepItem({num:(d.children.length+1).toString(),title:'New Step',desc:'Step description'},d.children.length));
+}
+
+// ── Grooming Editor ──
+async function renderGroomingEditor(){
+  const content=await loadContent();
+  const data=content.grooming||{};
+  const defaults={
+    hero:{badge:'★ 5.0 · 20 Ratings',headingMain:'A-1Pet Shop',headingEm:'And Grooming',subtext:'Nongkynrih, Shillong — Professional pet grooming services your furry friend will love.',btnText:'📞 CONTACT NOW',posterUrl:'images/herosection.jpg',videoUrl:'images/herosectionvideo.mp4'},
+    about:{image:'images/welcome.jpeg',welcomeHeading:'WELCOME',welcomePara:'A-1Pet Shop And Grooming in Nongkynrih, Shillong is a top destination for pet grooming services...',hours:[
+      {day:'Monday',time:'Closed'},{day:'Tuesday',time:'10:00 am – 7:00 pm'},{day:'Wednesday',time:'10:00 am – 7:00 pm'},{day:'Thursday',time:'10:00 am – 7:00 pm'},{day:'Friday',time:'10:00 am – 7:00 pm'},{day:'Saturday',time:'10:00 am – 7:00 pm'},{day:'Sunday',time:'11:00 am – 5:00 pm'}
+    ],stats:[{num:'5.0',label:'Rating'},{num:'20',label:'Reviews'},{num:'🐾',label:'Grooming'}]},
+    services:{badge:'Our services',heading:'What we can do<br>for your pet',desc:'From baths to full grooming, we provide quality pet care tailored to your furry friend\'s needs.',btnText:'See our services',items:[
+      {img:'images/4081455907607392.jpg',label:'Full grooming'},{img:'images/prevent-mats.jpg',label:'Bath & brush'},{img:'images/2533343538804035.jpg',label:'Nail & ear care'},{img:'images/7177680652812423.jpg',label:'Spa & shine'},{img:'images/review1.png',label:'Pet styling'}
+    ]},
+    gallery:{title:'📸 OUR GALLERY',subtext:'A glimpse into the A-1Pet Shop And Grooming experience — happy pets, expert care.',images:['images/review1.png','images/review2.png','images/review3.png','images/review4.png','images/review5.png']},
+    reviews:{badge:'Reviews',heading:'What clients say',subtext:'Rated 5.0 out of 20 reviews on JustDial.',bgImage:'images/7177680652812423.jpg',items:[
+      {name:'HAPPY CLIENT',stars:'★★★★★',text:'"Absolutely love this place! My dog always comes out looking and feeling amazing."'},{name:'PET PARENT',stars:'★★★★★',text:'"Professional groomers who genuinely care. The best in Nongkynrih."'}
+    ]},
+    cta:{heading:'Ready to spoil<br>your fur baby?',subtext:'Book an appointment at A-1Pet Shop And Grooming today.',btnText:'📞 CONTACT NOW'},
+    footer:{brand:'A-1 Enterprises',tagline:'Building the future of pet and working dog services in Northeast India.',copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.',fb:'https://www.facebook.com/SANGPRETI/',ig:'https://instagram.com/boxerfosterhome',yt:'https://youtu.be/Lgpqqi8ZEQI',gm:'https://g.co/kgs/knmDPK',address1:'A-1Pet Shop And Grooming',address2:'Nongkynrih, Shillong',address3:'Tue–Sat 10–7 · Sun 11–5',whatsApp:'https://wa.me/918891000000',email:'a1.enterprises8891@gmail.com'}
+  };
+  const s=Object.keys(data).length?data:defaults;
+  const ed=document.getElementById('groomingEditor');
+  ed.innerHTML=`
+    <div class="content-section">
+      <div class="sec-hd open" data-target="grLoad">Loading Overlay <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="grLoad">
+        <div class="cf-row">
+          <div class="cf-group"><label>Brand Text</label><input id="grLoadBrand" value="${escHtml(s.hero.headingMain+'<br>And Grooming')}"></div>
+          <div class="cf-group"><label>Brand Small</label><input id="grLoadSmall" value="Nongkynrih, Shillong"></div>
+        </div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="grHero">Hero Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="grHero">
+        <div class="cf-group"><label>Badge Text</label><input id="grHeroBadge" value="${escHtml(s.hero.badge)}"></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Main Heading</label><input id="grHeroHeadMain" value="${escHtml(s.hero.headingMain)}"></div>
+          <div class="cf-group"><label>Em (And Grooming)</label><input id="grHeroHeadEm" value="${escHtml(s.hero.headingEm)}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="grHeroSub" rows="2">${escHtml(s.hero.subtext)}</textarea></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Button Text</label><input id="grHeroBtn" value="${escHtml(s.hero.btnText)}"></div>
+          <div class="cf-group"><label>Video Poster URL</label><input id="grHeroPoster" value="${escHtml(s.hero.posterUrl)}"></div>
+        </div>
+        <div class="cf-group"><label>Video URL</label><input id="grHeroVideo" value="${escHtml(s.hero.videoUrl)}"></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="grAb">About Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="grAb">
+        <div class="cf-group"><label>Image URL</label><input id="grAbImg" value="${escHtml(s.about.image)}"></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Welcome Heading</label><input id="grAbWelcHead" value="${escHtml(s.about.welcomeHeading)}"></div>
+          <div class="cf-group"><label>Welcome Paragraph</label><textarea id="grAbWelcPara" rows="2">${escHtml(s.about.welcomePara)}</textarea></div>
+        </div>
+        <div class="cf-group"><label>Hours (one day/time per line, format: Day|Time)</label><textarea id="grHours" rows="6">${s.about.hours.map(function(h){return escHtml(h.day+'|'+h.time)}).join('\n')}</textarea></div>
+        <div class="cf-group"><label>Stats (one per line, format: num|label)</label><textarea id="grStats" rows="4">${s.about.stats.map(function(st){return escHtml(st.num+'|'+st.label)}).join('\n')}</textarea></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="grServ">Services Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="grServ">
+        <div class="cf-row">
+          <div class="cf-group"><label>Badge Text</label><input id="grServBadge" value="${escHtml(s.services.badge)}"></div>
+          <div class="cf-group"><label>Heading</label><input id="grServHead" value="${escHtml(s.services.heading)}"></div>
+        </div>
+        <div class="cf-group"><label>Description</label><textarea id="grServDesc" rows="2">${escHtml(s.services.desc)}</textarea></div>
+        <div class="cf-group"><label>Button Text</label><input id="grServBtn" value="${escHtml(s.services.btnText)}"></div>
+        <div id="grServRepeater">${s.services.items.map(function(item,i){return renderGrServItem(item,i)}).join('')}</div>
+        <button class="cf-add" onclick="addGrServItem()">+ Add Service Card</button>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="grGal">Gallery Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="grGal">
+        <div class="cf-row">
+          <div class="cf-group"><label>Title</label><input id="grGalTitle" value="${escHtml(s.gallery.title)}"></div>
+          <div class="cf-group"><label>Subtext</label><textarea id="grGalSub" rows="2">${escHtml(s.gallery.subtext)}</textarea></div>
+        </div>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Each image URL on its own line.</p>
+        <div class="cf-group"><textarea id="grGalImgs" rows="6">${s.gallery.images.map(function(u){return escHtml(u)}).join('\n')}</textarea></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="grRev">Reviews Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="grRev">
+        <div class="cf-row">
+          <div class="cf-group"><label>Badge Text</label><input id="grRevBadge" value="${escHtml(s.reviews.badge)}"></div>
+          <div class="cf-group"><label>Heading</label><input id="grRevHead" value="${escHtml(s.reviews.heading)}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="grRevSub" rows="2">${escHtml(s.reviews.subtext)}</textarea></div>
+        <div class="cf-group"><label>Background Image URL</label><input id="grRevBg" value="${escHtml(s.reviews.bgImage)}"></div>
+        <div id="grRevRepeater">${s.reviews.items.map(function(item,i){return renderGrRevItem(item,i)}).join('')}</div>
+        <button class="cf-add" onclick="addGrRevItem()">+ Add Review</button>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="grCta">CTA Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="grCta">
+        <div class="cf-group"><label>Heading</label><input id="grCtaHead" value="${escHtml(s.cta.heading)}"></div>
+        <div class="cf-group"><label>Subtext</label><textarea id="grCtaSub" rows="2">${escHtml(s.cta.subtext)}</textarea></div>
+        <div class="cf-group"><label>Button Text</label><input id="grCtaBtn" value="${escHtml(s.cta.btnText)}"></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="grFoot">Footer <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="grFoot">
+        <div class="cf-row">
+          <div class="cf-group"><label>Brand Name</label><input id="grFootBrand" value="${escHtml(s.footer.brand)}"></div>
+          <div class="cf-group"><label>Tagline</label><textarea id="grFootTag" rows="2">${escHtml(s.footer.tagline)}</textarea></div>
+        </div>
+        <div class="cf-group"><label>Copyright</label><input id="grFootCopy" value="${escHtml(s.footer.copyright)}"></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Facebook URL</label><input id="grFootFb" value="${escHtml(s.footer.fb)}"></div>
+          <div class="cf-group"><label>Instagram URL</label><input id="grFootIg" value="${escHtml(s.footer.ig)}"></div>
+        </div>
+        <div class="cf-row">
+          <div class="cf-group"><label>YouTube URL</label><input id="grFootYt" value="${escHtml(s.footer.yt)}"></div>
+          <div class="cf-group"><label>Google Maps URL</label><input id="grFootGm" value="${escHtml(s.footer.gm)}"></div>
+        </div>
+        <div class="cf-group"><label>Address Line 1</label><input id="grFootAddr1" value="${escHtml(s.footer.address1||'')}"></div>
+        <div class="cf-group"><label>Address Line 2</label><input id="grFootAddr2" value="${escHtml(s.footer.address2||'')}"></div>
+        <div class="cf-group"><label>Address Line 3</label><input id="grFootAddr3" value="${escHtml(s.footer.address3||'')}"></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>WhatsApp URL</label><input id="grFootWa" value="${escHtml(s.footer.whatsApp||s.footer.whatsapp||'')}"></div>
+          <div class="cf-group"><label>Email</label><input id="grFootEmail" value="${escHtml(s.footer.email)}"></div>
+        </div>
+      </div>
+    </div>
+    <button class="cf-save" id="saveAllBtn" style="margin-top:0">💾 Save All Changes</button>
+  `;
+  document.querySelectorAll('#groomingEditor .sec-hd').forEach(function(hd){
+    hd.addEventListener('click',function(){
+      hd.classList.toggle('open');
+      document.getElementById(hd.dataset.target).classList.toggle('open');
+    });
+  });
+}
+
+function renderGrServItem(item,i){
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Service Card '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'grServRepeater\')">✕ Remove</button></div><div class="cf-row"><div class="cf-group"><label>Image URL</label><input class="r-img" value="'+escHtml(item.img)+'"></div><div class="cf-group"><label>Label</label><input class="r-label" value="'+escHtml(item.label)+'"></div></div></div>';
+}
+function addGrServItem(){
+  var d=document.getElementById('grServRepeater');
+  d.insertAdjacentHTML('beforeend',renderGrServItem({img:'',label:'New Service'},d.children.length));
+}
+function renderGrRevItem(item,i){
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Review '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'grRevRepeater\')">✕ Remove</button></div><div class="cf-row"><div class="cf-group"><label>Name</label><input class="r-name" value="'+escHtml(item.name)+'"></div><div class="cf-group"><label>Stars (text)</label><input class="r-stars" value="'+escHtml(item.stars)+'"></div></div><div class="cf-group"><label>Text</label><textarea class="r-text" rows="2">'+escHtml(item.text)+'</textarea></div></div>';
+}
+function addGrRevItem(){
+  var d=document.getElementById('grRevRepeater');
+  d.insertAdjacentHTML('beforeend',renderGrRevItem({name:'Happy Client',stars:'★★★★★',text:'"Great service!"'},d.children.length));
+}
+
+// ── Boarding Editor ──
+async function renderBoardingEditor(){
+  const content=await loadContent();
+  const data=content.boarding||{};
+  const defaults={
+    hero:{heading:'Boarding & Kennels',subtext:'A safe, comfortable, and loving home away from home for your pet with round-the-clock professional care.',bgImage:'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80'},
+    features:{label:'Boarding Facilities',title:'A Home Away<br>from Home',subtext:'Whether you\'re traveling, busy at work, or need temporary care, our boarding facility provides a clean, safe, and loving environment for your pet.',items:[
+      {icon:'🏠',title:'Comfortable Kennels',desc:'Clean, spacious, and well-ventilated kennels designed for your pet\'s comfort and safety.'},
+      {icon:'👁️',title:'24/7 Supervision',desc:'Round-the-clock monitoring by our trained staff to ensure your pet is safe and happy at all times.'},
+      {icon:'🎾',title:'Exercise & Playtime',desc:'Regular exercise sessions, playtime, and walks to keep your pet active and engaged.'},
+      {icon:'🍗',title:'Nutritious Meals',desc:'Balanced, nutritious meals provided according to your pet\'s dietary requirements and preferences.'},
+      {icon:'🩺',title:'Medical Care',desc:'Regular health check-ups during the stay and quick access to veterinary care if needed.'},
+      {icon:'🚗',title:'Pick-up & Drop-off',desc:'Convenient pick-up and drop-off services available within Shillong for your convenience.'}
+    ]},
+    details:{label:'Why Board with Us',title:'Peace of Mind<br>While You\'re Away',paragraph:'We understand that leaving your pet can be stressful. That\'s why we go the extra mile to ensure your pet feels at home with us.',image:'images/7177680652812423.jpg',detailsList:['Clean, sanitized facilities','Trained & caring staff','Individual & group play','Regular photo updates','Medication administration','Flexible booking options'],btnText:'Book a Stay'},
+    cta:{heading:'Need a Safe Place for<br>Your Pet to Stay?',subtext:'Contact us to check availability, pricing, and book your pet\'s stay.',btnText:'Book via WhatsApp',btnLink:'https://wa.me/918891000000'},
+    footer:{copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.'}
+  };
+  const s=Object.keys(data).length?data:defaults;
+  const ed=document.getElementById('boardingEditor');
+  ed.innerHTML=`
+    <div class="content-section">
+      <div class="sec-hd open" data-target="boHero">Hero Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="boHero">
+        <div class="cf-group"><label>Heading</label><input id="boHeroHead" value="${escHtml(s.hero.heading)}"></div>
+        <div class="cf-group"><label>Subtext</label><textarea id="boHeroSub" rows="2">${escHtml(s.hero.subtext)}</textarea></div>
+        <div class="cf-group"><label>Background Image URL</label><input id="boHeroBg" value="${escHtml(s.hero.bgImage)}"></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="boFeat">Features Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="boFeat">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="boFeatLabel" value="${escHtml(s.features.label)}"></div>
+          <div class="cf-group"><label>Title</label><input id="boFeatTitle" value="${escHtml(s.features.title)}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="boFeatSub" rows="2">${escHtml(s.features.subtext)}</textarea></div>
+        <div id="boFeatRepeater">${s.features.items.map(function(item,i){return renderBoFeatItem(item,i)}).join('')}</div>
+        <button class="cf-add" onclick="addBoFeatItem()">+ Add Feature Card</button>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="boDet">Details Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="boDet">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="boDetLabel" value="${escHtml(s.details.label)}"></div>
+          <div class="cf-group"><label>Title</label><input id="boDetTitle" value="${escHtml(s.details.title)}"></div>
+        </div>
+        <div class="cf-group"><label>Paragraph</label><textarea id="boDetPara" rows="3">${escHtml(s.details.paragraph)}</textarea></div>
+        <div class="cf-group"><label>Image URL</label><input id="boDetImg" value="${escHtml(s.details.image)}"></div>
+        <div class="cf-group"><label>Details List (one per line)</label><textarea id="boDetList" rows="6">${s.details.detailsList.map(function(d){return escHtml(d)}).join('\n')}</textarea></div>
+        <div class="cf-group"><label>Button Text</label><input id="boDetBtn" value="${escHtml(s.details.btnText)}"></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="boCta">CTA Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="boCta">
+        <div class="cf-group"><label>Heading</label><input id="boCtaHead" value="${escHtml(s.cta.heading)}"></div>
+        <div class="cf-group"><label>Subtext</label><textarea id="boCtaSub" rows="2">${escHtml(s.cta.subtext)}</textarea></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Button Text</label><input id="boCtaBtn" value="${escHtml(s.cta.btnText)}"></div>
+          <div class="cf-group"><label>Button Link</label><input id="boCtaLink" value="${escHtml(s.cta.btnLink)}"></div>
+        </div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="boFoot">Footer <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="boFoot">
+        <div class="cf-group"><label>Copyright Text</label><input id="boFootCopy" value="${escHtml(s.footer.copyright)}"></div>
+      </div>
+    </div>
+    <button class="cf-save" id="saveAllBtn" style="margin-top:0">💾 Save All Changes</button>
+  `;
+  document.querySelectorAll('#boardingEditor .sec-hd').forEach(function(hd){
+    hd.addEventListener('click',function(){
+      hd.classList.toggle('open');
+      document.getElementById(hd.dataset.target).classList.toggle('open');
+    });
+  });
+}
+
+function renderBoFeatItem(item,i){
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Feature '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'boFeatRepeater\')">✕ Remove</button></div><div class="cf-row"><div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="'+escHtml(item.icon)+'"></div><div class="cf-group"><label>Title</label><input class="r-title" value="'+escHtml(item.title)+'"></div></div><div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
+}
+function addBoFeatItem(){
+  var d=document.getElementById('boFeatRepeater');
+  d.insertAdjacentHTML('beforeend',renderBoFeatItem({icon:'🏠',title:'New Feature',desc:'Feature description'},d.children.length));
+}
+
+// ── Collect training data ──
+function collectTrainingData(){
+  return {
+    hero:{
+      heading:document.getElementById('trHeroHead').value,
+      subtext:document.getElementById('trHeroSub').value,
+      bgImage:document.getElementById('trHeroBg').value
+    },
+    programs:{
+      label:document.getElementById('trProgLabel').value,
+      title:document.getElementById('trProgTitle').value,
+      subtext:document.getElementById('trProgSub').value,
+      items:collectRepeaterData('trProgRepeater',{img:'.r-img',icon:'.r-icon',title:'.r-title',desc:'.r-desc'})
+    },
+    gallery:{
+      label:document.getElementById('trGalLabel').value,
+      title:document.getElementById('trGalTitle').value,
+      subtext:document.getElementById('trGalSub').value,
+      images:document.getElementById('trGalImgs').value.split('\n').map(function(s){return s.trim()}).filter(Boolean)
+    },
+    process:{
+      label:document.getElementById('trProcLabel').value,
+      title:document.getElementById('trProcTitle').value,
+      subtext:document.getElementById('trProcSub').value,
+      steps:collectRepeaterData('trStepRepeater',{num:'.r-num',title:'.r-title',desc:'.r-desc'})
+    },
+    approach:{
+      label:document.getElementById('trApprLabel').value,
+      title:document.getElementById('trApprTitle').value,
+      para1:document.getElementById('trApprPara1').value,
+      para2:document.getElementById('trApprPara2').value,
+      benefits:document.getElementById('trApprBenefits').value.split('\n').map(function(s){return s.trim()}).filter(Boolean),
+      image:document.getElementById('trApprImage').value
+    },
+    cta:{
+      heading:document.getElementById('trCtaHead').value,
+      subtext:document.getElementById('trCtaSub').value,
+      btnText:document.getElementById('trCtaBtn').value,
+      btnLink:document.getElementById('trCtaLink').value
+    },
+    footer:{
+      copyright:document.getElementById('trFootCopyright').value
+    }
+  };
+}
+
+// ── Collect grooming data ──
+function collectGroomingData(){
+  var hours=document.getElementById('grHours').value.split('\n').map(function(s){return s.trim()}).filter(Boolean).map(function(s){
+    var parts=s.split('|');
+    return {day:parts[0]||'',time:parts[1]||''};
+  });
+  var stats=document.getElementById('grStats').value.split('\n').map(function(s){return s.trim()}).filter(Boolean).map(function(s){
+    var parts=s.split('|');
+    return {num:parts[0]||'',label:parts[1]||''};
+  });
+  return {
+    hero:{
+      badge:document.getElementById('grHeroBadge').value,
+      headingMain:document.getElementById('grHeroHeadMain').value,
+      headingEm:document.getElementById('grHeroHeadEm').value,
+      subtext:document.getElementById('grHeroSub').value,
+      btnText:document.getElementById('grHeroBtn').value,
+      posterUrl:document.getElementById('grHeroPoster').value,
+      videoUrl:document.getElementById('grHeroVideo').value
+    },
+    about:{
+      image:document.getElementById('grAbImg').value,
+      welcomeHeading:document.getElementById('grAbWelcHead').value,
+      welcomePara:document.getElementById('grAbWelcPara').value,
+      hours:hours,
+      stats:stats
+    },
+    services:{
+      badge:document.getElementById('grServBadge').value,
+      heading:document.getElementById('grServHead').value,
+      desc:document.getElementById('grServDesc').value,
+      btnText:document.getElementById('grServBtn').value,
+      items:collectRepeaterData('grServRepeater',{img:'.r-img',label:'.r-label'})
+    },
+    gallery:{
+      title:document.getElementById('grGalTitle').value,
+      subtext:document.getElementById('grGalSub').value,
+      images:document.getElementById('grGalImgs').value.split('\n').map(function(s){return s.trim()}).filter(Boolean)
+    },
+    reviews:{
+      badge:document.getElementById('grRevBadge').value,
+      heading:document.getElementById('grRevHead').value,
+      subtext:document.getElementById('grRevSub').value,
+      bgImage:document.getElementById('grRevBg').value,
+      items:collectRepeaterData('grRevRepeater',{name:'.r-name',stars:'.r-stars',text:'.r-text'})
+    },
+    cta:{
+      heading:document.getElementById('grCtaHead').value,
+      subtext:document.getElementById('grCtaSub').value,
+      btnText:document.getElementById('grCtaBtn').value
+    },
+    footer:{
+      brand:document.getElementById('grFootBrand').value,
+      tagline:document.getElementById('grFootTag').value,
+      copyright:document.getElementById('grFootCopy').value,
+      fb:document.getElementById('grFootFb').value,
+      ig:document.getElementById('grFootIg').value,
+      yt:document.getElementById('grFootYt').value,
+      gm:document.getElementById('grFootGm').value,
+      address1:document.getElementById('grFootAddr1').value,
+      address2:document.getElementById('grFootAddr2').value,
+      address3:document.getElementById('grFootAddr3').value,
+      whatsapp:document.getElementById('grFootWa').value,
+      email:document.getElementById('grFootEmail').value
+    }
+  };
+}
+
+// ── Collect boarding data ──
+function collectBoardingData(){
+  return {
+    hero:{
+      heading:document.getElementById('boHeroHead').value,
+      subtext:document.getElementById('boHeroSub').value,
+      bgImage:document.getElementById('boHeroBg').value
+    },
+    features:{
+      label:document.getElementById('boFeatLabel').value,
+      title:document.getElementById('boFeatTitle').value,
+      subtext:document.getElementById('boFeatSub').value,
+      items:collectRepeaterData('boFeatRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc'})
+    },
+    details:{
+      label:document.getElementById('boDetLabel').value,
+      title:document.getElementById('boDetTitle').value,
+      paragraph:document.getElementById('boDetPara').value,
+      image:document.getElementById('boDetImg').value,
+      detailsList:document.getElementById('boDetList').value.split('\n').map(function(s){return s.trim()}).filter(Boolean),
+      btnText:document.getElementById('boDetBtn').value
+    },
+    cta:{
+      heading:document.getElementById('boCtaHead').value,
+      subtext:document.getElementById('boCtaSub').value,
+      btnText:document.getElementById('boCtaBtn').value,
+      btnLink:document.getElementById('boCtaLink').value
+    },
+    footer:{
+      copyright:document.getElementById('boFootCopy').value
+    }
+  };
+}
+
+// ── Save content ──
+document.getElementById('saveContentBtn').addEventListener('click',async function(){
+  await saveAllContent();
+});
+document.addEventListener('click',async function(e){
+  if(e.target && e.target.id==='saveAllBtn') await saveAllContent();
+});
+
+async function saveAllContent(){
+  // Start with existing saved data, fall back to defaults
+  const data=await loadContent();
+
+  // Read Content tab fields if they're visible
+  if(document.getElementById('cHeroHeadline')){
+    data.hero.headline=document.getElementById('cHeroHeadline').value;
+    data.hero.badge=document.getElementById('cHeroBadge').value;
+    data.hero.bgImage=document.getElementById('cHeroBg').value;
+    data.hero.btnText=document.getElementById('cHeroBtn').value;
+    data.about.label=document.getElementById('cAboutLabel').value;
+    data.about.heading=document.getElementById('cAboutHeading').value;
+    data.about.para1=document.getElementById('cAboutPara1').value;
+    data.about.para2=document.getElementById('cAboutPara2').value;
+    data.about.para3=document.getElementById('cAboutPara3').value;
+    data.about.para4=document.getElementById('cAboutPara4').value;
+    data.about.image=document.getElementById('cAboutImage').value;
+    data.about.quoteText=document.getElementById('cAboutQuote').value;
+    data.about.quoteCite=document.getElementById('cAboutCite').value;
+    data.about.founderNote=document.getElementById('cFounderNote').value;
+    data.about.founderSub=document.getElementById('cFounderSub').value;
+    data.about.founderSign=document.getElementById('cFounderSign').value;
+    data.services.label=document.getElementById('cServLabel').value;
+    data.services.heading=document.getElementById('cServHeading').value;
+    data.services.subtext=document.getElementById('cServSub').value;
+    data.services.items=collectRepeaterData('servRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc',link:'.r-link'});
+    data.whyUs.label=document.getElementById('cWhyLabel').value;
+    data.whyUs.heading=document.getElementById('cWhyHeading').value;
+    data.whyUs.subtext=document.getElementById('cWhySub').value;
+    data.whyUs.items=collectRepeaterData('whyRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc'});
+    data.social=collectRepeaterData('socialRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc'});
+    data.gallery=document.getElementById('cGallery').value.split('\n').map(function(s){return s.trim()}).filter(Boolean);
+    data.testimonials=collectRepeaterData('testiRepeater',{stars:'.r-stars',name:'.r-name',quote:'.r-quote'});
+    data.testimonials.forEach(function(t){t.stars=parseInt(t.stars)||5});
+    data.footer.copyright=document.getElementById('cFootCopyright').value;
+    data.footer.tagline=document.getElementById('cFootTagline').value;
+    data.footer.fb=document.getElementById('cFootFb').value;
+    data.footer.ig=document.getElementById('cFootIg').value;
+    data.footer.yt=document.getElementById('cFootYt').value;
+    data.footer.gm=document.getElementById('cFootGm').value;
+    data.footer.email=document.getElementById('cFootEmail').value;
+    data.footer.whatsapp=document.getElementById('cFootWa').value;
+  }
+
+  // Collect training data if fields exist
+  if(document.getElementById('trHeroHead')){
+    data.training=collectTrainingData();
+  }
+
+  // Collect grooming data if fields exist
+  if(document.getElementById('grHeroBadge')){
+    data.grooming=collectGroomingData();
+  }
+
+  // Collect boarding data if fields exist
+  if(document.getElementById('boHeroHead')){
+    data.boarding=collectBoardingData();
+  }
+
+  saveContent(data);
+
+  const toast=document.getElementById('saveToast')||function(){
+    var t=document.createElement('div');
+    t.id='saveToast';t.className='cf-toast';t.textContent='✅ All content saved!';
+    document.body.appendChild(t);return t;
+  }();
+  toast.classList.add('show');
+  setTimeout(function(){toast.classList.remove('show')},2500);
+}
+
+// ── Tab switching ──
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click',async function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+    document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active')});
+    btn.classList.add('active');
+    var tabId='tab'+btn.dataset.tab.charAt(0).toUpperCase()+btn.dataset.tab.slice(1);
+    document.getElementById(tabId).classList.add('active');
+    if(btn.dataset.tab==='content')await renderContentEditor();
+    if(btn.dataset.tab==='training')await renderTrainingEditor();
+    if(btn.dataset.tab==='grooming')await renderGroomingEditor();
+    if(btn.dataset.tab==='boarding')await renderBoardingEditor();
+  });
 });
 
 // ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
-if(!requireAuth()){
-  document.getElementById('adminPass').focus();
-}else{
-  renderDashboard();
-}
+(async function(){
+  if(!requireAuth()){
+    document.getElementById('adminPass').focus();
+  }else{
+    await renderDashboard();
+  }
+})();
 </script>
 
 <footer style="background:#1a1a1a;color:rgba(255,255,255,.5);padding:24px;text-align:center;font-size:.8rem;border-top:1px solid rgba(255,255,255,.06)">

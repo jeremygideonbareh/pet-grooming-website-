@@ -10,6 +10,35 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:80px}
+
+/* ── PAGE LOADER ── */
+.page-loader{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .5s ease,visibility .5s ease;
+}
+.page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.loader-content{text-align:center}
+.loader-logo{margin-bottom:16px}
+.loader-logo img{width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto;animation:loaderPulse 1.2s ease-in-out infinite}
+.loader-brand{
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:1.5rem;font-weight:800;color:var(--charcoal);
+  margin-bottom:28px;letter-spacing:-.01em;
+}
+.loader-spinner{
+  width:36px;height:36px;margin:0 auto;
+  border:3px solid var(--border);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:loaderSpin .8s linear infinite;
+}
+@keyframes loaderSpin{to{transform:rotate(360deg)}}
+@keyframes loaderPulse{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(1.08);opacity:.8}
+}
 body{
   font-family:'Inter',-apple-system,sans-serif;
   background:#FBF7F2;color:#1A1412;
@@ -106,7 +135,8 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
 
 .hamburger{
   display:none;flex-direction:column;gap:5px;cursor:pointer;
-  background:none;border:none;padding:4px;
+  background:none;border:none;padding:10px;min-width:44px;min-height:44px;
+  align-items:center;justify-content:center;
 }
 .hamburger span{width:24px;height:2px;background:var(--charcoal);border-radius:2px;transition:all .3s ease;transform-origin:center}
 .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
@@ -132,7 +162,7 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
   position:absolute;inset:0;width:100%;height:100%;
   background:
     linear-gradient(135deg,rgba(26,20,18,.8) 0%,rgba(26,20,18,.4) 50%,rgba(26,20,18,.75) 100%),
-    url('https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1920&q=80') center 30%/cover no-repeat;
+    url('https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80') center 30%/cover no-repeat;
   animation:heroZoom 8s ease-out;
 }
 @keyframes heroZoom{0%{transform:scale(1.08)}100%{transform:scale(1)}}
@@ -142,32 +172,17 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
 }
 .hero-content>*{opacity:0;animation:fadeUp .7s cubic-bezier(.16,1,.3,1) forwards}
 .hero-content .hero-badge{
-  animation-delay:.4s;display:inline-flex;align-items:center;gap:8px;
+  animation-delay:.6s;display:inline-flex;align-items:center;gap:8px;
   background:rgba(255,255,255,.1);padding:8px 20px;border-radius:60px;
   color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.15);
   font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px;
 }
-.hero-content .hero-tagline{
-  animation-delay:.5s;font-size:.85rem;font-weight:500;letter-spacing:.15em;
-  text-transform:uppercase;color:var(--gold-light);margin-bottom:12px;
-}
-.hero-content h1{animation-delay:.7s;font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.6rem);font-weight:900;letter-spacing:-.03em;line-height:1.08;color:#fff;text-shadow:0 2px 30px rgba(0,0,0,.3)}
-.hero-content h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-light),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero-content p{animation-delay:.9s;font-size:clamp(.9rem,1.4vw,1.05rem);color:rgba(255,255,255,.75);line-height:1.7;margin-top:16px;max-width:640px;margin-inline:auto}
-.hero-btns{animation-delay:1.1s;display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:32px}
-.hero-statement{
-  animation-delay:1.3s;margin-top:36px;
-  display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:center;
-}
-.hero-statement span{
-  font-size:.78rem;color:rgba(255,255,255,.6);letter-spacing:.02em;
-  display:flex;align-items:center;gap:8px;
-}
-.hero-statement span::before{content:'▸';color:var(--gold);font-size:.7rem}
+.hero-content h1{animation-delay:.4s;font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,5rem);font-weight:900;letter-spacing:-.03em;line-height:1.05;color:#fff;text-shadow:0 2px 30px rgba(0,0,0,.3)}
+.hero-btns{animation-delay:.8s;display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:32px}
 @keyframes fadeUp{0%{opacity:0;transform:translateY(30px)}100%{opacity:1;transform:translateY(0)}}
 
 /* ── ABOUT ── */
-.about{padding:100px 0;background:var(--white)}
+.about{padding:80px 0;background:var(--white)}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
 .about-image{border-radius:32px;overflow:hidden;box-shadow:0 24px 48px -16px rgba(0,0,0,.12);position:relative;aspect-ratio:4/3;background:linear-gradient(135deg,var(--gold-light),var(--gold-dark))}
 .about-image img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
@@ -187,7 +202,7 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
 .founder-note .sign{display:block;margin-top:14px;font-weight:600;font-size:.85rem;color:var(--gold-light)}
 
 /* ── SERVICES GRID ── */
-.services{padding:100px 0;background:var(--cream-dark)}
+.services{padding:80px 0;background:var(--cream-dark)}
 .services-header{text-align:center;margin-bottom:56px}
 .serv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .serv-card{
@@ -239,7 +254,7 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
 .boarding-features li .ck{color:var(--gold);font-weight:700}
 
 /* ── GALLERY ── */
-.gallery{padding:100px 0;background:var(--cream-dark)}
+.gallery{padding:80px 0;background:var(--cream-dark)}
 .gallery-grid{
   display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px;
 }
@@ -321,7 +336,7 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
 .sr-item p{font-size:.8rem;color:var(--muted);line-height:1.5}
 
 /* ── TESTIMONIALS ── */
-.testimonials{padding:100px 0;background:var(--charcoal);color:var(--white)}
+.testimonials{padding:80px 0;background:var(--charcoal);color:var(--white)}
 .testimonials .section-title{color:var(--white)}
 .testimonials .section-sub{color:rgba(255,255,255,.6)}
 .testimonials .section-label{color:var(--gold-light)}
@@ -338,7 +353,7 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
 .test-card cite{display:block;margin-top:12px;font-style:normal;font-weight:600;font-size:.82rem;color:rgba(255,255,255,.9)}
 
 /* ── FUTURE SECTIONS ── */
-.future{padding:100px 0;background:var(--white)}
+.future{padding:80px 0;background:var(--white)}
 .future-header{text-align:center;margin-bottom:48px}
 .future-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px}
 .future-card{
@@ -365,7 +380,7 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
 }
 
 /* ── CTA ── */
-.cta-section{padding:100px 0;background:var(--charcoal);text-align:center;color:var(--white)}
+.cta-section{padding:80px 0;background:var(--charcoal);text-align:center;color:var(--white)}
 .cta-section h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.02em}
 .cta-section p{color:rgba(255,255,255,.65);margin-top:12px;max-width:480px;margin-inline:auto}
 .cta-section .btn-whatsapp{margin-top:28px}
@@ -376,6 +391,21 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
   font-size:.82rem;color:rgba(255,255,255,.7);transition:all .3s ease;
 }
 .cta-social a:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:var(--white)}
+
+/* ── WHY US ── */
+.why-us{padding:80px 0;background:var(--white)}
+.why-us .wu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px}
+.why-us .wu-item{background:var(--cream);border-radius:20px;padding:24px 20px;border:1px solid var(--border);transition:transform .3s ease;text-align:center}
+.why-us .wu-item:hover{transform:translateY(-4px)}
+.why-us .wu-item .icon{font-size:1.6rem;margin-bottom:10px}
+.why-us .wu-item h4{font-size:.9rem;font-weight:700;margin-bottom:6px;color:var(--charcoal)}
+.why-us .wu-item p{font-size:.82rem;color:var(--muted);line-height:1.5}
+.why-us .wu-sr{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}
+.why-us .wu-sr-item{text-align:center;padding:20px 16px;border-radius:16px;background:var(--cream-dark);transition:transform .3s ease}
+.why-us .wu-sr-item:hover{transform:translateY(-3px)}
+.why-us .wu-sr-item .icon{font-size:1.5rem;margin-bottom:8px}
+.why-us .wu-sr-item h4{font-size:.85rem;font-weight:600;margin-bottom:4px;color:var(--charcoal)}
+.why-us .wu-sr-item p{font-size:.78rem;color:var(--muted);line-height:1.4}
 
 /* ── FOOTER ── */
 footer{
@@ -421,23 +451,26 @@ footer{
   .about-grid,.training-grid,.grooming-grid,.boarding-grid{grid-template-columns:1fr;gap:40px}
   .serv-grid,.vmg-grid,.usp-grid,.future-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
   .sr-grid{grid-template-columns:repeat(2,1fr)}
+  .why-us .wu-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
+  .why-us .wu-sr{grid-template-columns:repeat(2,1fr)}
   .test-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
   .gallery-grid{grid-template-columns:repeat(3,1fr)}
   .gallery-item:nth-child(1){grid-column:span 1;grid-row:span 1}
   .gallery-item:nth-child(2){grid-column:span 1;grid-row:span 1}
 }
 @media(max-width:768px){
-  .about,.services,.training,.grooming-overview,.boarding,.gallery,.vmg,.testimonials,.future,.cta-section{padding-top:60px;padding-bottom:60px}
+  .about,.services,.training,.grooming-overview,.boarding,.gallery,.vmg,.why-us,.testimonials,.future,.cta-section{padding-top:60px;padding-bottom:60px}
   .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
   .footer-brand{grid-column:1/-1}
 }
 @media(max-width:640px){
   .gallery-grid{grid-template-columns:repeat(2,1fr)}
   .vmg-grid,.sr-grid{grid-template-columns:1fr}
+  .why-us .wu-sr{grid-template-columns:1fr}
   .training-list,.boarding-features{grid-template-columns:1fr}
-  .hero{padding:100px 24px 60px}
-  .about,.services,.training,.grooming-overview,.boarding,.gallery,.vmg,.testimonials,.future,.cta-section{padding-top:50px;padding-bottom:50px}
-  .hero-content h1{font-size:clamp(1.6rem,6vw,2rem)}
+  .hero{padding:80px 24px 60px}
+  .about,.services,.training,.grooming-overview,.boarding,.gallery,.vmg,.why-us,.testimonials,.future,.cta-section{padding-top:50px;padding-bottom:50px}
+  .hero-content h1{font-size:clamp(2rem,7vw,3rem)}
   .section-title{font-size:clamp(1.5rem,5vw,1.8rem)}
   .founder-note{padding:24px 20px}
   .serv-card{padding:28px 20px}
@@ -447,18 +480,16 @@ footer{
 }
 @media(max-width:480px){
   .hero{padding:80px 20px 50px}
-  .about,.services,.training,.grooming-overview,.boarding,.gallery,.vmg,.testimonials,.future,.cta-section{padding-top:40px;padding-bottom:40px}
+  .about,.services,.training,.grooming-overview,.boarding,.gallery,.vmg,.why-us,.testimonials,.future,.cta-section{padding-top:40px;padding-bottom:40px}
   .hero-content .hero-badge{font-size:.65rem;padding:6px 14px}
-  .hero-content .hero-tagline{font-size:.75rem}
-  .hero-content p{font-size:.85rem}
   .hero-btns{gap:12px;flex-direction:column;align-items:center}
   .hero-btns .btn{width:100%;justify-content:center}
-  .hero-statement{gap:8px 16px;margin-top:28px}
-  .hero-statement span{font-size:.72rem}
   .about-quote{padding:20px;font-size:.85rem}
   .sr-grid{grid-template-columns:1fr;max-width:320px;margin-inline:auto}
   .usp-grid{gap:16px}
   .usp-item{padding:20px 16px}
+  .why-us .wu-item{padding:20px 16px}
+  .why-us .wu-sr-item{padding:16px 12px}
   .test-card{padding:22px 18px}
   .cta-section{padding:60px 0}
   .cta-social{gap:10px}
@@ -472,15 +503,30 @@ footer{
   .gallery-item{aspect-ratio:4/3}
   .section-sub{font-size:.85rem}
   .about-text .about-quote{padding:16px;font-size:.82rem}
+  .founder-note{padding:20px 16px}
+  .why-us .wu-sr-item{padding:14px 10px}
   .vmg-card{padding:24px 18px}
   .sr-item{padding:20px 16px}
+  .serv-card{padding:24px 18px}
   .cta-section h2{font-size:clamp(1.4rem,6vw,1.8rem)}
   .footer{padding:40px 0 24px}
   .footer-col h4{margin-bottom:14px}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
+<body data-page="home">
+
+<!-- ═══ PAGE LOADER ═══ -->
+<div id="pageLoader" class="page-loader">
+  <div class="loader-content">
+    <div class="loader-logo">
+      <img src="images/a1logo.jpeg" alt="A-1 Enterprises">
+    </div>
+    <div class="loader-brand">A-1 Enterprises</div>
+    <div class="loader-spinner"></div>
+  </div>
+</div>
 
 <!-- ═══ NAV ═══ -->
 <nav id="navbar">
@@ -492,10 +538,10 @@ footer{
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#services">Services</a></li>
+      <li><a href="training.html">Dog Training</a></li>
       <li><a href="grooming.html">Grooming</a></li>
       <li><a href="store.html">Store</a></li>
       <li><a href="#gallery">Gallery</a></li>
-      <li><a href="#contact">Contact</a></li>
     </ul>
     <div class="nav-actions">
       <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp" style="display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);padding:10px 20px;border-radius:60px;font-weight:600;font-size:.82rem;transition:all .3s ease;text-decoration:none">
@@ -514,10 +560,10 @@ footer{
   <a href="index.html">Home</a>
   <a href="#about">About</a>
   <a href="#services">Services</a>
+  <a href="training.html">Dog Training</a>
   <a href="grooming.html">Grooming</a>
   <a href="store.html">Store</a>
   <a href="#gallery">Gallery</a>
-  <a href="#contact">Contact</a>
   <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp" style="display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);padding:12px 28px;border-radius:60px;font-weight:600;font-size:.9rem;text-decoration:none">WhatsApp Us</a>
 </div>
 
@@ -525,51 +571,10 @@ footer{
 <section class="hero" id="home">
   <div class="hero-bg"></div>
   <div class="hero-content">
+    <h1>A-1 Enterprises</h1>
     <div class="hero-badge">Since 2020 · Shillong, Meghalaya</div>
-    <div class="hero-tagline">Passion Turned Profession</div>
-    <h1>Building the Future of Pet &amp; Working Dog<br><em>Services in Northeast India</em></h1>
-    <p>From a small dream driven by love for dogs to becoming one of Meghalaya's growing canine service providers, A-1 Enterprises is committed to building a complete ecosystem for pets, training, grooming, boarding, rehabilitation, and future working dog development.</p>
     <div class="hero-btns">
-      <a href="#about" class="btn btn-primary">Discover Our Story</a>
-      <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn btn-outline">Chat on WhatsApp</a>
-    </div>
-    <div class="hero-statement">
-      <span>Professional Dog Training</span>
-      <span>Rehabilitation</span>
-      <span>Protection &amp; Detection</span>
-      <span>Grooming</span>
-      <span>Boarding</span>
-      <span>Pet Store</span>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ ABOUT ═══ -->
-<section class="about" id="about">
-  <div class="container">
-    <div class="about-grid">
-      <div class="about-text reveal">
-        <span class="section-label">About A-1 Enterprises</span>
-        <h2 class="section-title">Passion Turned Profession</h2>
-        <p class="section-sub">A-1 Enterprises was founded from pure passion, dedication, and a lifelong connection with dogs. What began as a hobby during college days gradually transformed into a professional venture with a vision to elevate pet care and canine training standards in Meghalaya and across Northeast India.</p>
-        <p class="section-sub" style="margin-top:10px">The founders personally experienced the challenges faced by pet parents, including housing limitations and the lack of professional canine facilities in the region. Instead of allowing those struggles to become obstacles, they became the motivation behind building something meaningful for the pet community.</p>
-        <p class="section-sub" style="margin-top:10px">Professionally established in 2020, A-1 Enterprises has steadily grown into a trusted name in dog training, grooming, rehabilitation, and pet services while continuously expanding its long-term vision of creating a complete pet ecosystem.</p>
-        <div class="about-quote">
-          "We started as college students and passionate pet parents who were often thrown out of rental houses for having too many dogs. What began as an obsession and passion for dogs eventually turned into a profession, and later into a larger vision for the Northeast."
-          <cite>— Founder, A-1 Enterprises</cite>
-        </div>
-      </div>
-      <div class="reveal reveal-delay-2">
-        <div class="about-image">
-          <img src="images/welcome.jpeg" alt="A-1 Enterprises pet care" loading="lazy">
-        </div>
-        <div class="founder-note">
-          <h4>✧ Founder's Note</h4>
-          <p>"A-1 Enterprises was built from passion, struggle, and dedication towards dogs. What started as a personal obsession gradually evolved into a profession, and today, into a larger vision of creating a complete ecosystem for pets and working dogs in the Northeast."</p>
-          <p class="section-sub" style="color:rgba(255,255,255,.6);margin-top:10px;font-size:.82rem">The journey has been strongly supported by family, especially by <strong style="color:var(--gold-light)">Mrs. Francisca S. Sangma</strong>, whose unwavering support and shared vision continue to play a vital role in the growth of A-1 Enterprises.</p>
-          <span class="sign">— Founder, A-1 Enterprises</span>
-        </div>
-      </div>
+      <a href="#about" class="btn btn-primary">About Us</a>
     </div>
   </div>
 </section>
@@ -578,7 +583,7 @@ footer{
 <section class="services" id="services">
   <div class="container">
     <div class="services-header reveal">
-      <span class="section-label">Our Services</span>
+      <span class="section-label">Passion Turned Profession</span>
       <h2 class="section-title">Complete Canine Care Ecosystem</h2>
       <p class="section-sub" style="margin-inline:auto">Professional, ethical, and result-oriented canine services under one trusted brand.</p>
     </div>
@@ -623,70 +628,32 @@ footer{
   </div>
 </section>
 
-<!-- ═══ TRAINING & REHAB ═══ -->
-<section class="training" id="training">
+<!-- ═══ ABOUT ═══ -->
+<section class="about" id="about">
   <div class="container">
-    <div class="training-grid">
-      <div class="reveal">
-        <span class="section-label">Training &amp; Rehabilitation</span>
-        <h2 class="section-title">Professional Dog Training<br>Built on Trust &amp; Science</h2>
-        <p class="section-sub">We offer personalized training programs based on each dog's temperament and behavior. Our approach combines modern canine science with real hands-on experience developed over years of dedicated work.</p>
-        <p class="section-sub" style="margin-top:10px">From basic obedience to advanced protection training, every program is designed to build a stronger bond between you and your dog while achieving lasting results.</p>
-        <ul class="training-list">
-          <li><span class="icon">✓</span> Obedience &amp; Behavioral Training</li>
-          <li><span class="icon">✓</span> Rehabilitation &amp; Correction</li>
-          <li><span class="icon">✓</span> Protection Training</li>
-          <li><span class="icon">✓</span> Detection Training</li>
-          <li><span class="icon">✓</span> Puppy Socialization</li>
-          <li><span class="icon">✓</span> Advanced Working Dog Programs</li>
-        </ul>
-        <a href="training.html" class="btn btn-primary" style="margin-top:28px;display:inline-flex">View Training Programs</a>
-      </div>
-      <div class="training-image reveal reveal-delay-2">
-        <img src="images/4081455907607392.jpg" alt="Dog training at A-1 Enterprises" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'">
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ GROOMING OVERVIEW ═══ -->
-<section class="grooming-overview" id="grooming">
-  <div class="container">
-    <div class="grooming-grid">
-      <div class="grooming-image reveal">
-        <img src="images/2533343538804035.jpg" alt="Pet grooming at A-1 Enterprises" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <span class="section-label">About A-1 Enterprises</span>
+        <h2 class="section-title">Passion Turned Profession</h2>
+        <p class="section-sub">A-1 Enterprises was founded from pure passion, dedication, and a lifelong connection with dogs. What began as a hobby during college days gradually transformed into a professional venture with a vision to elevate pet care and canine training standards in Meghalaya and across Northeast India.</p>
+        <p class="section-sub" style="margin-top:10px">From a small dream driven by love for dogs to becoming one of Meghalaya's growing canine service providers, A-1 Enterprises is committed to building a complete ecosystem for pets, training, grooming, boarding, rehabilitation, and future working dog development.</p>
+        <p class="section-sub" style="margin-top:10px">The founders personally experienced the challenges faced by pet parents, including housing limitations and the lack of professional canine facilities in the region. Instead of allowing those struggles to become obstacles, they became the motivation behind building something meaningful for the pet community.</p>
+        <p class="section-sub" style="margin-top:10px">Professionally established in 2020, A-1 Enterprises has steadily grown into a trusted name in dog training, grooming, rehabilitation, and pet services while continuously expanding its long-term vision of creating a complete pet ecosystem.</p>
+        <div class="about-quote">
+          "We started as college students and passionate pet parents who were often thrown out of rental houses for having too many dogs. What began as an obsession and passion for dogs eventually turned into a profession, and later into a larger vision for the Northeast."
+          <cite>— Founder, A-1 Enterprises</cite>
+        </div>
       </div>
       <div class="reveal reveal-delay-2">
-        <span class="section-label">Grooming</span>
-        <h2 class="section-title">Professional Grooming<br>with a Gentle Touch</h2>
-        <p class="section-sub">Full-service grooming including baths, precision haircuts, nail & ear care, and spa treatments. Every pet receives individualized attention in a calm, stress-free environment using only premium products.</p>
-        <p class="section-sub" style="margin-top:10px">Our experienced groomers ensure your pet looks and feels their best, whether it's a routine groom or a full makeover.</p>
-        <a href="grooming.html" class="btn btn-primary" style="margin-top:24px;display:inline-flex">Explore Grooming Services</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ BOARDING ═══ -->
-<section class="boarding" id="boarding">
-  <div class="container">
-    <div class="boarding-grid">
-      <div class="reveal">
-        <span class="section-label">Boarding &amp; Kennels</span>
-        <h2 class="section-title">A Home Away<br>from Home</h2>
-        <p class="section-sub">Safe, comfortable, and hygienic boarding facilities for your pet. Whether you're traveling, busy at work, or need temporary care, we provide a loving environment with round-the-clock professional supervision.</p>
-        <ul class="boarding-features">
-          <li><span class="ck">✓</span> Clean, spacious kennels</li>
-          <li><span class="ck">✓</span> 24/7 supervision &amp; care</li>
-          <li><span class="ck">✓</span> Regular exercise &amp; playtime</li>
-          <li><span class="ck">✓</span> Nutritious meals included</li>
-          <li><span class="ck">✓</span> Medical check-ups</li>
-          <li><span class="ck">✓</span> Pick-up &amp; drop-off</li>
-        </ul>
-        <a href="boarding.html" class="btn btn-primary" style="margin-top:24px;display:inline-flex">View Boarding Details</a>
-      </div>
-      <div class="boarding-image reveal reveal-delay-2">
-        <img src="images/7177680652812423.jpg" alt="Boarding facility" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'">
+        <div class="about-image">
+          <img src="images/welcome.jpeg" alt="A-1 Enterprises pet care" loading="lazy">
+        </div>
+        <div class="founder-note">
+          <h4>✧ Founder's Note</h4>
+          <p>"A-1 Enterprises was built from passion, struggle, and dedication towards dogs. What started as a personal obsession gradually evolved into a profession, and today, into a larger vision of creating a complete ecosystem for pets and working dogs in the Northeast."</p>
+          <p class="section-sub" style="color:rgba(255,255,255,.6);margin-top:10px;font-size:.82rem">The journey has been strongly supported by family, especially by <strong style="color:var(--gold-light)">Mrs. Francisca S. Sangma</strong>, whose unwavering support and shared vision continue to play a vital role in the growth of A-1 Enterprises.</p>
+          <span class="sign">— Founder, A-1 Enterprises</span>
+        </div>
       </div>
     </div>
   </div>
@@ -710,114 +677,66 @@ footer{
   <img id="lbImg" src="" alt="">
 </div>
 
-<!-- ═══ VISION / MISSION / GOALS ═══ -->
-<section class="vmg">
+<!-- ═══ WHY US (Vision · USP · Community) ═══ -->
+<section class="why-us">
   <div class="container">
     <div class="reveal" style="text-align:center">
-      <span class="section-label">Our Direction</span>
-      <h2 class="section-title">Vision · Mission · Goals</h2>
-      <p class="section-sub" style="margin-inline:auto">Building a complete and professional ecosystem for pets and working dogs in Northeast India.</p>
+      <span class="section-label">Why Choose Us</span>
+      <h2 class="section-title">Vision · Strengths · Purpose</h2>
+      <p class="section-sub" style="margin-inline:auto">To build a complete professional ecosystem for pets and working dogs in Northeast India — combining modern training, grooming, rehabilitation, veterinary support, and responsible pet care under one trusted platform.</p>
     </div>
-    <div class="vmg-grid">
-      <div class="vmg-card reveal reveal-delay-1">
-        <div class="icon">🔭</div>
-        <h3>Our Vision</h3>
-        <p>To build a complete and professional ecosystem for pets and working dogs in Northeast India by combining modern canine training, grooming, rehabilitation, veterinary support, boarding, and responsible pet care under one trusted platform.</p>
-      </div>
-      <div class="vmg-card reveal reveal-delay-2">
-        <div class="icon">🎯</div>
-        <h3>Our Mission</h3>
-        <ul>
-          <li>Professional, ethical, result-oriented training</li>
-          <li>Improve pet care standards in Northeast India</li>
-          <li>Promote responsible pet ownership &amp; welfare</li>
-          <li>Develop future-ready working dogs for security sectors</li>
-          <li>Build trust through professionalism &amp; transparency</li>
-        </ul>
-      </div>
-      <div class="vmg-card reveal reveal-delay-3">
-        <div class="icon">📈</div>
-        <h3>Our Goals</h3>
-        <ul>
-          <li><strong>Short-term:</strong> Expand training & grooming infra, launch vet clinic, improve accessibility, strengthen digital presence</li>
-          <li style="margin-top:8px"><strong>Long-term:</strong> Leading canine brand in Northeast, collaborate with law enforcement, integrated ecosystem with eco pet stays</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ USP ═══ -->
-<section class="usp">
-  <div class="container">
-    <div class="reveal" style="text-align:center">
-      <span class="section-label" style="color:var(--gold-light)">Why Choose Us</span>
-      <h2 class="section-title">Our Unique Strengths</h2>
-      <p class="section-sub" style="margin-inline:auto">What sets A-1 Enterprises apart in the region's pet care landscape.</p>
-    </div>
-    <div class="usp-grid">
-      <div class="usp-item reveal reveal-delay-1">
+    <div class="wu-grid">
+      <div class="wu-item reveal reveal-delay-1">
         <div class="icon">🏔️</div>
         <h4>Regional Pioneers</h4>
         <p>One of the few professionally growing canine-focused brands in Meghalaya and Northeast India.</p>
       </div>
-      <div class="usp-item reveal reveal-delay-2">
+      <div class="wu-item reveal reveal-delay-2">
         <div class="icon">🧠</div>
         <h4>Personalized Approach</h4>
-        <p>Every training program is customized based on each dog's unique temperament, behavior, and needs.</p>
+        <p>Every training program is customized based on each dog's unique temperament and needs.</p>
       </div>
-      <div class="usp-item reveal reveal-delay-3">
+      <div class="wu-item reveal reveal-delay-3">
         <div class="icon">🔄</div>
         <h4>Complete Ecosystem</h4>
         <p>Training, grooming, rehabilitation, boarding, and pet store — all under one brand for seamless care.</p>
       </div>
-      <div class="usp-item reveal reveal-delay-1">
+      <div class="wu-item reveal reveal-delay-1">
         <div class="icon">🔭</div>
         <h4>Long-Term Vision</h4>
         <p>Ecosystem focused on both companion pets and future working dog development for security sectors.</p>
       </div>
-      <div class="usp-item reveal reveal-delay-2">
+      <div class="wu-item reveal reveal-delay-2">
         <div class="icon">❤️</div>
         <h4>Passion-Driven</h4>
-        <p>Founded from genuine love for dogs, backed by real hands-on experience and unwavering dedication.</p>
+        <p>Founded from genuine love for dogs, backed by real hands-on experience and dedication.</p>
       </div>
-      <div class="usp-item reveal reveal-delay-3">
+      <div class="wu-item reveal reveal-delay-3">
         <div class="icon">🤝</div>
         <h4>Community Trust</h4>
         <p>Built on professionalism, transparency, and quality care that pet owners across the region trust.</p>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ═══ SOCIAL RESPONSIBILITY ═══ -->
-<section class="social-resp">
-  <div class="container">
-    <div class="reveal" style="text-align:center">
-      <span class="section-label">Social Responsibility</span>
-      <h2 class="section-title">Caring for Community &amp; Canines</h2>
-      <p class="section-sub" style="margin-inline:auto">At A-1 Enterprises, we believe responsible pet care also means responsible community care.</p>
-    </div>
-    <div class="sr-grid">
-      <div class="sr-item reveal reveal-delay-1">
+    <div class="wu-sr reveal">
+      <div class="wu-sr-item reveal reveal-delay-1">
         <div class="icon">🧹</div>
         <h4>Cleanliness Drives</h4>
-        <p>Regular cleanliness drives in dog walking areas to maintain hygienic public spaces for pets and owners.</p>
+        <p>Regular drives in dog walking areas for hygienic public spaces.</p>
       </div>
-      <div class="sr-item reveal reveal-delay-2">
+      <div class="wu-sr-item reveal reveal-delay-2">
         <div class="icon">🗑️</div>
         <h4>Dustbin Campaigns</h4>
-        <p>Promoting installation of dustbins in public pet walking zones for responsible waste disposal.</p>
+        <p>Promoting dustbin installation in public pet walking zones.</p>
       </div>
-      <div class="sr-item reveal reveal-delay-3">
+      <div class="wu-sr-item reveal reveal-delay-3">
         <div class="icon">📢</div>
         <h4>Awareness Programs</h4>
-        <p>Spreading awareness regarding responsible pet ownership and animal welfare across the community.</p>
+        <p>Spreading awareness on responsible pet ownership and welfare.</p>
       </div>
-      <div class="sr-item reveal reveal-delay-4">
+      <div class="wu-sr-item reveal reveal-delay-4">
         <div class="icon">🤲</div>
         <h4>Ethical Practices</h4>
-        <p>Encouraging ethical canine handling and humane training practices throughout our services.</p>
+        <p>Encouraging humane training practices throughout our services.</p>
       </div>
     </div>
   </div>
@@ -1023,6 +942,19 @@ lightbox.addEventListener('click',e=>{
     document.body.style.overflow='';
   }
 });
+
+// ── Page loader (min 2s) ──
+const loader=document.getElementById('pageLoader');
+const hideLoader=()=>{
+  if(loader){
+    loader.classList.add('hidden');
+    setTimeout(()=>loader.remove(),600);
+  }
+};
+setTimeout(()=>{if(document.readyState==='complete')hideLoader()},1200);
+window.addEventListener('load',()=>setTimeout(hideLoader,1200));
 </script>
+<script src="db.js"></script>
+<script src="content-loader.js"></script>
 </body>
 </html>

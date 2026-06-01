@@ -116,8 +116,9 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
   .feature-card{padding:20px 14px}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
+<body data-page="board">
 <nav id="navbar"><div class="nav-inner">
   <a href="index.html" class="nav-logo"><img src="images/a1logo.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
   <ul class="nav-links">
@@ -261,5 +262,7 @@ window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.s
 const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('active');observer.unobserve(e.target)}})},{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 </script>
+<script src="db.js"></script>
+<script src="content-loader.js"></script>
 </body>
 </html>

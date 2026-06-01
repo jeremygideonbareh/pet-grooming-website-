@@ -23,13 +23,15 @@ ul{list-style:none}
 .btn-primary{background:var(--gold);color:var(--charcoal);box-shadow:0 4px 20px rgba(201,160,92,.35)}
 .btn-primary:hover{background:var(--gold-dark);transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,160,92,.4)}
 .btn-primary:active{transform:scale(.97)}
+.btn-whatsapp{background:var(--whatsapp);color:var(--white);box-shadow:0 4px 16px rgba(37,211,102,.3)}
+.btn-whatsapp:hover{background:#1DA851;transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.35)}
 .reveal{opacity:0;transform:translateY(36px);transition:all .7s cubic-bezier(.16,1,.3,1)}
 .reveal.active{opacity:1;transform:translateY(0)}
 .reveal-delay-1{transition-delay:.1s}
 .reveal-delay-2{transition-delay:.2s}
 
 /* ── HERO ── */
-.page-hero{background:linear-gradient(135deg,rgba(26,20,18,.85),rgba(26,20,18,.6)),url('https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;padding:120px 24px 80px;text-align:center;color:#fff}
+.page-hero{background:linear-gradient(135deg,rgba(26,20,18,.85),rgba(26,20,18,.6)),url('https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;padding:120px 24px 80px;text-align:center;color:#fff}
 .page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:900;letter-spacing:-.02em}
 .page-hero p{font-size:1rem;color:rgba(255,255,255,.7);max-width:560px;margin:14px auto 0;line-height:1.6}
 
@@ -45,7 +47,7 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
 .nav-links a:hover{color:var(--charcoal)}
 .nav-links a:hover::after{width:100%}
 .nav-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:10px;min-width:44px;min-height:44px;align-items:center;justify-content:center}
 .hamburger span{width:24px;height:2px;background:var(--charcoal);border-radius:2px;transition:all .3s ease;transform-origin:center}
 .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
 .hamburger.active span:nth-child(2){opacity:0}
@@ -71,6 +73,25 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
 .benefits li{display:flex;align-items:center;gap:10px;font-size:.88rem;padding:12px 16px;background:var(--cream);border-radius:14px;font-weight:500}
 .benefits li .ck{color:var(--gold);font-weight:700}
 
+/* ── PROGRAM CARD IMAGES ── */
+.program-card .card-img{width:100%;height:160px;border-radius:16px;overflow:hidden;margin-bottom:16px;background:var(--cream-dark)}
+.program-card .card-img img{width:100%;height:100%;object-fit:cover}
+
+/* ── TRAINING GALLERY ── */
+.train-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+.train-gal .gal-item{border-radius:20px;overflow:hidden;aspect-ratio:4/3;background:var(--cream-dark);transition:transform .4s ease;cursor:pointer}
+.train-gal .gal-item:hover{transform:scale(1.04)}
+.train-gal .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.train-gal .gal-item:hover img{transform:scale(1.1)}
+
+/* ── TRAINING PROCESS ── */
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:32px}
+.process-step{text-align:center;padding:28px 20px;background:var(--white);border-radius:24px;border:1px solid var(--border);transition:transform .3s ease;position:relative}
+.process-step:hover{transform:translateY(-4px)}
+.process-step .step-num{width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--charcoal);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;margin:0 auto 14px}
+.process-step h4{font-size:.95rem;font-weight:700;margin-bottom:6px}
+.process-step p{font-size:.8rem;color:var(--muted);line-height:1.5}
+
 /* ── CTA ── */
 .cta-section{padding:80px 0;background:var(--charcoal);text-align:center;color:var(--white)}
 .cta-section h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800}
@@ -84,6 +105,10 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
 .footer-inner a{transition:color .3s ease;color:rgba(255,255,255,.5)}
 .footer-inner a:hover{color:var(--gold)}
 
+@media(max-width:900px){
+  .train-gal{grid-template-columns:repeat(2,1fr)}
+  .process-grid{grid-template-columns:repeat(2,1fr);max-width:480px;margin-inline:auto}
+}
 @media(max-width:768px){
   .programs{grid-template-columns:1fr}
   .approach-grid{grid-template-columns:1fr}
@@ -101,13 +126,20 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
   .cta-section{padding:60px 0}
   .cta-section h2{font-size:clamp(1.4rem,5vw,1.8rem)}
 }
+@media(max-width:640px){
+  .program-card .card-img{height:140px}
+}
 @media(max-width:480px){
   .page-hero{padding:80px 16px 40px}
   .content-section{padding:40px 0}
   .section-title{font-size:clamp(1.4rem,5vw,1.6rem)}
   .section-sub{font-size:.85rem}
+  .train-gal{grid-template-columns:1fr;max-width:400px;margin-inline:auto}
+  .process-grid{grid-template-columns:1fr;max-width:380px;margin-inline:auto}
   .program-card h3{font-size:1rem}
   .program-card p{font-size:.8rem}
+  .program-card .card-img{height:130px}
+  .process-step{padding:22px 16px}
   .benefits li{font-size:.82rem;padding:10px 12px}
   .cta-section{padding:50px 0}
   .btn{padding:12px 24px;font-size:.82rem}
@@ -117,19 +149,22 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
   .page-hero h1{font-size:clamp(1.4rem,5vw,1.6rem)}
   .content-section{padding:32px 0}
   .program-card{padding:20px 14px}
+  .program-card .card-img{height:110px}
+  .process-step{padding:18px 14px}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
+<body data-page="train">
 <nav id="navbar"><div class="nav-inner">
   <a href="index.html" class="nav-logo"><img src="images/a1logo.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
     <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#services">Services</a></li>
     <li><a href="grooming.html">Grooming</a></li>
     <li><a href="boarding.html">Boarding</a></li>
     <li><a href="store.html">Store</a></li>
-    <li><a href="index.html#contact">Contact</a></li>
   </ul>
   <div class="nav-actions">
     <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp" style="display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);padding:10px 20px;border-radius:60px;font-weight:600;font-size:.8rem;transition:all .3s ease;text-decoration:none">
@@ -142,10 +177,10 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
 <div class="mobile-nav" id="mobileNav">
   <a href="index.html">Home</a>
   <a href="index.html#about">About</a>
+  <a href="index.html#services">Services</a>
   <a href="grooming.html">Grooming</a>
   <a href="boarding.html">Boarding</a>
   <a href="store.html">Store</a>
-  <a href="index.html#contact">Contact</a>
   <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp" style="display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);padding:12px 28px;border-radius:60px;font-weight:600;font-size:.9rem;text-decoration:none">WhatsApp Us</a>
 </div>
 
@@ -163,34 +198,92 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
     </div>
     <div class="programs">
       <div class="program-card reveal reveal-delay-1">
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80" alt="Obedience training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="icon">🎯</div>
         <h3>Obedience &amp; Behavioral Training</h3>
         <p>Foundation training covering sit, stay, heel, recall, and loose-leash walking. We address behavioral issues like jumping, barking, pulling, and separation anxiety using positive reinforcement methods.</p>
       </div>
       <div class="program-card reveal reveal-delay-2">
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80" alt="Rehabilitation training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="icon">🔄</div>
         <h3>Rehabilitation &amp; Correction</h3>
         <p>Specialized programs for dogs with trauma, aggression, fear, or anxiety. Our compassionate approach rebuilds confidence and trust through structured, professional methods tailored to each dog's history.</p>
       </div>
       <div class="program-card reveal reveal-delay-1">
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80" alt="Protection training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="icon">🛡️</div>
         <h3>Protection &amp; Detection Training</h3>
         <p>Advanced training for personal protection, property security, and scent detection. Designed for working dogs and owners seeking specialized capabilities with professional oversight.</p>
       </div>
       <div class="program-card reveal reveal-delay-2">
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80" alt="Puppy socialization" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="icon">🐾</div>
         <h3>Puppy Socialization</h3>
         <p>Early socialization and basic manners for puppies. Critical foundation training during the developmental window to ensure confident, well-adjusted adult dogs.</p>
       </div>
       <div class="program-card reveal reveal-delay-1">
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=800&q=80" alt="Working dog training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="icon">🎖️</div>
         <h3>Working Dog Development</h3>
         <p>Future-ready programs for security, detection, and public service sectors. We are developing collaborations with law enforcement agencies to train dogs for real-world operational roles.</p>
       </div>
       <div class="program-card reveal reveal-delay-2">
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80" alt="Owner training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="icon">👨‍👩‍👧‍👦</div>
         <h3>Owner-Centric Training</h3>
         <p>We train the owner alongside the dog. Our approach ensures you understand the techniques and continue reinforcing good behavior long after the formal training sessions end.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ GALLERY ═══ -->
+<section class="content-section" style="background:var(--white)">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <span class="section-label">Gallery</span>
+      <h2 class="section-title">Training in Action</h2>
+      <p class="section-sub" style="margin-inline:auto">Real moments from our training sessions — building skills, trust, and lasting bonds.</p>
+    </div>
+    <div class="train-gal reveal reveal-delay-2">
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROCESS ═══ -->
+<section class="content-section">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <span class="section-label">How It Works</span>
+      <h2 class="section-title">Our Training Process</h2>
+      <p class="section-sub" style="margin-inline:auto">A structured step-by-step approach to ensure the best results for you and your dog.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-step reveal reveal-delay-1">
+        <div class="step-num">1</div>
+        <h4>Assessment</h4>
+        <p>We evaluate your dog's temperament, behavior, and needs through a thorough initial consultation.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-2">
+        <div class="step-num">2</div>
+        <h4>Custom Plan</h4>
+        <p>A tailored training program is designed specifically for your dog's unique personality and goals.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-1">
+        <div class="step-num">3</div>
+        <h4>Training Sessions</h4>
+        <p>Structured one-on-one sessions using positive reinforcement and proven canine science methods.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-2">
+        <div class="step-num">4</div>
+        <h4>Ongoing Support</h4>
+        <p>Post-training guidance and follow-ups to ensure lasting results and continued progress.</p>
       </div>
     </div>
   </div>
@@ -264,5 +357,7 @@ window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.s
 const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('active');observer.unobserve(e.target)}})},{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 </script>
+<script src="db.js"></script>
+<script src="content-loader.js"></script>
 </body>
 </html>
