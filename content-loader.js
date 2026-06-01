@@ -199,16 +199,19 @@
       if (titles.length >= 1) html(titles[0], s.programs.title);
       var subs = document.querySelectorAll('.content-section .container .section-sub');
       if (subs.length >= 1) text(subs[0], s.programs.subtext);
-      if (s.programs.items) {
+      if (s.programs.items && s.programs.items.length) {
+        console.log('[Content] Rendering ' + s.programs.items.length + ' program cards');
         clearAndFill('.programs', s.programs.items, function(item) {
           var card = div('program-card');
           var imgDiv = div('card-img');
-          var img = document.createElement('img');
-          img.src = item.img || '';
-          img.alt = item.title || '';
-          img.loading = 'lazy';
-          img.onerror = function() { this.parentElement.style.display = 'none'; };
-          imgDiv.appendChild(img);
+          if (item.img) {
+            var img = document.createElement('img');
+            img.src = item.img;
+            img.alt = item.title || '';
+            img.loading = 'lazy';
+            img.onerror = function() { this.parentElement.style.display = 'none'; };
+            imgDiv.appendChild(img);
+          }
           var icon = div('icon');
           icon.textContent = item.icon || '🐾';
           var h3 = document.createElement('h3');
@@ -221,6 +224,7 @@
           card.appendChild(p);
           return card;
         });
+        console.log('[Content] Programs container now has ' + document.querySelector('.programs').children.length + ' children');
       }
     }
     if (s.gallery) {
