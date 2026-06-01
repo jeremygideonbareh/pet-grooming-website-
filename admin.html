@@ -413,7 +413,7 @@ input,textarea,select,button{font-family:inherit}
           <div class="preview" id="imgPreview">
             <span style="font-size:.6rem;padding:4px">No image</span>
           </div>
-          <input type="file" id="imgInput" accept="image/*">
+          <input type="file" id="imgInput" accept="image/jpeg, image/png, image/webp">
         </div>
       </div>
       <div class="form-group">
@@ -558,55 +558,77 @@ function generateId(){
 let dashQuery='';
 
 async function renderDashboard(){
-  if(!isAuthenticated())return;
+  console.log('[Admin] renderDashboard() called');
+  if(!Auth.isAuthenticated())return;
   const products=await loadProducts();
-  const filtered=products.filter(p=>{
-    if(!dashQuery)return true;
-    const q=dashQuery.toLowerCase();
-    return p.name.toLowerCase().includes(q)||p.catLabel.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q);
-  });
-
-  // Stats
-  const cats=new Set(products.map(p=>p.cat));
-  document.getElementById('statsRow').innerHTML=`
-    <div class="stat-card"><div class="num">${products.length}</div><div class="label">Total Products</div></div>
-    <div class="stat-card"><div class="num">${cats.size}</div><div class="label">Categories</div></div>
-    <div class="stat-card"><div class="num">₹${products.reduce((s,p)=>{const m=p.price.replace(/[^0-9]/g,'');return s+(parseInt(m)||0)},0).toLocaleString()}+</div><div class="label">Total Value</div></div>
-    <div class="stat-card"><div class="num">${products.filter(p=>p.cat==='dog-food').length}</div><div class="label">Food Items</div></div>
-  `;
-
-  // Table
-  const tbody=document.getElementById('prodTableBody');
-  if(filtered.length===0){
-    tbody.innerHTML='<tr><td colspan="6" class="empty">No products found. Add your first product!</td></tr>';
+  console.log('[Admin] products loaded:', products ? products.length : 0);
+  if (!products || products.length === 0) {
+    document.getElementById('statsRow').innerHTML = '<div class="stat-card" style="grid-column:1/-1;text-align:center;color:var(--muted)">No products yet</div>';
+    document.getElementById('prodTableBody').innerHTML = '<tr><td colspan="6" class="empty">No products found. Add your first product!</td></tr>';
     return;
   }
 
-  tbody.innerHTML=filtered.map(p=>{
-    const imgSrc=p.img||'';
-    const imgHtml=imgSrc?`<img class="thumb" src="${imgSrc}" alt="${p.name}" onerror="this.style.display='none'">`:'<div class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--muted)">📷</div>';
-    const desc=p.desc||'—';
-    return `<tr>
-      <td>${imgHtml}</td>
-      <td><span class="prod-name">${escapeHtml(p.name)}</span></td>
-      <td>${escapeHtml(p.price)}</td>
-      <td><span class="prod-cat-badge">${escapeHtml(p.catLabel)}</span></td>
-      <td style="font-size:.8rem;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(desc)}</td>
-      <td>
-        <div class="actions">
-          <button class="dash-btn dash-btn-primary dash-btn-sm" data-edit="${p.id}">Edit</button>
-          <button class="dash-btn dash-btn-danger dash-btn-sm" data-delete="${p.id}">Delete</button>
-        </div>
-      </td>
-    </tr>`;
+  // Filter (null-safe)
+  const filtered = dashQuery
+    ? products.filter(function(p){
+        var q = dashQuery.toLowerCase();
+        return (p.name || '').toLowerCase().indexOf(q) !== -1
+            || (p.catLabel || '').toLowerCase().indexOf(q) !== -1
+            || (p.desc || '').toLowerCase().indexOf(q) !== -1;
+      })
+    : products;
+
+  // Stats (null-safe)
+  var catSet = {};
+  products.forEach(function(p){ if (p.cat) catSet[p.cat] = true });
+  var catCount = Object.keys(catSet).length;
+  var totalVal = 0;
+  products.forEach(function(p){
+    var raw = (p.price || '').replace(/[^0-9]/g, '');
+    totalVal += parseInt(raw, 10) || 0;
+  });
+  var foodCount = 0;
+  products.forEach(function(p){ if (p.cat === 'dog-food') foodCount++ });
+
+  document.getElementById('statsRow').innerHTML =
+    '<div class="stat-card"><div class="num">' + products.length + '</div><div class="label">Total Products</div></div>' +
+    '<div class="stat-card"><div class="num">' + catCount + '</div><div class="label">Categories</div></div>' +
+    '<div class="stat-card"><div class="num">₹' + totalVal.toLocaleString() + '+</div><div class="label">Total Value</div></div>' +
+    '<div class="stat-card"><div class="num">' + foodCount + '</div><div class="label">Food Items</div></div>';
+
+  // Table
+  var tbody = document.getElementById('prodTableBody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">No products match your search.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(function(p){
+    console.log('[Admin] Drawing table row for:', p.name);
+    var imgSrc = p.img || '';
+    var imgHtml = imgSrc
+      ? '<img class="thumb" src="' + imgSrc + '" alt="' + (p.name || '') + '" onerror="this.style.display=\'none\'">'
+      : '<div class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--muted)">📷</div>';
+    var desc = p.desc || '—';
+    return '<tr>' +
+      '<td>' + imgHtml + '</td>' +
+      '<td><span class="prod-name">' + escapeHtml(p.name) + '</span></td>' +
+      '<td>' + escapeHtml(p.price) + '</td>' +
+      '<td><span class="prod-cat-badge">' + escapeHtml(p.catLabel) + '</span></td>' +
+      '<td style="font-size:.8rem;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escapeHtml(desc) + '</td>' +
+      '<td><div class="actions">' +
+        '<button class="dash-btn dash-btn-primary dash-btn-sm" data-edit="' + p.id + '">Edit</button>' +
+        '<button class="dash-btn dash-btn-danger dash-btn-sm" data-delete="' + p.id + '">Delete</button>' +
+      '</div></td>' +
+    '</tr>';
   }).join('');
 
   // Bind edit/delete
-  tbody.querySelectorAll('[data-edit]').forEach(btn=>{
-    btn.addEventListener('click',()=>openEdit(btn.dataset.edit));
+  tbody.querySelectorAll('[data-edit]').forEach(function(btn){
+    btn.addEventListener('click', function(){ openEdit(btn.dataset.edit); });
   });
-  tbody.querySelectorAll('[data-delete]').forEach(btn=>{
-    btn.addEventListener('click',()=>openDelete(btn.dataset.delete));
+  tbody.querySelectorAll('[data-delete]').forEach(function(btn){
+    btn.addEventListener('click', function(){ openDelete(btn.dataset.delete); });
   });
 }
 
@@ -666,7 +688,7 @@ document.getElementById('imgInput').addEventListener('change',async function(){
     uploadedImageData=url;
     preview.innerHTML=`<img src="${url}" alt="Preview">`;
   }catch(e){
-    preview.innerHTML='<span style="font-size:.6rem;padding:4px">Upload failed</span>';
+    preview.innerHTML='<span style="font-size:.6rem;padding:4px">' + (e.message || 'Upload failed') + '</span>';
   }
 });
 
@@ -1605,6 +1627,7 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
     btn.classList.add('active');
     var tabId='tab'+btn.dataset.tab.charAt(0).toUpperCase()+btn.dataset.tab.slice(1);
     document.getElementById(tabId).classList.add('active');
+    if(btn.dataset.tab==='products')await renderDashboard();
     if(btn.dataset.tab==='content')await renderContentEditor();
     if(btn.dataset.tab==='training')await renderTrainingEditor();
     if(btn.dataset.tab==='grooming')await renderGroomingEditor();
