@@ -294,6 +294,27 @@ input,textarea,select,button{font-family:inherit}
 .cf-img-preview{width:80px;height:80px;border-radius:12px;overflow:hidden;background:var(--cream-dark);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--muted);text-align:center;flex-shrink:0}
 .cf-img-preview img{width:100%;height:100%;object-fit:cover}
 
+/* ── Repeater image upload widget ── */
+.img-upload-row{display:flex;align-items:center;gap:8px}
+.img-upload-row input[type="file"]{flex:1;font-size:.8rem}
+.img-upload-row input[type="file"]::file-selector-button{
+  padding:6px 14px;border-radius:60px;border:1px solid var(--border);
+  background:var(--cream);font-weight:600;font-size:.75rem;
+  cursor:pointer;transition:all .3s;font-family:inherit;
+}
+.img-upload-row input[type="file"]::file-selector-button:hover{background:var(--gold);border-color:var(--gold);color:var(--charcoal)}
+.img-upload-status{font-size:.7rem;color:var(--muted);white-space:nowrap}
+.img-upload-preview{margin-top:6px}
+.img-upload-preview img{width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid var(--border);background:var(--cream-dark)}
+.gallery-upload-row{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.gallery-upload-row input[type="file"]{font-size:.85rem}
+.gallery-upload-row input[type="file"]::file-selector-button{
+  padding:8px 16px;border-radius:60px;border:1px solid var(--border);
+  background:var(--cream);font-weight:600;font-size:.8rem;
+  cursor:pointer;transition:all .3s;font-family:inherit;
+}
+.gallery-upload-row input[type="file"]::file-selector-button:hover{background:var(--gold);border-color:var(--gold);color:var(--charcoal)}
+
 @media(max-width:768px){
   .cf-row{grid-template-columns:1fr}
   .content-section .sec-hd{padding:14px 18px;font-size:.85rem}
@@ -883,7 +904,8 @@ async function renderContentEditor(){
     <div class="content-section">
       <div class="sec-hd open" data-target="secGallery">Gallery Images <span class="arrow">▼</span></div>
       <div class="sec-bd open" id="secGallery">
-        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Each image URL on its own line.</p>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Upload images or paste URLs (one per line):</p>
+        <div class="gallery-upload-row"><input type="file" accept="image/jpeg, image/png, image/webp" class="gallery-upload-btn" data-target="cGallery"><span class="img-upload-status" style="font-size:.75rem;color:var(--muted)"></span></div>
         <div class="cf-group"><textarea id="cGallery" rows="6">${data.gallery.map(s=>escHtml(s)).join('\n')}</textarea></div>
       </div>
     </div>
@@ -1079,7 +1101,8 @@ async function renderTrainingEditor(){
           <div class="cf-group"><label>Title</label><input id="trGalTitle" value="${escHtml(s.gallery.title)}"></div>
         </div>
         <div class="cf-group"><label>Subtext</label><textarea id="trGalSub" rows="2">${escHtml(s.gallery.subtext)}</textarea></div>
-        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Each image URL on its own line.</p>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Upload images or paste URLs (one per line):</p>
+        <div class="gallery-upload-row"><input type="file" accept="image/jpeg, image/png, image/webp" class="gallery-upload-btn" data-target="trGalImgs"><span class="img-upload-status" style="font-size:.75rem;color:var(--muted)"></span></div>
         <div class="cf-group"><textarea id="trGalImgs" rows="6">${s.gallery.images.map(function(u){return escHtml(u)}).join('\n')}</textarea></div>
       </div>
     </div>
@@ -1135,8 +1158,23 @@ async function renderTrainingEditor(){
   });
 }
 
+function renderImageUploadWidget(val){
+  var hasImg = val && val.length > 4;
+  return '<div class="cf-group"><label>Image</label>' +
+    '<div class="img-upload-row">' +
+    '<input type="file" accept="image/jpeg, image/png, image/webp" class="image-upload-btn">' +
+    '<input type="hidden" class="r-img" value="' + escHtml(val) + '">' +
+    '<span class="img-upload-status">' + (hasImg ? 'Uploaded' : 'No file') + '</span>' +
+    '</div>' +
+    '<div class="img-upload-preview"' + (hasImg ? '' : ' style="display:none"') + '>' +
+    '<img src="' + escHtml(val) + '" onerror="this.parentNode.style.display=\'none\'">' +
+    '</div></div>';
+}
+
 function renderTrProgItem(item,i){
-  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Program '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'trProgRepeater\')">✕ Remove</button></div><div class="cf-group"><label>Image URL</label><input class="r-img" value="'+escHtml(item.img)+'"></div><div class="cf-row"><div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="'+escHtml(item.icon)+'"></div><div class="cf-group"><label>Title</label><input class="r-title" value="'+escHtml(item.title)+'"></div></div><div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Program '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'trProgRepeater\')">✕ Remove</button></div>'+
+    renderImageUploadWidget(item.img)+
+    '<div class="cf-row"><div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="'+escHtml(item.icon)+'"></div><div class="cf-group"><label>Title</label><input class="r-title" value="'+escHtml(item.title)+'"></div></div><div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
 }
 function addTrProgItem(){
   var d=document.getElementById('trProgRepeater');
@@ -1229,7 +1267,8 @@ async function renderGroomingEditor(){
           <div class="cf-group"><label>Title</label><input id="grGalTitle" value="${escHtml(s.gallery.title)}"></div>
           <div class="cf-group"><label>Subtext</label><textarea id="grGalSub" rows="2">${escHtml(s.gallery.subtext)}</textarea></div>
         </div>
-        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Each image URL on its own line.</p>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Upload images or paste URLs (one per line):</p>
+        <div class="gallery-upload-row"><input type="file" accept="image/jpeg, image/png, image/webp" class="gallery-upload-btn" data-target="grGalImgs"><span class="img-upload-status" style="font-size:.75rem;color:var(--muted)"></span></div>
         <div class="cf-group"><textarea id="grGalImgs" rows="6">${s.gallery.images.map(function(u){return escHtml(u)}).join('\n')}</textarea></div>
       </div>
     </div>
@@ -1290,7 +1329,9 @@ async function renderGroomingEditor(){
 }
 
 function renderGrServItem(item,i){
-  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Service Card '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'grServRepeater\')">✕ Remove</button></div><div class="cf-row"><div class="cf-group"><label>Image URL</label><input class="r-img" value="'+escHtml(item.img)+'"></div><div class="cf-group"><label>Label</label><input class="r-label" value="'+escHtml(item.label)+'"></div></div></div>';
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Service Card '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'grServRepeater\')">✕ Remove</button></div>'+
+    renderImageUploadWidget(item.img)+
+    '<div class="cf-group"><label>Label</label><input class="r-label" value="'+escHtml(item.label)+'"></div></div>';
 }
 function addGrServItem(){
   var d=document.getElementById('grServRepeater');
@@ -1633,6 +1674,62 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
     if(btn.dataset.tab==='grooming')await renderGroomingEditor();
     if(btn.dataset.tab==='boarding')await renderBoardingEditor();
   });
+});
+
+// ═══════════════════════════════════════════════
+// IMAGE UPLOAD DELEGATION (repeaters + galleries)
+// ═══════════════════════════════════════════════
+document.addEventListener('change', async function(e){
+  var target = e.target;
+
+  // ── Repeater image upload ──
+  if (target.classList.contains('image-upload-btn')) {
+    var file = target.files[0];
+    if (!file) return;
+    var row = target.parentNode;
+    var hidden = row.querySelector('.r-img');
+    var status = row.querySelector('.img-upload-status');
+    var preview = row.nextElementSibling;
+    if (!preview || !preview.classList.contains('img-upload-preview')) preview = null;
+
+    status.textContent = 'Uploading...';
+    try {
+      var url = await window.uploadImageToCloud(file);
+      if (hidden) hidden.value = url;
+      status.textContent = 'Uploaded';
+      if (preview) {
+        preview.style.display = '';
+        var img = preview.querySelector('img');
+        if (img) img.src = url;
+      }
+    } catch (err) {
+      status.textContent = err.message || 'Upload failed';
+    }
+    // Reset so the same file can be re-selected
+    target.value = '';
+  }
+
+  // ── Gallery image upload ──
+  if (target.classList.contains('gallery-upload-btn')) {
+    var file = target.files[0];
+    if (!file) return;
+    var status = target.parentNode.querySelector('.img-upload-status');
+    var textareaId = target.getAttribute('data-target');
+    var textarea = document.getElementById(textareaId);
+
+    status.textContent = 'Uploading...';
+    try {
+      var url = await window.uploadImageToCloud(file);
+      status.textContent = '✅ Uploaded';
+      if (textarea) {
+        var current = textarea.value.trim();
+        textarea.value = current ? current + '\n' + url : url;
+      }
+    } catch (err) {
+      status.textContent = err.message || 'Upload failed';
+    }
+    target.value = '';
+  }
 });
 
 // ═══════════════════════════════════════════════
