@@ -196,9 +196,9 @@
     if (s.programs) {
       text('.content-section .container .section-label', s.programs.label);
       var titles = document.querySelectorAll('.content-section .container .section-title');
-      if (titles.length >= 1) html(titles[0], s.programs.title);
+      if (titles.length >= 1) titles[0].innerHTML = s.programs.title;
       var subs = document.querySelectorAll('.content-section .container .section-sub');
-      if (subs.length >= 1) text(subs[0], s.programs.subtext);
+      if (subs.length >= 1) subs[0].textContent = s.programs.subtext;
       if (s.programs.items && s.programs.items.length) {
         console.log('[Content] Rendering ' + s.programs.items.length + ' program cards');
         clearAndFill('.programs', s.programs.items, function(item) {
@@ -231,11 +231,11 @@
       var galContainers = document.querySelectorAll('.content-section .container');
       if (galContainers.length >= 2) {
         var glabels = galContainers[1].querySelectorAll('.section-label');
-        if (glabels.length) text(glabels[0], s.gallery.label);
+        if (glabels.length) glabels[0].textContent = s.gallery.label;
         var gtitles = galContainers[1].querySelectorAll('.section-title');
-        if (gtitles.length) text(gtitles[0], s.gallery.title);
+        if (gtitles.length) gtitles[0].textContent = s.gallery.title;
         var gsubs = galContainers[1].querySelectorAll('.section-sub');
-        if (gsubs.length) text(gsubs[0], s.gallery.subtext);
+        if (gsubs.length) gsubs[0].textContent = s.gallery.subtext;
       }
       if (s.gallery.images && s.gallery.images.length) {
         var gal = document.querySelector('.train-gal');
@@ -259,11 +259,11 @@
       var procs = document.querySelectorAll('.content-section .container');
       if (procs.length >= 3) {
         var plabels = procs[2].querySelectorAll('.section-label');
-        if (plabels.length) text(plabels[0], s.process.label);
+        if (plabels.length) plabels[0].textContent = s.process.label;
         var ptitles = procs[2].querySelectorAll('.section-title');
-        if (ptitles.length) text(ptitles[0], s.process.title);
+        if (ptitles.length) ptitles[0].textContent = s.process.title;
         var psubs = procs[2].querySelectorAll('.section-sub');
-        if (psubs.length) text(psubs[0], s.process.subtext);
+        if (psubs.length) psubs[0].textContent = s.process.subtext;
       }
       if (s.process.steps) {
         clearAndFill('.process-grid', s.process.steps, function(item) {
@@ -285,7 +285,7 @@
       var approachLabel = document.querySelector('.approach-grid .section-label');
       if (approachLabel && s.approach.label) approachLabel.textContent = s.approach.label;
       var approachTitle = document.querySelector('.approach-grid .section-title');
-      if (approachTitle && s.approach.title) html(approachTitle, s.approach.title);
+      if (approachTitle && s.approach.title) approachTitle.innerHTML = s.approach.title;
       var approachParas = document.querySelectorAll('.approach-grid .section-sub');
       if (approachParas.length >= 1 && s.approach.para1) approachParas[0].textContent = s.approach.para1;
       if (approachParas.length >= 2 && s.approach.para2) approachParas[1].textContent = s.approach.para2;
@@ -334,7 +334,7 @@
       text('#heroBtn', s.hero.btnText);
       attr('video.hero-bg', 'poster', s.hero.posterUrl);
       var source = document.querySelector('video.hero-bg source');
-      if (source) attr(source, 'src', s.hero.videoUrl);
+      if (source) source.src = s.hero.videoUrl;
       if (source) source.parentElement.load();
     }
     if (s.about) {
@@ -484,9 +484,9 @@
     if (s.features) {
       text('.content-section .container .section-label', s.features.label);
       var titles = document.querySelectorAll('.content-section .container .section-title');
-      if (titles.length >= 1) html(titles[0], s.features.title);
+      if (titles.length >= 1) titles[0].innerHTML = s.features.title;
       var subs = document.querySelectorAll('.content-section .container .section-sub');
-      if (subs.length >= 1) text(subs[0], s.features.subtext);
+      if (subs.length >= 1) subs[0].textContent = s.features.subtext;
       if (s.features.items) {
         clearAndFill('.features-grid', s.features.items, function(item) {
           var card = div('feature-card');
