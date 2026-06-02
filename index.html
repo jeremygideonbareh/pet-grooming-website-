@@ -1114,18 +1114,17 @@ const smIcon=document.getElementById('smIcon');
 const smTitle=document.getElementById('smTitle');
 const smDesc=document.getElementById('smDesc');
 const smLink=document.getElementById('smLink');
-document.getElementById('servGrid').addEventListener('click',e=>{
-  const card=e.target.closest('.serv-card');
-  if(!card)return;
-  const d=SERV_DATA[card.dataset.svc];
-  if(!d)return;
-    smIcon.textContent=d.icon;
-    smTitle.textContent=d.title;
-    smDesc.textContent=d.desc;
-    smLink.href=d.link;
-    servModal.classList.add('open');
-    document.body.style.overflow='hidden';
-  });
+document.getElementById('servGrid').addEventListener('click',function(e){
+  var card=e.target.closest('.serv-card');
+  if(!card){return}
+  var d=SERV_DATA[card.dataset.svc];
+  if(!d){return}
+  smIcon.textContent=d.icon;
+  smTitle.textContent=d.title;
+  smDesc.textContent=d.desc;
+  smLink.href=d.link;
+  servModal.classList.add('open');
+  document.body.style.overflow='hidden';
 });
 const closeServModal=()=>{servModal.classList.remove('open');document.body.style.overflow=''};
 smClose.addEventListener('click',closeServModal);
