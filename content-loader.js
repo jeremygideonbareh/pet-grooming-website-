@@ -98,7 +98,7 @@
         var body = div('serv-body');
         var span = document.createElement('span');
         span.className = 'serv-icon';
-        span.textContent = item.icon || '🐾';
+        span.textContent = item.icon || 'A-1';
         var h3 = document.createElement('h3');
         h3.textContent = item.title || '';
         body.appendChild(span);
