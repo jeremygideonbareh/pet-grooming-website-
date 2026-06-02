@@ -17,6 +17,47 @@ body{
 }
 img{display:block;max-width:100%;height:auto}
 
+/* ── FLOATING LOGO ── */
+.floating-logo{position:fixed;top:12px;left:16px;z-index:1001;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.15);border-radius:60px;padding:6px 16px 6px 6px;font-family:'Playfair Display',serif;font-weight:800;font-size:1rem;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.15);transition:box-shadow .3s ease;text-decoration:none;white-space:nowrap}
+.floating-logo img{width:32px;height:32px;border-radius:50%;object-fit:cover}
+.floating-logo.scrolled{box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.nav-island{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.08);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.1);border-radius:60px;padding:6px 20px;display:flex;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.1);transition:box-shadow .3s ease}
+.nav-island.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.2)}
+.nav-island .nav-links{display:flex;align-items:center;gap:4px;margin:0;padding:0}
+.nav-island .nav-links a{font-size:.78rem;font-weight:500;color:rgba(255,255,255,.7);padding:6px 14px;border-radius:40px;transition:all .3s ease;white-space:nowrap;text-decoration:none}
+.nav-island .nav-links a:hover{background:rgba(255,255,255,0.1);color:#fff}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:8px;margin-left:4px;min-width:36px;min-height:36px;align-items:center;justify-content:center}
+.hamburger span{width:20px;height:2px;background:#fff;border-radius:2px;transition:all .3s ease;transform-origin:center}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
+.mobile-nav{position:fixed;inset:0;background:rgba(14,10,8,.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index:998;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:80px 24px 40px}
+.mobile-nav.open{display:flex}
+.mobile-nav a{font-size:1.1rem;font-weight:600;color:#fff;padding:10px 24px;border-radius:40px;transition:background .3s;text-decoration:none}
+.mobile-nav a:hover{background:rgba(255,255,255,0.08)}
+.mobile-nav .btn-whatsapp{margin-top:12px;padding:12px 28px;border-radius:60px;display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);font-weight:600;font-size:.9rem;text-decoration:none}
+.whatsapp-fab{position:fixed;bottom:24px;right:24px;z-index:1001;width:56px;height:56px;border-radius:50%;background:var(--whatsapp);color:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.35);transition:all .3s ease;text-decoration:none}
+.whatsapp-fab:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(37,211,102,.4)}
+@media(max-width:1024px){.nav-island .nav-links{display:none}.hamburger{display:flex}.floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}.floating-logo img{width:28px;height:28px}.nav-island{padding:4px 10px;top:10px}.whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}}
+
+/* ── BOOKING MODAL ── */
+.booking-overlay{position:fixed;inset:0;z-index:2000;background:rgba(26,20,18,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:24px}
+.booking-overlay.open{display:flex}
+.booking-modal{background:rgba(30,22,18,.8);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.12);border-radius:28px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;padding:36px 32px;animation:modalIn .3s ease;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.booking-modal h2{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800;letter-spacing:-.01em;color:#fff;margin-bottom:4px}
+.booking-modal .sub{font-size:.85rem;color:rgba(255,255,255,.6);margin-bottom:20px}
+.booking-modal .close-btn{float:right;background:none;border:none;font-size:1.5rem;cursor:pointer;color:rgba(255,255,255,.5);transition:color .3s;line-height:1}
+.booking-modal .close-btn:hover{color:#fff}
+.booking-modal .form-group{margin-bottom:16px}
+.booking-modal .form-group label{display:block;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.8);margin-bottom:6px}
+.booking-modal .form-group input,.booking-modal .form-group textarea,.booking-modal .form-group select{width:100%;padding:12px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);backdrop-filter:blur(8px);font-family:'Inter',sans-serif;font-size:.9rem;color:#fff;outline:none;transition:border-color .3s}
+.booking-modal .form-group input:focus,.booking-modal .form-group textarea:focus,.booking-modal .form-group select:focus{border-color:var(--gold)}
+.booking-modal .form-group textarea{resize:vertical;min-height:80px}
+.booking-modal .btn-send{width:100%;padding:14px;border-radius:60px;border:none;background:var(--whatsapp);color:var(--white);font-family:'Inter',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:background .3s,transform .2s;display:flex;align-items:center;justify-content:center;gap:10px}
+.booking-modal .btn-send:hover{background:#1DA851}
+.booking-modal .btn-send:active{transform:scale(.97)}
+
 /* ── LOADING ── */
 .loading-overlay{
   position:fixed;inset:0;background:#0E0A08;z-index:9999;
@@ -141,10 +182,10 @@ img{display:block;max-width:100%;height:auto}
 .hours-card .today{color:#C26A3C;font-weight:800}
 .stats-row{display:flex;gap:12px;margin-top:28px}
 .stat-item{
-  flex:1;background:#FFF2E5;padding:18px 12px;border-radius:24px;text-align:center;
+  flex:1;background:rgba(255,255,255,.08);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);padding:18px 12px;border-radius:24px;text-align:center;
 }
 .stat-item .num{font-size:1.6rem;font-weight:900;color:#C26A3C}
-.stat-item .label{font-size:.75rem;color:#5C4535;margin-top:4px;font-weight:500}
+.stat-item .label{font-size:.75rem;color:rgba(255,255,255,.7);margin-top:4px;font-weight:500}
 
 /* ── SERVICES ── */
 .services-wrap{
@@ -288,7 +329,7 @@ img{display:block;max-width:100%;height:auto}
 
 /* ── FLOATING HOME BUTTON ── */
 .float-home{
-  position:fixed;bottom:24px;right:24px;z-index:500;
+  position:fixed;bottom:24px;left:24px;z-index:500;
   display:flex;align-items:center;gap:8px;
   background:#2E241F;color:#fff;padding:12px 20px;border-radius:60px;
   font-size:.82rem;font-weight:600;text-decoration:none;
@@ -395,7 +436,7 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   .cta h2{font-size:1.5rem}
   .hours-card{padding:14px}
   .hours-card .day,.hours-card .time{font-size:.78rem}
-  .float-home{bottom:16px;right:16px;width:42px;height:42px;font-size:1rem}
+  .float-home{bottom:16px;left:16px;width:42px;height:42px}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -411,6 +452,27 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   <div class="paw-loader"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
   <div class="paw-dots"><div></div><div></div><div></div><div></div><div></div></div>
 </div>
+
+<a href="index.html" class="floating-logo" id="floatingLogo"><img src="images/a1logo.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
+<nav class="nav-island" id="navIsland">
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="training.html">Training</a></li>
+    <li><a href="boarding.html">Boarding</a></li>
+    <li><a href="eco-cottages.html">Eco Cottages</a></li>
+    <li><a href="store.html">Store</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Home</a>
+  <a href="training.html">Training</a>
+  <a href="boarding.html">Boarding</a>
+  <a href="eco-cottages.html">Eco Cottages</a>
+  <a href="store.html">Store</a>
+  <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp">WhatsApp Us</a>
+</div>
+<a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="whatsapp-fab" id="whatsappFab" aria-label="Chat on WhatsApp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
 
 <div class="app-content" id="appContent">
 
@@ -626,6 +688,47 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   </footer>
 </div>
 
+<!-- BOOKING MODAL -->
+<div class="booking-overlay" id="bookingOverlay">
+  <div class="booking-modal">
+    <button class="close-btn" id="bookingClose">&times;</button>
+    <h2>Book a Grooming Session</h2>
+    <p class="sub">Fill in your details and we'll confirm your appointment.</p>
+    <form id="bookingForm">
+      <div class="form-group">
+        <label for="bookName">Your Name</label>
+        <input type="text" id="bookName" required autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label for="bookPhone">Phone Number</label>
+        <input type="tel" id="bookPhone" required autocomplete="tel">
+      </div>
+      <div class="form-group">
+        <label for="bookPet">Pet's Name &amp; Breed</label>
+        <input type="text" id="bookPet" required>
+      </div>
+      <div class="form-group">
+        <label for="bookService">Service Needed</label>
+        <select id="bookService">
+          <option value="Full Grooming">Full Grooming</option>
+          <option value="Bath & Brush">Bath &amp; Brush</option>
+          <option value="Nail & Ear Care">Nail &amp; Ear Care</option>
+          <option value="Spa & Shine">Spa &amp; Shine</option>
+          <option value="Pet Styling">Pet Styling</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="bookMsg">Additional Notes</label>
+        <textarea id="bookMsg" placeholder="Any special requests or concerns..."></textarea>
+      </div>
+      <button type="submit" class="btn-send">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Send Booking Request
+      </button>
+    </form>
+  </div>
+</div>
+
 <script>
 // ── START AT TOP ──
 history.scrollRestoration='manual';window.scrollTo(0,0);
@@ -652,10 +755,49 @@ window.addEventListener('resize',()=>{if(app.classList.contains('visible'))activ
 // ── TODAY HOURS HIGHLIGHT ──
 (function(){const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];const t=days[new Date().getDay()];const card=document.getElementById('hoursCard');if(card){const spans=card.querySelectorAll('.day');spans.forEach(e=>{if(e.textContent.trim()===t){e.style.color='#EAA172';e.nextElementSibling.style.color='#EAA172'}})}})();
 
+// ── NAV ──
+const hamburger=document.getElementById('hamburger');
+const mobileNav=document.getElementById('mobileNav');
+if(hamburger){hamburger.addEventListener('click',()=>{
+  hamburger.classList.toggle('active');
+  mobileNav.classList.toggle('open');
+  document.body.style.overflow=mobileNav.classList.contains('open')?'hidden':'';
+});}
+if(mobileNav){mobileNav.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{
+  hamburger.classList.remove('active');
+  mobileNav.classList.remove('open');
+  document.body.style.overflow='';
+}));}
+const navIsland=document.getElementById('navIsland');
+const floatingLogo=document.getElementById('floatingLogo');
+if(navIsland){window.addEventListener('scroll',()=>{
+  const s=window.scrollY>20;
+  navIsland.classList.toggle('scrolled',s);
+  floatingLogo.classList.toggle('scrolled',s);
+});}
+
+// ── BOOKING MODAL ──
+const bookOverlay=document.getElementById('bookingOverlay');
+const bookClose=document.getElementById('bookingClose');
+function openBook(){if(bookOverlay){bookOverlay.classList.add('open');document.body.style.overflow='hidden'}}
+function closeBook(){if(bookOverlay){bookOverlay.classList.remove('open');document.body.style.overflow=''}}
+if(bookClose)bookClose.addEventListener('click',closeBook);
+if(bookOverlay)bookOverlay.addEventListener('click',e=>{if(e.target===bookOverlay)closeBook()});
+document.getElementById('bookingForm')?.addEventListener('submit',e=>{
+  e.preventDefault();
+  const n=document.getElementById('bookName').value.trim();
+  const p=document.getElementById('bookPhone').value.trim();
+  const pet=document.getElementById('bookPet').value.trim();
+  const svc=document.getElementById('bookService').value;
+  const m=document.getElementById('bookMsg').value.trim();
+  const txt=`Hi A-1Pet Shop And Grooming! I'd like to book a grooming session.%0A%0AName: ${n}%0APhone: ${p}%0APet: ${pet}%0AService: ${svc}%0A%0A${m}`;
+  window.open(`https://wa.me/918891000000?text=${encodeURIComponent(txt)}`,'_blank');
+  closeBook();
+});
+
 // ── BUTTONS ──
-const msg="📞 Thank you for your interest! Please call A-1Pet Shop And Grooming during business hours or find the number on JustDial to book an appointment.";
-document.getElementById('heroBtn')?.addEventListener('click',e=>{e.preventDefault();alert(msg)});
-document.getElementById('ctaBtn')?.addEventListener('click',e=>{e.preventDefault();alert(msg)});
+document.getElementById('heroBtn')?.addEventListener('click',e=>{e.preventDefault();openBook()});
+document.getElementById('ctaBtn')?.addEventListener('click',e=>{e.preventDefault();openBook()});
 document.getElementById('servicesBtn')?.addEventListener('click',e=>{e.preventDefault();alert("✨ Our services include: Full grooming, Bath & brush, Nail & ear care, Spa & shine, and Pet styling — all with premium products and expert care!")});
 </script>
 <script src="db.js"></script>
