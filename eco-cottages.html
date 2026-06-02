@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Boarding & Kennels — A-1 Enterprises | Shillong</title>
-  <meta name="description" content="Safe, comfortable pet boarding and kennel facilities by A-1 Enterprises in Shillong, Meghalaya. 24/7 supervision, care, and professional attention.">
+  <title>A-1 Eco Cottages — Pet Friendly Stay | A-1 Enterprises</title>
+  <meta name="description" content="A-1 Eco Cottages: Pet-friendly eco stay in Shillong, Meghalaya. Comfortable cottages, nature trails, and a relaxing retreat for you and your furry friend.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -22,11 +22,16 @@ ul{list-style:none}
 .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:60px;font-weight:600;font-size:.9rem;cursor:pointer;transition:all .35s cubic-bezier(.16,1,.3,1);border:none;font-family:inherit}
 .btn-primary{background:var(--gold);color:var(--charcoal);box-shadow:0 4px 20px rgba(201,160,92,.35)}
 .btn-primary:hover{background:var(--gold-dark);transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,160,92,.4)}
+.btn-primary:active{transform:scale(.97)}
+.btn-whatsapp{background:var(--whatsapp);color:var(--white);box-shadow:0 4px 16px rgba(37,211,102,.3)}
+.btn-whatsapp:hover{background:#1DA851;transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.35)}
 .reveal{opacity:0;transform:translateY(36px);transition:all .7s cubic-bezier(.16,1,.3,1)}
 .reveal.active{opacity:1;transform:translateY(0)}
-.reveal-delay-1{transition-delay:.1s;}.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
 
-.page-hero{background:linear-gradient(135deg,rgba(26,20,18,.8),rgba(26,20,18,.5)),url('https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;padding:120px 24px 80px;text-align:center;color:#fff}
+/* ── HERO ── */
+.page-hero{background:linear-gradient(135deg,rgba(26,20,18,.75),rgba(26,20,18,.55)),url('https://images.unsplash.com/photo-1440778303588-435521a205bc?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;padding:120px 24px 80px;text-align:center;color:#fff}
 .page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:900;letter-spacing:-.02em}
 .page-hero p{font-size:1rem;color:rgba(255,255,255,.7);max-width:560px;margin:14px auto 0;line-height:1.6}
 
@@ -42,7 +47,7 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
 .nav-links a:hover{color:var(--charcoal)}
 .nav-links a:hover::after{width:100%}
 .nav-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:10px;min-width:44px;min-height:44px;align-items:center;justify-content:center}
 .hamburger span{width:24px;height:2px;background:var(--charcoal);border-radius:2px;transition:all .3s ease;transform-origin:center}
 .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
 .hamburger.active span:nth-child(2){opacity:0}
@@ -55,18 +60,29 @@ nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.06)}
 
 /* ── CONTENT ── */
 .content-section{padding:80px 0}
+
+/* ── FEATURES ── */
 .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
-.feature-card{background:var(--white);border-radius:24px;padding:32px 24px;border:1px solid var(--border);transition:all .4s ease}
+.feature-card{background:var(--white);border-radius:24px;padding:32px 24px;border:1px solid var(--border);transition:all .4s ease;text-align:center}
 .feature-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(0,0,0,.1);border-color:var(--gold)}
 .feature-card .icon{font-size:2rem;margin-bottom:16px}
 .feature-card h3{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:10px}
 .feature-card p{font-size:.85rem;line-height:1.6;color:var(--muted)}
+
+/* ── ECO GALLERY ── */
+.eco-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+.eco-gal .gal-item{border-radius:20px;overflow:hidden;aspect-ratio:4/3;background:var(--cream-dark);transition:transform .4s ease;cursor:pointer}
+.eco-gal .gal-item:hover{transform:scale(1.04)}
+.eco-gal .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.eco-gal .gal-item:hover img{transform:scale(1.1)}
+
+/* ── DETAILS ── */
 .details-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:40px}
 .details-image{border-radius:28px;overflow:hidden;aspect-ratio:4/3;background:var(--cream-dark)}
 .details-image img{width:100%;height:100%;object-fit:cover}
-.details-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
-.details-list li{display:flex;align-items:center;gap:10px;font-size:.85rem;padding:10px 14px;background:var(--cream);border-radius:12px}
-.details-list li .ck{color:var(--gold);font-weight:700}
+.features-list{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.features-list li{display:flex;align-items:center;gap:10px;font-size:.88rem;padding:12px 16px;background:var(--cream);border-radius:14px;font-weight:500}
+.features-list li .ck{color:var(--gold);font-weight:700}
 
 /* ── CTA ── */
 .cta-section{padding:80px 0;background:var(--charcoal);text-align:center;color:var(--white)}
@@ -79,12 +95,13 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
 .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
 .footer-inner .links{display:flex;gap:20px}
 .footer-inner a{transition:color .3s ease;color:rgba(255,255,255,.5)}
-.footer-inner a:hover{color:var(--gold)}
-
-@media(max-width:768px){
-  .features-grid{grid-template-columns:1fr}
+.footer-inner a:hover{color:var(--gold)}@media(max-width:900px){
+  .eco-gal{grid-template-columns:repeat(2,1fr)}
   .details-grid{grid-template-columns:1fr}
-  .details-list{grid-template-columns:1fr}
+  .features-list{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .features-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
   .content-section{padding:60px 0}
   .page-hero{padding:100px 24px 60px}
 }
@@ -103,9 +120,10 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
   .content-section{padding:40px 0}
   .section-title{font-size:clamp(1.4rem,5vw,1.6rem)}
   .section-sub{font-size:.85rem}
+  .eco-gal{grid-template-columns:1fr;max-width:400px;margin-inline:auto}
   .feature-card h3{font-size:1rem}
   .feature-card p{font-size:.8rem}
-  .details-list li{font-size:.8rem;padding:8px 12px}
+  .features-list li{font-size:.82rem;padding:10px 12px}
   .cta-section{padding:50px 0}
   .btn{padding:12px 24px;font-size:.82rem}
 }
@@ -114,21 +132,22 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
   .page-hero h1{font-size:clamp(1.4rem,5vw,1.6rem)}
   .content-section{padding:32px 0}
   .feature-card{padding:20px 14px}
+  .details-grid{gap:24px}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body data-page="board">
+<body data-page="eco">
 <nav id="navbar"><div class="nav-inner">
   <a href="index.html" class="nav-logo"><img src="images/a1logo.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
     <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#services">Services</a></li>
     <li><a href="training.html">Training</a></li>
     <li><a href="grooming.html">Grooming</a></li>
-    <li><a href="eco-cottages.html">Eco Cottages</a></li>
+    <li><a href="boarding.html">Boarding</a></li>
     <li><a href="store.html">Store</a></li>
-    <li><a href="index.html#contact">Contact</a></li>
   </ul>
   <div class="nav-actions">
     <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp" style="display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);padding:10px 20px;border-radius:60px;font-weight:600;font-size:.8rem;transition:all .3s ease;text-decoration:none">
@@ -141,79 +160,100 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
 <div class="mobile-nav" id="mobileNav">
   <a href="index.html">Home</a>
   <a href="index.html#about">About</a>
+  <a href="index.html#services">Services</a>
   <a href="training.html">Training</a>
   <a href="grooming.html">Grooming</a>
+  <a href="boarding.html">Boarding</a>
   <a href="store.html">Store</a>
-  <a href="index.html#contact">Contact</a>
   <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp" style="display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);padding:12px 28px;border-radius:60px;font-weight:600;font-size:.9rem;text-decoration:none">WhatsApp Us</a>
 </div>
 
 <section class="page-hero">
-  <h1>Boarding &amp; Kennels</h1>
-  <p>A safe, comfortable, and loving home away from home for your pet with round-the-clock professional care.</p>
+  <h1>A-1 Eco Cottages</h1>
+  <p>A pet-friendly eco retreat in the heart of Shillong — where you and your furry friend can relax, reconnect, and recharge surrounded by nature.</p>
 </section>
 
 <section class="content-section">
   <div class="container">
     <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto">
-      <span class="section-label">Boarding Facilities</span>
-      <h2 class="section-title">A Home Away<br>from Home</h2>
-      <p class="section-sub" style="margin-inline:auto">Whether you're traveling, busy at work, or need temporary care, our boarding facility provides a clean, safe, and loving environment for your pet with professional supervision at all times.</p>
+      <span class="section-label">Amenities</span>
+      <h2 class="section-title">Comfort Meets Nature</h2>
+      <p class="section-sub" style="margin-inline:auto">Designed for pet parents who want a peaceful getaway without leaving their furry family members behind.</p>
     </div>
     <div class="features-grid">
       <div class="feature-card reveal reveal-delay-1">
-        <div class="icon">🏠</div>
-        <h3>Comfortable Kennels</h3>
-        <p>Clean, spacious, and well-ventilated kennels designed for your pet's comfort. Each kennel is sanitized daily and equipped with comfortable bedding.</p>
+        <div class="icon">🏡</div>
+        <h3>Pet-Friendly Cottages</h3>
+        <p>Spacious, clean cottages designed to accommodate both you and your pets comfortably. Each cottage has a private entrance and outdoor access.</p>
       </div>
       <div class="feature-card reveal reveal-delay-2">
-        <div class="icon">👁️</div>
-        <h3>24/7 Supervision</h3>
-        <p>Round-the-clock monitoring by our trained staff. Your pet is never alone, and any health or behavioral changes are addressed immediately.</p>
+        <div class="icon">🌲</div>
+        <h3>Nature Trails</h3>
+        <p>Explore scenic walking trails through lush greenery — perfect for morning walks with your dog amidst the fresh mountain air of Shillong.</p>
       </div>
       <div class="feature-card reveal reveal-delay-1">
-        <div class="icon">🎾</div>
-        <h3>Exercise &amp; Playtime</h3>
-        <p>Regular exercise sessions, playtime, and walks to keep your pet active, stimulated, and happy throughout their stay with us.</p>
+        <div class="icon">🐾</div>
+        <h3>Pet Play Area</h3>
+        <p>A secure, fenced play area where your dog can run, play, and socialize off-leash in a safe and natural environment.</p>
       </div>
       <div class="feature-card reveal reveal-delay-2">
-        <div class="icon">🍗</div>
-        <h3>Nutritious Meals</h3>
-        <p>Balanced, nutritious meals provided according to your pet's dietary requirements. We also accommodate special diets and feeding schedules.</p>
+        <div class="icon">🍃</div>
+        <h3>Eco-Friendly Stay</h3>
+        <p>Sustainable practices including rainwater harvesting, solar lighting, and organic waste management — because we care for the planet too.</p>
       </div>
       <div class="feature-card reveal reveal-delay-1">
-        <div class="icon">🩺</div>
-        <h3>Medical Care</h3>
-        <p>Regular health check-ups during the stay. We have protocols in place for any medical needs and coordinate with veterinarians when required.</p>
+        <div class="icon">🔥</div>
+        <h3>Bonfire Evenings</h3>
+        <p>Enjoy cozy bonfire evenings under the stars. A perfect way to wind down with good company, including your four-legged companions.</p>
       </div>
       <div class="feature-card reveal reveal-delay-2">
-        <div class="icon">🚗</div>
-        <h3>Pick-up &amp; Drop-off</h3>
-        <p>Convenient pick-up and drop-off services available to make the boarding process hassle-free for pet parents across Shillong.</p>
+        <div class="icon">🍽️</div>
+        <h3>Pet-Centric Services</h3>
+        <p>On-demand pet sitting, feeding schedules, and access to A-1's professional pet care services during your stay for complete peace of mind.</p>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ═══ GALLERY ═══ -->
+<section class="content-section" style="background:var(--white)">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <span class="section-label">Gallery</span>
+      <h2 class="section-title">A Glimpse of Paradise</h2>
+      <p class="section-sub" style="margin-inline:auto">Peaceful surroundings, cozy accommodations, and happy pets — experience the eco difference.</p>
+    </div>
+    <div class="eco-gal reveal reveal-delay-2">
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=800&q=80" alt="Eco cottage" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?auto=format&fit=crop&w=800&q=80" alt="Nature trail" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?auto=format&fit=crop&w=800&q=80" alt="Bonfire" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=800&q=80" alt="Dog in nature" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80" alt="Camping" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1572947650440-e8a97ef053b2?auto=format&fit=crop&w=800&q=80" alt="Cabin retreat" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DETAILS ═══ -->
 <section class="content-section" style="background:var(--cream-dark)">
   <div class="container">
     <div class="details-grid">
-      <div class="details-image reveal">
-        <img src="images/7177680652812423.jpg" alt="Boarding facility" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'">
-      </div>
-      <div class="reveal reveal-delay-2">
-        <span class="section-label">Why Board with Us</span>
-        <h2 class="section-title">Peace of Mind<br>While You're Away</h2>
-        <p class="section-sub">We understand that leaving your pet can be stressful. That's why we've built a facility and team that prioritizes safety, comfort, and happiness above everything else.</p>
-        <ul class="details-list">
-          <li><span class="ck">✓</span> Clean, sanitized facilities</li>
-          <li><span class="ck">✓</span> Trained &amp; caring staff</li>
-          <li><span class="ck">✓</span> Individual &amp group play</li>
-          <li><span class="ck">✓</span> Regular photo updates</li>
-          <li><span class="ck">✓</span> Medication administration</li>
-          <li><span class="ck">✓</span> Flexible booking options</li>
+      <div class="reveal">
+        <span class="section-label">About the Stay</span>
+        <h2 class="section-title">A Home Away from Home<br>for You &amp; Your Pet</h2>
+        <p class="section-sub">A-1 Eco Cottages offers a unique pet-friendly retreat in the serene hills of Shillong. Whether you're looking for a weekend getaway or an extended stay, our eco-conscious cottages provide the perfect blend of comfort and nature.</p>
+        <p class="section-sub" style="margin-top:10px">Every cottage is thoughtfully designed with your pet's comfort in mind — from easy-clean floors to secure outdoor spaces. We believe that the best memories are made when your furry family members are part of the experience.</p>
+        <ul class="features-list">
+          <li><span class="ck">✓</span> Fully furnished private cottages</li>
+          <li><span class="ck">✓</span> Secure pet-friendly environment</li>
+          <li><span class="ck">✓</span> Scenic mountain views</li>
+          <li><span class="ck">✓</span> Organic meals available</li>
+          <li><span class="ck">✓</span> 24/7 on-site caretaker</li>
+          <li><span class="ck">✓</span> Nearby pet care services</li>
         </ul>
-        <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:28px;display:inline-flex">Book a Stay</a>
+      </div>
+      <div class="details-image reveal reveal-delay-2">
+        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80" alt="Eco cottage exterior" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'">
       </div>
     </div>
   </div>
@@ -221,11 +261,11 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
 
 <section class="cta-section">
   <div class="container reveal">
-    <h2>Need a Safe Place for<br>Your Pet to Stay?</h2>
-    <p>Contact us to check availability, pricing, and book your pet's stay.</p>
+    <h2>Ready for a Pet-Friendly<br>Getaway?</h2>
+    <p>Book your stay at A-1 Eco Cottages — a peaceful retreat for you and your furry companion.</p>
     <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn btn-whatsapp" style="display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:60px;font-weight:600;font-size:.9rem;border:none;cursor:pointer;text-decoration:none">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-      Book via WhatsApp
+      Book on WhatsApp
     </a>
   </div>
 </section>
@@ -238,8 +278,8 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
         <a href="index.html">Home</a>
         <a href="training.html">Training</a>
         <a href="grooming.html">Grooming</a>
-  <a href="eco-cottages.html">Eco Cottages</a>
-  <a href="store.html">Store</a>
+        <a href="boarding.html">Boarding</a>
+        <a href="store.html">Store</a>
         <a href="index.html#contact">Contact</a>
       </div>
     </div>

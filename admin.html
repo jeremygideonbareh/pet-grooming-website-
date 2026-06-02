@@ -373,6 +373,7 @@ input,textarea,select,button{font-family:inherit}
       <button class="tab-btn" data-tab="training">🐕 Training</button>
       <button class="tab-btn" data-tab="grooming">✂️ Grooming</button>
       <button class="tab-btn" data-tab="boarding">🏠 Boarding</button>
+      <button class="tab-btn" data-tab="eco">🌿 Eco Cottages</button>
     </div>
 
     <div id="tabProducts" class="tab-content active">
@@ -416,6 +417,10 @@ input,textarea,select,button{font-family:inherit}
 
     <div id="tabBoarding" class="tab-content">
       <div class="content-editor" id="boardingEditor"></div>
+    </div>
+
+    <div id="tabEco" class="tab-content">
+      <div class="content-editor" id="ecoEditor"></div>
     </div>
   </div>
 </div>
@@ -814,7 +819,7 @@ document.getElementById('dashSearch').addEventListener('input',function(){
 const DEFAULT_CONTENT={
   hero:{headline:'A-1 Enterprises',badge:'Since 2020 · Shillong, Meghalaya',bgImage:'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80',btnText:'About Us'},
   about:{label:'About A-1 Enterprises',heading:'Passion Turned Profession',para1:'A-1 Enterprises was founded from pure passion, dedication, and a lifelong connection with dogs. What began as a hobby during college days gradually transformed into a professional venture with a vision to elevate pet care and canine training standards in Meghalaya and across Northeast India.',para2:'From a small dream driven by love for dogs to becoming one of Meghalaya\'s growing canine service providers, A-1 Enterprises is committed to building a complete ecosystem for pets, training, grooming, boarding, rehabilitation, and future working dog development.',para3:'The founders personally experienced the challenges faced by pet parents, including housing limitations and the lack of professional canine facilities in the region. Instead of allowing those struggles to become obstacles, they became the motivation behind building something meaningful for the pet community.',para4:'Professionally established in 2020, A-1 Enterprises has steadily grown into a trusted name in dog training, grooming, rehabilitation, and pet services while continuously expanding its long-term vision of creating a complete pet ecosystem.',image:'images/welcome.jpeg',quoteText:'"We started as college students and passionate pet parents who were often thrown out of rental houses for having too many dogs. What began as an obsession and passion for dogs eventually turned into a profession, and later into a larger vision for the Northeast."',quoteCite:'— Founder, A-1 Enterprises',founderNote:'"A-1 Enterprises was built from passion, struggle, and dedication towards dogs. What started as a personal obsession gradually evolved into a profession, and today, into a larger vision of creating a complete ecosystem for pets and working dogs in the Northeast."',founderSub:'Mrs. Francisca S. Sangma',founderSign:'— Founder, A-1 Enterprises'},
-  services:{label:'Passion Turned Profession',heading:'Complete Canine Care Ecosystem',subtext:'Professional, ethical, and result-oriented canine services under one trusted brand.',items:[{icon:'🐕',title:'Dog Training & Rehabilitation',desc:'Obedience training, behavioral correction, and rehabilitation tailored to each dog\'s unique temperament.',link:'training.html'},{icon:'✂️',title:'Professional Grooming',desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments.',link:'grooming.html'},{icon:'🏠',title:'Boarding & Kennels',desc:'Safe, comfortable boarding facilities with round-the-clock care and professional supervision.',link:'boarding.html'},{icon:'🛒',title:'Premium Pet Store',desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products.',link:'store.html'},{icon:'🔄',title:'Rehabilitation & Correction',desc:'Specialized programs for dogs with behavioral challenges, anxiety, or trauma.',link:'training.html'},{icon:'🎖️',title:'Working Dog Development',desc:'Future-ready working dog programs for security, detection, and public service sectors.',link:'training.html'}]},
+  services:{label:'Passion Turned Profession',heading:'Complete Canine Care Ecosystem',subtext:'Professional, ethical, and result-oriented canine services under one trusted brand.',items:[{icon:'🐕',title:'Dog Training',desc:'Obedience training, behavioral correction, and rehabilitation tailored to each dog\'s unique temperament.',link:'training.html'},{icon:'✂️',title:'Professional Grooming',desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments.',link:'grooming.html'},{icon:'🏠',title:'Boarding & Kennels',desc:'Safe, comfortable boarding facilities with round-the-clock care and professional supervision.',link:'boarding.html'},{icon:'🛒',title:'Premium Pet Store',desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products.',link:'store.html'},{icon:'🌿',title:'A-1 Eco Cottages',desc:'A pet-friendly eco retreat in Shillong — comfortable cottages, nature trails, and a relaxing getaway.',link:'eco-cottages.html'},{icon:'🎖️',title:'Working Dog Development',desc:'Future-ready working dog programs for security, detection, and public service sectors.',link:'training.html'}]},
   whyUs:{label:'Why Choose Us',heading:'Vision · Strengths · Purpose',subtext:'To build a complete professional ecosystem for pets and working dogs in Northeast India — combining modern training, grooming, rehabilitation, veterinary support, and responsible pet care under one trusted platform.',items:[{icon:'🏔️',title:'Regional Pioneers',desc:'One of the few professionally growing canine-focused brands in Meghalaya and Northeast India.'},{icon:'🧠',title:'Personalized Approach',desc:'Every training program is customized based on each dog\'s unique temperament and needs.'},{icon:'🔄',title:'Complete Ecosystem',desc:'Training, grooming, rehabilitation, boarding, and pet store — all under one brand for seamless care.'},{icon:'🔭',title:'Long-Term Vision',desc:'Ecosystem focused on both companion pets and future working dog development.'},{icon:'❤️',title:'Passion-Driven',desc:'Founded from genuine love for dogs, backed by real hands-on experience and dedication.'},{icon:'🤝',title:'Community Trust',desc:'Built on professionalism, transparency, and quality care that pet owners trust.'}]},
   social:[{icon:'🧹',title:'Cleanliness Drives',desc:'Regular drives in dog walking areas for hygienic public spaces.'},{icon:'🗑️',title:'Dustbin Campaigns',desc:'Promoting dustbin installation in public pet walking zones.'},{icon:'📢',title:'Awareness Programs',desc:'Spreading awareness on responsible pet ownership and welfare.'},{icon:'🤲',title:'Ethical Practices',desc:'Encouraging humane training practices throughout our services.'}],
   gallery:['images/review1.png','images/review2.png','images/review3.png','images/review4.png','images/review5.png','images/4081455907607392.jpg','images/2533343538804035.jpg','images/7177680652812423.jpg','images/welcome.jpeg','images/prevent-mats.jpg'],
@@ -1046,7 +1051,7 @@ async function renderTrainingEditor(){
     hero:{heading:'Dog Training & Rehabilitation',subtext:'Professional, ethical, and result-oriented training programs tailored to each dog\'s unique temperament and needs.',bgImage:'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80'},
     programs:{label:'Our Programs',title:'Comprehensive Training<br>for Every Dog',subtext:'From basic obedience to advanced working dog development — we offer a full spectrum of training programs.',items:[
       {icon:'🎯',title:'Obedience & Behavioral Training',desc:'Foundation training covering sit, stay, heel, recall, and basic manners for a well-behaved companion.',img:'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80'},
-      {icon:'🔄',title:'Rehabilitation & Correction',desc:'Specialized programs for dogs with trauma, fear, aggression, or anxiety issues — using patient, science-based methods.',img:'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80'},
+      {icon:'🌿',title:'A-1 Eco Cottages',desc:'A pet-friendly eco retreat in Shillong with comfortable cottages, nature trails, and bonfire evenings — perfect for you and your furry companion.',img:'https://images.unsplash.com/photo-1440778303588-435521a205bc?auto=format&fit=crop&w=800&q=80'},
       {icon:'🛡️',title:'Protection & Detection Training',desc:'Advanced training for personal protection, scent detection, and specialized working roles.',img:'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80'},
       {icon:'🐾',title:'Puppy Socialization',desc:'Early socialization and basic manners for puppies — building confidence and positive behaviors from day one.',img:'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80'},
       {icon:'🎖️',title:'Working Dog Development',desc:'Future-ready programs for security, detection, and public service working dog roles.',img:'https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=800&q=80'},
@@ -1434,6 +1439,116 @@ function addBoFeatItem(){
   d.insertAdjacentHTML('beforeend',renderBoFeatItem({icon:'🏠',title:'New Feature',desc:'Feature description'},d.children.length));
 }
 
+// ── Eco Cottages Editor ──
+async function renderEcoEditor(){
+  const content=await loadContent();
+  const data=content.eco||{};
+  const defaults={
+    hero:{heading:'A-1 Eco Cottages',subtext:'A pet-friendly eco retreat in the heart of Shillong — where you and your furry friend can relax, reconnect, and recharge surrounded by nature.',bgImage:'https://images.unsplash.com/photo-1440778303588-435521a205bc?auto=format&fit=crop&w=1920&q=80'},
+    features:{label:'Amenities',title:'Comfort Meets Nature',subtext:'Designed for pet parents who want a peaceful getaway without leaving their furry family members behind.',items:[
+      {icon:'🏡',title:'Pet-Friendly Cottages',desc:'Spacious, clean cottages with private entrances and outdoor access for you and your pets.'},
+      {icon:'🌲',title:'Nature Trails',desc:'Scenic walking trails through lush greenery — perfect for morning walks with your dog.'},
+      {icon:'🐾',title:'Pet Play Area',desc:'Secure, fenced play area where your dog can run and play off-leash in a safe natural environment.'},
+      {icon:'🍃',title:'Eco-Friendly Stay',desc:'Rainwater harvesting, solar lighting, and organic waste management — care for the planet too.'},
+      {icon:'🔥',title:'Bonfire Evenings',desc:'Cozy bonfire evenings under the stars with your four-legged companions.'},
+      {icon:'🍽️',title:'Pet-Centric Services',desc:'On-demand pet sitting, feeding schedules, and access to A-1 professional pet care services.'}
+    ]},
+    gallery:{label:'Gallery',title:'A Glimpse of Paradise',subtext:'Peaceful surroundings, cozy accommodations, and happy pets — experience the eco difference.',images:[
+      'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1572947650440-e8a97ef053b2?auto=format&fit=crop&w=800&q=80'
+    ]},
+    details:{label:'About the Stay',title:'A Home Away from Home<br>for You & Your Pet',para1:'A-1 Eco Cottages offers a unique pet-friendly retreat in the serene hills of Shillong. Our eco-conscious cottages provide the perfect blend of comfort and nature.',para2:'Every cottage is thoughtfully designed with your pet\'s comfort in mind — from easy-clean floors to secure outdoor spaces.',featuresList:['Fully furnished private cottages','Secure pet-friendly environment','Scenic mountain views','Organic meals available','24/7 on-site caretaker','Nearby pet care services'],image:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80'},
+    cta:{heading:'Ready for a Pet-Friendly<br>Getaway?',subtext:'Book your stay at A-1 Eco Cottages — a peaceful retreat for you and your furry companion.',btnText:'Book on WhatsApp',btnLink:'https://wa.me/918891000000'},
+    footer:{copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.'}
+  };
+  const s=Object.keys(data).length?data:defaults;
+  const ed=document.getElementById('ecoEditor');
+  ed.innerHTML=`
+    <div class="content-section">
+      <div class="sec-hd open" data-target="ecHero">Hero Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="ecHero">
+        <div class="cf-group"><label>Heading</label><input id="ecHeroHead" value="${escHtml(s.hero.heading)}"></div>
+        <div class="cf-group"><label>Subtext</label><textarea id="ecHeroSub" rows="2">${escHtml(s.hero.subtext)}</textarea></div>
+        <div class="cf-group"><label>Background Image URL</label><input id="ecHeroBg" value="${escHtml(s.hero.bgImage)}"></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="ecFeat">Features Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="ecFeat">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="ecFeatLabel" value="${escHtml(s.features.label)}"></div>
+          <div class="cf-group"><label>Title</label><input id="ecFeatTitle" value="${escHtml(s.features.title)}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="ecFeatSub" rows="2">${escHtml(s.features.subtext)}</textarea></div>
+        <div id="ecFeatRepeater">${s.features.items.map(function(item,i){return renderEcFeatItem(item,i)}).join('')}</div>
+        <button class="cf-add" onclick="addEcFeatItem()">+ Add Feature</button>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="ecGal">Gallery Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="ecGal">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="ecGalLabel" value="${escHtml(s.gallery.label)}"></div>
+          <div class="cf-group"><label>Title</label><input id="ecGalTitle" value="${escHtml(s.gallery.title)}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="ecGalSub" rows="2">${escHtml(s.gallery.subtext)}</textarea></div>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Upload images or paste URLs (one per line):</p>
+        <div class="gallery-upload-row"><input type="file" accept="image/jpeg, image/png, image/webp" class="gallery-upload-btn" data-target="ecGalImgs"><span class="img-upload-status" style="font-size:.75rem;color:var(--muted)"></span></div>
+        <div class="cf-group"><textarea id="ecGalImgs" rows="6">${s.gallery.images.map(function(u){return escHtml(u)}).join('\n')}</textarea></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="ecDet">Details Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="ecDet">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="ecDetLabel" value="${escHtml(s.details.label)}"></div>
+          <div class="cf-group"><label>Title</label><input id="ecDetTitle" value="${escHtml(s.details.title)}"></div>
+        </div>
+        <div class="cf-group"><label>Paragraph 1</label><textarea id="ecDetPara1" rows="3">${escHtml(s.details.para1)}</textarea></div>
+        <div class="cf-group"><label>Paragraph 2</label><textarea id="ecDetPara2" rows="3">${escHtml(s.details.para2)}</textarea></div>
+        <div class="cf-group"><label>Features List (one per line)</label><textarea id="ecDetList" rows="6">${s.details.featuresList.map(function(f){return escHtml(f)}).join('\n')}</textarea></div>
+        <div class="cf-group"><label>Image URL</label><input id="ecDetImg" value="${escHtml(s.details.image)}"></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="ecCta">CTA Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="ecCta">
+        <div class="cf-group"><label>Heading</label><input id="ecCtaHead" value="${escHtml(s.cta.heading)}"></div>
+        <div class="cf-group"><label>Subtext</label><textarea id="ecCtaSub" rows="2">${escHtml(s.cta.subtext)}</textarea></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Button Text</label><input id="ecCtaBtn" value="${escHtml(s.cta.btnText)}"></div>
+          <div class="cf-group"><label>Button Link</label><input id="ecCtaLink" value="${escHtml(s.cta.btnLink)}"></div>
+        </div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="ecFoot">Footer <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="ecFoot">
+        <div class="cf-group"><label>Copyright Text</label><input id="ecFootCopy" value="${escHtml(s.footer.copyright)}"></div>
+      </div>
+    </div>
+    <button class="cf-save" id="saveAllBtn" style="margin-top:0">💾 Save All Changes</button>
+  `;
+  document.querySelectorAll('#ecoEditor .sec-hd').forEach(function(hd){
+    hd.addEventListener('click',function(){
+      hd.classList.toggle('open');
+      document.getElementById(hd.dataset.target).classList.toggle('open');
+    });
+  });
+}
+
+function renderEcFeatItem(item,i){
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Feature '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'ecFeatRepeater\')">✕ Remove</button></div><div class="cf-row"><div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="'+escHtml(item.icon)+'"></div><div class="cf-group"><label>Title</label><input class="r-title" value="'+escHtml(item.title)+'"></div></div><div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
+}
+function addEcFeatItem(){
+  var d=document.getElementById('ecFeatRepeater');
+  d.insertAdjacentHTML('beforeend',renderEcFeatItem({icon:'🏡',title:'New Feature',desc:'Feature description'},d.children.length));
+}
+
 // ── Collect training data ──
 function collectTrainingData(){
   return {
@@ -1582,6 +1697,46 @@ function collectBoardingData(){
   };
 }
 
+// ── Collect Eco Cottages data ──
+function collectEcoData(){
+  return {
+    hero:{
+      heading:document.getElementById('ecHeroHead').value,
+      subtext:document.getElementById('ecHeroSub').value,
+      bgImage:document.getElementById('ecHeroBg').value
+    },
+    features:{
+      label:document.getElementById('ecFeatLabel').value,
+      title:document.getElementById('ecFeatTitle').value,
+      subtext:document.getElementById('ecFeatSub').value,
+      items:collectRepeaterData('ecFeatRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc'})
+    },
+    gallery:{
+      label:document.getElementById('ecGalLabel').value,
+      title:document.getElementById('ecGalTitle').value,
+      subtext:document.getElementById('ecGalSub').value,
+      images:document.getElementById('ecGalImgs').value.split('\n').map(function(s){return s.trim()}).filter(Boolean)
+    },
+    details:{
+      label:document.getElementById('ecDetLabel').value,
+      title:document.getElementById('ecDetTitle').value,
+      para1:document.getElementById('ecDetPara1').value,
+      para2:document.getElementById('ecDetPara2').value,
+      featuresList:document.getElementById('ecDetList').value.split('\n').map(function(s){return s.trim()}).filter(Boolean),
+      image:document.getElementById('ecDetImg').value
+    },
+    cta:{
+      heading:document.getElementById('ecCtaHead').value,
+      subtext:document.getElementById('ecCtaSub').value,
+      btnText:document.getElementById('ecCtaBtn').value,
+      btnLink:document.getElementById('ecCtaLink').value
+    },
+    footer:{
+      copyright:document.getElementById('ecFootCopy').value
+    }
+  };
+}
+
 // ── Save content ──
 document.getElementById('saveContentBtn').addEventListener('click',async function(){
   await saveAllContent();
@@ -1649,6 +1804,11 @@ async function saveAllContent(){
     data.boarding=collectBoardingData();
   }
 
+  // Collect eco data if fields exist
+  if(document.getElementById('ecHeroHead')){
+    data.eco=collectEcoData();
+  }
+
   saveContent(data);
 
   const toast=document.getElementById('saveToast')||function(){
@@ -1673,6 +1833,7 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
     if(btn.dataset.tab==='training')await renderTrainingEditor();
     if(btn.dataset.tab==='grooming')await renderGroomingEditor();
     if(btn.dataset.tab==='boarding')await renderBoardingEditor();
+    if(btn.dataset.tab==='eco')await renderEcoEditor();
   });
 });
 

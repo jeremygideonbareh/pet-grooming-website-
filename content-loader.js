@@ -532,12 +532,111 @@
     }
   }
 
+  /* ── page: eco (eco-cottages.html) ── */
+  function applyEco(d) {
+    var s = d.eco;
+    if (!s) return;
+    if (s.hero) {
+      text('.page-hero h1', s.hero.heading);
+      text('.page-hero p', s.hero.subtext);
+      styleBg('.page-hero', s.hero.bgImage);
+    }
+    if (s.features) {
+      text('.content-section .container .section-label', s.features.label);
+      var titles = document.querySelectorAll('.content-section .container .section-title');
+      if (titles.length >= 1) titles[0].innerHTML = s.features.title;
+      var subs = document.querySelectorAll('.content-section .container .section-sub');
+      if (subs.length >= 1) subs[0].textContent = s.features.subtext;
+      if (s.features.items) {
+        clearAndFill('.features-grid', s.features.items, function(item) {
+          var card = div('feature-card');
+          var icon = div('icon');
+          icon.textContent = item.icon || '🏡';
+          var h3 = document.createElement('h3');
+          h3.textContent = item.title || '';
+          var p = document.createElement('p');
+          p.textContent = item.desc || '';
+          card.appendChild(icon);
+          card.appendChild(h3);
+          card.appendChild(p);
+          return card;
+        });
+      }
+    }
+    if (s.gallery) {
+      var galContainers = document.querySelectorAll('.content-section .container');
+      if (galContainers.length >= 2) {
+        var glabels = galContainers[1].querySelectorAll('.section-label');
+        if (glabels.length) glabels[0].textContent = s.gallery.label;
+        var gtitles = galContainers[1].querySelectorAll('.section-title');
+        if (gtitles.length) gtitles[0].textContent = s.gallery.title;
+        var gsubs = galContainers[1].querySelectorAll('.section-sub');
+        if (gsubs.length) gsubs[0].textContent = s.gallery.subtext;
+      }
+      if (s.gallery.images && s.gallery.images.length) {
+        var gal = document.querySelector('.eco-gal');
+        if (gal) {
+          gal.innerHTML = '';
+          s.gallery.images.forEach(function(url) {
+            if (!url) return;
+            var item = div('gal-item');
+            var img = document.createElement('img');
+            img.src = url;
+            img.alt = 'Eco cottage';
+            img.loading = 'lazy';
+            img.onerror = function() { this.style.display = 'none'; this.parentElement.style.background = 'linear-gradient(135deg,var(--gold-light),var(--gold))'; };
+            item.appendChild(img);
+            gal.appendChild(item);
+          });
+        }
+      }
+    }
+    if (s.details) {
+      var detailContainers = document.querySelectorAll('.content-section .container');
+      if (detailContainers.length >= 3) {
+        var dlabels = detailContainers[2].querySelectorAll('.section-label');
+        if (dlabels.length) dlabels[0].textContent = s.details.label;
+        var dtitles = detailContainers[2].querySelectorAll('.section-title');
+        if (dtitles.length) dtitles[0].innerHTML = s.details.title;
+        var dsubs = detailContainers[2].querySelectorAll('.section-sub');
+        if (dsubs.length >= 1 && s.details.paragraph) dsubs[0].textContent = s.details.paragraph;
+        if (dsubs.length >= 2 && s.details.para2) dsubs[1].textContent = s.details.para2;
+      }
+      if (s.details.featuresList) {
+        var fl = document.querySelector('.features-list');
+        if (fl) {
+          fl.innerHTML = '';
+          s.details.featuresList.forEach(function(item) {
+            var li = document.createElement('li');
+            var ck = document.createElement('span');
+            ck.className = 'ck';
+            ck.textContent = '✓';
+            li.appendChild(ck);
+            li.appendChild(document.createTextNode(' ' + item));
+            fl.appendChild(li);
+          });
+        }
+      }
+      imgSrc('.details-image img', s.details.image);
+    }
+    if (s.cta) {
+      text('.cta-section h2', s.cta.heading);
+      text('.cta-section p', s.cta.subtext);
+      text('.cta-section .btn-whatsapp', s.cta.btnText);
+      attr('.cta-section .btn-whatsapp', 'href', s.cta.btnLink);
+    }
+    if (s.footer) {
+      text('footer .footer-inner > span', s.footer.copyright);
+    }
+  }
+
   /* ── dispatch ── */
   switch (page) {
     case 'home':  applyHome(data);  break;
     case 'train': applyTrain(data); break;
     case 'groom': applyGroom(data); break;
     case 'board': applyBoard(data); break;
+    case 'eco':   applyEco(data);   break;
     /* store: no content sections yet */
     default: break;
   }

@@ -1,19 +1,41 @@
-# A-1 Enterprises Website — Handover Document
+# A-1 Enterprises Website — Complete Handover & Architecture Guide
+
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [File Structure](#file-structure)
+3. [Architecture Diagram](#architecture-diagram)
+4. [Design System](#design-system)
+5. [Page Breakdown](#page-breakdown)
+6. [Admin System](#admin-system)
+7. [Data Layer (db.js)](#data-layer-dbjs)
+8. [Auth Layer (auth.js)](#auth-layer-authjs)
+9. [Upload Layer (upload.js)](#upload-layer-uploadjs)
+10. [Content Loader (content-loader.js)](#content-loader-content-loaderjs)
+11. [Data Flow](#data-flow)
+12. [Supabase Setup](#supabase-setup)
+13. [Cloudflare Pages Deployment](#cloudflare-pages-deployment)
+14. [Security Notes](#security-notes)
+15. [Reusable Template Pattern](#reusable-template-pattern)
+16. [Dev Workflow](#dev-workflow)
+17. [Known Issues & Roadmap](#known-issues--roadmap)
+
+---
 
 ## Project Overview
 
-A complete multi-page pet services website for **A-1 Enterprises** based in **Shillong, Meghalaya, India**. Tagline: **"Passion Turned Profession"**. The site presents a growing canine care ecosystem including dog training, grooming, boarding, a pet store, and future expansions (vet clinic, eco stay).
+A complete multi-page pet services website for **A-1 Enterprises** based in **Shillong, Meghalaya, India**. Tagline: **"Passion Turned Profession"**.
 
 ### Brand Details
-- **Company:** A-1 Enterprises
-- **Tagline:** Passion Turned Profession
-- **Email:** a1.enterprises8891@gmail.com
-- **WhatsApp:** +91 8891 000 000
-- **Business Hours:** Mon–Sat 10:00 AM – 6:00 PM
-- **Address:** Block-C, Nongrimmaw, Laitumkhrah, Shillong, Meghalaya 793011
-- **Google Maps:** https://g.co/kg/knmDPK
-- **YouTube Video:** https://youtu.be/Lgpqqi8ZEQI ("SHILLONG MYNTA || DOG TRAINING AS AN ALTERNATE CAREER OPTION")
-- **Founder:** Mrs. Francisca S. Sangma (acknowledged in founder's note)
+| Field | Value |
+|---|---|
+| Company | A-1 Enterprises |
+| Tagline | Passion Turned Profession |
+| Email | a1.enterprises8891@gmail.com |
+| WhatsApp | +91 8891 000 000 |
+| Business Hours | Mon–Sat 10:00 AM – 6:00 PM |
+| Address | Block-C, Nongrimmaw, Laitumkhrah, Shillong, Meghalaya 793011 |
+| Google Maps | https://g.co/kg/knmDPK |
+| Founder | Mrs. Francisca S. Sangma |
 
 ### Social Media
 | Platform | URL |
@@ -23,271 +45,990 @@ A complete multi-page pet services website for **A-1 Enterprises** based in **Sh
 | YouTube | https://youtu.be/Lgpqqi8ZEQI |
 | Google Business | https://g.co/kg/knmDPK |
 
+### Hosting
+| Detail | Value |
+|---|---|
+| Domain | Cloudflare Pages (auto-deployed from GitHub) |
+| Database | Supabase (PostgreSQL + Storage) |
+| Repo | github.com/jeremygideonbareh/pet-grooming-website- |
+
 ---
 
 ## File Structure
 
 ```
-aiwebsite/
-├── index.html            ─ Main homepage (all sections, branding, gallery)
-├── training.html         ─ Training & Rehabilitation detail page
-├── grooming.html         ─ Grooming detail page
-├── boarding.html         ─ Boarding & Kennels detail page
-├── store.html            ─ Pet store with product grid & inquiry modal
-├── admin.html            ─ Password-protected admin dashboard (Products + Content + Training + Grooming + Boarding tabs)
-├── content-loader.js     ─ Shared JS: reads localStorage content and applies to every page
-├── images/
-│   ├── a1logo.jpeg              ─ Company logo
-│   ├── welcome.jpeg             ─ Welcome/facility image
-│   ├── review1.png              ─ Google review screenshots
-│   ├── review2.png
-│   ├── review3.png
-│   ├── review4.png
-│   ├── review5.png
-│   ├── 4081455907607392.jpg     ─ Training/facility photos
-│   ├── 2533343538804035.jpg
-│   ├── 7177680652812423.jpg
-│   ├── herosection.jpg          ─ Hero section image
-│   ├── herosectionvideo.mp4     ─ Hero section background video
-│   ├── prevent-mats.jpg         ─ Grooming mat image
-│   └── frames/                  ─ Video frames folder
-├── .cloudflareignore            ─ Excludes .git/ and dev files from deployment
-├── wrangler.jsonc               ─ Cloudflare Workers config (auto-generated)
-├── .gitignore
-├── .nojekyll
-├── HANDOFF.md                   ─ THIS FILE
-└── base.html                    ─ Intended template, unused (empty)
+a1-enterprise/
+├── index.html              # Homepage (hero, about, services, why us, gallery, testimonials, footer) — 960 lines
+├── training.html           # Training detail page — 363 lines
+├── eco-cottages.html       # Eco Cottages detail page — 6 sections — 406 lines
+├── grooming.html           # Grooming detail page — 665 lines
+├── boarding.html           # Boarding detail page — 265 lines
+├── store.html              # Pet store (product grid, search, filter, inquiry modal) — 674 lines
+├── admin.html              # Admin dashboard (6 tabs) — 1764 lines
+│
+├── auth.js                 # Auth layer — mock async API, lockout, session token
+├── upload.js               # Upload layer — Supabase Storage + type validation + auto-compression
+├── db.js                   # Data layer — Supabase client init + 7 async CRUD functions
+├── content-loader.js       # Content loader — reads DB, applies to DOM per `data-page` attribute — 544 lines
+│
+├── .cloudflareignore       # Excludes .git/, *.md, .wrangler/ from Cloudflare deployment
+├── .gitignore              # Standard git ignores
+├── .nojekyll               # Empty marker — tells GitHub Pages not to process with Jekyll (legacy, not needed for Cloudflare)
+│                          
+├── HANDOFF.md              # This file
+│
+└── images/                 # Static image assets — referenced by hardcoded HTML and admin content
+    ├── a1logo.jpeg         # Company logo (used in nav, page loader)
+    ├── welcome.jpeg        # About section welcome image
+    ├── review1.png – review5.png  # Google review screenshots (gallery)
+    ├── 4081455907607392.jpg       # Training/dog photos
+    ├── 2533343538804035.jpg       # Training/dog photos
+    ├── 7177680652812423.jpg       # Grooming/boarding photos
+    ├── herosection.jpg     # Grooming hero video poster
+    ├── herosectionvideo.mp4 # Grooming hero background video
+    ├── prevent-mats.jpg    # Grooming mat image
+    └── frames/             # Extracted video frames (unused, legacy)
+
+# NOTABLE ABSENCES (files mentioned in git history but now removed):
+# - wrangler.jsonc   — was auto-generated by `wrangler deploy`, deleted after switching to Cloudflare Pages
+# - base.html        — empty template file, never implemented
 ```
 
 ---
 
-## Page-by-Page Breakdown
+## Architecture Diagram
 
-### `index.html` — Homepage (957 lines)
-The main landing page. Sections in order:
+```
+┌─────────────────────────────────────────────────────────┐
+│                     Cloudflare Pages                     │
+│  (auto-deployed from GitHub on git push to main branch)  │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+  │  index.html  training.html  eco-cottages.html           │
+  │  grooming.html  boarding.html  store.html  admin.html   │
+  │       ↑                        ↑                        │
+  │       │ content-loader.js      │ auth.js                 │
+  │       │ reads from             │ login/logout            │
+  │       │ DB.getSiteContent()    │                        │
+  │       │                        │                        │
+  │  ┌────┴─────────────┐   ┌──────┴──────────┐             │
+  │  │    db.js         │   │   upload.js     │             │
+  │  │  Supabase client │   │  file upload    │             │
+│  │  7 CRUD fns      │   │  type check     │             │
+│  │                  │   │  compression    │             │
+│  └────┬─────────────┘   └──────┬──────────┘             │
+│       │                        │                        │
+└───────┼────────────────────────┼────────────────────────┘
+        │                        │
+        ▼                        ▼
+┌─────────────────────────────────────────────────────────┐
+│                     Supabase                             │
+│                                                          │
+│  ┌─────────────────────┐   ┌─────────────────────────┐  │
+│  │  Table: site_content│   │  Storage: a1-images     │  │
+│  │  id (PK, int=1)     │   │  Public bucket          │  │
+│  │  data (jsonb)       │   │  Uploaded images at:    │  │
+│  │  updated_at (ts)    │   │  /public/{filename}     │  │
+│  ├─────────────────────┤   └─────────────────────────┘  │
+│  │  Table: products    │                                │
+│  │  id (PK, text)      │                                │
+│  │  name, price, cat   │                                │
+│  │  catLabel, desc, img│                                │
+│  └─────────────────────┘                                │
+└─────────────────────────────────────────────────────────┘
+```
 
-1. **Nav** — Fixed top bar with logo, links (About, Services, Dog Training, Grooming, Store, Gallery), WhatsApp CTA, hamburger mobile menu
-2. **Page Loader** — Logo + brand name + gold spinner, min 1.2s display, fades out on load
-3. **Hero** — Full-viewport dark gradient overlay on background image. Headline "A-1 Enterprises", badge "Since 2020 · Shillong, Meghalaya", "About Us" CTA
-4. **Services** — 6-card grid (Training, Grooming, Boarding, Pet Store, Rehabilitation, Working Dog). Section label: "Passion Turned Profession"
-5. **About** — Split layout: text (journey story, quote, founder note) + image. Mentions Mrs. Francisca S. Sangma
-6. **Gallery** — Dynamic masonry grid populated by JS from `GALLERY_IMAGES[]` array. Lightbox on click
-7. **Why Us** — Vision, Mission, Goals (3 cards) + 6 USP cards + 4 Social Responsibility cards
-8. **Testimonials** — 3 testimonial cards with star ratings
-9. **Future Expansion** — 2 cards (Vet Clinic "Coming Soon", Eco Stay "Coming Soon")
-10. **CTA / Contact** — WhatsApp button + social link row
-11. **Footer** — 4-column grid: brand + social icons, quick links, services, contact info
+### Data Flow Summary
 
-### `training.html` — Training Detail Page (360 lines)
-Full detail page with:
-- Hero section (heading, subtext, background image)
-- **Our Programs** — 6 program cards (image, icon, title, description) — managed via admin
-- **Training Gallery** — 6-image gallery grid — managed via admin
-- **How It Works** — 4-step process (Assessment → Custom Plan → Training Sessions → Ongoing Support) — managed via admin
-- **Approach** — Split layout: text + benefits list + image — managed via admin
-- CTA section — WhatsApp button
-- Footer
+**Admin saves content:**
+```
+admin.html → collectTrainingData() / collectRepeaterData() → saveAllContent()
+  → DB.saveSiteContent(data) → supabase.from('site_content').upsert({id:1, data})
+```
 
-### `grooming.html` — Grooming Detail Page (665 lines)
-Pre-existing grooming page, updated with:
-- Loading overlay with brand text
-- Hero with video background + badge + heading + CTA
-- **About** — Image, welcome text, hours card (7 days), stats row (3 items) — managed via admin
-- **Services** — Image cards (5 items) — managed via admin
-- **Gallery** — Auto-scrolling image slider (5 images duplicated) — managed via admin
-- **Reviews** — Background image + 2 review cards — managed via admin
-- CTA section, Footer, Floating Home button
+**Admin saves products:**
+```
+admin.html → saveProducts(products) → DB.saveAllProducts(products)
+  → delete all + insert batch on products table
+```
 
-### `boarding.html` — Boarding Detail Page (265 lines)
-Full detail page with:
-- Hero section (heading, subtext, background image)
-- **Facilities** — 6 feature cards (icon, title, description) — managed via admin
-- **Details** — Split layout: image + text + details list — managed via admin
-- CTA section — WhatsApp button
-- Footer
+**Front-end loads content:**
+```
+content-loader.js → DB.getSiteContent() → supabase.from('site_content').select('data')
+  → applyTrain(data) / applyGroom(data) / etc. → DOM updated
+```
 
-### `store.html` — Pet Store Page (676 lines)
-Product catalog with:
-- Nav + search bar + category filters
-- Product grid with Inquire modal
-- Data source: `localStorage` key `a1_store_products`
-- Footer
-
-### `admin.html` — Admin Dashboard (extended, ~1400+ lines)
-**Tabs:** Products | Content | Training | Grooming | Boarding
-
-See dedicated Admin System section below.
-
-### `content-loader.js` — Shared Content Loader
-A centralized JS file loaded on every page. On `DOMContentLoaded`:
-1. Reads `a1_site_content` from `localStorage`
-2. Detects current page via `<body data-page="...">` attribute
-3. Applies only the relevant section of data to that page's DOM
-4. For repeaters: clears container and rebuilds from data (handles variable item counts)
-5. For images: updates `src` attributes with `onerror` fallbacks
-6. If no saved data exists, hardcoded HTML displays as-is (silent fallback)
+**Image upload:**
+```
+admin.html <input type="file"> → uploadImageToCloud(file)
+  → validate type (jpeg/png/webp)
+  → if >2MB: compress via canvas (max 1200px, quality 0.8)
+  → supabase.storage.from('a1-images').upload(filename, blob)
+  → supabase.storage.from('a1-images').getPublicUrl(filename)
+  → return public URL string → stored in hidden input → saved to DB
+```
 
 ---
 
-## Admin System — Complete Technical Details
+## Design System
 
-### Architecture
-Client-side only. No backend server. All data in `localStorage`. Two keys:
-- `a1_store_products` — Product catalog data
-- `a1_site_content` — All site content (Hero, About, Services, WhyUs, Gallery, Testimonials, Footer + Training + Grooming + Boarding sections)
+### Colors
+| Token | Hex | Usage |
+|---|---|---|
+| `--cream` | `#FBF7F2` | Page backgrounds |
+| `--cream-dark` | `#F5EDE4` | Card hover, secondary backgrounds |
+| `--charcoal` | `#1A1412` | Text, primary buttons |
+| `--charcoal-soft` | `#2C2420` | Button hover |
+| `--gold` | `#C9A05C` | Accents, CTAs, highlights |
+| `--gold-light` | `#E8C88A` | Light gold backgrounds |
+| `--gold-dark` | `#A77F3E` | Gold hover states |
+| `--muted` | `#7A6B5E` | Secondary text, metadata |
+| `--border` | `#E3D9CE` | Card borders, dividers |
+| `--white` | `#FFFFFF` | Card backgrounds |
+| `--green` | `#27ae60` | Success toast |
+| `--red` | `#e74c3c` | Delete buttons, errors |
 
-### Authentication
-- **Password:** `admin123`
-- **Salt:** `A1-ENTERPRISES::2026`
-- **Stored Hash:** `3a39e22d9cc93390556fcc5ba1014374fb56195337fd6b6dd5e2af25af9bdd6c`
-- SHA-256 via Web Crypto API, session token in `sessionStorage` (24h expiry)
-- Lockout after 5 failed attempts (exponential backoff)
+### Fonts
+| Usage | Font | Weight |
+|---|---|---|
+| Body | Inter (Google Fonts) | 300–900 |
+| Headings | Playfair Display (Google Fonts) | 600–900 |
 
-### Tab: Products — CRUD
-**Storage Key:** `a1_store_products`
+### Animations
+- **Scroll reveal:** `IntersectionObserver` adds `.active` class to `.reveal` elements (translateY 36px → 0, opacity 0→1, 0.7s cubic-bezier)
+- **Stagger:** `.reveal-delay-1` (0.1s), `.reveal-delay-2` (0.2s)
+- **Page loader:** Logo + spinner, min 1.2s display, fades out on `window.onload`
+- **Modal:** Scale+fade-in keyframe (0.3s ease)
 
-**Product Schema:**
+### Responsive Breakpoints
+| Breakpoint | Key Changes |
+|---|---|
+| 1200px+ | Desktop layout, max-width containers |
+| 1024px | Nav → hamburger menu |
+| 900px | Multi-column grids → stacked |
+| 768px | Padding 100px→60px, footer collapses |
+| 640px | Hero padding reduced, headings smaller |
+| 480px | Padding 40px, full-width buttons |
+| 360px | Tightest padding, single-column gallery |
+
+### Page Loader
+Every page has a full-viewport loader overlay with the A1 logo, brand name, and gold spinner. It shows for a minimum of 1.2 seconds and fades out on `window.onload`. The loader exists in the HTML directly (not dynamically injected).
+
+### Nav / Hamburger Menu
+Each page has its own fixed navbar with the logo, nav links, and WhatsApp CTA. The pattern is duplicated in every HTML file:
+
+**Desktop:** Full horizontal nav links. The navbar gets a `.scrolled` class on `window.scrollY > 20` (adds shadow/background).
+
+**Mobile (< 1024px):** A `.hamburger` button (3 stacked `<span>` elements) toggles a `.mobile-nav` fullscreen overlay:
 ```javascript
-{
-  id: 'p' + Date.now() + randomString,
-  name: string,
-  price: string,        // e.g. "₹1,200"
-  cat: string,           // category ID (e.g. "dog-food")
-  catLabel: string,      // display name (e.g. "Dog Food")
-  desc: string,          // max 300 chars
-  img: string            // URL or data URI
+hamburger.addEventListener('click', function() {
+  hamburger.classList.toggle('active');      // animates 3 spans into X
+  mobileNav.classList.toggle('open');         // shows/hides fullscreen nav
+  document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+});
+mobileNav.querySelectorAll('a').forEach(function(link) {
+  link.addEventListener('click', function() {
+    hamburger.classList.remove('active');
+    mobileNav.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+```
+
+### Scroll-Reveal IntersectionObserver
+Duplicated at the bottom of every page. Only observes `.reveal` elements that exist **at page load time**:
+```javascript
+const observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.classList.add('active');   // triggers CSS transition (opacity 0→1, translateY 36→0)
+      observer.unobserve(e.target);        // one-time animation
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+```
+
+**Quirk with content-loader.js:** `content-loader.js` replaces DOM content AFTER this observer runs. New elements with the `reveal` class added by JS are NOT observed. To fix this, the observer should be re-run or `content-loader.js` should call `observer.observe(newEl)` for each new element. Currently, program cards and gallery items created by `content-loader.js` do NOT have the `reveal` class (they use `program-card` or `gal-item`), so this is a non-issue for the current implementation. But if you add `.reveal` to dynamically created elements, you must also observe them.
+
+### Gallery Lightbox (index.html only)
+The homepage gallery has a lightbox overlay (`#lightbox`). Clicking a gallery image sets the lightbox img `src` and adds `.open` to the overlay. Clicking the overlay or pressing Escape closes it. The gallery itself is a masonry grid populated from a `GALLERY_IMAGES[]` array (10 hardcoded image paths). This is SEPARATE from the admin-managed gallery on detail pages.
+
+### Image `onerror` Fallback
+Every dynamically-rendered image across the site uses an `onerror` handler to gracefully hide broken images instead of showing the browser's broken image icon:
+
+```javascript
+// Content-loader: hides parent container
+img.onerror = function() { this.parentElement.style.display = 'none'; };
+
+// Store page: hides img, shows gold gradient background
+onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"
+
+// Admin preview: hides preview wrapper
+onerror="this.parentElement.style.display='none'"
+```
+
+This prevents ugly broken image icons when Supabase Storage URLs become invalid or images are deleted from the bucket.
+
+---
+
+## Page Breakdown
+
+### `index.html` — Homepage
+| Section | data-page | Managed by Admin? | Content source |
+|---|---|---|---|
+| Nav (fixed, with hamburger) | — | No | Static HTML |
+| Page Loader | — | No | Static HTML |
+| Hero | — | Yes (Content tab) | DB/fallback |
+| Services (6 cards) | — | Yes (Content tab) | DB/fallback |
+| About | — | Yes (Content tab) | DB/fallback |
+| Gallery (dynamic masonry) | — | Yes (Content tab) | DB/fallback |
+| Why Us (VMG+USP+Social) | — | Yes (Content tab) | DB/fallback |
+| Testimonials | — | Yes (Content tab) | DB/fallback |
+| Future Expansion (Vet, Eco Stay) | — | No | Static HTML |
+| CTA / Contact | — | No | Static HTML |
+| Footer | — | Yes (Content tab) | DB/fallback |
+| `<body data-page="home">` | ✅ | |
+
+### `training.html` — Training Detail Page
+| Section | Managed by Admin? | Content source |
+|---|---|---|
+| Hero | Yes (Training tab) | DB/fallback |
+| Programs (program cards) | Yes (Training tab) | DB/fallback |
+| Gallery (image grid) | Yes (Training tab) | DB/fallback |
+| Process (4 steps) | Yes (Training tab) | DB/fallback |
+| Approach (text + benefits + image) | Yes (Training tab) | DB/fallback |
+| CTA (WhatsApp) | Yes (Training tab) | DB/fallback |
+| Footer | Yes (Training tab) | DB/fallback |
+| `<body data-page="train">` | ✅ |
+
+### `grooming.html` — Grooming Detail Page
+| Section | Managed by Admin? | Content source |
+|---|---|---|
+| Loading Overlay | Yes (Grooming tab) | DB/fallback |
+| Hero (video bg) | Yes (Grooming tab) | DB/fallback |
+| About (hours + stats) | Yes (Grooming tab) | DB/fallback |
+| Services (image cards) | Yes (Grooming tab) | DB/fallback |
+| Gallery (auto-scroll slider) | Yes (Grooming tab) | DB/fallback |
+| Reviews | Yes (Grooming tab) | DB/fallback |
+| CTA | Yes (Grooming tab) | DB/fallback |
+| Footer | Yes (Grooming tab) | DB/fallback |
+| `<body data-page="groom">` | ✅ |
+
+### `eco-cottages.html` — Eco Cottages Detail Page
+| Section | Managed by Admin? | Content source |
+|---|---|---|
+| Hero | Yes (Eco Cottages tab) | DB/fallback |
+| Features (6 amenity cards) | Yes (Eco Cottages tab) | DB/fallback |
+| Gallery (image grid) | Yes (Eco Cottages tab) | DB/fallback |
+| Details (image + text + features list) | Yes (Eco Cottages tab) | DB/fallback |
+| CTA (WhatsApp) | Yes (Eco Cottages tab) | DB/fallback |
+| Footer | Yes (Eco Cottages tab) | DB/fallback |
+| `<body data-page="eco">` | ✅ |
+
+### `boarding.html` — Boarding Detail Page
+| Section | Managed by Admin? | Content source |
+|---|---|---|
+| Hero | Yes (Boarding tab) | DB/fallback |
+| Features (6 cards) | Yes (Boarding tab) | DB/fallback |
+| Details (image + text + list) | Yes (Boarding tab) | DB/fallback |
+| CTA (WhatsApp) | Yes (Boarding tab) | DB/fallback |
+| Footer | Yes (Boarding tab) | DB/fallback |
+| `<body data-page="board">` | ✅ |
+
+### `store.html` — Pet Store Page
+| Section | Managed by Admin? | Content source |
+|---|---|---|
+| Nav | No | Static HTML |
+| Search + Filters | No | Static HTML |
+| Product Grid | Yes (Products tab) | DB.getProducts() → products table |
+| Inquiry Modal | No | Static HTML/JS |
+| Footer category links | No | Static HTML (scrolls to store & filters by category) |
+| Footer | No | Static HTML |
+
+The store page has its own `loadProducts()` function that calls `DB.getProducts()`. If no products exist in Supabase, it seeds 16 default products and saves them to the database. This is the ONLY page that auto-seeds data.
+
+```javascript
+const DEFAULT_PRODUCTS = [
+  { id:'p1', name:'Premium Adult Dog Food (Chicken & Rice)',  price:'₹1,850', cat:'dog-food', ... },
+  // ... 16 products total, covering all 6 categories (dog-food, treats, toys, accessories, grooming, health)
+];
+
+async function loadProducts() {
+  var products = await DB.getProducts();
+  if (!products || products.length === 0) {
+    await DB.saveAllProducts(DEFAULT_PRODUCTS);
+    return DEFAULT_PRODUCTS;
+  }
+  return products;
 }
 ```
 
-**Categories:** Dog Food, Treats, Toys, Accessories, Grooming, Health
+**Note:** The store page does NOT use `content-loader.js` for its product grid. Products are rendered by the page's own inline `renderProducts()` function. The page only uses `content-loader.js` for potential future text sections (currently none are mapped — the switch statement hits `default: break;`).
 
-**Dashboard:** Stats row, search, table (Image, Name, Price, Category, Description, Actions), Add/Edit/Delete modals. Image upload converts to data URI.
+**Inquiry Modal Flow:**
+1. User clicks "Inquire Now" on a product card → `openInquiry(p)` stores the product object, populates the modal header with product name, clears the form, shows modal overlay
+2. User fills in name, phone, optional message → submits form
+3. Form submit handler builds a WhatsApp message with product name, price, user name, phone, and message
+4. Opens `https://wa.me/918891000000?text=...` in a new tab → user can send the inquiry via WhatsApp
+5. Modal closes after submission
 
-### Tab: Content — Homepage Editor
-Editable sections (all stored under `a1_site_content`):
+**Footer Category Links:** The store footer has category links (`data-cat` attributes) that click → set `currentCategory` → clear search → re-render products → smooth-scroll to the store section (offset by navbar height).
+
+---
+
+## Admin System
+
+### Architecture
+Single-page app inside `admin.html`. No frameworks. All JS is vanilla (ES5-compatible, no arrow functions in shared code). The admin has 5 tabs:
+
+**Tab switching mechanism:**
+- Each tab button has `data-tab="products|content|training|grooming|boarding"`
+- Clicking a tab: removes `.active` from all buttons and tab-content divs → adds `.active` to clicked button → shows corresponding `<div id="tabProducts|tabContent|tabTraining|tabGrooming|tabBoarding">` → calls the tab's async render function (which fetches data from Supabase and populates the editor fields)
+- Products tab uniquely calls `await renderDashboard()` on every switch to refresh the product table from the database
+
+| Tab | Button | Tab ID | Editor Function | Save Function |
+|---|---|---|---|---|
+| Products | `data-tab="products"` | `tabProducts` | `renderDashboard()` | `saveProducts()` → `DB.saveAllProducts()` |
+| Content | `data-tab="content"` | `tabContent` | `renderContentEditor()` | `saveAllContent()` → `DB.saveSiteContent()` |
+| Training | `data-tab="training"` | `tabTraining` | `renderTrainingEditor()` | `saveAllContent()` → `DB.saveSiteContent()` |
+| Grooming | `data-tab="grooming"` | `tabGrooming` | `renderGroomingEditor()` | `saveAllContent()` → `DB.saveSiteContent()` |
+| Boarding | `data-tab="boarding"` | `tabBoarding` | `renderBoardingEditor()` | `saveAllContent()` → `DB.saveSiteContent()` |
+| Eco Cottages | `data-tab="eco"` | `tabEco` | `renderEcoEditor()` | `saveAllContent()` → `DB.saveSiteContent()` |
+
+### Login Flow
+1. Page loads → `requireAuth()` checks `Auth.isAuthenticated()` (sessionStorage token + 24h expiry)
+2. If not authenticated → login overlay shown
+3. User enters password → `handleLogin()` → `Auth.attemptLogin(password)` (async mock API)
+4. On success → session token stored → `renderDashboard()` called
+5. On failure → lockout tracking (5 attempts max, exponential backoff up to 5min)
+
+### Tab: Products
+**Schema (saved to `products` Supabase table):**
+```javascript
+{
+  id: 'p' + Date.now() + random,   // Primary key
+  name: string,                      // Product name
+  price: string,                     // e.g. "₹1,200"
+  cat: string,                       // Category ID (e.g. "dog-food")
+  catLabel: string,                  // Display name (e.g. "Dog Food")
+  desc: string,                      // Description (max 300 chars)
+  img: string                        // Public URL from Supabase Storage
+}
+```
+
+**Categories:** Dog Food, Treats & Snacks, Toys & Play, Accessories, Grooming, Health & Wellness
+
+**Dashboard features:**
+- Stats row (total count, categories, total value, food items)
+- Search input (filters in real-time)
+- Table with Image, Name, Price, Category, Description, Actions (Edit/Delete)
+- Add Product modal → Save → `DB.saveAllProducts()`
+- Edit Product modal → pre-filled → Save → `DB.saveAllProducts()`
+- Delete confirmation → removes from array → `DB.saveAllProducts()`
+
+**Image upload in Products modal:** File input → `uploadImageToCloud(file)` → returns Supabase Storage URL → displayed as preview → saved with product data.
+
+### Tab: Content
+Editable sections for the homepage. Each section is a collapsible card (click header to toggle):
 
 | Section | Fields |
 |---|---|
 | Hero | headline, badge, bgImage URL, btnText |
-| About | label, heading, para1–para4, image URL, quoteText, quoteCite, founderNote, founderSub, founderSign |
-| Services | label, heading, subtext, repeater (icon, title, desc, link) |
-| Why Us | label, heading, subtext, repeater (icon, title, desc) |
-| Social Responsibility | repeater (icon, title, desc) |
-| Gallery | textarea (one URL per line) |
-| Testimonials | repeater (stars number, name, quote) |
-| Footer | copyright, tagline, social URLs (fb, ig, yt, gm), email, whatsapp |
+| About | label, heading, para1–4, image URL, quoteText, quoteCite, founderNote, founderSub, founderSign |
+| Services | label, heading, subtext, **repeater** {icon, title, desc, link} |
+| Why Us (USP) | label, heading, subtext, **repeater** {icon, title, desc} |
+| Social Responsibility | **repeater** {icon, title, desc} |
+| Gallery Images | Textarea (one URL per line) + **file upload button** |
+| Testimonials | **repeater** {stars, name, quote} |
+| Footer | copyright, tagline, fb, ig, yt, gm, email, whatsapp |
 
-### Tab: Training — Training Page Editor
-Editable sections (nested under `a1_site_content.training`):
+### Tab: Training
+Editable sections for training.html:
 
 | Section | Fields |
 |---|---|
 | Hero | heading, subtext, bgImage URL |
 | Programs Header | label, title, subtext |
-| Program Cards | repeater (img URL, icon, title, desc) — 6 items |
+| Program Cards | **repeater** {img: file upload, icon, title, desc} |
 | Gallery Header | label, title, subtext |
-| Gallery Images | textarea (one URL per line) |
+| Gallery Images | Textarea + **file upload button** |
 | Process Header | label, title, subtext |
-| Process Steps | repeater (num, title, desc) — 4 items |
+| Process Steps | **repeater** {num, title, desc} |
 | Approach | label, title, para1, para2, benefits (textarea, one per line), image URL |
 | CTA | heading, subtext, btnText, btnLink |
 | Footer | copyright |
 
-### Tab: Grooming — Grooming Page Editor
-Editable sections (nested under `a1_site_content.grooming`):
+### Tab: Grooming
+Editable sections for grooming.html:
 
 | Section | Fields |
 |---|---|
 | Loading Overlay | brand, brandSmall |
 | Hero | badge, headingMain, headingEm, subtext, btnText, posterUrl, videoUrl |
-| About | image URL, welcomeHeading, welcomePara, hours (7 day/time pairs), stats (3 items with num + label) |
-| Services | badge, heading, desc, btnText, image cards repeater (img URL, label) — 5 items |
-| Gallery | title, subtext, images (textarea, one per line) |
-| Reviews | badge, heading, subtext, bgImage URL, review cards repeater (name, stars, text) — 2 items |
+| About | image URL, welcomeHeading, welcomePara, hours (one day\|time per line), stats (one num\|label per line) |
+| Services | badge, heading, desc, btnText, **repeater** {img: file upload, label} |
+| Gallery | title, subtext, textarea + **file upload button** |
+| Reviews | badge, heading, subtext, bgImage URL, **repeater** {name, stars, text} |
 | CTA | heading, subtext, btnText |
-| Footer | brand, tagline, copyright, social URLs (fb, ig, yt, gm), address lines (3), contact links (whatsApp URL, email) |
+| Footer | brand, tagline, copyright, fb, ig, yt, gm, address1–3, whatsapp, email |
 
-### Tab: Boarding — Boarding Page Editor
-Editable sections (nested under `a1_site_content.boarding`):
+### Tab: Boarding
+Editable sections for boarding.html:
 
 | Section | Fields |
 |---|---|
 | Hero | heading, subtext, bgImage URL |
 | Features Header | label, title, subtext |
-| Feature Cards | repeater (icon, title, desc) — 6 items |
+| Feature Cards | **repeater** {icon, title, desc} |
 | Details | label, title, paragraph, image URL, detailsList (textarea, one per line), btnText |
 | CTA | heading, subtext, btnText, btnLink |
 | Footer | copyright |
 
-### Save/Load Mechanism
-- **Save button** (single "Save All Changes"): collects all fields from all 4 content tabs, merges into one `a1_site_content` object, writes to localStorage
-- **Tab switch**: when switching to Content/Training/Grooming/Boarding, the form is populated from the saved data in localStorage (if any)
-- **Products tab**: separate save button that writes to `a1_store_products`
+### Repeater System
+Used in multiple tabs for variable-length lists (services, programs, features, testimonials, etc.).
 
----
+**Rendering:** Each repeater item is a `.cf-rpt-item` div with class-based input fields (`.r-img`, `.r-icon`, `.r-title`, etc.).
 
-## Content-Loader Architecture
+**Adding items:** "Add" button calls a dedicated function that `insertAdjacentHTML` a new `.cf-rpt-item` with default values.
 
-### How It Works
+**Removing items:** ✕ Remove button calls `removeRepeater(this, containerId)`.
 
-```
-Admin saves → localStorage.setItem('a1_site_content', JSON.stringify(allData))
-                    ↓
-Page loads → localStorage.getItem('a1_site_content')
-                    ↓
-             content-loader.js parses data
-                    ↓
-             Checks <body data-page="index|training|grooming|boarding|store">
-                    ↓
-             Applies only relevant sections to that page's DOM
-                    ↓
-             If no data → hardcoded HTML stays unchanged
-```
-
-### `a1_site_content` Data Structure (top-level keys)
+**Collecting data:** `collectRepeaterData(containerId, fieldMap)` queries all `.cf-rpt-item` elements inside the container, maps class selectors to object keys:
 ```javascript
-{
-  hero: { ... },              // Used by: index.html
-  about: { ... },             // Used by: index.html
-  services: { ... },          // Used by: index.html
-  whyUs: { ... },             // Used by: index.html
-  social: [ ... ],            // Used by: index.html
-  gallery: [ ... ],           // Used by: index.html
-  testimonials: [ ... ],      // Used by: index.html
-  footer: { ... },            // Used by: index.html
-  training: { ... },          // Used by: training.html
-  grooming: { ... },          // Used by: grooming.html
-  boarding: { ... }           // Used by: boarding.html
+collectRepeaterData('trProgRepeater', {
+  img: '.r-img',    // hidden input, populated by file upload
+  icon: '.r-icon',
+  title: '.r-title',
+  desc: '.r-desc'
+})
+// Returns: [{img, icon, title, desc}, ...]
+```
+
+### `collectRepeaterData(containerId, fieldMap)` — Helper
+Queries `.cf-rpt-item` children of the container, reads each field input by class selector, returns an array of objects:
+
+```javascript
+function collectRepeaterData(containerId, fieldMap) {
+  var items = document.querySelectorAll('#' + containerId + ' .cf-rpt-item');
+  var result = [];
+  items.forEach(function(item) {
+    var obj = {};
+    for (var key in fieldMap) {
+      var input = item.querySelector(fieldMap[key]);
+      obj[key] = input ? input.value : '';
+    }
+    result.push(obj);
+  });
+  return result;
 }
 ```
 
-### Page Detection
-Each page has `<body data-page="train">` (short code). In `content-loader.js`:
+Usage example (from Training tab):
 ```javascript
-const page = document.body.dataset.page; // "home" | "train" | "groom" | "board" | "store"
+collectRepeaterData('trProgRepeater', {
+  img: '.r-img',    // hidden input, populated by file upload
+  icon: '.r-icon',
+  title: '.r-title',
+  desc: '.r-desc'
+})
+// Returns: [{img, icon, title, desc}, ...]
 ```
 
-### Loading Behavior
-- **index.html** (`data-page="home"`): loads hero, about, services, whyUs, social, gallery, testimonials, footer
-- **training.html** (`data-page="train"`): loads training.{hero, programs, gallery, process, approach, cta, footer}
-- **grooming.html** (`data-page="groom"`): loads grooming.{hero, about, services, gallery, reviews, cta, footer}
-- **boarding.html** (`data-page="board"`): loads boarding.{hero, features, details, cta, footer}
-- **store.html** (`data-page="store"`): currently no content sections (only product data which is separate)
-- If no saved data: does nothing, hardcoded HTML displays as-is
-- If a specific section is missing from saved data: skips that section, hardcoded content remains
+Each repeater item that needs an image has a **file upload widget** generated by `renderImageUploadWidget(val)`:
 
-### Repeater Handling
-For repeatable items (service cards, program cards, feature cards, etc.), the script:
-1. Clears the container element's children
-2. Loops over the data array
-3. Creates new DOM elements matching the original HTML template structure
-4. Appends them to the container
+```
+┌──────────────────────────────────────┐
+│ Image                                │
+│ ┌──────────────────┐ ┌──────────┐   │
+│ │ [Choose File]    │ │ No file  │   │
+│ └──────────────────┘ └──────────┘   │
+│ ┌────────────────────┐              │
+│ │   [thumbnail]      │  (hidden     │
+│ │    60×60px         │   until      │
+│ └────────────────────┘   uploaded)  │
+└──────────────────────────────────────┘
+```
 
-This ensures variable item counts are handled correctly (unlike in-place text replacement).
+It consists of:
+- `<input type="file" class="image-upload-btn">` — triggers upload
+- `<input type="hidden" class="r-img">` — stores the returned URL (what `collectRepeaterData` reads)
+- Status text: "No file" → "Uploading..." → "Uploaded"
+- Preview thumbnail (appears after upload)
+
+### Gallery Upload Buttons
+Each gallery textarea (Content, Training, Grooming) has a file upload button above it:
+```
+┌────────────────────────────────┐
+│ [Choose File]    (status)     │
+└────────────────────────────────┘
+┌────────────────────────────────┐
+│ │ (textarea with URLs,        │
+│ │  one per line)              │
+└────────────────────────────────┘
+```
+When a file is uploaded, the URL is **appended** to the textarea on a new line, preserving any existing URLs.
+
+### Event Delegation for Uploads
+A single `document.addEventListener('change', async function(e){...})` handles all file uploads:
+- **`.image-upload-btn`** → uploads to Supabase → stores URL in sibling `.r-img` hidden input → shows preview
+- **`.gallery-upload-btn`** → uploads to Supabase → appends URL to `data-target` textarea
+
+Both call `window.uploadImageToCloud(file)`.
+
+### Save/Load Mechanism
+- **"Save All Changes" button** (`#saveContentBtn` on Content tab, `#saveAllBtn` on Training/Grooming/Boarding tabs, or any button with id `saveAllBtn`) → `saveAllContent()`
+- `saveAllContent()` collects ALL visible tab fields into one `data` object, then calls `DB.saveSiteContent(data)`
+- Products have their own save flow via `DB.saveAllProducts(products)`
+- Content is loaded via `loadContent()` → `DB.getSiteContent() || DEFAULT_CONTENT`
+
+### DEFAULT_CONTENT Fallback
+Defined at `admin.html:814` as a large `const DEFAULT_CONTENT = {...}` object containing complete default data for all tabs (homepage hero, about, services, whyUs, social, gallery, testimonials, footer + training, grooming, boarding sections). This is the authoring template for new data — the admin editors populate their fields from this object when Supabase returns null (empty table, first load, or network failure).
+
+The load chain:
+1. `loadContent()` calls `DB.getSiteContent()`
+2. If Supabase returns valid data → admin editors use it
+3. If null (first time, no data yet) → `DEFAULT_CONTENT` is used as fallback
+4. Saving always writes back to Supabase via `DB.saveSiteContent(data)`
+
+**Important:** On the FIRST save, the admin MUST click "Save All Changes" on each tab to persist the default content (or their edits) to Supabase. Until then, the pages rely on their own hardcoded HTML fallback.
+
+### Toast Notification
+After saving, `saveAllContent()` creates (or reuses) a fixed-position `.cf-toast` div at the bottom of the screen:
+```javascript
+var toast = document.getElementById('saveToast') || function() {
+  var t = document.createElement('div');
+  t.id = 'saveToast';
+  t.className = 'cf-toast';
+  t.textContent = '✅ All content saved!';
+  document.body.appendChild(t);
+  return t;
+}();
+toast.classList.add('show');                    // opacity 0→1
+setTimeout(function() { toast.classList.remove('show'); }, 2500);  // auto-hide
+```
+
+### Delete Confirmation Dialog
+Products use a `.confirm-box` modal overlay:
+```
+┌──────────────────────┐
+│        🗑️            │
+│   Delete Product?    │
+│  "Product Name"      │
+│  This cannot be      │
+│  undone.             │
+│                      │
+│  [Cancel] [Delete]   │
+└──────────────────────┘
+```
+- `openDelete(id)` sets `deleteProductId`, shows the modal
+- "Delete" button calls `let products = products.filter(x => x.id !== deleteProductId)` → `DB.saveAllProducts(products)` → closes modal → re-renders
+- Escape key or overlay click closes the modal
+
+### Two Escape Functions (Inconsistency)
+`admin.html` has two nearly identical HTML-escape functions:
+
+| Function | Location | Used For | Signature |
+|---|---|---|---|
+| `escapeHtml(text)` | Line 656 | Product table cells (template strings) | Uses `const d`, no null fallback |
+| `escHtml(t)` | Line 951 | Content editor fields (template literals) | Uses `const d`, has `t \|\| ''` fallback |
+
+Both create a `<div>`, set `textContent`, return `innerHTML`. The inconsistency is a legacy artifact. For new code, prefer `escHtml()` with the null-safe fallback.
+
+### JS Style Inconsistency
+The admin.html script uses a mix of ES5 and ES6 styles:
+- **ES5:** Product CRUD section — `var`, `function()`, string concatenation — works in all browsers
+- **ES6:** Content editor section — `const`, arrow functions (`=>`), template literals — requires modern browser
+- **Repeater functions:** Mixed — some use ES5 (`function renderTrProgItem`), some use ES6 (`const` inside)
+
+For future projects, pick one style and stick with it. ES5 is safer for broad compatibility.
+
+### Data Structure (site_content)
+```javascript
+{
+  hero: { headline, badge, bgImage, btnText },
+  about: { label, heading, para1-4, image, quoteText, quoteCite, founderNote, founderSub, founderSign },
+  services: { label, heading, subtext, items: [{icon, title, desc, link}, ...] },
+  whyUs: { label, heading, subtext, items: [{icon, title, desc}, ...] },
+  social: [{icon, title, desc}, ...],
+  gallery: ["url1", "url2", ...],
+  testimonials: [{stars: 5, name, quote}, ...],
+  footer: { copyright, tagline, fb, ig, yt, gm, email, whatsapp },
+  training: {
+    hero: { heading, subtext, bgImage },
+    programs: { label, title, subtext, items: [{img, icon, title, desc}, ...] },
+    gallery: { label, title, subtext, images: [...] },
+    process: { label, title, subtext, steps: [{num, title, desc}, ...] },
+    approach: { label, title, para1, para2, benefits: [...], image },
+    cta: { heading, subtext, btnText, btnLink },
+    footer: { copyright }
+  },
+  grooming: {
+    hero: { badge, headingMain, headingEm, subtext, btnText, posterUrl, videoUrl },
+    about: { image, welcomeHeading, welcomePara, hours: [{day, time}], stats: [{num, label}] },
+    services: { badge, heading, desc, btnText, items: [{img, label}, ...] },
+    gallery: { title, subtext, images: [...] },
+    reviews: { badge, heading, subtext, bgImage, items: [{name, stars, text}, ...] },
+    cta: { heading, subtext, btnText },
+    footer: { brand, tagline, copyright, fb, ig, yt, gm, address1-3, whatsapp, email }
+  },
+  boarding: {
+    hero: { heading, subtext, bgImage },
+    features: { label, title, subtext, items: [{icon, title, desc}, ...] },
+    details: { label, title, paragraph, image, detailsList: [...], btnText },
+    cta: { heading, subtext, btnText, btnLink },
+    footer: { copyright }
+  }
+}
+```
 
 ---
 
-## Security & Deployment
+## Data Layer (db.js)
+
+### Location
+`db.js` — loaded via `<script src="db.js">` on every page.
+
+### Supabase Client
+```javascript
+var SUPABASE_URL = 'https://hqgdifxecxrxhjsbavkl.supabase.co';
+var SUPABASE_ANON_KEY = 'sb_publishable_4-UBFcXGsiLjHINRAfydTQ_lCVzE9OM';
+var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+```
+
+The client is exposed as `window.DB.supabase` so `upload.js` can reuse it.
+
+### 7 CRUD Functions
+
+All functions are async, wrapped in try/catch, and log errors with `console.error('[DB]')`.
+
+#### `getSiteContent()` → `Object|null`
+- Queries: `supabase.from('site_content').select('data').eq('id', 1).single()`
+- Returns the `data` jsonb column value, or `null` on error/missing
+
+#### `saveSiteContent(dataObj)`
+- Upserts: `supabase.from('site_content').upsert({id:1, data: dataObj, updated_at: new Date().toISOString()})`
+- Single-row table (id=1 always)
+
+#### `getProducts()` → `Array`
+- Queries: `supabase.from('products').select('*').order('id')`
+- Returns array of product objects, or `[]` on error
+
+#### `saveAllProducts(products)`
+- Fetches existing IDs → deletes them → inserts the new batch
+- This is a full replacement strategy (not incremental)
+- If products array is empty, only deletes (no insert)
+
+#### `addProduct(product)`
+- Single insert: `supabase.from('products').insert(product)`
+
+#### `updateProduct(id, updates)`
+- Update by ID: `supabase.from('products').update(updates).eq('id', id)`
+
+#### `deleteProduct(id)`
+- Delete by ID: `supabase.from('products').delete().eq('id', id)`
+
+### Connectivity Test
+Open browser console and call:
+```javascript
+window.runSupabaseTest()
+```
+This inserts a dummy product, reads it back, cleans it up, then does the same for site_content. Logs ✅ or ❌ for each step.
+
+### Exposed Global
+```javascript
+window.DB = {
+  supabase,           // Supabase client (for upload.js)
+  getSiteContent,
+  saveSiteContent,
+  getProducts,
+  saveAllProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct
+};
+```
+
+---
+
+## Auth Layer (auth.js)
+
+### Location
+`auth.js` — loaded via `<script src="auth.js">` before `db.js` and `upload.js`.
+
+### Functions
+
+#### `Auth.isAuthenticated()` → `boolean`
+Checks `sessionStorage` for a token with valid 24h expiry.
+
+#### `Auth.attemptLogin(password)` → `{success, error?, locked?, remaining?}`
+- Async mock API (300–700ms simulated delay)
+- Checks password against `admin123`
+- Lockout: 5 max attempts, exponential backoff (60s → 120s → 240s → 300s max)
+- On success: generates crypto token, stores in sessionStorage
+
+#### `Auth.logout()`
+Removes session token from sessionStorage.
+
+### Exposed Global
+```javascript
+window.Auth = {
+  isAuthenticated,
+  attemptLogin,
+  logout,
+  SESSION_KEY: 'a1_admin_session'
+};
+```
+
+### Production TODO
+Replace the `if (password === 'admin123')` mock check with a real backend call (Cloudflare Worker, Firebase Auth, Supabase Auth, etc.).
+
+```javascript
+// Example production replacement:
+// const res = await fetch('https://api.example.com/auth/login', {
+//   method: 'POST',
+//   headers: { 'Content-Type': 'application/json' },
+//   body: JSON.stringify({ password })
+// });
+// return res.json();
+```
+
+---
+
+## Upload Layer (upload.js)
+
+### Location
+`upload.js` — loaded via `<script src="upload.js">` after `auth.js`, before `db.js`.
+
+### Function: `uploadImageToCloud(file)` → `Promise<string>`
+
+**Step 1 — Type validation:**
+```javascript
+var ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+if (ALLOWED_TYPES.indexOf(file.type) === -1) {
+  throw new Error('Invalid file type. Please upload a JPG, PNG, or WebP.');
+}
+```
+
+**Step 2 — Auto-compression (if > 2MB):**
+- Creates an Image element from the file
+- Draws to Canvas at max 1200px on the longest side (preserves aspect ratio)
+- Outputs WebP (or JPEG fallback) at quality 0.8
+- Uploads the compressed blob instead of the original file
+- If compression fails, falls back to the original file with a warning
+
+**Step 3 — Supabase Storage upload:**
+```javascript
+// Extract extension from original filename
+var ext = (file.name.match(/\.[^.]+$/) || ['.jpg'])[0];
+
+// Unique filename: timestamp + 6-char random string + original extension
+var fileName = Date.now() + '_' + Math.random().toString(36).slice(2, 8) + ext;
+var uploadResult = await supabase.storage.from('a1-images').upload(fileName, blob, {
+  cacheControl: '3600',
+  upsert: false
+});
+var publicUrlResult = supabase.storage.from('a1-images').getPublicUrl(fileName);
+return publicUrlResult.data.publicUrl;
+```
+
+### Bucket Requirement
+Create `a1-images` bucket in Supabase dashboard → **Storage** → **New bucket** → name: `a1-images` → **Public bucket** ✓. RLS should allow public insert/read (or configure proper policies).
+
+### Exposed Global
+```javascript
+window.uploadImageToCloud = uploadImageToCloud;
+```
+
+---
+
+## Content Loader (content-loader.js)
+
+### Location
+`content-loader.js` — loaded via `<script src="content-loader.js">` after `db.js`.
+
+### Architecture
+An async IIFE that:
+1. Calls `DB.getSiteContent()` to fetch data from Supabase
+2. Reads `document.body.dataset.page` to detect the current page
+3. Dispatches to the correct `apply*()` function
+
+### Helper Functions
+| Function | Purpose |
+|---|---|
+| `text(selector, value)` | Sets `textContent` of matching element |
+| `html(selector, value)` | Sets `innerHTML` of matching element |
+| `attr(selector, name, value)` | Sets attribute on matching element |
+| `styleBg(selector, url)` | Sets `backgroundImage` |
+| `imgSrc(selector, src)` | Sets `src` on an img element, attaches onerror handler |
+| `clearAndFill(containerSelector, items, fn)` | Clears container, iterates items, appends each result |
+| `div(className)` | Creates a `<div>` with the given class |
+
+### Page Dispatch
+```javascript
+switch (page) {
+  case 'home':  applyHome(data);  break;
+  case 'train': applyTrain(data); break;
+  case 'groom': applyGroom(data); break;
+  case 'board': applyBoard(data); break;
+  default: break;  // store.html: no content sections
+}
+```
+
+### Fallback Behavior
+- If `DB.getSiteContent()` returns `null` (Supabase error, empty table, network failure) → the script exits early and the hardcoded HTML in each page remains as-is
+- If a specific section (e.g., `s.programs`) is missing from the data → that section update is skipped, hardcoded content stays
+- The static HTML in each page is the fallback — it's always valid, just potentially stale
+
+### CRITICAL: Always set properties directly on DOM elements
+When you already have a DOM element reference, NEVER pass it to helper functions that expect CSS selectors. This code pattern is WRONG:
+```javascript
+// ❌ CRASHES — passes DOM element, not selector string
+html(titles[0], s.programs.title);
+// → document.querySelector('[object HTMLHeadingElement]') → throws
+
+// ✅ CORRECT — sets property directly on the element
+titles[0].innerHTML = s.programs.title;
+```
+
+### Apply Functions Detail
+
+Each `apply*` function uses helpers that accept CSS selector strings. **Never pass a DOM element as a selector** — the helpers call `document.querySelector(sel)` internally, which crashes with `'[object HTMLHeadingElement]'` when given a DOM element coerced to a string. Always set properties directly on element references:
+
+```javascript
+// ❌ CRASHES
+html(titles[0], s.programs.title);
+
+// ✅ CORRECT
+titles[0].innerHTML = s.programs.title;
+```
+
+#### `applyHome(d)` — index.html
+Updates hero, about, services (clearAndFill `.serv-grid`), whyUs (clearAndFill `.wu-grid`), social (clearAndFill `.wu-sr`), gallery (clearAndFill `#galleryGrid`), testimonials (clearAndFill `.test-grid`), footer.
+
+**Gallery note:** The inline script on index.html populates `#galleryGrid` from a hardcoded `GALLERY_IMAGES[]` array (10 images) and attaches lightbox click handlers to each item. Then `content-loader.js` runs and OVERRIDES the gallery content via `applyHome()` if admin data exists — BUT the content-loader creates gallery items WITHOUT lightbox click handlers. 
+
+**Result:** When admin gallery data exists, images are displayed but clicking them does NOT open the lightbox. When Supabase returns null (no data, network failure), the hardcoded gallery with working lightbox remains. This is a known bug (see Known Issues).
+
+The lightbox elements (`#lightbox`, `#lbImg`, `#lbClose`) are static DOM elements that survive both renderings — the issue is only the missing click event listeners on dynamically created items.
+
+#### `applyTrain(d)` — training.html
+Updates hero, programs (clearAndFill `.programs`), gallery (clearAndFill `.train-gal`), process (clearAndFill `.process-grid`), approach (text + benefits list + image), cta, footer.
+
+Program cards are rendered WITHOUT the `reveal` CSS class (they use `program-card` only). This means they always start visible (no scroll animation), which is intentional to avoid the IntersectionObserver quirk.
+
+#### `applyGroom(d)` — grooming.html
+Updates hero (heading with `<em>` sub-element, video poster/src), about (hours card by id `hoursCard`, stats in `.stats-row`), services (clearAndFill `.serv-cards`), gallery, reviews (clearAndFill `.reviews-grid`), cta, footer.
+
+**Gallery slider (infinite scroll):** The grooming page gallery is a horizontal auto-scrolling slider. Content-loader duplicates the image array (`s.gallery.images.concat(s.gallery.images)`) and appends all items to `.slider-track`. The CSS `@keyframes scroll` continuously translates the track left. The duplication creates a seamless loop — when the first set scrolls out, the identical second set is already in view, and the animation resets without a visible gap.
+
+```javascript
+// Duplicate images for seamless infinite scroll
+var allImgs = s.gallery.images.concat(s.gallery.images);
+allImgs.forEach(function(url, i) { ... });
+```
+
+The CSS animation driving the scroll:
+```css
+@keyframes scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }  /* moves half the total width */
+}
+```
+Since the track holds 2× the images, `-50%` scrolls exactly one full set, then resets seamlessly.
+
+#### `applyBoard(d)` — boarding.html
+Updates hero, features (clearAndFill `.features-grid`), details (image, details-list, button), cta, footer.
+
+### Content-Loader and Scroll-Reveal Interaction
+The scroll-reveal IntersectionObserver runs BEFORE `content-loader.js` on every page. This means:
+- Elements that exist in the static HTML with `.reveal` class → observed → animate in on scroll
+- Elements created by content-loader.js → NOT observed → never get `.active` class
+
+**Homepage bug:** `applyHome()` creates service cards with `class="serv-card reveal"`, but these are NOT observed by the IntersectionObserver. When Supabase data loads successfully, the static cards are replaced with invisible ones (opacity: 0, no `.active` class ever added). The services section appears empty.
+
+**Workarounds:**
+1. Don't use `.reveal` on dynamically created cards (current approach for program/feature cards)
+2. After `clearAndFill()`, re-query and observe new `.reveal` elements
+3. Recreate the IntersectionObserver inside `content-loader.js`
+
+Currently, only the homepage service cards are affected. Program cards (training), feature cards (boarding), gallery items, and review cards do NOT use the `.reveal` class.
+
+---
+
+## Supabase Setup
+
+### Prerequisites
+1. Create a Supabase account at https://supabase.com
+2. Create a new project
+3. Get your project URL and anon key from Settings → API
+
+### Tables
+
+#### `site_content` (single row, flexible schema via JSONB)
+```sql
+CREATE TABLE site_content (
+  id INTEGER PRIMARY KEY DEFAULT 1,
+  data JSONB NOT NULL DEFAULT '{}',
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Insert the initial row
+INSERT INTO site_content (id, data) VALUES (1, '{}')
+ON CONFLICT (id) DO NOTHING;
+```
+
+#### `products` (one row per product)
+```sql
+CREATE TABLE products (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  price TEXT,
+  cat TEXT,
+  catLabel TEXT,
+  desc TEXT,
+  img TEXT
+);
+```
+
+### Storage Bucket
+1. Go to **Storage** → **New bucket**
+2. Name: `a1-images`
+3. **Public bucket** ✓ (so URLs are accessible without authentication)
+4. Optionally configure RLS policies for public read + authenticated write
+
+### RLS Policies (recommended for production)
+```sql
+-- site_content: public read, only authenticated write
+CREATE POLICY "Public read access" ON site_content FOR SELECT USING (true);
+CREATE POLICY "Authenticated write access" ON site_content FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+-- products: public read, only authenticated write
+CREATE POLICY "Public read access" ON products FOR SELECT USING (true);
+CREATE POLICY "Authenticated write access" ON products FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+-- Storage: public read, authenticated write
+-- (configure via Storage dashboard UI)
+```
+
+**Note:** The current setup uses the anon key for all operations (read + write). For a production site, you should enable RLS and restrict writes. The anon key is publishable and safe to expose in client-side code ONLY when RLS is properly configured.
+
+---
+
+## Cloudflare Pages Deployment
+
+### Setup Steps
+1. Push code to GitHub repository
+2. Go to **Cloudflare Dashboard** → **Workers & Pages** → **Create** → **Pages**
+3. **Connect to Git** → select your GitHub repo → **Begin setup**
+4. **Build settings:**
+   - Build command: *(leave blank — pure static site)*
+   - Build output directory: `*` (root, or leave default)
+   - Root directory: *(leave blank)*
+5. Click **Deploy and continue**
+
+### Auto-Deploy
+Every `git push` to the main branch triggers an automatic redeploy.
 
 ### `.cloudflareignore`
 ```
@@ -297,107 +1038,161 @@ This ensures variable item counts are handled correctly (unlike in-place text re
 *.md
 scrolling efffect/
 ```
-Prevents `.git/` folder and dev files from being uploaded to Cloudflare deployment.
+This prevents `.git/` (exposes your entire git history!), markdown files, and Wrangler config from being included in the deployment.
 
-### Deployment to Cloudflare Pages
-1. Go to **Cloudflare Dashboard** → **Workers & Pages** → **Create** → **Pages**
-2. **Connect to Git** → select this GitHub repo → **Begin setup**
-3. **Build settings:** leave everything blank (no build command, output directory: default)
-4. Click **Deploy**
-5. (Optional) Add custom domain in Pages dashboard
+### Custom Domain (Optional)
+In Pages dashboard → your project → **Custom domains** → **Set up a custom domain** → enter your domain.
 
-### Current Cloudflare Worker (Legacy)
-A Worker deployment exists at `aenterprisewebsite.cloudlyconfusing.workers.dev` from a previous `wrangler deploy` command. Once Cloudflare Pages is set up, the Worker deployment should be deleted from the Cloudflare dashboard to avoid confusion.
+### Worker vs Pages
+The project previously used a Cloudflare Worker deployment at `aenterprisewebsite.cloudlyconfusing.workers.dev`. This was replaced by Cloudflare Pages for simpler static hosting. The Worker can be deleted from the Cloudflare dashboard to avoid confusion.
 
 ---
 
-## Design System
+## Security Notes
 
-- **CSS Custom Properties:** `--cream`, `--cream-dark`, `--charcoal`, `--charcoal-soft`, `--gold`, `--gold-light`, `--gold-dark`, `--muted`, `--border`, `--white`, `--whatsapp`, `--whatsapp-dark`
-- **Fonts:** Inter (body), Playfair Display (headings) via Google Fonts
-- **Animations:** `IntersectionObserver`-based scroll reveal (`.reveal`), fade-up with staggered delays
-- **Page Loader:** Logo + brand + gold spinner, min 1.2s, fades out on `window.onload`
+### What's Exposed
+- Supabase URL and anon key are in `db.js` (client-side) — this is by design (anon key is publishable)
+- Admin password `admin123` is in `auth.js` as a mock check — this is NOT real security
+- All data operations go through Supabase with the anon key — RLS must be configured for production
 
-### Responsive Breakpoints
-| Breakpoint | Changes |
-|---|---|
-| 1024px | Desktop nav → hamburger menu |
-| 900px | Multi-column grids → single column |
-| 768px | Section padding 100px→60px, footer collapses |
-| 640px | Hero padding reduced, headings smaller, gallery 2-col |
-| 480px | Sections 40px padding, buttons full-width, footers 1-col |
-| 360px | Tightest padding, gallery 1-col, admin session info hidden |
+### Real Authentication (Production TODO)
+Replace the mock auth with one of:
+- **Supabase Auth** — email/password or magic link
+- **Firebase Auth** — anonymous or email/password
+- **Cloudflare Workers** — server-side auth endpoint
+- **Cloudflare Access** — if using Cloudflare as reverse proxy
 
----
-
-## Mobile Responsiveness
-All pages have been professionally audited and optimized across 360px–1200px. Key fixes applied:
-- Section padding responsive at every breakpoint
-- Hero top padding adjusted per breakpoint
-- Headings use `clamp()` for smooth scaling
-- Buttons full-width on mobile
-- Gallery collapses 3-col → 2-col → 1-col
-- Admin dashboard header wraps, session info hidden at 360px
-- Bug fixes: `--brown` → `--charcoal-soft`, `img{width:100%}` → `max-width:100%`
+### Image Upload
+- File type is validated client-side (JPG/PNG/WebP only). This is convenience, not security. Add server-side validation.
+- Files are compressed client-side before upload (reduces storage usage).
+- Supabase Storage bucket is public — anyone with the URL can view images. Use RLS policies to restrict if needed.
 
 ---
 
-## Known Issues & Future Improvements
+## Reusable Template Pattern
 
-### Security (Critical)
-- Client-side authentication is **not real security** — the password hash is visible in source code
-- **For production:** replace with real backend (Supabase, Firebase, or custom API with server-side auth)
+This project follows a specific architecture that can be reused for any multi-page static site with an admin panel. Here's the pattern:
 
-### Future Enhancements
-1. **Real database** — Replace `localStorage` with cloud database for persistent cross-device data
-2. **Image hosting** — Upload images to Cloudflare Images, Cloudinary, or similar instead of data URIs
-3. **Contact form** — Replace WhatsApp-only with email/backend form processing
-4. **SEO** — Add sitemap.xml, structured data (JSON-LD), Open Graph tags
-5. **Analytics** — Add Google Analytics or Cloudflare Web Analytics
-6. **Performance** — Lazy-load off-screen images, optimize image sizes, `font-display: swap`
-7. **Vet Clinic page** — Currently "Coming Soon" on homepage
-8. **Eco Stay page** — Currently "Coming Soon" on homepage
-9. **Working Dog Development** — Full detail page yet to be created
-10. **Admin export/import** — Allow exporting `localStorage` data as JSON file for backup
+### 1. Core Architecture
+```
+auth.js     → Authentication (mock or real)
+upload.js   → File uploads to cloud storage
+db.js       → Database CRUD operations
+content-loader.js → Apply database content to DOM
+```
 
-### Items Already Fixed
-- ❌ Mobile responsiveness at 360px — DONE across all pages
-- ❌ Undefined `--brown` CSS variable — FIXED
-- ❌ `img{width:100%}` stretching in grooming.html — FIXED to `max-width:100%`
-- ❌ Admin dashboard header overflow — FIXED
-- ❌ Media queries out of order — FIXED
-- ❌ No content editing for detail pages — FIXED (Training/Grooming/Boarding tabs added to admin)
-- ❌ Admin edits not reflected on live site — FIXED (content-loader.js reads localStorage on all pages)
-- ❌ .git folder exposed on Cloudflare — FIXED (.cloudflareignore added)
+### 2. Page Setup
+Every HTML page needs:
+- `<body data-page="page-name">` — for content-loader detection
+- Scripts loaded in order: Supabase CDN → auth.js → upload.js → db.js → content-loader.js
+- Hardcoded fallback content (displayed when no DB data exists)
+
+### 3. Admin Panel Setup
+Every admin tab needs:
+- A tab button (`<button class="tab-btn" data-tab="tabname">`)
+- A tab content div (`<div id="tabTabname" class="tab-content">`)
+- A render function (`renderTabnameEditor()`) that reads from DB and populates forms
+- A save function that collects form data and writes to DB
+- Repeater fields: use `renderImageUploadWidget()` for images, `collectRepeaterData()` for saving
+
+### 4. Database Setup
+- `site_content` table: single row with JSONB `data` column — flexible schema, one source of truth for all page content
+- Additional tables (like `products`) for structured data that needs querying/filtering
+- Storage bucket for images
+
+### 5. Deployment
+- Push to GitHub
+- Connect Cloudflare Pages to GitHub repo
+- Auto-deploy on every push
+
+### 6. Key Design Decisions
+- **No build step** — pure HTML/CSS/JS, no framework, no npm, no bundler
+- **Vanilla JS (ES5-compatible)** — no transpilation needed, works in all modern browsers
+- **Supabase as backend** — free tier includes PostgreSQL DB + Storage + Auth
+- **Cloudflare Pages** — free static hosting with auto-deploy from Git
+- **Separate JS files** — modular, testable, easy to swap implementations (e.g., swap localStorage for Supabase in db.js only)
 
 ---
 
 ## Dev Workflow
 
 ```bash
-# Local development: edit HTML/JS/CSS in any editor, preview by opening file in browser
-# or using VS Code Live Server
+# Local development
+# Open files in browser or use VS Code Live Server
 
-# Commit changes
+# Commit and deploy
 git add .
-git commit -m "describe what changed"
+git commit -m "Describe what changed and why"
+git push    # → Cloudflare Pages auto-deploys
 
-# Deploy (auto if Cloudflare Pages connected to GitHub)
-git push
+# Test Supabase connection (in browser console)
+window.runSupabaseTest()
 
-# Manual deploy via wrangler (alternative)
-npx wrangler deploy
+# Check database state
+DB.getSiteContent()
+DB.getProducts()
 ```
 
-No build step, no framework — pure static HTML/CSS/JS.
+### Script Loading Order (Critical — every page)
+```html
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- page-specific inline scripts (IntersectionObserver, nav, etc.) -->
+<script src="auth.js"></script>
+<script src="upload.js"></script>
+<script src="db.js"></script>
+<script src="content-loader.js"></script>
+```
+
+`auth.js` must load before `upload.js` and `db.js`. `db.js` must load before `content-loader.js`. The Supabase CDN must load before `db.js`.
+
+### Adding a New Admin-Editable Page
+1. Create the HTML page with hardcoded fallback content and `<body data-page="xxx">`
+2. Add the Supabase CDN and all JS scripts in the correct order
+3. Add a new tab to `admin.html` with render + save functions
+4. Add a new `applyXxx()` function to `content-loader.js`
+5. Add the new page's default data structure to `DEFAULT_CONTENT` in `admin.html`
+6. Add the page to the router switch in `content-loader.js`
 
 ---
 
-## Contact for Questions
+## Known Issues & Roadmap
 
-If any part of this system is unclear:
-1. Read this document thoroughly
-2. Open each `.html` file and read through the JavaScript sections
-3. Check `localStorage` in browser DevTools → Application → Local Storage
-4. Test the admin login with password `admin123`
-5. Check `content-loader.js` for the page-to-section mapping logic
+### Current Limitations
+- **Auth is mock-only** — password `admin123` is hardcoded in `auth.js`. Replace with real auth for production.
+- **No RLS policies** — Supabase anon key has full write access. Configure RLS before going public.
+- **Store page isn't content-loaded** — product data comes from `DB.getProducts()` but the page's text sections (hero, about) aren't managed by the admin content editor.
+- **No image deletion** — uploaded images accumulate in the Supabase Storage bucket forever. Add an admin UI to list/delete orphaned images.
+- **No backup/export** — no way to export Supabase data as JSON.
+- **Scroll-reveal + content-loader mismatch (HOMEPAGE BUG)** — IntersectionObserver runs before content-loader replaces DOM. Homepage service cards get `class="serv-card reveal"` but are never observed, staying `opacity: 0` forever. Fix: add `observer.observe()` for each new card in the `clearAndFill` callback, or remove the `reveal` class from dynamically created cards.
+- **Homepage gallery lightbox broken with admin data (HOMEPAGE BUG)** — content-loader replaces gallery items but doesn't attach lightbox click handlers. When admin gallery images are loaded from Supabase, clicking them does not open the lightbox. Fix: add click listener to each gallery item created in `applyHome()`'s gallery section, reusing the same lightbox logic from the inline script.
+- **JS style inconsistency** — admin.html mixes ES5 (`var`, `function`, string concat) in the product section with ES6 (`const`, `=>`, template literals) in the content editor. Not a bug, but inconsistent.
+- **Two escape functions** — `escapeHtml()` and `escHtml()` do the same thing with slightly different null handling. Use `escHtml()` for new code.
+- **`.nojekyll` is legacy** — exists for GitHub Pages but we're on Cloudflare Pages. Can be deleted.
+- **`base.html` is empty** — unused template file. Can be deleted.
+
+### Future Enhancements
+1. **Real auth** — replace mock with Supabase Auth or Cloudflare Workers
+2. **Contact form** — send inquiries via email API instead of just WhatsApp links
+3. **SEO** — sitemap.xml, JSON-LD structured data, Open Graph tags
+4. **Analytics** — Google Analytics or Cloudflare Web Analytics
+5.  **Vet Clinic page** — currently "Coming Soon" on homepage
+6.  **Working Dog Development page** — full detail page yet to be created
+8. **Image management** — delete/replace images via admin panel
+9. **Bulk product import** — CSV upload for products
+10. **Activity log** — track who changed what and when
+
+### Items Already Fixed
+- ❌ Mobile responsiveness at 360px — DONE
+- ❌ Admin edits not reflected on live site — DONE (content-loader.js + Supabase)
+- ❌ .git folder exposed on Cloudflare — DONE (.cloudflareignore)
+- ❌ Image uploads as data URIs (bloating localStorage) — DONE (Supabase Storage)
+- ❌ Client-side auth hash visible in HTML — DONE (moved to auth.js)
+- ❌ localStorage data lost on browser clear — DONE (migrated to Supabase)
+- ❌ `isAuthenticated()` ReferenceError crashing admin — FIXED
+- ❌ Null prices crashing stats render — FIXED
+- ❌ DOM elements passed as querySelector selectors — FIXED
+- ❌ Only 6 program cards rendering — FIXED (was the querySelector crash above)
+
+---
+
+*Last updated: June 2026*
