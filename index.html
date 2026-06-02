@@ -216,23 +216,37 @@ ul{list-style:none}
 /* ── SERVICES GRID ── */
 .services{padding:80px 0;background:var(--cream-dark)}
 .services-header{text-align:center;margin-bottom:56px}
-.serv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.serv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .serv-card{
-  background:rgba(255,255,255,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:28px;padding:36px 28px;
-  border:1px solid rgba(255,255,255,0.25);
-  transition:all .4s cubic-bezier(.16,1,.3,1);
-  display:flex;flex-direction:column;
+  position:relative;border-radius:24px;overflow:hidden;cursor:pointer;
+  aspect-ratio:3/4;display:flex;align-items:flex-end;
+  transition:transform .4s ease,box-shadow .4s ease;
 }
-.serv-card:hover{transform:translateY(-8px);box-shadow:0 24px 50px -16px rgba(26,20,18,.12);border-color:var(--gold)}
-.serv-icon{
-  width:72px;height:72px;border-radius:20px;display:flex;align-items:center;justify-content:center;
-  font-size:1.8rem;margin-bottom:20px;
-  background:linear-gradient(135deg,var(--gold-light),var(--gold));color:var(--white);flex-shrink:0;
+.serv-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(0,0,0,.15)}
+.serv-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.serv-card:hover img{transform:scale(1.08)}
+.serv-card .serv-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 40%,rgba(26,20,18,.85) 100%);
 }
-.serv-card h3{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:10px;letter-spacing:-.01em}
-.serv-card p{font-size:.85rem;line-height:1.6;color:var(--muted);flex:1}
-.serv-link{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:.82rem;color:var(--gold-dark);margin-top:20px;transition:gap .3s ease;padding:8px 18px;border-radius:60px;background:rgba(255,255,255,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.2)}
-.serv-card:hover .serv-link{gap:14px;background:rgba(255,255,255,0.6)}
+.serv-card .serv-body{
+  position:relative;z-index:1;padding:24px 20px;width:100%;
+}
+.serv-card .serv-body .serv-icon{font-size:1.6rem;margin-bottom:6px;display:block}
+.serv-card .serv-body h3{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#fff;letter-spacing:-.01em;line-height:1.3}
+
+/* ── SERVICE MODAL ── */
+.serv-modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(26,20,18,.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:24px}
+.serv-modal-overlay.open{display:flex}
+.serv-modal{background:rgba(255,255,255,.75);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.25);border-radius:28px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:40px 32px;animation:modalIn .35s ease;box-shadow:0 24px 64px rgba(0,0,0,.15)}
+@keyframes modalIn{from{opacity:0;transform:scale(.92) translateY(24px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.serv-modal .sm-icon{font-size:3rem;margin-bottom:16px}
+.serv-modal h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;letter-spacing:-.01em;color:var(--charcoal);margin-bottom:12px}
+.serv-modal p{font-size:.9rem;line-height:1.7;color:var(--muted)}
+.serv-modal .sm-btn{display:inline-flex;align-items:center;gap:10px;margin-top:24px;padding:14px 28px;border-radius:60px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .3s ease;border:none;font-family:inherit;background:rgba(255,255,255,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.2);color:var(--charcoal);text-decoration:none}
+.serv-modal .sm-btn:hover{background:rgba(255,255,255,0.6);transform:translateY(-2px)}
+.serv-modal .sm-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.3);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:none;width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;color:var(--charcoal);transition:background .3s;display:flex;align-items:center;justify-content:center}
+.serv-modal .sm-close:hover{background:rgba(255,255,255,0.5)}
 
 /* ── A-1 DIFFERENCE ── */
 .a1-diff{padding:80px 0;background:var(--white)}
@@ -477,7 +491,8 @@ footer{
 }
 @media(max-width:900px){
   .about-grid,.training-grid,.grooming-grid,.boarding-grid,.a1-diff .a1-grid{grid-template-columns:1fr;gap:40px}
-  .serv-grid,.vmg-grid,.usp-grid,.future-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
+  .serv-grid{grid-template-columns:repeat(2,1fr);gap:14px}
+  .vmg-grid,.usp-grid,.future-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
   .sr-grid{grid-template-columns:repeat(2,1fr)}
   .why-choose .wc-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
   .why-choose .wc-sr{grid-template-columns:repeat(2,1fr)}
@@ -490,6 +505,7 @@ footer{
   .about,.services,.a1-diff,.training,.grooming-overview,.boarding,.gallery,.vmg,.why-choose,.testimonials,.future,.cta-section{padding-top:60px;padding-bottom:60px}
   .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
   .footer-brand{grid-column:1/-1}
+  .serv-modal{padding:32px 24px;margin:12px}
 }
 @media(max-width:640px){
   .gallery-grid{grid-template-columns:repeat(2,1fr)}
@@ -501,29 +517,12 @@ footer{
   .hero-content h1{font-size:clamp(2rem,7vw,3rem)}
   .section-title{font-size:clamp(1.5rem,5vw,1.8rem)}
   .founder-note{padding:24px 20px}
-  .serv-card{padding:28px 20px}
   .future-card .future-body{padding:28px 20px}
   .usp{padding:60px 0}
   .social-resp{padding:60px 0}
 }
-@media(max-width:480px){
-  .hero{padding:70px 16px 40px}
-  .about,.services,.a1-diff,.training,.grooming-overview,.boarding,.gallery,.vmg,.why-choose,.testimonials,.future,.cta-section{padding-top:40px;padding-bottom:40px}
-  .hero-content .hero-badge{font-size:.65rem;padding:6px 14px}
-  .hero-btns{gap:12px;flex-direction:column;align-items:center}
-  .hero-btns .btn{width:100%;justify-content:center}
-  .about-quote{padding:20px;font-size:.85rem}
-  .sr-grid{grid-template-columns:1fr;max-width:320px;margin-inline:auto}
-  .usp-grid{gap:16px}
-  .usp-item{padding:20px 16px}
-  .why-choose .wc-item{padding:20px 16px}
-  .why-choose .wc-sr-item{padding:16px 12px}
-  .test-card{padding:22px 18px}
-  .cta-section{padding:60px 0}
-  .cta-social{gap:10px}
-  .cta-social a{padding:8px 16px;font-size:.78rem}
-  .footer-grid{grid-template-columns:1fr}
-  .footer-bottom{flex-direction:column;gap:12px;text-align:center}
+@media(max-width:500px){
+  .serv-grid{grid-template-columns:1fr;max-width:360px;margin-inline:auto}
 }
 @media(max-width:360px){
   .hero{padding:60px 14px 30px}
@@ -628,54 +627,46 @@ footer{
       <h2 class="section-title">Complete Canine Care Ecosystem</h2>
       <p class="section-sub" style="margin-inline:auto">Professional, ethical, and result-oriented canine services under one trusted brand.</p>
     </div>
-    <div class="serv-grid">
-      <article class="serv-card reveal reveal-delay-1">
-        <div class="serv-icon">🐕</div>
-        <h3>Dog Training</h3>
-        <p>Obedience training, behavioral correction, and personalized programs tailored to each dog's unique temperament using positive reinforcement methods.</p>
-        <a href="training.html" class="serv-link">Learn More →</a>
+    <div class="serv-grid" id="servGrid">
+      <article class="serv-card reveal reveal-delay-1" data-svc="dog-training">
+        <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=600&q=80" alt="Dog Training" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body"><span class="serv-icon">🐕</span><h3>Dog Training</h3></div>
       </article>
-      <article class="serv-card reveal reveal-delay-2">
-        <div class="serv-icon">♿</div>
-        <h3>Rehabilitation Training</h3>
-        <p>Specialized rehabilitation for dogs recovering from trauma, behavioral issues, or physical challenges. Patient, structured programs designed to restore confidence and well-being.</p>
-        <a href="training.html" class="serv-link">Learn More →</a>
+      <article class="serv-card reveal reveal-delay-2" data-svc="rehab">
+        <img src="https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=600&q=80" alt="Rehabilitation" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body"><span class="serv-icon">♿</span><h3>Rehabilitation Training</h3></div>
       </article>
-      <article class="serv-card reveal reveal-delay-3">
-        <div class="serv-icon">🛡️</div>
-        <h3>Protection Training</h3>
-        <p>Advanced personal protection training for responsible owners. Professional-grade programs that build controlled, reliable protective behaviors with expert oversight.</p>
-        <a href="training.html" class="serv-link">Learn More →</a>
+      <article class="serv-card reveal reveal-delay-3" data-svc="protection">
+        <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80" alt="Protection Training" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body"><span class="serv-icon">🛡️</span><h3>Protection Training</h3></div>
       </article>
-      <article class="serv-card reveal reveal-delay-1">
-        <div class="serv-icon">🔍</div>
-        <h3>Detection Training</h3>
-        <p>Scent detection and tracking programs for security, search, and specialized working roles. Developing dogs with focused, reliable detection capabilities.</p>
-        <a href="training.html" class="serv-link">Learn More →</a>
+      <article class="serv-card reveal reveal-delay-1" data-svc="detection">
+        <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=600&q=80" alt="Detection Training" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body"><span class="serv-icon">🔍</span><h3>Detection Training</h3></div>
       </article>
-      <article class="serv-card reveal reveal-delay-2">
-        <div class="serv-icon">✂️</div>
-        <h3>Grooming Services</h3>
-        <p>Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments. Every pet receives individualized, stress-free care.</p>
-        <a href="grooming.html" class="serv-link">Learn More →</a>
+      <article class="serv-card reveal reveal-delay-2" data-svc="grooming">
+        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be9de2?auto=format&fit=crop&w=600&q=80" alt="Grooming" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body"><span class="serv-icon">✂️</span><h3>Grooming Services</h3></div>
       </article>
-      <article class="serv-card reveal reveal-delay-3">
-        <div class="serv-icon">🏠</div>
-        <h3>Boarding &amp; Kennels</h3>
-        <p>Safe, comfortable boarding facilities with round-the-clock care. Your pet stays in a clean, loving environment with professional supervision.</p>
-        <a href="boarding.html" class="serv-link">Learn More →</a>
+      <article class="serv-card reveal reveal-delay-3" data-svc="boarding">
+        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80" alt="Boarding" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body"><span class="serv-icon">🏠</span><h3>Boarding &amp; Kennels</h3></div>
       </article>
-      <article class="serv-card reveal reveal-delay-1">
-        <div class="serv-icon">🛒</div>
-        <h3>Pet Store</h3>
-        <p>Curated selection of high-quality pet food, accessories, toys, and wellness products. We stock only the best brands for your furry friend.</p>
-        <a href="store.html" class="serv-link">Learn More →</a>
+      <article class="serv-card reveal reveal-delay-1" data-svc="store">
+        <img src="https://images.unsplash.com/photo-1565708097881-bbf4f5c7b6d0?auto=format&fit=crop&w=600&q=80" alt="Pet Store" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body"><span class="serv-icon">🛒</span><h3>Pet Store</h3></div>
       </article>
-      <article class="serv-card reveal reveal-delay-2">
-        <div class="serv-icon">🎖️</div>
-        <h3>Working Dog Development</h3>
-        <p>Future-ready working dog programs for security, detection, and public service sectors. Collaborations with law enforcement agencies in development.</p>
-        <a href="training.html" class="serv-link">Learn More →</a>
+      <article class="serv-card reveal reveal-delay-2" data-svc="working-dog">
+        <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=600&q=80" alt="Working Dog" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body"><span class="serv-icon">🎖️</span><h3>Working Dog Development</h3></div>
       </article>
     </div>
   </div>
@@ -1023,6 +1014,17 @@ footer{
   </div>
 </footer>
 
+<!-- ═══ SERVICE MODAL ═══ -->
+<div class="serv-modal-overlay" id="servModal">
+  <div class="serv-modal" style="position:relative">
+    <button class="sm-close" id="smClose">✕</button>
+    <div class="sm-icon" id="smIcon"></div>
+    <h2 id="smTitle"></h2>
+    <p id="smDesc"></p>
+    <a href id="smLink" class="sm-btn">Visit Page →</a>
+  </div>
+</div>
+
 <script>
 // ── Mobile nav ──
 const hamburger=document.getElementById('hamburger');
@@ -1094,6 +1096,41 @@ lightbox.addEventListener('click',e=>{
     document.body.style.overflow='';
   }
 });
+
+// ── Service modal ──
+const SERV_DATA={
+  'dog-training':{icon:'🐕',title:'Dog Training',desc:'Obedience training, behavioral correction, and personalized programs tailored to each dog\'s unique temperament using positive reinforcement methods.',link:'training.html'},
+  'rehab':{icon:'♿',title:'Rehabilitation Training',desc:'Specialized rehabilitation for dogs recovering from trauma, behavioral issues, or physical challenges. Patient, structured programs designed to restore confidence and well-being.',link:'training.html'},
+  'protection':{icon:'🛡️',title:'Protection Training',desc:'Advanced personal protection training for responsible owners. Professional-grade programs that build controlled, reliable protective behaviors with expert oversight.',link:'training.html'},
+  'detection':{icon:'🔍',title:'Detection Training',desc:'Scent detection and tracking programs for security, search, and specialized working roles. Developing dogs with focused, reliable detection capabilities.',link:'training.html'},
+  'grooming':{icon:'✂️',title:'Grooming Services',desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments. Every pet receives individualized, stress-free care.',link:'grooming.html'},
+  'boarding':{icon:'🏠',title:'Boarding & Kennels',desc:'Safe, comfortable boarding facilities with round-the-clock care. Your pet stays in a clean, loving environment with professional supervision.',link:'boarding.html'},
+  'store':{icon:'🛒',title:'Pet Store',desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products. We stock only the best brands for your furry friend.',link:'store.html'},
+  'working-dog':{icon:'🎖️',title:'Working Dog Development',desc:'Future-ready working dog programs for security, detection, and public service sectors. Collaborations with law enforcement agencies in development.',link:'training.html'},
+};
+const servModal=document.getElementById('servModal');
+const smClose=document.getElementById('smClose');
+const smIcon=document.getElementById('smIcon');
+const smTitle=document.getElementById('smTitle');
+const smDesc=document.getElementById('smDesc');
+const smLink=document.getElementById('smLink');
+document.getElementById('servGrid').addEventListener('click',e=>{
+  const card=e.target.closest('.serv-card');
+  if(!card)return;
+  const d=SERV_DATA[card.dataset.svc];
+  if(!d)return;
+    smIcon.textContent=d.icon;
+    smTitle.textContent=d.title;
+    smDesc.textContent=d.desc;
+    smLink.href=d.link;
+    servModal.classList.add('open');
+    document.body.style.overflow='hidden';
+  });
+});
+const closeServModal=()=>{servModal.classList.remove('open');document.body.style.overflow=''};
+smClose.addEventListener('click',closeServModal);
+servModal.addEventListener('click',e=>{if(e.target===servModal)closeServModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeServModal()});
 
 // ── Page loader (min 2s) ──
 const loader=document.getElementById('pageLoader');

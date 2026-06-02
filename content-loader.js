@@ -74,22 +74,36 @@
       text('.services-header .section-label', d.services.label);
       text('.services-header .section-title', d.services.heading);
       text('.services-header .section-sub', d.services.subtext);
-      clearAndFill('.serv-grid', d.services.items, function(item) {
+      clearAndFill('.serv-grid', d.services.items, function(item, idx) {
+        var SERVICE_IMAGES = [
+          'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1583337130417-3346a1be9de2?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1565708097881-bbf4f5c7b6d0?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=600&q=80',
+        ];
+        var svcId = (item.title || 'svc' + idx).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
         var card = div('serv-card reveal');
-        var icon = div('serv-icon');
-        icon.textContent = item.icon || '🐾';
+        card.dataset.svc = svcId;
+        var img = document.createElement('img');
+        img.src = SERVICE_IMAGES[idx] || SERVICE_IMAGES[0];
+        img.alt = item.title || '';
+        img.loading = 'lazy';
+        card.appendChild(img);
+        var overlay = div('serv-overlay');
+        card.appendChild(overlay);
+        var body = div('serv-body');
+        var span = document.createElement('span');
+        span.className = 'serv-icon';
+        span.textContent = item.icon || '🐾';
         var h3 = document.createElement('h3');
         h3.textContent = item.title || '';
-        var p = document.createElement('p');
-        p.textContent = item.desc || '';
-        var a = document.createElement('a');
-        a.className = 'serv-link';
-        a.href = item.link || '#';
-        a.textContent = 'Learn More →';
-        card.appendChild(icon);
-        card.appendChild(h3);
-        card.appendChild(p);
-        card.appendChild(a);
+        body.appendChild(span);
+        body.appendChild(h3);
+        card.appendChild(body);
         return card;
       });
     }
@@ -640,4 +654,15 @@
     /* store: no content sections yet */
     default: break;
   }
+
+  /* ── Observe newly-added reveal elements ── */
+  var ro = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('active');
+        ro.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal:not(.active)').forEach(function(el) { ro.observe(el); });
 })();
