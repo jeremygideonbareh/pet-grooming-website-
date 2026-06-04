@@ -511,20 +511,31 @@
       var subs = document.querySelectorAll('.content-section .container .section-sub');
       if (subs.length >= 1) subs[0].textContent = s.features.subtext;
       if (s.features.items) {
-        var cards = document.querySelectorAll('.features-grid .feature-card');
-        s.features.items.forEach(function(item, i) {
-          if (i >= cards.length) return;
-          var card = cards[i];
-          var iconEl = card.querySelector('.icon');
-          if (iconEl) iconEl.textContent = item.icon || '🏠';
-          var h3 = card.querySelector('h3');
-          if (h3) h3.textContent = item.title || '';
-          var p = card.querySelector('p');
-          if (p) p.textContent = item.desc || '';
-          if (item.img) {
-            var img = card.querySelector('.feature-img img');
-            if (img) { img.src = item.img; }
+        var BOARD_FALLBACK = ['https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1491604612772-6853927639ef?auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1565708097881-bbf4f5c7b6d0?auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80'];
+        clearAndFill('.features-grid', s.features.items, function(item, i) {
+          var card = div('feature-card');
+          var imgDiv = div('feature-img');
+          var imgUrl = item.img || BOARD_FALLBACK[i] || '';
+          if (imgUrl) {
+            var img = document.createElement('img');
+            img.src = imgUrl;
+            img.alt = item.title || '';
+            img.loading = 'lazy';
+            imgDiv.appendChild(img);
           }
+          var body = div('feature-body');
+          var icon = div('icon');
+          icon.textContent = item.icon || '🏠';
+          var h3 = document.createElement('h3');
+          h3.textContent = item.title || '';
+          var p = document.createElement('p');
+          p.textContent = item.desc || '';
+          body.appendChild(icon);
+          body.appendChild(h3);
+          body.appendChild(p);
+          card.appendChild(imgDiv);
+          card.appendChild(body);
+          return card;
         });
       }
     }
@@ -556,7 +567,7 @@
       text('footer .footer-inner > span', s.footer.copyright);
     }
   }
-
+  
   /* ── page: eco (eco-cottages.html) ── */
   function applyEco(d) {
     var s = d.eco;
@@ -573,20 +584,31 @@
       var subs = document.querySelectorAll('.content-section .container .section-sub');
       if (subs.length >= 1) subs[0].textContent = s.features.subtext;
       if (s.features.items) {
-        var cards = document.querySelectorAll('.features-grid .feature-card');
-        s.features.items.forEach(function(item, i) {
-          if (i >= cards.length) return;
-          var card = cards[i];
-          var iconEl = card.querySelector('.icon');
-          if (iconEl) iconEl.textContent = item.icon || '🏡';
-          var h3 = card.querySelector('h3');
-          if (h3) h3.textContent = item.title || '';
-          var p = card.querySelector('p');
-          if (p) p.textContent = item.desc || '';
-          if (item.img) {
-            var img = card.querySelector('.feature-img img');
-            if (img) { img.src = item.img; }
+        var ECO_FALLBACK = ['https://images.unsplash.com/photo-1455587734955-081b22074882?auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80'];
+        clearAndFill('.features-grid', s.features.items, function(item, i) {
+          var card = div('feature-card');
+          var imgDiv = div('feature-img');
+          var imgUrl = item.img || ECO_FALLBACK[i] || '';
+          if (imgUrl) {
+            var img = document.createElement('img');
+            img.src = imgUrl;
+            img.alt = item.title || '';
+            img.loading = 'lazy';
+            imgDiv.appendChild(img);
           }
+          var body = div('feature-body');
+          var icon = div('icon');
+          icon.textContent = item.icon || '🏡';
+          var h3 = document.createElement('h3');
+          h3.textContent = item.title || '';
+          var p = document.createElement('p');
+          p.textContent = item.desc || '';
+          body.appendChild(icon);
+          body.appendChild(h3);
+          body.appendChild(p);
+          card.appendChild(imgDiv);
+          card.appendChild(body);
+          return card;
         });
       }
     }
