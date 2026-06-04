@@ -52,6 +52,8 @@
     if (d.hero) {
       text('.hero-content h1', d.hero.headline);
       text('.hero-badge', d.hero.badge);
+      text('.hero-tagline', d.hero.tagline);
+      text('.hero-desc', d.hero.desc);
       text('.hero-btns .btn-primary', d.hero.btnText);
       styleBg('.hero-bg', d.hero.bgImage);
     }
