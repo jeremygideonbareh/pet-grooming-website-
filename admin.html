@@ -166,7 +166,6 @@ input,textarea,select,button{font-family:inherit}
   .dash-stats{grid-template-columns:1fr}
   .dash-header{padding:16px;flex-direction:column;align-items:stretch;text-align:center}
   .dash-header .dash-actions{justify-content:center}
-  .dash-body{padding:20px 16px}
   .modal{padding:24px 20px}
   .login-card{padding:32px 24px}
 }
@@ -259,7 +258,7 @@ input,textarea,select,button{font-family:inherit}
 .modal-actions .btn-cancel:hover{background:var(--cream);color:var(--charcoal)}
 
 /* ── TABS ── */
-.dash-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:2px solid var(--border)}
+.dash-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:10;background:var(--cream)}
 .tab-btn{padding:12px 24px;border:none;background:none;font-weight:600;font-size:.85rem;color:var(--muted);cursor:pointer;transition:all .3s;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px}
 .tab-btn:hover{color:var(--charcoal)}
 .tab-btn.active{color:var(--charcoal);border-bottom-color:var(--gold)}
@@ -319,7 +318,14 @@ input,textarea,select,button{font-family:inherit}
   .cf-row{grid-template-columns:1fr}
   .content-section .sec-hd{padding:14px 18px;font-size:.85rem}
   .content-section .sec-bd{padding:18px}
-  .tab-btn{padding:10px 16px;font-size:.8rem}
+  .dash-tabs{overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;gap:0;scrollbar-width:none;padding-bottom:4px}
+  .dash-tabs::-webkit-scrollbar{display:none}
+  .tab-btn{padding:10px 14px;font-size:.8rem;white-space:nowrap;flex-shrink:0}
+  .dash-body{padding:16px}
+}
+@media(max-width:480px){
+  .tab-btn{padding:10px 12px;font-size:.75rem}
+  .dash-body{padding:12px}
 }
 
 /* ── DELETE CONFIRM ── */
