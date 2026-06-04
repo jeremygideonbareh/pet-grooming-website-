@@ -1,7 +1,8 @@
 (async function() {
   'use strict';
 
-  var data = await DB.getSiteContent();
+  if (typeof DB === 'undefined' || typeof DB.getSiteContent !== 'function') return;
+  var data = await DB.getSiteContent().catch(function(){ return null; });
   if (!data) return;
 
   var page = document.body && document.body.dataset.page;
