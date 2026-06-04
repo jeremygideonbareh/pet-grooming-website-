@@ -69,11 +69,15 @@ ul{list-style:none}
 
 /* ── FEATURES ── */
 .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
-.feature-card{background:rgba(255,255,255,0.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:24px;padding:32px 24px;border:1px solid rgba(255,255,255,0.2);transition:all .4s ease;text-align:center}
+.feature-card{background:rgba(255,255,255,0.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.2);transition:all .4s ease;text-align:center}
 .feature-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(0,0,0,.1);border-color:var(--gold)}
+.feature-img{width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--cream-dark)}
+.feature-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.feature-card:hover .feature-img img{transform:scale(1.08)}
 .feature-card .icon{font-size:2rem;margin-bottom:16px}
 .feature-card h3{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:10px}
 .feature-card p{font-size:.85rem;line-height:1.6;color:var(--muted)}
+.feature-body{padding:24px}
 
 /* ── ECO GALLERY ── */
 .eco-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
@@ -184,34 +188,40 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
     </div>
     <div class="features-grid">
       <div class="feature-card reveal reveal-delay-1">
-        <div class="icon">🏡</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1455587734955-081b22074882?auto=format&fit=crop&w=600&q=80" alt="Pet-Friendly Cottages" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">🏡</div>
         <h3>Pet-Friendly Cottages</h3>
-        <p>Spacious, clean cottages designed to accommodate both you and your pets comfortably. Each cottage has a private entrance and outdoor access.</p>
+        <p>Spacious, clean cottages designed to accommodate both you and your pets comfortably. Each cottage has a private entrance and outdoor access.</p></div>
       </div>
       <div class="feature-card reveal reveal-delay-2">
-        <div class="icon">🌲</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=600&q=80" alt="Nature Trails" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">🌲</div>
         <h3>Nature Trails</h3>
-        <p>Explore scenic walking trails through lush greenery — perfect for morning walks with your dog amidst the fresh mountain air of Shillong.</p>
+        <p>Explore scenic walking trails through lush greenery — perfect for morning walks with your dog amidst the fresh mountain air of Shillong.</p></div>
       </div>
       <div class="feature-card reveal reveal-delay-1">
-        <div class="icon">🐾</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80" alt="Pet Play Area" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">🐾</div>
         <h3>Pet Play Area</h3>
-        <p>A secure, fenced play area where your dog can run, play, and socialize off-leash in a safe and natural environment.</p>
+        <p>A secure, fenced play area where your dog can run, play, and socialize off-leash in a safe and natural environment.</p></div>
       </div>
       <div class="feature-card reveal reveal-delay-2">
-        <div class="icon">🍃</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=600&q=80" alt="Eco-Friendly Stay" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">🍃</div>
         <h3>Eco-Friendly Stay</h3>
-        <p>Sustainable practices including rainwater harvesting, solar lighting, and organic waste management — because we care for the planet too.</p>
+        <p>Sustainable practices including rainwater harvesting, solar lighting, and organic waste management — because we care for the planet too.</p></div>
       </div>
       <div class="feature-card reveal reveal-delay-1">
-        <div class="icon">🔥</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=600&q=80" alt="Bonfire Evenings" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">🔥</div>
         <h3>Bonfire Evenings</h3>
-        <p>Enjoy cozy bonfire evenings under the stars. A perfect way to wind down with good company, including your four-legged companions.</p>
+        <p>Enjoy cozy bonfire evenings under the stars. A perfect way to wind down with good company, including your four-legged companions.</p></div>
       </div>
       <div class="feature-card reveal reveal-delay-2">
-        <div class="icon">🍽️</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80" alt="Pet-Centric Services" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">🍽️</div>
         <h3>Pet-Centric Services</h3>
-        <p>On-demand pet sitting, feeding schedules, and access to A-1's professional pet care services during your stay for complete peace of mind.</p>
+        <p>On-demand pet sitting, feeding schedules, and access to A-1's professional pet care services during your stay for complete peace of mind.</p></div>
       </div>
     </div>
   </div>

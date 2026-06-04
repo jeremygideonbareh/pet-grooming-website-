@@ -83,7 +83,7 @@
           'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=600&q=80',
           'https://images.unsplash.com/photo-1560807707-8cc77767d783?auto=format&fit=crop&w=600&q=80',
           'https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?auto=format&fit=crop&w=600&q=80',
-          'https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=600&q=80',
         ];
         var svcId = (item.title || 'svc' + idx).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
         var card = div('serv-card reveal');
@@ -255,8 +255,17 @@
         var gal = document.querySelector('.train-gal');
         if (gal) {
           gal.innerHTML = '';
-          s.gallery.images.forEach(function(url) {
-            if (!url) return;
+          var validImgs = s.gallery.images.filter(function(u) { return u; });
+          var FALLBACK_GALLERY = [
+            'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80'
+          ];
+          var imgs = validImgs.length >= 6 ? validImgs : FALLBACK_GALLERY;
+          imgs.forEach(function(url) {
             var item = div('gal-item');
             var img = document.createElement('img');
             img.src = url;
@@ -564,15 +573,27 @@
       if (s.features.items) {
         clearAndFill('.features-grid', s.features.items, function(item) {
           var card = div('feature-card');
+          var imgDiv = div('feature-img');
+          if (item.img) {
+            var img = document.createElement('img');
+            img.src = item.img;
+            img.alt = item.title || '';
+            img.loading = 'lazy';
+            img.onerror = function() { this.parentElement.style.display = 'none'; };
+            imgDiv.appendChild(img);
+          }
+          var body = div('feature-body');
           var icon = div('icon');
           icon.textContent = item.icon || '🏡';
           var h3 = document.createElement('h3');
           h3.textContent = item.title || '';
           var p = document.createElement('p');
           p.textContent = item.desc || '';
-          card.appendChild(icon);
-          card.appendChild(h3);
-          card.appendChild(p);
+          body.appendChild(icon);
+          body.appendChild(h3);
+          body.appendChild(p);
+          card.appendChild(imgDiv);
+          card.appendChild(body);
           return card;
         });
       }
