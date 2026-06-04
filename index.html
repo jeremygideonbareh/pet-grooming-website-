@@ -28,8 +28,8 @@ html{scroll-behavior:smooth;scroll-padding-top:70px}
   margin-bottom:28px;letter-spacing:-.01em;
 }
 .loader-spinner{
-  width:36px;height:36px;margin:0 auto;
-  border:3px solid var(--border);
+  width:22px;height:22px;margin:28px auto 0;
+  border:2.5px solid var(--border);
   border-top-color:var(--gold);
   border-radius:50%;
   animation:loaderSpin .8s linear infinite;
@@ -38,7 +38,6 @@ html{scroll-behavior:smooth;scroll-padding-top:70px}
 .loader-tagline:nth-child(3){animation-delay:.2s}
 .loader-tagline:nth-child(4){animation-delay:.4s}
 @keyframes loaderSlideUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
-@keyframes loaderPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 @keyframes loaderSpin{to{transform:rotate(360deg)}}
 @keyframes loaderPulse{
   0%,100%{transform:scale(1);opacity:1}
@@ -1140,7 +1139,7 @@ smClose.addEventListener('click',closeServModal);
 servModal.addEventListener('click',e=>{if(e.target===servModal)closeServModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeServModal()});
 
-// ── Page loader (min 2s) ──
+// ── Page loader (min 3s) ──
 const loader=document.getElementById('pageLoader');
 const hideLoader=()=>{
   if(loader){
@@ -1148,8 +1147,8 @@ const hideLoader=()=>{
     setTimeout(()=>loader.remove(),600);
   }
 };
-setTimeout(()=>{if(document.readyState==='complete')hideLoader()},2000);
-window.addEventListener('load',()=>setTimeout(hideLoader,2000));
+setTimeout(()=>{if(document.readyState==='complete')hideLoader()},3000);
+window.addEventListener('load',()=>setTimeout(hideLoader,3000));
 </script>
 <script src="db.js"></script>
 <script src="content-loader.js"></script>
