@@ -76,14 +76,14 @@
       text('.services-header .section-sub', d.services.subtext);
       clearAndFill('.serv-grid', d.services.items, function(item, idx) {
         var SERVICE_IMAGES = [
-          'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=600&q=80',
-          'https://placehold.co/600x400/2C5F2D/FFF?text=Rehabilitation',
-          'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80',
-          'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=600&q=80',
-          'https://placehold.co/600x400/C9A05C/FFF?text=Grooming',
-          'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80',
-          'https://placehold.co/600x400/5B7DB1/FFF?text=Pet+Store',
-          'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1510771463146-e89e6e86560e?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1491604612772-6853927639ef?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1560807707-8cc77767d783?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?auto=format&fit=crop&w=600&q=80',
         ];
         var svcId = (item.title || 'svc' + idx).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
         var card = div('serv-card reveal');
