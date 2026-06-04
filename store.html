@@ -440,6 +440,8 @@ footer{
   </div>
 </footer>
 
+<script src="db.js"></script>
+<script src="content-loader.js"></script>
 <script>
 // ── Products data (from localStorage, seeded if empty) ──
 const DEFAULT_PRODUCTS=[
@@ -645,7 +647,5 @@ window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'
 // ── Init ──
 (async function(){ await render(); })();
 </script>
-<script src="db.js"></script>
-<script src="content-loader.js"></script>
 </body>
 </html>
