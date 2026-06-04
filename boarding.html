@@ -62,11 +62,15 @@ ul{list-style:none}
 /* ── CONTENT ── */
 .content-section{padding:80px 0}
 .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
-.feature-card{background:rgba(255,255,255,0.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:24px;padding:32px 24px;border:1px solid rgba(255,255,255,0.2);transition:all .4s ease}
+.feature-card{background:rgba(255,255,255,0.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.2);transition:all .4s ease}
 .feature-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(0,0,0,.1);border-color:var(--gold)}
+.feature-img{width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--cream-dark)}
+.feature-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.feature-card:hover .feature-img img{transform:scale(1.08)}
 .feature-card .icon{font-size:2rem;margin-bottom:16px}
 .feature-card h3{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:10px}
 .feature-card p{font-size:.85rem;line-height:1.6;color:var(--muted)}
+.feature-body{padding:24px}
 .details-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:40px}
 .details-image{border-radius:28px;overflow:hidden;aspect-ratio:4/3;background:var(--cream-dark)}
 .details-image img{width:100%;height:100%;object-fit:cover}
@@ -165,34 +169,40 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
     </div>
     <div class="features-grid">
       <div class="feature-card reveal reveal-delay-1">
-        <div class="icon">🏠</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=600&q=80" alt="Comfortable Kennels" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">🏠</div>
         <h3>Comfortable Kennels</h3>
-        <p>Clean, spacious, and well-ventilated kennels designed for your pet's comfort. Each kennel is sanitized daily and equipped with comfortable bedding.</p>
+        <p>Clean, spacious, and well-ventilated kennels designed for your pet's comfort. Each kennel is sanitized daily and equipped with comfortable bedding.</p></div>
       </div>
       <div class="feature-card reveal reveal-delay-2">
-        <div class="icon">👁️</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=600&q=80" alt="24/7 Supervision" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">👁️</div>
         <h3>24/7 Supervision</h3>
-        <p>Round-the-clock monitoring by our trained staff. Your pet is never alone, and any health or behavioral changes are addressed immediately.</p>
+        <p>Round-the-clock monitoring by our trained staff. Your pet is never alone, and any health or behavioral changes are addressed immediately.</p></div>
       </div>
       <div class="feature-card reveal reveal-delay-1">
-        <div class="icon">🎾</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1491604612772-6853927639ef?auto=format&fit=crop&w=600&q=80" alt="Exercise &amp; Playtime" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">🎾</div>
         <h3>Exercise &amp; Playtime</h3>
-        <p>Regular exercise sessions, playtime, and walks to keep your pet active, stimulated, and happy throughout their stay with us.</p>
+        <p>Regular exercise sessions, playtime, and walks to keep your pet active, stimulated, and happy throughout their stay with us.</p></div>
       </div>
       <div class="feature-card reveal reveal-delay-2">
-        <div class="icon">🍗</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1565708097881-bbf4f5c7b6d0?auto=format&fit=crop&w=600&q=80" alt="Nutritious Meals" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">🍗</div>
         <h3>Nutritious Meals</h3>
-        <p>Balanced, nutritious meals provided according to your pet's dietary requirements. We also accommodate special diets and feeding schedules.</p>
+        <p>Balanced, nutritious meals provided according to your pet's dietary requirements. We also accommodate special diets and feeding schedules.</p></div>
       </div>
       <div class="feature-card reveal reveal-delay-1">
-        <div class="icon">🩺</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80" alt="Medical Care" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">🩺</div>
         <h3>Medical Care</h3>
-        <p>Regular health check-ups during the stay. We have protocols in place for any medical needs and coordinate with veterinarians when required.</p>
+        <p>Regular health check-ups during the stay. We have protocols in place for any medical needs and coordinate with veterinarians when required.</p></div>
       </div>
       <div class="feature-card reveal reveal-delay-2">
-        <div class="icon">🚗</div>
+        <div class="feature-img"><img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80" alt="Pick-up &amp; Drop-off" loading="lazy"></div>
+        <div class="feature-body"><div class="icon">🚗</div>
         <h3>Pick-up &amp; Drop-off</h3>
-        <p>Convenient pick-up and drop-off services available to make the boarding process hassle-free for pet parents across Shillong.</p>
+        <p>Convenient pick-up and drop-off services available to make the boarding process hassle-free for pet parents across Shillong.</p></div>
       </div>
     </div>
   </div>

@@ -513,15 +513,27 @@
       if (s.features.items) {
         clearAndFill('.features-grid', s.features.items, function(item) {
           var card = div('feature-card');
+          var imgDiv = div('feature-img');
+          if (item.img) {
+            var img = document.createElement('img');
+            img.src = item.img;
+            img.alt = item.title || '';
+            img.loading = 'lazy';
+            img.onerror = function() { this.parentElement.style.display = 'none'; };
+            imgDiv.appendChild(img);
+          }
+          var body = div('feature-body');
           var icon = div('icon');
           icon.textContent = item.icon || '🏠';
           var h3 = document.createElement('h3');
           h3.textContent = item.title || '';
           var p = document.createElement('p');
           p.textContent = item.desc || '';
-          card.appendChild(icon);
-          card.appendChild(h3);
-          card.appendChild(p);
+          body.appendChild(icon);
+          body.appendChild(h3);
+          body.appendChild(p);
+          card.appendChild(imgDiv);
+          card.appendChild(body);
           return card;
         });
       }

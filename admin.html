@@ -1357,12 +1357,12 @@ async function renderBoardingEditor(){
   const defaults={
     hero:{heading:'Boarding & Kennels',subtext:'A safe, comfortable, and loving home away from home for your pet with round-the-clock professional care.',bgImage:'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80'},
     features:{label:'Boarding Facilities',title:'A Home Away<br>from Home',subtext:'Whether you\'re traveling, busy at work, or need temporary care, our boarding facility provides a clean, safe, and loving environment for your pet.',items:[
-      {icon:'🏠',title:'Comfortable Kennels',desc:'Clean, spacious, and well-ventilated kennels designed for your pet\'s comfort and safety.'},
-      {icon:'👁️',title:'24/7 Supervision',desc:'Round-the-clock monitoring by our trained staff to ensure your pet is safe and happy at all times.'},
-      {icon:'🎾',title:'Exercise & Playtime',desc:'Regular exercise sessions, playtime, and walks to keep your pet active and engaged.'},
-      {icon:'🍗',title:'Nutritious Meals',desc:'Balanced, nutritious meals provided according to your pet\'s dietary requirements and preferences.'},
-      {icon:'🩺',title:'Medical Care',desc:'Regular health check-ups during the stay and quick access to veterinary care if needed.'},
-      {icon:'🚗',title:'Pick-up & Drop-off',desc:'Convenient pick-up and drop-off services available within Shillong for your convenience.'}
+      {icon:'🏠',title:'Comfortable Kennels',desc:'Clean, spacious, and well-ventilated kennels designed for your pet\'s comfort and safety.',img:'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=600&q=80'},
+      {icon:'👁️',title:'24/7 Supervision',desc:'Round-the-clock monitoring by our trained staff to ensure your pet is safe and happy at all times.',img:'https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=600&q=80'},
+      {icon:'🎾',title:'Exercise & Playtime',desc:'Regular exercise sessions, playtime, and walks to keep your pet active and engaged.',img:'https://images.unsplash.com/photo-1491604612772-6853927639ef?auto=format&fit=crop&w=600&q=80'},
+      {icon:'🍗',title:'Nutritious Meals',desc:'Balanced, nutritious meals provided according to your pet\'s dietary requirements and preferences.',img:'https://images.unsplash.com/photo-1565708097881-bbf4f5c7b6d0?auto=format&fit=crop&w=600&q=80'},
+      {icon:'🩺',title:'Medical Care',desc:'Regular health check-ups during the stay and quick access to veterinary care if needed.',img:'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80'},
+      {icon:'🚗',title:'Pick-up & Drop-off',desc:'Convenient pick-up and drop-off services available within Shillong for your convenience.',img:'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80'}
     ]},
     details:{label:'Why Board with Us',title:'Peace of Mind<br>While You\'re Away',paragraph:'We understand that leaving your pet can be stressful. That\'s why we go the extra mile to ensure your pet feels at home with us.',image:'images/7177680652812423.jpg',detailsList:['Clean, sanitized facilities','Trained & caring staff','Individual & group play','Regular photo updates','Medication administration','Flexible booking options'],btnText:'Book a Stay'},
     cta:{heading:'Need a Safe Place for<br>Your Pet to Stay?',subtext:'Contact us to check availability, pricing, and book your pet\'s stay.',btnText:'Book via WhatsApp',btnLink:'https://wa.me/918891000000'},
@@ -1432,11 +1432,13 @@ async function renderBoardingEditor(){
 }
 
 function renderBoFeatItem(item,i){
-  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Feature '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'boFeatRepeater\')">✕ Remove</button></div><div class="cf-row"><div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="'+escHtml(item.icon)+'"></div><div class="cf-group"><label>Title</label><input class="r-title" value="'+escHtml(item.title)+'"></div></div><div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Feature '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'boFeatRepeater\')">✕ Remove</button></div>'+
+    renderImageUploadWidget(item.img)+
+    '<div class="cf-row"><div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="'+escHtml(item.icon)+'"></div><div class="cf-group"><label>Title</label><input class="r-title" value="'+escHtml(item.title)+'"></div></div><div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
 }
 function addBoFeatItem(){
   var d=document.getElementById('boFeatRepeater');
-  d.insertAdjacentHTML('beforeend',renderBoFeatItem({icon:'🏠',title:'New Feature',desc:'Feature description'},d.children.length));
+  d.insertAdjacentHTML('beforeend',renderBoFeatItem({icon:'🏠',title:'New Feature',desc:'Feature description',img:''},d.children.length));
 }
 
 // ── Eco Cottages Editor ──
@@ -1675,7 +1677,7 @@ function collectBoardingData(){
       label:document.getElementById('boFeatLabel').value,
       title:document.getElementById('boFeatTitle').value,
       subtext:document.getElementById('boFeatSub').value,
-      items:collectRepeaterData('boFeatRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc'})
+      items:collectRepeaterData('boFeatRepeater',{img:'.r-img',icon:'.r-icon',title:'.r-title',desc:'.r-desc'})
     },
     details:{
       label:document.getElementById('boDetLabel').value,
