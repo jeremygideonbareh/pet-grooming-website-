@@ -239,6 +239,8 @@ ul{list-style:none}
   position:relative;z-index:1;padding:24px 20px;width:100%;
 }
 .serv-card .serv-body .serv-icon{font-size:.65rem;margin-bottom:6px;display:inline-block;padding:3px 12px;border-radius:60px;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-weight:600;letter-spacing:.03em;text-transform:uppercase}
+.serv-subs{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.serv-subs span{font-size:.6rem;padding:2px 8px;border-radius:60px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-weight:500;letter-spacing:.02em;color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.15)}
 
 /* ── SERVICE MODAL ── */
 .serv-modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(26,20,18,.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:24px}
@@ -489,10 +491,11 @@ footer{
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
   .nav-island .nav-links{display:none}
-  .hamburger{display:flex}
+  .hamburger{position:fixed;top:10px;right:12px;z-index:1002;display:flex;margin-left:0;background:rgba(255,255,255,0.65);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.25);border-radius:60px;padding:8px;min-width:40px;min-height:40px}
   .floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}
   .floating-logo img{width:28px;height:28px}
-  .nav-island{padding:4px 10px;top:10px}
+  .floating-logo .logo-text{display:none}
+  .nav-island{left:auto;right:12px;transform:none;padding:0;background:transparent;backdrop-filter:none;border:none;box-shadow:none;top:10px;min-width:auto}
   .whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}
 }
 @media(max-width:900px){
@@ -566,7 +569,7 @@ footer{
 <!-- ═══ FLOATING LOGO ═══ -->
 <a href="index.html" class="floating-logo" id="floatingLogo">
   <img src="images/a1logo.jpeg" alt="A-1 Enterprises" loading="lazy">
-  A-1 Enterprises
+  <span class="logo-text">A-1 Enterprises</span>
 </a>
 
 <!-- ═══ FLOATING NAV ISLAND ═══ -->
@@ -575,9 +578,6 @@ footer{
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#why-choose">Why Choose Us</a></li>
-    <li><a href="training.html">Dog Training</a></li>
-    <li><a href="eco-cottages.html">Eco Cottages</a></li>
-    <li><a href="grooming.html">Grooming</a></li>
     <li><a href="store.html">Store</a></li>
     <li><a href="#gallery">Gallery</a></li>
   </ul>
@@ -591,9 +591,6 @@ footer{
   <a href="#about">About</a>
   <a href="#services">Services</a>
   <a href="#why-choose">Why Choose Us</a>
-  <a href="training.html">Dog Training</a>
-  <a href="eco-cottages.html">Eco Cottages</a>
-  <a href="grooming.html">Grooming</a>
   <a href="store.html">Store</a>
   <a href="#gallery">Gallery</a>
   <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp">WhatsApp Us</a>
@@ -639,12 +636,12 @@ footer{
       <article class="serv-card reveal reveal-delay-1" data-svc="dog-training">
         <img src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&w=600&q=80" alt="Dog Training" loading="lazy">
         <div class="serv-overlay"></div>
-        <div class="serv-body"><span class="serv-icon">Dog</span><h3>Dog Training</h3></div>
+        <div class="serv-body"><span class="serv-icon">Dog</span><h3>Dog Training</h3><div class="serv-subs"><span>Basic</span><span>Intermediate</span><span>Advanced</span><span>Protection/Detection</span></div></div>
       </article>
       <article class="serv-card reveal reveal-delay-2" data-svc="rehab">
         <img src="https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?auto=format&fit=crop&w=600&q=80" alt="Rehabilitation" loading="lazy">
         <div class="serv-overlay"></div>
-        <div class="serv-body"><span class="serv-icon">Rehab</span><h3>Rehabilitation Training</h3></div>
+        <div class="serv-body"><span class="serv-icon">Rehab</span><h3>Rehabilitation</h3></div>
       </article>
       <article class="serv-card reveal reveal-delay-3" data-svc="protection">
         <img src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?auto=format&fit=crop&w=600&q=80" alt="Protection Training" loading="lazy">
@@ -1108,7 +1105,7 @@ lightbox.addEventListener('click',e=>{
 // ── Service modal ──
 const SERV_DATA={
   'dog-training':{icon:'Dog',title:'Dog Training',desc:'Obedience training, behavioral correction, and personalized programs tailored to each dog\'s unique temperament using positive reinforcement methods.',link:'training.html'},
-  'rehab':{icon:'Rehab',title:'Rehabilitation Training',desc:'Specialized rehabilitation for dogs recovering from trauma, behavioral issues, or physical challenges. Patient, structured programs designed to restore confidence and well-being.',link:'training.html'},
+  'rehab':{icon:'Rehab',title:'Rehabilitation',desc:'Specialized rehabilitation for dogs recovering from trauma, behavioral issues, or physical challenges. Patient, structured programs designed to restore confidence and well-being.',link:'training.html'},
   'protection':{icon:'Shield',title:'Protection Training',desc:'Advanced personal protection training for responsible owners. Professional-grade programs that build controlled, reliable protective behaviors with expert oversight.',link:'training.html'},
   'detection':{icon:'Search',title:'Detection Training',desc:'Scent detection and tracking programs for security, search, and specialized working roles. Developing dogs with focused, reliable detection capabilities.',link:'training.html'},
   'grooming':{icon:'Groom',title:'Grooming Services',desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments. Every pet receives individualized, stress-free care.',link:'grooming.html'},
