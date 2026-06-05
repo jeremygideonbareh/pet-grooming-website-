@@ -58,12 +58,12 @@ A complete multi-page pet services website for **A-1 Enterprises** based in **Sh
 
 ```
 a1-enterprise/
-├── index.html              # Homepage (hero, about, services, why us, gallery, testimonials, footer) — 960 lines
+├── index.html              # Homepage (loader w/ tagline, hero w/ sliding animations, about, services, why us, gallery, testimonials, footer, nav w/o subpage links, mobile hamburger top-right) — ~960 lines
 ├── training.html           # Training detail page — 363 lines
 ├── eco-cottages.html       # Eco Cottages detail page — 6 sections — 406 lines
 ├── grooming.html           # Grooming detail page — 665 lines
 ├── boarding.html           # Boarding detail page — 265 lines
-├── store.html              # Pet store (product grid, search, filter, inquiry modal) — 674 lines
+├── store.html              # Pet store (30 products, search, filter, inquiry modal, auto-seeds DB) — 660 lines
 ├── admin.html              # Admin dashboard (6 tabs) — 1764 lines
 │
 ├── auth.js                 # Auth layer — mock async API, lockout, session token
@@ -212,14 +212,16 @@ admin.html <input type="file"> → uploadImageToCloud(file)
 | 360px | Tightest padding, single-column gallery |
 
 ### Page Loader
-Every page has a full-viewport loader overlay with the A1 logo, brand name, and gold spinner. It shows for a minimum of 1.2 seconds and fades out on `window.onload`. The loader exists in the HTML directly (not dynamically injected).
+Every page has a full-viewport loader overlay with the A1 logo, brand name, tagline + ecosystem description text (slide-up staggered animation), and a 22px gold spinner positioned 28px below the text. It shows for a minimum of **3 seconds** and fades out on `window.onload`. The loader exists in the HTML directly (not dynamically injected). On `index.html`, the tagline "Passion Turned Profession" and ecosystem description text appear on the loader (NOT the hero section) — this was a client preference to keep the hero clean with only heading + buttons + sliding animations.
 
 ### Nav / Hamburger Menu
 Each page has its own fixed navbar with the logo, nav links, and WhatsApp CTA. The pattern is duplicated in every HTML file:
 
 **Desktop:** Full horizontal nav links. The navbar gets a `.scrolled` class on `window.scrollY > 20` (adds shadow/background).
 
-**Mobile (< 1024px):** A `.hamburger` button (3 stacked `<span>` elements) toggles a `.mobile-nav` fullscreen overlay:
+**Homepage nav links removed:** Dog Training, Eco Cottages, and Grooming links were removed from both the floating nav island and the mobile nav menu (per client request to keep homepage nav focused on core sections). Subpages still link to each other.
+
+**Mobile (< 1024px):** The logo text (`.logo-text`) is hidden via `display:none` so only the logo image shows. The hamburger button is repositioned to `fixed; top:10px; right:12px` with its own frosted glass background (`rgba(255,255,255,0.65)`), and the nav-island becomes transparent with no padding/blur. A `.hamburger` button (3 stacked `<span>` elements) toggles a `.mobile-nav` fullscreen overlay:
 ```javascript
 hamburger.addEventListener('click', function() {
   hamburger.classList.toggle('active');      // animates 3 spans into X
@@ -279,7 +281,7 @@ This prevents ugly broken image icons when Supabase Storage URLs become invalid 
 |---|---|---|---|
 | Nav (fixed, with hamburger) | — | No | Static HTML |
 | Page Loader | — | No | Static HTML |
-| Hero | — | Yes (Content tab) | DB/fallback |
+| Hero (sliding animations: badge slides left, heading + buttons slide up via CSS keyframes) | — | Yes (Content tab) | DB/fallback |
 | Services (6 cards) | — | Yes (Content tab) | DB/fallback |
 | About | — | Yes (Content tab) | DB/fallback |
 | Gallery (dynamic masonry) | — | Yes (Content tab) | DB/fallback |
@@ -346,23 +348,36 @@ This prevents ugly broken image icons when Supabase Storage URLs become invalid 
 | Footer category links | No | Static HTML (scrolls to store & filters by category) |
 | Footer | No | Static HTML |
 
-The store page has its own `loadProducts()` function that calls `DB.getProducts()`. If no products exist in Supabase, it seeds 16 default products and saves them to the database. This is the ONLY page that auto-seeds data.
+The store page has its own `loadProducts()` function that calls `DB.getProducts()`. If no products exist in Supabase, it seeds **30 default products** across all 6 categories and saves them to the database. This is the ONLY page that auto-seeds data.
 
 ```javascript
 const DEFAULT_PRODUCTS = [
   { id:'p1', name:'Premium Adult Dog Food (Chicken & Rice)',  price:'₹1,850', cat:'dog-food', ... },
-  // ... 16 products total, covering all 6 categories (dog-food, treats, toys, accessories, grooming, health)
+  // ... 30 products total, covering all 6 categories (dog-food, treats, toys, accessories, grooming, health)
 ];
 
 async function loadProducts() {
-  var products = await DB.getProducts();
-  if (!products || products.length === 0) {
-    await DB.saveAllProducts(DEFAULT_PRODUCTS);
+  if (typeof DB === 'undefined' || typeof DB.getProducts !== 'function') {
+    console.warn('[Store] DB not available, using defaults');
     return DEFAULT_PRODUCTS;
   }
-  return products;
+  try {
+    var products = await DB.getProducts();
+    if (!products || products.length === 0) {
+      await DB.saveAllProducts(DEFAULT_PRODUCTS);
+      return DEFAULT_PRODUCTS;
+    }
+    return products;
+  } catch (e) {
+    console.warn('[Store] DB error, using defaults:', e);
+    return DEFAULT_PRODUCTS;
+  }
 }
 ```
+
+**Script load order fix:** `db.js` and `content-loader.js` were originally loaded AFTER the inline product rendering script, causing `DB.getProducts()` to throw (`DB` undefined). Fixed by moving both `<script src>` tags to load BEFORE the inline script block.
+
+**All 30 products have unique Unsplash images.** Previously, products p17-p28 duplicated images from p2-p15 (12 duplicate pairs). Each duplicate was replaced with a distinct verified Unsplash photo so every product card shows a different image.
 
 **Note:** The store page does NOT use `content-loader.js` for its product grid. Products are rendered by the page's own inline `renderProducts()` function. The page only uses `content-loader.js` for potential future text sections (currently none are mapped — the switch statement hits `default: break;`).
 
@@ -1145,6 +1160,8 @@ DB.getProducts()
 
 `auth.js` must load before `upload.js` and `db.js`. `db.js` must load before `content-loader.js`. The Supabase CDN must load before `db.js`.
 
+**CRITICAL — store.html:** On the store page, `db.js` and `content-loader.js` must load BEFORE the inline `<script>` block that defines `DEFAULT_PRODUCTS` and calls `render()` → `DB.getProducts()`. If loaded after, `DB` will be undefined and the page will crash. This was a known bug (now fixed).
+
 ### Adding a New Admin-Editable Page
 1. Create the HTML page with hardcoded fallback content and `<body data-page="xxx">`
 2. Add the Supabase CDN and all JS scripts in the correct order
@@ -1169,6 +1186,8 @@ DB.getProducts()
 - **Two escape functions** — `escapeHtml()` and `escHtml()` do the same thing with slightly different null handling. Use `escHtml()` for new code.
 - **`.nojekyll` is legacy** — exists for GitHub Pages but we're on Cloudflare Pages. Can be deleted.
 - **`base.html` is empty** — unused template file. Can be deleted.
+- **Product images are generic Unsplash dog photos** — none show the actual product (e.g., dog food bag, brush, life jacket). Acceptable for now since this is a free stock photo site, but would benefit from real product photography.
+- **Loader shows tagline + ecosystem description text on every page** — this text is designed for the homepage. If subpages get their own loader text, they should update the loader HTML individually.
 
 ### Future Enhancements
 1. **Real auth** — replace mock with Supabase Auth or Cloudflare Workers
@@ -1192,7 +1211,37 @@ DB.getProducts()
 - ❌ Null prices crashing stats render — FIXED
 - ❌ DOM elements passed as querySelector selectors — FIXED
 - ❌ Only 6 program cards rendering — FIXED (was the querySelector crash above)
+- ❌ Homepage nav links cluttered (Training, Eco Cottages, Grooming) — REMOVED from floating nav + mobile nav
+- ❌ Logo text visible on mobile (cluttered header) — HIDDEN, image only
+- ❌ Hamburger misplaced on mobile — FIXED to top-right with frosted glass background
+- ❌ Store products not rendering (DB undefined) — FIXED script load order + added typeof DB guard
+- ❌ content-loader.js crashing when DB is unavailable — FIXED with undefined guard
+- ❌ Only 16 products in store — EXPANDED to 30 products across all 6 categories
+- ❌ 12 product images duplicated (p17-p28 shared with p2-p15) — FIXED, all 30 now unique
+- ❌ Hero section had tagline/desc text (client wanted clean hero) — MOVED tagline + ecosystem text to page loader
+- ❌ Loader too short (1.2s) — INCREASED to 3s
+- ❌ Loader spinner too large — REDUCED to 22px, positioned 28px below text
+- ❌ Training card lacked sub-headings — ADDED Basic, Intermediate, Advanced, Protection/Detection pill tags
+- ❌ "Rehabilitation Training" too long — RENAMED to "Rehabilitation"
 
 ---
 
 *Last updated: June 2026*
+
+## Session Summary (June 2026)
+
+### What was done this session:
+1. **Store page:** Fixed `DB` undefined bug (script load order) + added `typeof DB` guard + try/catch so 30 default products render even if Supabase is down
+2. **content-loader.js:** Added guard against undefined `DB` to prevent crash when Supabase CDN fails
+3. **Product images:** Replaced all 12 duplicate Unsplash photos (p17-p28) with unique images — every product now has its own photo
+4. **Hero section:** Reverted heading/tagline/description — tagline + ecosystem text moved to page loader; added sliding CSS animations (slideLeft for badge, slideUp for heading + buttons)
+5. **Page loader:** Added tagline + ecosystem description text with staggered slide-up animation; increased duration to 3s; reduced spinner to 22px with margin-top 28px
+6. **Nav cleanup:** Removed Dog Training, Eco Cottages, Grooming from homepage floating nav + mobile nav
+7. **Mobile layout:** Logo shows image only (`.logo-text` hidden on `@media max-width:1024px`); hamburger fixed to top-right with frosted glass background; nav-island transparent/paddingless
+8. **Training card:** Added `.serv-subs` pill tags (Basic, Intermediate, Advanced, Protection/Detection) to Dog Training service card
+9. **Renamed "Rehabilitation Training"** → "Rehabilitation" in both card and modal data
+
+### Files changed:
+- `index.html` — loader text, hero animations, nav link removals, mobile CSS, training subs, rehab rename
+- `store.html` — DEFAULT_PRODUCTS expanded to 30, loadProducts() DB guard + try/catch, script load order fix, duplicate image replacements
+- `content-loader.js` — DB undefined guard at top of IIFE

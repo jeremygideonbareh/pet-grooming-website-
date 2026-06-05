@@ -6,6 +6,7 @@
   <title>A-1Pet Shop And Grooming — Shillong</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
 <style>
+:root{--cream:#FBF7F2;--cream-dark:#F5EDE4;--charcoal:#1A1412;--charcoal-soft:#2C2420;--gold:#C9A05C;--gold-light:#E8C88A;--gold-dark:#A77F3E;--muted:#7A6B5E;--border:#E3D9CE;--white:#FFFFFF;--whatsapp:#25D366;--green:#27ae60;--red:#e74c3c}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
@@ -26,6 +27,10 @@ img{display:block;max-width:100%;height:auto}
 .nav-island .nav-links{display:flex;align-items:center;gap:4px;margin:0;padding:0}
 .nav-island .nav-links a{font-size:.78rem;font-weight:500;color:rgba(255,255,255,.7);padding:6px 14px;border-radius:40px;transition:all .3s ease;white-space:nowrap;text-decoration:none}
 .nav-island .nav-links a:hover{background:rgba(255,255,255,0.1);color:#fff}
+.nav-social{display:flex;align-items:center;gap:4px;margin-left:auto;margin-right:4px}
+.nav-social a{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;transition:all .3s ease;color:rgba(255,255,255,.6);text-decoration:none}
+.nav-social a:hover{background:rgba(255,255,255,0.1);color:#fff}
+.nav-social svg{width:16px;height:16px}
 .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:8px;margin-left:4px;min-width:36px;min-height:36px;align-items:center;justify-content:center}
 .hamburger span{width:20px;height:2px;background:#fff;border-radius:2px;transition:all .3s ease;transform-origin:center}
 .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
@@ -38,7 +43,7 @@ img{display:block;max-width:100%;height:auto}
 .mobile-nav .btn-whatsapp{margin-top:12px;padding:12px 28px;border-radius:60px;display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);font-weight:600;font-size:.9rem;text-decoration:none}
 .whatsapp-fab{position:fixed;bottom:24px;right:24px;z-index:1001;width:56px;height:56px;border-radius:50%;background:var(--whatsapp);color:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.35);transition:all .3s ease;text-decoration:none}
 .whatsapp-fab:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(37,211,102,.4)}
-@media(max-width:1024px){.nav-island .nav-links{display:none}.hamburger{display:flex}.floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}.floating-logo img{width:28px;height:28px}.nav-island{padding:4px 10px;top:10px}.whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}}
+@media(max-width:1024px){.nav-island .nav-links{display:none}.nav-island .nav-social{display:none}.hamburger{display:flex}.floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}.floating-logo img{width:28px;height:28px}.nav-island{padding:4px 10px;top:10px}.whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}}
 
 /* ── BOOKING MODAL ── */
 .booking-overlay{position:fixed;inset:0;z-index:2000;background:rgba(26,20,18,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:24px}
@@ -57,6 +62,38 @@ img{display:block;max-width:100%;height:auto}
 .booking-modal .btn-send{width:100%;padding:14px;border-radius:60px;border:none;background:var(--whatsapp);color:var(--white);font-family:'Inter',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:background .3s,transform .2s;display:flex;align-items:center;justify-content:center;gap:10px}
 .booking-modal .btn-send:hover{background:#1DA851}
 .booking-modal .btn-send:active{transform:scale(.97)}
+.tslot:hover{border-color:var(--gold)!important;background:rgba(255,255,255,.12)!important}
+
+/* ── AUTH MODAL ── */
+.auth-overlay{position:fixed;inset:0;z-index:3000;background:rgba(26,20,18,.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:24px}
+.auth-overlay.open{display:flex}
+.auth-modal{background:#fff;border-radius:28px;max-width:420px;width:100%;padding:36px 32px;animation:modalIn .3s ease;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.auth-modal .close-btn{float:right;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted);transition:color .3s;line-height:1}
+.auth-modal .close-btn:hover{color:var(--charcoal)}
+.auth-modal h2{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;color:var(--charcoal);margin-bottom:4px}
+.auth-modal .sub{font-size:.85rem;color:var(--muted);margin-bottom:20px}
+.auth-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border)}
+.auth-tab{flex:1;padding:10px 0;text-align:center;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .3s}
+.auth-tab.active{color:var(--gold-dark);border-bottom-color:var(--gold)}
+.auth-form{display:none}
+.auth-form.active{display:block}
+.auth-form .form-group{margin-bottom:14px}
+.auth-form .form-group label{display:block;font-size:.75rem;font-weight:600;color:var(--charcoal);margin-bottom:5px}
+.auth-form .form-group input{width:100%;padding:11px 16px;border-radius:12px;border:1px solid var(--border);background:var(--cream);font-family:'Inter',sans-serif;font-size:.9rem;color:var(--charcoal);outline:none;transition:border-color .3s}
+.auth-form .form-group input:focus{border-color:var(--gold)}
+.auth-form .btn-submit{width:100%;padding:13px;border-radius:60px;border:none;background:var(--gold);color:var(--charcoal);font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:background .3s,transform .2s}
+.auth-form .btn-submit:hover{background:var(--gold-dark)}
+.auth-form .btn-submit:active{transform:scale(.97)}
+.auth-error{font-size:.8rem;color:var(--red);margin-top:8px;display:none}
+.auth-success{font-size:.8rem;color:var(--green);margin-top:8px;display:none}
+.auth-form .auth-switch{font-size:.8rem;color:var(--muted);text-align:center;margin-top:14px}
+.auth-form .auth-switch a{color:var(--gold-dark);cursor:pointer;text-decoration:underline}
+.auth-form .auth-divider{text-align:center;font-size:.75rem;color:var(--muted);margin:18px 0 10px;position:relative}
+.auth-form .auth-divider::before,.auth-form .auth-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border)}
+.auth-form .auth-divider::before{left:0}
+.auth-form .auth-divider::after{right:0}
+.auth-form .btn-guest{width:100%;padding:12px;border-radius:60px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Inter',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .3s}
+.auth-form .btn-guest:hover{background:var(--cream-dark);color:var(--charcoal)}
 
 /* ── LOADING ── */
 .loading-overlay{
@@ -131,6 +168,12 @@ img{display:block;max-width:100%;height:auto}
   animation:heroZoom 5s 1.3s ease both;
 }
 @keyframes heroZoom{from{transform:scale(1.08);opacity:.7}to{transform:scale(1);opacity:1}}
+.hero-social{position:absolute;top:24px;right:24px;z-index:5;display:flex;gap:10px}
+.hero-social a{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);transition:all .3s ease;color:#fff;text-decoration:none}
+.hero-social a:hover{background:rgba(255,255,255,0.25);transform:translateY(-2px)}
+.hero-social svg{width:18px;height:18px}
+@media(max-width:1024px){.hero-social{top:16px;right:16px;gap:8px}.hero-social a{width:32px;height:32px}.hero-social svg{width:16px;height:16px}}
+@media(max-width:640px){.hero-social{top:12px;right:12px;gap:6px}.hero-social a{width:28px;height:28px}.hero-social svg{width:14px;height:14px}}
 .hero-overlay{
   position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(14,10,8,.15) 0%,rgba(14,10,8,.55) 100%);
@@ -443,11 +486,13 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
 </head>
 <body data-page="groom">
 
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-bg-shapes"><div class="shape"></div><div class="shape"></div><div class="shape"></div></div>
-  <div class="loading-brand">
-    A-1Pet Shop<br>And Grooming
-    <small>Nongkynrih, Shillong</small>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div style="text-align:center">
+      <div style="margin-bottom:16px"><img src="images/a1logo.jpeg" alt="A-1 Enterprises" style="width:64px;height:64px;border-radius:50%;object-fit:cover;margin:0 auto;display:block"></div>
+      <div style="font-size:1.3rem;font-weight:800;text-align:center;font-family:'Playfair Display',serif;color:#fff;letter-spacing:-.01em">A-1 Enterprises</div>
+      <div style="font-size:.85rem;color:rgba(255,255,255,.5);margin-top:4px">A-1Pet Shop And Grooming — Passion Turned Profession</div>
+    </div>
+    <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.08);border-top-color:#EAA172;border-radius:50%;animation:gSpin .8s linear infinite"></div>
   </div>
   <div class="paw-loader"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
   <div class="paw-dots"><div></div><div></div><div></div><div></div><div></div></div>
@@ -462,6 +507,11 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
     <li><a href="eco-cottages.html">Eco Cottages</a></li>
     <li><a href="store.html">Store</a></li>
   </ul>
+  <div class="nav-social">
+    <a href="https://youtu.be/Lgpqqi8ZEQI" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    <a href="https://instagram.com/boxerfosterhome?igshid=YmMyMTA2M2Y=" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+    <a href="https://www.facebook.com/SANGPRETI/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+  </div>
   <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-nav" id="mobileNav">
@@ -471,6 +521,11 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   <a href="eco-cottages.html">Eco Cottages</a>
   <a href="store.html">Store</a>
   <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp">WhatsApp Us</a>
+  <div class="mobile-social" style="display:flex;gap:18px;margin-top:16px">
+    <a href="https://youtu.be/Lgpqqi8ZEQI" target="_blank" rel="noopener" aria-label="YouTube"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    <a href="https://instagram.com/boxerfosterhome?igshid=YmMyMTA2M2Y=" target="_blank" rel="noopener" aria-label="Instagram"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+    <a href="https://www.facebook.com/SANGPRETI/" target="_blank" rel="noopener" aria-label="Facebook"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+  </div>
 </div>
 <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="whatsapp-fab" id="whatsappFab" aria-label="Chat on WhatsApp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
 
@@ -488,7 +543,12 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
       <p>Nongkynrih, Shillong — Professional pet grooming services your furry friend will love.</p>
       <button class="btn-primary" id="heroBtn">📞 CONTACT NOW</button>
     </div>
-  </section>
+    <div class="hero-social">
+    <a href="https://youtu.be/Lgpqqi8ZEQI" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    <a href="https://instagram.com/boxerfosterhome?igshid=YmMyMTA2M2Y=" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+    <a href="https://www.facebook.com/SANGPRETI/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+  </div>
+</section>
 
   <!-- ABOUT -->
   <section class="section" id="about">
@@ -688,6 +748,121 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   </footer>
 </div>
 
+<script src="auth.js"></script>
+<script src="db.js"></script>
+
+<!-- AUTH MODAL -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-modal">
+    <button class="close-btn" id="authClose">&times;</button>
+    <h2>Sign in to Book</h2>
+    <p class="sub">Create an account or sign in to book a grooming session.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-auth-tab="login">Sign In</button>
+      <button class="auth-tab" data-auth-tab="signup">Sign Up</button>
+    </div>
+
+    <form class="auth-form active" id="authLoginForm">
+      <div class="form-group">
+        <label for="authLoginEmail">Email</label>
+        <input type="email" id="authLoginEmail" required autocomplete="email" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label for="authLoginPassword">Password</label>
+        <input type="password" id="authLoginPassword" required autocomplete="current-password" placeholder="Enter your password">
+      </div>
+      <button type="submit" class="btn-submit">Sign In</button>
+      <div class="auth-error" id="authLoginError"></div>
+      <div class="auth-switch">Don't have an account? <a id="authSwitchToSignup">Sign up</a></div>
+    </form>
+
+    <form class="auth-form" id="authSignupForm">
+      <div class="form-group">
+        <label for="authSignupName">Full Name</label>
+        <input type="text" id="authSignupName" required autocomplete="name" placeholder="Your full name">
+      </div>
+      <div class="form-group">
+        <label for="authSignupEmail">Email</label>
+        <input type="email" id="authSignupEmail" required autocomplete="email" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label for="authSignupPhone">Phone Number</label>
+        <input type="tel" id="authSignupPhone" required autocomplete="tel" placeholder="+91 XXXXXXXXXX">
+      </div>
+      <div class="form-group">
+        <label for="authSignupLocation">Location</label>
+        <input type="text" id="authSignupLocation" placeholder="Your area / locality in Shillong">
+      </div>
+      <div class="form-group">
+        <label for="authSignupDogAge">Dog's Age</label>
+        <input type="text" id="authSignupDogAge" placeholder="e.g. 2 years, 6 months">
+      </div>
+      <div class="form-group">
+        <label for="authSignupDogGender">Dog's Gender</label>
+        <select id="authSignupDogGender">
+          <option value="">Select...</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="authSignupDogBreed">Dog's Breed</label>
+        <input type="text" id="authSignupDogBreed" placeholder="e.g. Labrador, German Shepherd">
+      </div>
+      <div class="form-group">
+        <label for="authSignupSickness">Any Sickness / Medical Conditions</label>
+        <input type="text" id="authSignupSickness" placeholder="None, or describe">
+      </div>
+      <div class="form-group" style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:120px">
+          <label>Vaccinated?</label>
+          <select id="authSignupVaccination">
+            <option value="">Select...</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:120px">
+          <label>Deworming (within 3 months)?</label>
+          <select id="authSignupDeworming">
+            <option value="">Select...</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="authSignupAllergy">Any Allergies</label>
+        <input type="text" id="authSignupAllergy" placeholder="None, or list">
+      </div>
+      <div class="form-group">
+        <label for="authSignupTemperament">Temperament of the Dog</label>
+        <select id="authSignupTemperament">
+          <option value="">Select...</option>
+          <option value="Friendly">Friendly</option>
+          <option value="Shy">Shy</option>
+          <option value="Energetic">Energetic</option>
+          <option value="Aggressive">Aggressive</option>
+          <option value="Anxious">Anxious</option>
+          <option value="Calm">Calm</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="authSignupPassword">Password</label>
+        <input type="password" id="authSignupPassword" required autocomplete="new-password" placeholder="Create a password (min 6 chars)">
+      </div>
+      <button type="submit" class="btn-submit">Create Account &amp; Continue</button>
+      <div class="auth-error" id="authSignupError"></div>
+      <div class="auth-success" id="authSignupSuccess"></div>
+      <div class="auth-switch">Already have an account? <a id="authSwitchToLogin">Sign in</a></div>
+    </form>
+
+    <div class="auth-divider">or</div>
+    <button class="btn-guest" id="authGuestBtn">Continue as Guest</button>
+  </div>
+</div>
+
 <!-- BOOKING MODAL -->
 <div class="booking-overlay" id="bookingOverlay">
   <div class="booking-modal">
@@ -700,12 +875,91 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
         <input type="text" id="bookName" required autocomplete="name">
       </div>
       <div class="form-group">
-        <label for="bookPhone">Phone Number</label>
-        <input type="tel" id="bookPhone" required autocomplete="tel">
+        <label for="bookEmail">Email</label>
+        <input type="email" id="bookEmail" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="bookLocation">Location</label>
+        <input type="text" id="bookLocation" placeholder="Your area / locality in Shillong">
       </div>
       <div class="form-group">
         <label for="bookPet">Pet's Name &amp; Breed</label>
         <input type="text" id="bookPet" required>
+      </div>
+      <div class="form-group">
+        <label for="bookDogAge">Dog's Age</label>
+        <input type="text" id="bookDogAge" placeholder="e.g. 2 years, 6 months">
+      </div>
+      <div class="form-group">
+        <label for="bookDogGender">Dog's Gender</label>
+        <select id="bookDogGender">
+          <option value="">Select...</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="bookSickness">Any Sickness / Medical Conditions</label>
+        <input type="text" id="bookSickness" placeholder="None, or describe any conditions">
+      </div>
+      <div class="form-group" style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:120px">
+          <label>Vaccinated?</label>
+          <select id="bookVaccination">
+            <option value="">Select...</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:120px">
+          <label>Deworming (within 3 months)?</label>
+          <select id="bookDeworming">
+            <option value="">Select...</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bookVaccinationCard">Attach Vaccination Card (optional)</label>
+        <input type="file" id="bookVaccinationCard" accept="image/jpeg,image/png,image/webp,application/pdf">
+      </div>
+      <div class="form-group">
+        <label for="bookAllergy">Any Allergies</label>
+        <input type="text" id="bookAllergy" placeholder="None, or list any allergies">
+      </div>
+      <div class="form-group">
+        <label for="bookTemperament">Temperament of the Dog</label>
+        <select id="bookTemperament">
+          <option value="">Select...</option>
+          <option value="Friendly">Friendly</option>
+          <option value="Shy">Shy</option>
+          <option value="Energetic">Energetic</option>
+          <option value="Aggressive">Aggressive</option>
+          <option value="Anxious">Anxious</option>
+          <option value="Calm">Calm</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Select Time Slot</label>
+        <div id="timeSlots" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <label class="tslot" style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);cursor:pointer;font-size:.8rem;color:#fff;transition:all .3s">
+            <input type="radio" name="timeSlot" value="10:00 AM - 11:30 AM" style="accent-color:var(--gold)"> 10:00 AM - 11:30 AM
+          </label>
+          <label class="tslot" style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);cursor:pointer;font-size:.8rem;color:#fff;transition:all .3s">
+            <input type="radio" name="timeSlot" value="11:30 AM - 1:00 PM" style="accent-color:var(--gold)"> 11:30 AM - 1:00 PM
+          </label>
+          <label class="tslot" style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);cursor:pointer;font-size:.8rem;color:#fff;transition:all .3s">
+            <input type="radio" name="timeSlot" value="2:00 PM - 3:30 PM" style="accent-color:var(--gold)"> 2:00 PM - 3:30 PM
+          </label>
+          <label class="tslot" style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);cursor:pointer;font-size:.8rem;color:#fff;transition:all .3s">
+            <input type="radio" name="timeSlot" value="3:30 PM - 5:00 PM" style="accent-color:var(--gold)"> 3:30 PM - 5:00 PM
+          </label>
+          <label class="tslot" style="grid-column:1/-1;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);cursor:pointer;font-size:.8rem;color:#fff;transition:all .3s">
+            <input type="radio" name="timeSlot" value="5:00 PM - 6:30 PM" style="accent-color:var(--gold)"> 5:00 PM - 6:30 PM
+          </label>
+        </div>
+        <p style="font-size:.75rem;color:rgba(255,255,255,.5);margin-top:8px">Confirmation depends on availability</p>
       </div>
       <div class="form-group">
         <label for="bookService">Service Needed</label>
@@ -718,10 +972,21 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
         </select>
       </div>
       <div class="form-group">
+        <label>Preferred Contact Method</label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;color:rgba(255,255,255,.8);cursor:pointer">
+            <input type="radio" name="contactMethod" value="WhatsApp" checked style="accent-color:var(--gold)"> WhatsApp
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;color:rgba(255,255,255,.8);cursor:pointer">
+            <input type="radio" name="contactMethod" value="Phone Call" style="accent-color:var(--gold)"> Phone Call
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
         <label for="bookMsg">Additional Notes</label>
         <textarea id="bookMsg" placeholder="Any special requests or concerns..."></textarea>
       </div>
-      <button type="submit" class="btn-send">
+      <button type="submit" class="btn-send" id="bookSubmitBtn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
         Send Booking Request
       </button>
@@ -776,22 +1041,211 @@ if(navIsland){window.addEventListener('scroll',()=>{
   floatingLogo.classList.toggle('scrolled',s);
 });}
 
-// ── BOOKING MODAL ──
+/* ── AUTH STATE ── */
+let _authUser=null;
+let _authSession=null;
+let _guestMode=false;
+
+async function checkAuthSession(){
+  try{
+    if(typeof Auth==='undefined'||!Auth.getSession)return;
+    const session=await Auth.getSession();
+    if(session){
+      _authSession=session;
+      const user=await Auth.getUser();
+      if(user)_authUser=user;
+    }
+  }catch(e){console.warn('[Book] Auth check failed:',e)}
+}
+
+async function prefillBookingForm(){
+  if(!_authUser)return;
+  try{
+    const profile=typeof DB!=='undefined'&&DB.getProfile?await DB.getProfile(_authUser.id):null;
+    const fields=['bookName','bookPhone','bookEmail','bookLocation','bookDogAge','bookDogGender','bookSickness','bookAllergy'];
+    const profileMap={'bookName':'full_name','bookPhone':'phone','bookEmail':'email','bookLocation':'location','bookDogAge':'dog_age','bookDogGender':'dog_gender','bookSickness':'sickness','bookAllergy':'allergy'};
+    const meta=_authUser.user_metadata||{};
+    fields.forEach(function(id){
+      const el=document.getElementById(id);
+      if(!el)return;
+      let val=null;
+      if(profile&&profile[profileMap[id]])val=profile[profileMap[id]];
+      else if(meta[profileMap[id]])val=meta[profileMap[id]];
+      if(val)el.value=val;
+    });
+    if(profile||meta){
+      const src=profile||meta;
+      if(src.vaccination){const el=document.getElementById('bookVaccination');if(el)el.value=src.vaccination}
+      if(src.deworming){const el=document.getElementById('bookDeworming');if(el)el.value=src.deworming}
+      if(src.temperament){const el=document.getElementById('bookTemperament');if(el)el.value=src.temperament}
+    }
+    const emailEl=document.getElementById('bookEmail');
+    if(emailEl&&_authUser.email&&!emailEl.value)emailEl.value=_authUser.email;
+    const petEl=document.getElementById('bookPet');
+    if(petEl&&!petEl.value){
+      const breed=profile?profile.dog_breed:meta.dog_breed;
+      if(breed)petEl.value=breed;
+    }
+  }catch(e){console.warn('[Book] Prefill failed:',e)}
+}
+
+/* ── AUTH MODAL ── */
+const authOverlay=document.getElementById('authOverlay');
+const authClose=document.getElementById('authClose');
+const authTabs=document.querySelectorAll('.auth-tab');
+const authLoginForm=document.getElementById('authLoginForm');
+const authSignupForm=document.getElementById('authSignupForm');
+const authSwitchToSignup=document.getElementById('authSwitchToSignup');
+const authSwitchToLogin=document.getElementById('authSwitchToLogin');
+const authGuestBtn=document.getElementById('authGuestBtn');
+const authLoginError=document.getElementById('authLoginError');
+const authSignupError=document.getElementById('authSignupError');
+const authSignupSuccess=document.getElementById('authSignupSuccess');
+
+function openAuth(){authOverlay.classList.add('open');document.body.style.overflow='hidden'}
+function closeAuth(){authOverlay.classList.remove('open');document.body.style.overflow=''}
+function showAuthError(el,msg){el.textContent=msg;el.style.display='block'}
+function hideAuthError(el){el.textContent='';el.style.display='none'}
+
+authTabs.forEach(function(tab){
+  tab.addEventListener('click',function(){
+    authTabs.forEach(function(t){t.classList.remove('active')});
+    this.classList.add('active');
+    const target=this.getAttribute('data-auth-tab');
+    document.querySelectorAll('.auth-form').forEach(function(f){f.classList.remove('active')});
+    if(target==='login')authLoginForm.classList.add('active');
+    else authSignupForm.classList.add('active');
+    hideAuthError(authLoginError);
+    hideAuthError(authSignupError);
+    if(authSignupSuccess)authSignupSuccess.style.display='none';
+  });
+});
+
+authSwitchToSignup.addEventListener('click',function(e){
+  e.preventDefault();
+  document.querySelector('[data-auth-tab="signup"]').click();
+});
+authSwitchToLogin.addEventListener('click',function(e){
+  e.preventDefault();
+  document.querySelector('[data-auth-tab="login"]').click();
+});
+
+authClose.addEventListener('click',closeAuth);
+authOverlay.addEventListener('click',function(e){if(e.target===authOverlay)closeAuth()});
+
+authGuestBtn.addEventListener('click',function(){
+  _guestMode=true;
+  closeAuth();
+  openBookModal();
+});
+
+authLoginForm.addEventListener('submit',async function(e){
+  e.preventDefault();
+  hideAuthError(authLoginError);
+  const email=document.getElementById('authLoginEmail').value.trim();
+  const password=document.getElementById('authLoginPassword').value;
+  if(!email||!password){showAuthError(authLoginError,'Please fill in all fields.');return}
+  const btn=this.querySelector('.btn-submit');
+  btn.textContent='Signing in...';btn.disabled=true;
+  const result=await Auth.signIn(email,password);
+  btn.textContent='Sign In';btn.disabled=false;
+  if(result.success){
+    _authUser=result.user;
+    _authSession=result.session;
+    closeAuth();
+    await prefillBookingForm();
+    openBookModal();
+  }else{
+    showAuthError(authLoginError,result.error||'Sign-in failed. Please try again.');
+  }
+});
+
+authSignupForm.addEventListener('submit',async function(e){
+  e.preventDefault();
+  hideAuthError(authSignupError);
+  if(authSignupSuccess)authSignupSuccess.style.display='none';
+  const name=document.getElementById('authSignupName').value.trim();
+  const email=document.getElementById('authSignupEmail').value.trim();
+  const phone=document.getElementById('authSignupPhone').value.trim();
+  const location=document.getElementById('authSignupLocation').value.trim();
+  const dogAge=document.getElementById('authSignupDogAge').value.trim();
+  const dogGender=document.getElementById('authSignupDogGender').value;
+  const dogBreed=document.getElementById('authSignupDogBreed').value.trim();
+  const sickness=document.getElementById('authSignupSickness').value.trim();
+  const vaccination=document.getElementById('authSignupVaccination').value;
+  const deworming=document.getElementById('authSignupDeworming').value;
+  const allergy=document.getElementById('authSignupAllergy').value.trim();
+  const temperament=document.getElementById('authSignupTemperament').value;
+  const password=document.getElementById('authSignupPassword').value;
+  if(!name||!email||!phone||!password){showAuthError(authSignupError,'Please fill in all required fields.');return}
+  if(password.length<6){showAuthError(authSignupError,'Password must be at least 6 characters.');return}
+  const profileData={full_name:name,phone:phone,location:location,dog_age:dogAge,dog_gender:dogGender,dog_breed:dogBreed,sickness:sickness,vaccination:vaccination,deworming:deworming,allergy:allergy,temperament:temperament};
+  const btn=this.querySelector('.btn-submit');
+  btn.textContent='Creating account...';btn.disabled=true;
+  const result=await Auth.signUp(email,password,profileData);
+  btn.textContent='Create Account & Continue';btn.disabled=false;
+  if(result.success){
+    if(result.session){
+      _authUser=result.user;
+      _authSession=result.session;
+      closeAuth();
+      await prefillBookingForm();
+      openBookModal();
+    }else{
+      if(authSignupSuccess){
+        authSignupSuccess.textContent='Account created! Please check your email to confirm before signing in.';
+        authSignupSuccess.style.display='block';
+      }
+      document.querySelector('[data-auth-tab="login"]').click();
+    }
+  }else{
+    showAuthError(authSignupError,result.error||'Sign-up failed. Please try again.');
+  }
+});
+
+/* ── BOOKING MODAL ── */
 const bookOverlay=document.getElementById('bookingOverlay');
 const bookClose=document.getElementById('bookingClose');
-function openBook(){if(bookOverlay){bookOverlay.classList.add('open');document.body.style.overflow='hidden'}}
-function closeBook(){if(bookOverlay){bookOverlay.classList.remove('open');document.body.style.overflow=''}}
+
+async function openBook(){
+  if(_guestMode||_authSession){
+    openBookModal();
+    return;
+  }
+  await checkAuthSession();
+  if(_authSession){
+    await prefillBookingForm();
+    openBookModal();
+  }else{
+    openAuth();
+  }
+}
+
+function openBookModal(){bookOverlay.classList.add('open');document.body.style.overflow='hidden'}
+function closeBook(){bookOverlay.classList.remove('open');document.body.style.overflow=''}
 if(bookClose)bookClose.addEventListener('click',closeBook);
 if(bookOverlay)bookOverlay.addEventListener('click',e=>{if(e.target===bookOverlay)closeBook()});
-document.getElementById('bookingForm')?.addEventListener('submit',e=>{
+document.getElementById('bookingForm')?.addEventListener('submit',async function(e){
   e.preventDefault();
-  const n=document.getElementById('bookName').value.trim();
-  const p=document.getElementById('bookPhone').value.trim();
-  const pet=document.getElementById('bookPet').value.trim();
-  const svc=document.getElementById('bookService').value;
-  const m=document.getElementById('bookMsg').value.trim();
-  const txt=`Hi A-1Pet Shop And Grooming! I'd like to book a grooming session.%0A%0AName: ${n}%0APhone: ${p}%0APet: ${pet}%0AService: ${svc}%0A%0A${m}`;
-  window.open(`https://wa.me/918891000000?text=${encodeURIComponent(txt)}`,'_blank');
+  function v(id){const el=document.getElementById(id);return el?el.value.trim():''}
+  function radio(name){const el=document.querySelector('input[name="'+name+'"]:checked');return el?el.value:''}
+  const n=v('bookName'),p=v('bookPhone'),e2=v('bookEmail'),loc=v('bookLocation'),pet=v('bookPet'),da=v('bookDogAge'),dg=v('bookDogGender');
+  const sk=v('bookSickness'),vac=v('bookVaccination'),dew=v('bookDeworming'),al=v('bookAllergy'),tem=v('bookTemperament');
+  const slot=radio('timeSlot'),contact=radio('contactMethod')||'WhatsApp';
+  const svc=v('bookService'),msg=v('bookMsg');
+  let vacUrl='';
+  const vacFile=document.getElementById('bookVaccinationCard');
+  if(vacFile&&vacFile.files&&vacFile.files[0]){
+    vacUrl=await DB.uploadVaccinationCard(vacFile.files[0])||'';
+  }
+  let txt='Hi A-1Pet Shop And Grooming! I would like to book a grooming session.%0A%0A';
+  txt+=`Name: ${n}%0APhone: ${p}%0AEmail: ${e2}%0ALocation: ${loc}%0APet: ${pet}%0AAge: ${da}%0AGender: ${dg}%0AService: ${svc}%0ATime Slot: ${slot}%0ASickness: ${sk}%0AVaccinated: ${vac}%0ADeworming: ${dew}%0AAllergies: ${al}%0ATemperament: ${tem}%0ANotes: ${msg}`;
+  if(vacUrl)txt+=`%0AVaccination Card: ${vacUrl}`;
+  if(contact==='WhatsApp'){
+    window.open(`https://wa.me/918891000000?text=${txt}`,'_blank');
+  }else{
+    window.open('tel:+918891000000');
+  }
   closeBook();
 });
 
@@ -799,8 +1253,10 @@ document.getElementById('bookingForm')?.addEventListener('submit',e=>{
 document.getElementById('heroBtn')?.addEventListener('click',e=>{e.preventDefault();openBook()});
 document.getElementById('ctaBtn')?.addEventListener('click',e=>{e.preventDefault();openBook()});
 document.getElementById('servicesBtn')?.addEventListener('click',e=>{e.preventDefault();alert("✨ Our services include: Full grooming, Bath & brush, Nail & ear care, Spa & shine, and Pet styling — all with premium products and expert care!")});
+
+// Check auth on page load
+checkAuthSession();
 </script>
-<script src="db.js"></script>
 <script src="content-loader.js"></script>
 
 <a href="index.html" class="float-home">

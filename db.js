@@ -182,6 +182,83 @@
     }
   }
 
+  /* ── Profile ── */
+
+  /**
+   * Fetch a user profile from the public.profiles table.
+   * @param {string} userId - The Supabase Auth user ID (UUID).
+   * @returns {Promise<Object|null>} The profile row, or null.
+   */
+  async function getProfile(userId) {
+    try {
+      var result = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      if (result.error) {
+        if (result.error.code === 'PGRST116') return null; // not found
+        console.error('[DB] getProfile error:', result.error);
+        return null;
+      }
+      return result.data || null;
+    } catch (e) {
+      console.error('[DB] getProfile exception:', e);
+      return null;
+    }
+  }
+
+  /**
+   * Upsert a profile row into public.profiles.
+   * Accepts all profile fields: full_name, phone, location, dog_age,
+   * dog_gender, dog_breed, sickness, vaccination, deworming,
+   * vaccination_card_url, allergy, temperament.
+   * @param {Object} profile - Must include id (UUID).
+   */
+  async function upsertProfile(profile) {
+    try {
+      var result = await supabase
+        .from('profiles')
+        .upsert(profile, { onConflict: 'id' });
+      if (result.error) {
+        console.error('[DB] upsertProfile error:', result.error);
+      }
+    } catch (e) {
+      console.error('[DB] upsertProfile exception:', e);
+    }
+  }
+
+  /**
+   * Upload a vaccination card file to Supabase Storage and return the URL.
+   * @param {File} file - The vaccination card file.
+   * @returns {Promise<string|null>} Public URL or null.
+   */
+  async function uploadVaccinationCard(file) {
+    try {
+      if (!file) return null;
+      var ALLOWED = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+      if (ALLOWED.indexOf(file.type) === -1) {
+        console.warn('[DB] Invalid vaccination card file type:', file.type);
+        return null;
+      }
+      var ext = (file.name.match(/\.[^.]+$/) || ['.jpg'])[0];
+      var fileName = 'vac_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + ext;
+      var uploadResult = await supabase.storage.from('a1-images').upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+      if (uploadResult.error) {
+        console.error('[DB] Vaccination card upload error:', uploadResult.error);
+        return null;
+      }
+      var urlResult = supabase.storage.from('a1-images').getPublicUrl(fileName);
+      return urlResult.data ? urlResult.data.publicUrl : null;
+    } catch (e) {
+      console.error('[DB] uploadVaccinationCard exception:', e);
+      return null;
+    }
+  }
+
   /* ── Expose globally ── */
   window.DB = {
     supabase: supabase,  // exposed so upload.js can reuse the same client
@@ -191,7 +268,10 @@
     saveAllProducts: saveAllProducts,
     addProduct:      addProduct,
     updateProduct:   updateProduct,
-    deleteProduct:   deleteProduct
+    deleteProduct:   deleteProduct,
+    getProfile:      getProfile,
+    upsertProfile:   upsertProfile,
+    uploadVaccinationCard: uploadVaccinationCard
   };
 
   /**

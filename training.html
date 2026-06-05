@@ -31,7 +31,7 @@ ul{list-style:none}
 .reveal-delay-2{transition-delay:.2s}
 
 /* ── HERO ── */
-.page-hero{background:linear-gradient(135deg,rgba(26,20,18,.85),rgba(26,20,18,.6)),url('https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;text-align:center;color:#fff}
+.page-hero{position:relative;background:linear-gradient(135deg,rgba(26,20,18,.85),rgba(26,20,18,.6)),url('https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;text-align:center;color:#fff}
 .page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:900;letter-spacing:-.02em}
 .page-hero p{font-size:1rem;color:rgba(255,255,255,.7);max-width:560px;margin:14px auto 0;line-height:1.6}
 
@@ -50,6 +50,10 @@ ul{list-style:none}
 .nav-island .nav-links{display:flex;align-items:center;gap:4px;margin:0;padding:0}
 .nav-island .nav-links a{font-size:.78rem;font-weight:500;color:var(--muted);padding:6px 14px;border-radius:40px;transition:all .3s ease;white-space:nowrap;text-decoration:none}
 .nav-island .nav-links a:hover{background:rgba(255,255,255,0.4);color:var(--charcoal)}
+.nav-social{display:flex;align-items:center;gap:4px;margin-left:auto;margin-right:4px}
+.nav-social a{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;transition:all .3s ease;color:var(--muted);text-decoration:none}
+.nav-social a:hover{background:rgba(255,255,255,0.4);color:var(--charcoal)}
+.nav-social svg{width:16px;height:16px}
 .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:8px;margin-left:4px;min-width:36px;min-height:36px;align-items:center;justify-content:center}
 .hamburger span{width:20px;height:2px;background:var(--charcoal);border-radius:2px;transition:all .3s ease;transform-origin:center}
 .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
@@ -62,7 +66,7 @@ ul{list-style:none}
 .mobile-nav .btn-whatsapp{margin-top:12px;padding:12px 28px;border-radius:60px;display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);font-weight:600;font-size:.9rem;text-decoration:none}
 .whatsapp-fab{position:fixed;bottom:24px;right:24px;z-index:1001;width:56px;height:56px;border-radius:50%;background:var(--whatsapp);color:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.35);transition:all .3s ease;text-decoration:none}
 .whatsapp-fab:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(37,211,102,.4)}
-@media(max-width:1024px){.nav-island .nav-links{display:none}.hamburger{display:flex}.floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}.floating-logo img{width:28px;height:28px}.nav-island{padding:4px 10px;top:10px}.whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}}
+@media(max-width:1024px){.nav-island .nav-links{display:none}.nav-island .nav-social{display:none}.hamburger{display:flex}.floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}.floating-logo img{width:28px;height:28px}.nav-island{padding:4px 10px;top:10px}.whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}}
 
 /* ── CONTENT ── */
 .content-section{padding:80px 0}
@@ -176,11 +180,19 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
 .booking-modal .btn-send{width:100%;padding:14px;border-radius:60px;border:none;background:var(--whatsapp);color:var(--white);font-family:'Inter',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:background .3s,transform .2s;display:flex;align-items:center;justify-content:center;gap:10px}
 .booking-modal .btn-send:hover{background:#1DA851}
 .booking-modal .btn-send:active{transform:scale(.97)}
+.dog-training-card{transition:transform .3s ease,box-shadow .3s ease}
+.dog-training-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.15)}
+.hero-social{position:absolute;top:24px;right:24px;z-index:5;display:flex;gap:10px}
+.hero-social a{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);transition:all .3s ease;color:#fff;text-decoration:none}
+.hero-social a:hover{background:rgba(255,255,255,0.25);transform:translateY(-2px)}
+.hero-social svg{width:18px;height:18px}
+@media(max-width:1024px){.hero-social{top:16px;right:16px;gap:8px}.hero-social a{width:32px;height:32px}.hero-social svg{width:16px;height:16px}}
+@media(max-width:640px){.hero-social{top:12px;right:12px;gap:6px}.hero-social a{width:28px;height:28px}.hero-social svg{width:14px;height:14px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body data-page="train">
-<div id="pageLoader" class="page-loader"><div class="loader-spinner"></div></div>
+<div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><div class="loader-logo" style="margin-bottom:16px"><img src="images/a1logo.jpeg" alt="A-1 Enterprises" style="width:64px;height:64px;border-radius:50%;object-fit:cover;margin:0 auto;display:block"></div><div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:800;color:var(--charcoal);margin-bottom:20px">A-1 Enterprises</div><div class="loader-spinner"></div></div></div>
 <a href="index.html" class="floating-logo" id="floatingLogo"><img src="images/a1logo.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
 <nav class="nav-island" id="navIsland">
   <ul class="nav-links">
@@ -192,6 +204,11 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
     <li><a href="boarding.html">Boarding</a></li>
     <li><a href="store.html">Store</a></li>
   </ul>
+  <div class="nav-social">
+    <a href="https://youtu.be/Lgpqqi8ZEQI" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    <a href="https://instagram.com/boxerfosterhome?igshid=YmMyMTA2M2Y=" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+    <a href="https://www.facebook.com/SANGPRETI/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+  </div>
   <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-nav" id="mobileNav">
@@ -203,57 +220,111 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
   <a href="boarding.html">Boarding</a>
   <a href="store.html">Store</a>
   <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="btn-whatsapp">WhatsApp Us</a>
+  <div class="mobile-social" style="display:flex;gap:18px;margin-top:16px">
+    <a href="https://youtu.be/Lgpqqi8ZEQI" target="_blank" rel="noopener" aria-label="YouTube"><svg width="22" height="22" viewBox="0 0 24 24" fill="var(--charcoal)"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    <a href="https://instagram.com/boxerfosterhome?igshid=YmMyMTA2M2Y=" target="_blank" rel="noopener" aria-label="Instagram"><svg width="22" height="22" viewBox="0 0 24 24" fill="var(--charcoal)"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+    <a href="https://www.facebook.com/SANGPRETI/" target="_blank" rel="noopener" aria-label="Facebook"><svg width="22" height="22" viewBox="0 0 24 24" fill="var(--charcoal)"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+  </div>
 </div>
 <a href="https://wa.me/918891000000" target="_blank" rel="noopener" class="whatsapp-fab" id="whatsappFab" aria-label="Chat on WhatsApp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
 
 <section class="page-hero">
   <h1>Professional Dog Training</h1>
   <p>Professional, ethical, and result-oriented training programs tailored to each dog's unique temperament and needs.</p>
+  <div class="hero-social">
+    <a href="https://youtu.be/Lgpqqi8ZEQI" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    <a href="https://instagram.com/boxerfosterhome?igshid=YmMyMTA2M2Y=" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+    <a href="https://www.facebook.com/SANGPRETI/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+  </div>
 </section>
 
 <section class="content-section">
   <div class="container">
     <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto">
-      <span class="section-label">Our Programs</span>
+      <span class="section-label">Dog Training</span>
       <h2 class="section-title">Comprehensive Training<br>for Every Dog</h2>
       <p class="section-sub" style="margin-inline:auto">From basic obedience to advanced working dog development, every program is designed to build a stronger bond between you and your dog while achieving lasting results.</p>
     </div>
-    <div class="programs">
+    <div class="programs" style="justify-content:center">
+      <div class="program-card reveal reveal-delay-1 dog-training-card" style="cursor:pointer;max-width:500px;width:100%" onclick="openBook()">
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80" alt="Dog Training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="icon">🐕</div>
+        <h3>All Training Programs</h3>
+        <p style="margin-bottom:16px">Every program is tailored to your dog's unique temperament and needs. Click to enquire and we'll help you choose the right path.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px">
+          <span style="background:var(--gold-light);color:var(--charcoal);padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:600">Basic Obedience</span>
+          <span style="background:var(--gold-light);color:var(--charcoal);padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:600">Intermediate</span>
+          <span style="background:var(--gold-light);color:var(--charcoal);padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:600">Advanced</span>
+          <span style="background:var(--gold-light);color:var(--charcoal);padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:600">Protection Training</span>
+          <span style="background:var(--gold-light);color:var(--charcoal);padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:600">Detection Training</span>
+          <span style="background:var(--gold-light);color:var(--charcoal);padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:600">Rehabilitation</span>
+        </div>
+        <div style="display:flex;gap:12px;justify-content:center">
+          <button class="btn-primary" style="font-size:.85rem;padding:10px 28px" onclick="event.stopPropagation();openBook()">Enquire Now</button>
+        </div>
+      </div>
+    </div>
+      <div class="programs">
+        <div class="program-card reveal reveal-delay-1">
+          <div class="card-img"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80" alt="Basic Obedience" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+          <div class="icon">🎯</div>
+          <h3>Basic Obedience</h3>
+          <p>Foundation training covering sit, stay, heel, recall, loose-leash walking and basic manners. Essential groundwork every dog needs for a well-behaved life with positive reinforcement methods.</p>
+        </div>
+        <div class="program-card reveal reveal-delay-2">
+          <div class="card-img"><img src="https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80" alt="Intermediate Obedience" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+          <div class="icon">📈</div>
+          <h3>Intermediate Obedience</h3>
+          <p>Building on basics with advanced cues, off-leash control, distance commands, and improved focus in distracting environments. Perfect for dogs ready to take the next step.</p>
+        </div>
+        <div class="program-card reveal reveal-delay-1">
+          <div class="card-img"><img src="https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=800&q=80" alt="Advance Obedience" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+          <div class="icon">🏆</div>
+          <h3>Advance Obedience</h3>
+          <p>Precision training with complex routines, hand signals, advanced directional control, and reliable off-lead performance. For competition, working roles, or exceptional everyday behavior.</p>
+        </div>
+        <div class="program-card reveal reveal-delay-2">
+          <div class="card-img"><img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80" alt="Protection Training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+          <div class="icon">🛡️</div>
+          <h3>Protection Training</h3>
+          <p>Specialized personal protection and property security training. Dogs learn controlled guarding, threat assessment, and defensive maneuvers under professional supervision.</p>
+        </div>
+        <div class="program-card reveal reveal-delay-1">
+          <div class="card-img"><img src="https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=800&q=80" alt="Detection Training" loading="lazy" onerror="this.parentElement.style.display='none'></div>
+          <div class="icon">🔍</div>
+          <h3>Detection Training</h3>
+          <p>Scent detection and alert training for narcotics, explosives, or search-and-rescue applications. Rigorous conditioning for operational working dogs in security and law enforcement.</p>
+        </div>
+        <div class="program-card reveal reveal-delay-2">
+          <div class="card-img"><img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80" alt="Rehabilitation" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+          <div class="icon">💚</div>
+          <h3>Rehabilitation</h3>
+          <p>Specialized behavior modification for dogs with fear, anxiety, aggression, or trauma. Our patient, structured approach helps dogs overcome challenges and build confidence.</p>
+        </div>
+      </div>
+  </div>
+</section>
+
+<!-- ═══ STAGES & PROCESS ═══ -->
+<section class="content-section" style="background:var(--cream-dark)">
+  <div class="container">
+    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto">
+      <span class="section-label">Stages &amp; Process of Training</span>
+      <h2 class="section-title">Every Dog's Journey<br>is Unique</h2>
+      <p class="section-sub" style="margin-inline:auto">Beyond our core programs, we also offer foundational early learning and owner-integrated training approaches that complement every stage of your dog's development.</p>
+    </div>
+    <div class="programs" style="margin-top:40px">
       <div class="program-card reveal reveal-delay-1">
-        <div class="card-img"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80" alt="Obedience training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
-        <div class="icon">🎯</div>
-        <h3>Obedience &amp; Behavioral Training</h3>
-        <p>Foundation training covering sit, stay, heel, recall, and loose-leash walking. We address behavioral issues like jumping, barking, pulling, and separation anxiety using positive reinforcement methods.</p>
-      </div>
-      <div class="program-card reveal reveal-delay-2">
-        <div class="card-img"><img src="https://images.unsplash.com/photo-1440778303588-435521a205bc?auto=format&fit=crop&w=800&q=80" alt="Eco Cottages" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
-        <div class="icon">🌿</div>
-        <h3>A-1 Eco Cottages</h3>
-        <p>A pet-friendly eco retreat in Shillong with comfortable cottages, nature trails, and bonfire evenings. The perfect getaway for you and your furry companion amidst nature.</p>
-      </div>
-      <div class="program-card reveal reveal-delay-1">
-        <div class="card-img"><img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80" alt="Protection training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
-        <div class="icon">🛡️</div>
-        <h3>Protection &amp; Detection Training</h3>
-        <p>Advanced training for personal protection, property security, and scent detection. Designed for working dogs and owners seeking specialized capabilities with professional oversight.</p>
-      </div>
-      <div class="program-card reveal reveal-delay-2">
-        <div class="card-img"><img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80" alt="Puppy socialization" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80" alt="Puppy Socialisation" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="icon">🐾</div>
-        <h3>Puppy Socialization</h3>
-        <p>Early socialization and basic manners for puppies. Critical foundation training during the developmental window to ensure confident, well-adjusted adult dogs.</p>
-      </div>
-      <div class="program-card reveal reveal-delay-1">
-        <div class="card-img"><img src="https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=800&q=80" alt="Working dog training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
-        <div class="icon">🎖️</div>
-        <h3>Working Dog Development</h3>
-        <p>Future-ready programs for security, detection, and public service sectors. We are developing collaborations with law enforcement agencies to train dogs for real-world operational roles.</p>
+        <h3>Puppy Socialisation</h3>
+        <p>Early socialisation and basic manners for puppies aged 8–16 weeks. Critical foundation training during the developmental window to ensure confident, well-adjusted adult dogs. Introduces puppies to new environments, sounds, people, and other dogs in a controlled, positive setting.</p>
       </div>
       <div class="program-card reveal reveal-delay-2">
-        <div class="card-img"><img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80" alt="Owner training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=800&q=80" alt="Owner-Centric Training" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="icon">👨‍👩‍👧‍👦</div>
         <h3>Owner-Centric Training</h3>
-        <p>We train the owner alongside the dog. Our approach ensures you understand the techniques and continue reinforcing good behavior long after the formal training sessions end.</p>
+        <p>We train the owner alongside the dog. Our approach ensures you understand the techniques, read your dog's body language, and continue reinforcing good behavior long after formal sessions end. Empowers you to become your dog's best trainer and lifelong partner.</p>
       </div>
     </div>
   </div>
@@ -353,7 +424,6 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
       <span>© 2026 A-1 Enterprises. Passion Turned Profession.</span>
       <div class="links">
         <a href="index.html">Home</a>
-        <a href="eco-cottages.html">Eco Cottages</a>
         <a href="grooming.html">Grooming</a>
         <a href="boarding.html">Boarding</a>
         <a href="store.html">Store</a>
@@ -362,6 +432,123 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
     </div>
   </div>
 </footer>
+
+<script src="auth.js"></script>
+<script src="db.js"></script>
+
+<!-- AUTH MODAL -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-modal">
+    <button class="close-btn" id="authClose">&times;</button>
+    <h2>Sign in to Book</h2>
+    <p class="sub">Create an account or sign in to book a session.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-auth-tab="login">Sign In</button>
+      <button class="auth-tab" data-auth-tab="signup">Sign Up</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form class="auth-form active" id="authLoginForm">
+      <div class="form-group">
+        <label for="authLoginEmail">Email</label>
+        <input type="email" id="authLoginEmail" required autocomplete="email" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label for="authLoginPassword">Password</label>
+        <input type="password" id="authLoginPassword" required autocomplete="current-password" placeholder="Enter your password">
+      </div>
+      <button type="submit" class="btn-submit">Sign In</button>
+      <div class="auth-error" id="authLoginError"></div>
+      <div class="auth-switch">Don't have an account? <a id="authSwitchToSignup">Sign up</a></div>
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form class="auth-form" id="authSignupForm">
+      <div class="form-group">
+        <label for="authSignupName">Full Name</label>
+        <input type="text" id="authSignupName" required autocomplete="name" placeholder="Your full name">
+      </div>
+      <div class="form-group">
+        <label for="authSignupEmail">Email</label>
+        <input type="email" id="authSignupEmail" required autocomplete="email" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label for="authSignupPhone">Phone Number</label>
+        <input type="tel" id="authSignupPhone" required autocomplete="tel" placeholder="+91 XXXXXXXXXX">
+      </div>
+      <div class="form-group">
+        <label for="authSignupLocation">Location</label>
+        <input type="text" id="authSignupLocation" placeholder="Your area / locality in Shillong">
+      </div>
+      <div class="form-group">
+        <label for="authSignupDogAge">Dog's Age</label>
+        <input type="text" id="authSignupDogAge" placeholder="e.g. 2 years, 6 months">
+      </div>
+      <div class="form-group">
+        <label for="authSignupDogGender">Dog's Gender</label>
+        <select id="authSignupDogGender">
+          <option value="">Select...</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="authSignupDogBreed">Dog's Breed</label>
+        <input type="text" id="authSignupDogBreed" placeholder="e.g. Labrador, German Shepherd">
+      </div>
+      <div class="form-group">
+        <label for="authSignupSickness">Any Sickness / Medical Conditions</label>
+        <input type="text" id="authSignupSickness" placeholder="None, or describe">
+      </div>
+      <div class="form-group" style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:120px">
+          <label>Vaccinated?</label>
+          <select id="authSignupVaccination">
+            <option value="">Select...</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:120px">
+          <label>Deworming (within 3 months)?</label>
+          <select id="authSignupDeworming">
+            <option value="">Select...</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="authSignupAllergy">Any Allergies</label>
+        <input type="text" id="authSignupAllergy" placeholder="None, or list">
+      </div>
+      <div class="form-group">
+        <label for="authSignupTemperament">Temperament of the Dog</label>
+        <select id="authSignupTemperament">
+          <option value="">Select...</option>
+          <option value="Friendly">Friendly</option>
+          <option value="Shy">Shy</option>
+          <option value="Energetic">Energetic</option>
+          <option value="Aggressive">Aggressive</option>
+          <option value="Anxious">Anxious</option>
+          <option value="Calm">Calm</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="authSignupPassword">Password</label>
+        <input type="password" id="authSignupPassword" required autocomplete="new-password" placeholder="Create a password (min 6 chars)">
+      </div>
+      <button type="submit" class="btn-submit">Create Account &amp; Continue</button>
+      <div class="auth-error" id="authSignupError"></div>
+      <div class="auth-success" id="authSignupSuccess"></div>
+      <div class="auth-switch">Already have an account? <a id="authSwitchToLogin">Sign in</a></div>
+    </form>
+
+    <div class="auth-divider">or</div>
+    <button class="btn-guest" id="authGuestBtn">Continue as Guest</button>
+  </div>
+</div>
 
 <!-- BOOKING MODAL -->
 <div class="booking-overlay" id="bookingOverlay">
@@ -379,27 +566,85 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
         <input type="tel" id="bookPhone" required autocomplete="tel">
       </div>
       <div class="form-group">
-        <label for="bookEmail">Email (optional)</label>
+        <label for="bookEmail">Email</label>
         <input type="email" id="bookEmail" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="bookLocation">Location</label>
+        <input type="text" id="bookLocation" placeholder="Your area / locality in Shillong">
       </div>
       <div class="form-group">
         <label for="bookDog">Dog's Name &amp; Breed</label>
         <input type="text" id="bookDog" required>
       </div>
       <div class="form-group">
+        <label for="bookDogAge">Dog's Age</label>
+        <input type="text" id="bookDogAge" placeholder="e.g. 2 years, 6 months">
+      </div>
+      <div class="form-group">
+        <label for="bookDogGender">Dog's Gender</label>
+        <select id="bookDogGender">
+          <option value="">Select...</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div class="form-group">
         <label for="bookProgram">Program Interested In</label>
         <select id="bookProgram">
-          <option value="Obedience & Behavioral Training">Obedience &amp; Behavioral Training</option>
-          <option value="A-1 Eco Cottages">A-1 Eco Cottages</option>
-          <option value="Protection & Detection Training">Protection &amp; Detection Training</option>
-          <option value="Puppy Socialization">Puppy Socialization</option>
-          <option value="Working Dog Development">Working Dog Development</option>
-          <option value="Owner-Centric Training">Owner-Centric Training</option>
+          <option value="Basic Obedience">Basic Obedience</option>
+          <option value="Intermediate Obedience">Intermediate Obedience</option>
+          <option value="Advanced Obedience">Advanced Obedience</option>
+          <option value="Protection Training">Protection Training</option>
+          <option value="Detection Training">Detection Training</option>
+          <option value="Rehabilitation">Rehabilitation</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="bookSickness">Any Sickness / Medical Conditions</label>
+        <input type="text" id="bookSickness" placeholder="None, or describe any conditions">
+      </div>
+      <div class="form-group" style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:120px">
+          <label>Vaccinated?</label>
+          <select id="bookVaccination">
+            <option value="">Select...</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:120px">
+          <label>Deworming (within 3 months)?</label>
+          <select id="bookDeworming">
+            <option value="">Select...</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bookVaccinationCard">Attach Vaccination Card (optional)</label>
+        <input type="file" id="bookVaccinationCard" accept="image/jpeg,image/png,image/webp,application/pdf">
+      </div>
+      <div class="form-group">
+        <label for="bookAllergy">Any Allergies</label>
+        <input type="text" id="bookAllergy" placeholder="None, or list any allergies">
+      </div>
+      <div class="form-group">
+        <label for="bookTemperament">Temperament of the Dog</label>
+        <select id="bookTemperament">
+          <option value="">Select...</option>
+          <option value="Friendly">Friendly</option>
+          <option value="Shy">Shy</option>
+          <option value="Energetic">Energetic</option>
+          <option value="Aggressive">Aggressive</option>
+          <option value="Anxious">Anxious</option>
+          <option value="Calm">Calm</option>
         </select>
       </div>
       <div class="form-group">
         <label for="bookMsg">Additional Notes</label>
-        <textarea id="bookMsg" placeholder="Tell us about your dog's training needs..."></textarea>
+        <textarea id="bookMsg" placeholder="Any other information we should know..."></textarea>
       </div>
       <button type="submit" class="btn-send">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
@@ -433,28 +678,224 @@ const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isInt
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 const loader=document.getElementById('pageLoader');
 window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'),400)});
+
+/* ── AUTH STATE ── */
+let _authUser=null;          // current supabase user object
+let _authSession=null;       // current supabase session
+let _guestMode=false;        // true when user clicked "continue as guest"
+
+async function checkAuthSession(){
+  try{
+    if(typeof Auth==='undefined'||!Auth.getSession)return;
+    const session=await Auth.getSession();
+    if(session){
+      _authSession=session;
+      const user=await Auth.getUser();
+      if(user)_authUser=user;
+    }
+  }catch(e){console.warn('[Book] Auth check failed:',e)}
+}
+
+async function prefillBookingForm(){
+  if(!_authUser)return;
+  try{
+    const profile=typeof DB!=='undefined'&&DB.getProfile?await DB.getProfile(_authUser.id):null;
+    const fields=['bookName','bookPhone','bookEmail','bookLocation','bookDogAge','bookDogGender','bookSickness','bookAllergy'];
+    const profileMap={'bookName':'full_name','bookPhone':'phone','bookEmail':'email','bookLocation':'location','bookDogAge':'dog_age','bookDogGender':'dog_gender','bookSickness':'sickness','bookAllergy':'allergy'};
+    const meta=_authUser.user_metadata||{};
+    fields.forEach(function(id){
+      const el=document.getElementById(id);
+      if(!el)return;
+      let val=null;
+      if(profile&&profile[profileMap[id]])val=profile[profileMap[id]];
+      else if(meta[profileMap[id]])val=meta[profileMap[id]];
+      if(val)el.value=val;
+    });
+    // Vaccination + Deworming
+    if(profile||meta){
+      const src=profile||meta;
+      if(src.vaccination){const el=document.getElementById('bookVaccination');if(el)el.value=src.vaccination}
+      if(src.deworming){const el=document.getElementById('bookDeworming');if(el)el.value=src.deworming}
+      if(src.temperament){const el=document.getElementById('bookTemperament');if(el)el.value=src.temperament}
+    }
+    // Email from auth user
+    const emailEl=document.getElementById('bookEmail');
+    if(emailEl&&_authUser.email&&!emailEl.value)emailEl.value=_authUser.email;
+    // Dog breed fallback
+    const dogEl=document.getElementById('bookDog');
+    if(dogEl&&!dogEl.value){
+      const breed=profile?profile.dog_breed:meta.dog_breed;
+      if(breed)dogEl.value=breed;
+    }
+  }catch(e){console.warn('[Book] Prefill failed:',e)}
+}
+
+/* ── AUTH MODAL ── */
+const authOverlay=document.getElementById('authOverlay');
+const authClose=document.getElementById('authClose');
+const authTabs=document.querySelectorAll('.auth-tab');
+const authLoginForm=document.getElementById('authLoginForm');
+const authSignupForm=document.getElementById('authSignupForm');
+const authSwitchToSignup=document.getElementById('authSwitchToSignup');
+const authSwitchToLogin=document.getElementById('authSwitchToLogin');
+const authGuestBtn=document.getElementById('authGuestBtn');
+const authLoginError=document.getElementById('authLoginError');
+const authSignupError=document.getElementById('authSignupError');
+const authSignupSuccess=document.getElementById('authSignupSuccess');
+
+function openAuth(){authOverlay.classList.add('open');document.body.style.overflow='hidden'}
+function closeAuth(){authOverlay.classList.remove('open');document.body.style.overflow=''}
+function showAuthError(el,msg){el.textContent=msg;el.style.display='block'}
+function hideAuthError(el){el.textContent='';el.style.display='none'}
+
+authTabs.forEach(function(tab){
+  tab.addEventListener('click',function(){
+    authTabs.forEach(function(t){t.classList.remove('active')});
+    this.classList.add('active');
+    const target=this.getAttribute('data-auth-tab');
+    document.querySelectorAll('.auth-form').forEach(function(f){f.classList.remove('active')});
+    if(target==='login')authLoginForm.classList.add('active');
+    else authSignupForm.classList.add('active');
+    hideAuthError(authLoginError);
+    hideAuthError(authSignupError);
+    if(authSignupSuccess)authSignupSuccess.style.display='none';
+  });
+});
+
+authSwitchToSignup.addEventListener('click',function(e){
+  e.preventDefault();
+  document.querySelector('[data-auth-tab="signup"]').click();
+});
+authSwitchToLogin.addEventListener('click',function(e){
+  e.preventDefault();
+  document.querySelector('[data-auth-tab="login"]').click();
+});
+
+authClose.addEventListener('click',closeAuth);
+authOverlay.addEventListener('click',function(e){if(e.target===authOverlay)closeAuth()});
+
+// Guest continue
+authGuestBtn.addEventListener('click',function(){
+  _guestMode=true;
+  closeAuth();
+  openBookModal();
+});
+
+// LOGIN
+authLoginForm.addEventListener('submit',async function(e){
+  e.preventDefault();
+  hideAuthError(authLoginError);
+  const email=document.getElementById('authLoginEmail').value.trim();
+  const password=document.getElementById('authLoginPassword').value;
+  if(!email||!password){showAuthError(authLoginError,'Please fill in all fields.');return}
+  const btn=this.querySelector('.btn-submit');
+  btn.textContent='Signing in...';btn.disabled=true;
+  const result=await Auth.signIn(email,password);
+  btn.textContent='Sign In';btn.disabled=false;
+  if(result.success){
+    _authUser=result.user;
+    _authSession=result.session;
+    closeAuth();
+    await prefillBookingForm();
+    openBookModal();
+  }else{
+    showAuthError(authLoginError,result.error||'Sign-in failed. Please try again.');
+  }
+});
+
+// SIGNUP
+authSignupForm.addEventListener('submit',async function(e){
+  e.preventDefault();
+  hideAuthError(authSignupError);
+  if(authSignupSuccess)authSignupSuccess.style.display='none';
+  const name=document.getElementById('authSignupName').value.trim();
+  const email=document.getElementById('authSignupEmail').value.trim();
+  const phone=document.getElementById('authSignupPhone').value.trim();
+  const location=document.getElementById('authSignupLocation').value.trim();
+  const dogAge=document.getElementById('authSignupDogAge').value.trim();
+  const dogGender=document.getElementById('authSignupDogGender').value;
+  const dogBreed=document.getElementById('authSignupDogBreed').value.trim();
+  const sickness=document.getElementById('authSignupSickness').value.trim();
+  const vaccination=document.getElementById('authSignupVaccination').value;
+  const deworming=document.getElementById('authSignupDeworming').value;
+  const allergy=document.getElementById('authSignupAllergy').value.trim();
+  const temperament=document.getElementById('authSignupTemperament').value;
+  const password=document.getElementById('authSignupPassword').value;
+  if(!name||!email||!phone||!password){showAuthError(authSignupError,'Please fill in all required fields.');return}
+  if(password.length<6){showAuthError(authSignupError,'Password must be at least 6 characters.');return}
+  const profileData={full_name:name,phone:phone,location:location,dog_age:dogAge,dog_gender:dogGender,dog_breed:dogBreed,sickness:sickness,vaccination:vaccination,deworming:deworming,allergy:allergy,temperament:temperament};
+  const btn=this.querySelector('.btn-submit');
+  btn.textContent='Creating account...';btn.disabled=true;
+  const result=await Auth.signUp(email,password,profileData);
+  btn.textContent='Create Account & Continue';btn.disabled=false;
+  if(result.success){
+    if(result.session){
+      // User was auto-confirmed (or email confirmation disabled)
+      _authUser=result.user;
+      _authSession=result.session;
+      closeAuth();
+      await prefillBookingForm();
+      openBookModal();
+    }else{
+      // Email confirmation required
+      if(authSignupSuccess){
+        authSignupSuccess.textContent='Account created! Please check your email to confirm before signing in.';
+        authSignupSuccess.style.display='block';
+      }
+      // Switch to login tab
+      document.querySelector('[data-auth-tab="login"]').click();
+    }
+  }else{
+    showAuthError(authSignupError,result.error||'Sign-up failed. Please try again.');
+  }
+});
+
+/* ── BOOKING MODAL ── */
 const bookBtn=document.getElementById('bookSessionBtn');
 const bookOverlay=document.getElementById('bookingOverlay');
 const bookClose=document.getElementById('bookingClose');
-function openBook(){bookOverlay.classList.add('open');document.body.style.overflow='hidden'}
+
+async function openBook(){
+  if(_guestMode||_authSession){
+    openBookModal();
+    return;
+  }
+  // Re-check session on each open
+  await checkAuthSession();
+  if(_authSession){
+    await prefillBookingForm();
+    openBookModal();
+  }else{
+    openAuth();
+  }
+}
+
+function openBookModal(){bookOverlay.classList.add('open');document.body.style.overflow='hidden'}
 function closeBook(){bookOverlay.classList.remove('open');document.body.style.overflow=''}
 bookBtn?.addEventListener('click',openBook);
 bookClose?.addEventListener('click',closeBook);
 bookOverlay?.addEventListener('click',e=>{if(e.target===bookOverlay)closeBook()});
-document.getElementById('bookingForm')?.addEventListener('submit',e=>{
+document.getElementById('bookingForm')?.addEventListener('submit',async function(e){
   e.preventDefault();
-  const n=document.getElementById('bookName').value.trim();
-  const p=document.getElementById('bookPhone').value.trim();
-  const e2=document.getElementById('bookEmail').value.trim();
-  const d=document.getElementById('bookDog').value.trim();
-  const pr=document.getElementById('bookProgram').value;
-  const m=document.getElementById('bookMsg').value.trim();
-  const txt=`Hi A-1 Enterprises! I'd like to book a training session.%0A%0AName: ${n}%0APhone: ${p}%0AEmail: ${e2}%0ADog: ${d}%0AProgram: ${pr}%0A%0A${m}`;
-  window.open(`https://wa.me/918891000000?text=${encodeURIComponent(txt)}`,'_blank');
+  function v(id){const el=document.getElementById(id);return el?el.value.trim():''}
+  const n=v('bookName'),p=v('bookPhone'),e2=v('bookEmail'),loc=v('bookLocation'),d=v('bookDog'),da=v('bookDogAge'),dg=v('bookDogGender'),pr=v('bookProgram');
+  const sk=v('bookSickness'),vac=v('bookVaccination'),dew=v('bookDeworming'),al=v('bookAllergy'),tem=v('bookTemperament'),msg=v('bookMsg');
+  // Upload vaccination card if present
+  let vacUrl='';
+  const vacFile=document.getElementById('bookVaccinationCard');
+  if(vacFile&&vacFile.files&&vacFile.files[0]){
+    vacUrl=await DB.uploadVaccinationCard(vacFile.files[0])||'';
+  }
+  let txt='Hi A-1 Enterprises! I would like to book a training session.%0A%0A';
+  txt+=`Name: ${n}%0APhone: ${p}%0AEmail: ${e2}%0ALocation: ${loc}%0ADog: ${d}%0AAge: ${da}%0AGender: ${dg}%0AProgram: ${pr}%0ASickness: ${sk}%0AVaccinated: ${vac}%0ADeworming: ${dew}%0AAllergies: ${al}%0ATemperament: ${tem}%0ANotes: ${msg}`;
+  if(vacUrl)txt+=`%0AVaccination Card: ${vacUrl}`;
+  window.open(`https://wa.me/918891000000?text=${txt}`,'_blank');
   closeBook();
 });
+
+// Check auth on page load
+checkAuthSession();
 </script>
-<script src="db.js"></script>
 <script src="content-loader.js"></script>
 </body>
 </html>
