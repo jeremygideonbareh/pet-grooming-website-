@@ -25,7 +25,7 @@ ul{list-style:none}
   --cream:#FBF7F2;--cream-dark:#F5EDE4;--charcoal:#1A1412;
   --charcoal-soft:#2C2420;--gold:#C9A05C;--gold-light:#E8C88A;
   --gold-dark:#A77F3E;--muted:#7A6B5E;--border:#E3D9CE;--white:#FFFFFF;
-  --whatsapp:#25D366;--whatsapp-dark:#1DA851;
+  --green:#27ae60;--whatsapp:#25D366;--whatsapp-dark:#1DA851;
 }
 
 /* ── FLOATING LOGO ── */
@@ -568,10 +568,16 @@ async function render(){
       <div class="prod-body">
         <h3>${p.name}</h3>
         <div class="desc">${p.desc}</div>
-        <button class="prod-inquire" data-id="${p.id}">Inquire Now</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <button class="prod-inquire" data-id="${p.id}" data-action="whatsapp" style="flex:1;min-width:120px">💬 Enquire via WhatsApp</button>
+          <button class="prod-inquire" data-id="${p.id}" data-action="call" style="flex:1;min-width:120px;background:var(--green)">📞 Call to Check Availability</button>
+        </div>
       </div>
     `;
-    card.querySelector('.prod-inquire').addEventListener('click',()=>openInquiry(p));
+    card.querySelector('[data-action="whatsapp"]')?.addEventListener('click',()=>openInquiry(p));
+    card.querySelector('[data-action="call"]')?.addEventListener('click',()=>{
+      window.open('tel:+918891000000');
+    });
     grid.appendChild(card);
   });
 }

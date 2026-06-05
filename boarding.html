@@ -369,6 +369,7 @@ window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'
     <form id="bookingForm">
       <div class="form-group"><label for="bookName">Your Name</label><input type="text" id="bookName" required autocomplete="name"></div>
       <div class="form-group"><label for="bookPhone">Phone Number</label><input type="tel" id="bookPhone" required autocomplete="tel"></div>
+      <div class="form-group"><label for="bookWhatsApp">WhatsApp Number</label><input type="tel" id="bookWhatsApp" autocomplete="tel" placeholder="Same or different from phone"></div>
       <div class="form-group"><label for="bookEmail">Email</label><input type="email" id="bookEmail" autocomplete="email"></div>
       <div class="form-group"><label for="bookLocation">Location</label><input type="text" id="bookLocation" placeholder="Your area / locality in Shillong"></div>
       <div class="form-group"><label for="bookPet">Pet's Name &amp; Breed</label><input type="text" id="bookPet" required></div>
@@ -382,6 +383,7 @@ window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'
       <div class="form-group"><label for="bookVaccinationCard">Attach Vaccination Card (optional)</label><input type="file" id="bookVaccinationCard" accept="image/jpeg,image/png,image/webp,application/pdf"></div>
       <div class="form-group"><label for="bookAllergy">Any Allergies</label><input type="text" id="bookAllergy" placeholder="None, or list"></div>
       <div class="form-group"><label for="bookTemperament">Temperament of the Dog</label><select id="bookTemperament"><option value="">Select...</option><option value="Friendly">Friendly</option><option value="Shy">Shy</option><option value="Energetic">Energetic</option><option value="Aggressive">Aggressive</option><option value="Anxious">Anxious</option><option value="Calm">Calm</option></select></div>
+      <div class="form-group"><label for="bookBehavioral">Behavioural Issues / Training Goals</label><textarea id="bookBehavioral" placeholder="Describe any behavioural issues or special care instructions..."></textarea></div>
       <div class="form-group"><label for="bookStartDate">Boarding Start Date <span style="color:var(--red)">*</span></label><input type="date" id="bookStartDate" required></div>
       <div class="form-group"><label for="bookEndDate">Boarding End Date <span style="color:var(--red)">*</span></label><input type="date" id="bookEndDate" required></div>
       <div class="form-group"><label for="bookMsg">Additional Notes</label><textarea id="bookMsg" placeholder="Any special requests, dietary needs, or medical instructions..."></textarea></div>
@@ -398,7 +400,7 @@ bBtn?.addEventListener('click',openBookModal);bC?.addEventListener('click',close
 document.getElementById('bookingForm')?.addEventListener('submit',async function(e){
   e.preventDefault();
   function v(id){const el=document.getElementById(id);return el?el.value.trim():''}
-  const n=v('bookName'),p=v('bookPhone'),e2=v('bookEmail'),loc=v('bookLocation'),d=v('bookPet'),da=v('bookDogAge'),dg=v('bookDogGender'),sk=v('bookSickness'),vac=v('bookVaccination'),dew=v('bookDeworming'),al=v('bookAllergy'),tem=v('bookTemperament'),sd=v('bookStartDate'),ed=v('bookEndDate'),msg=v('bookMsg');
+  const n=v('bookName'),p=v('bookPhone'),w=v('bookWhatsApp'),e2=v('bookEmail'),loc=v('bookLocation'),d=v('bookPet'),da=v('bookDogAge'),dg=v('bookDogGender'),sk=v('bookSickness'),vac=v('bookVaccination'),dew=v('bookDeworming'),al=v('bookAllergy'),tem=v('bookTemperament'),bh=v('bookBehavioral'),sd=v('bookStartDate'),ed=v('bookEndDate'),msg=v('bookMsg');
   const btn=this.querySelector('.btn-send');
   const origText=btn?btn.textContent:'';
   if(btn){btn.textContent='Submitting...';btn.disabled=true}
@@ -408,11 +410,11 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     if(vacFile&&vacFile.files&&vacFile.files[0]){
       vacUrl=await DB.uploadVaccinationCard(vacFile.files[0])||'';
     }
-    const ownerId=await DB.findOrCreateOwner(p,n,e2,loc);
-    const dogId=await DB.findOrUpdateDog(ownerId,d,{dog_age:da,dog_gender:dg,sickness:sk,vaccination:vac,deworming:dew,allergy:al,temperament:tem,vaccination_card_url:vacUrl});
+    const ownerId=await DB.findOrCreateOwner(p,n,e2,loc,w);
+    const dogId=await DB.findOrUpdateDog(ownerId,d,{dog_age:da,dog_gender:dg,sickness:sk,vaccination:vac,deworming:dew,allergy:al,temperament:tem,behavioral_issues:bh,vaccination_card_url:vacUrl});
     await DB.insertBooking(ownerId,dogId,{category:'Boarding',service:'',timeframe:`${sd} to ${ed}`,notes:msg});
     let txt='Hi A-1 Enterprises! I would like to book a boarding stay.%0A%0A';
-    txt+=`Name: ${n}%0APhone: ${p}%0AEmail: ${e2}%0ALocation: ${loc}%0ADog: ${d}%0AAge: ${da}%0AGender: ${dg}%0ASickness: ${sk}%0AVaccinated: ${vac}%0ADeworming: ${dew}%0AAllergies: ${al}%0ATemperament: ${tem}%0AFrom: ${sd}%0ATo: ${ed}%0ANotes: ${msg}`;
+    txt+=`Name: ${n}%0APhone: ${p}%0AWhatsApp: ${w}%0AEmail: ${e2}%0ALocation: ${loc}%0ADog: ${d}%0AAge: ${da}%0AGender: ${dg}%0ASickness: ${sk}%0AVaccinated: ${vac}%0ADeworming: ${dew}%0AAllergies: ${al}%0ATemperament: ${tem}%0ABehavioural Issues: ${bh}%0AFrom: ${sd}%0ATo: ${ed}%0ANotes: ${msg}`;
     if(vacUrl)txt+=`%0AVaccination Card: ${vacUrl}`;
     window.open(`https://wa.me/918891000000?text=${txt}`,'_blank');
     closeBook();

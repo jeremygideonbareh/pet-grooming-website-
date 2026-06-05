@@ -267,9 +267,10 @@
    * @param {string} name
    * @param {string} email
    * @param {string} location
+   * @param {string} [whatsapp]
    * @returns {Promise<string>} owner_id (UUID)
    */
-  async function findOrCreateOwner(phone, name, email, location) {
+  async function findOrCreateOwner(phone, name, email, location, whatsapp) {
     try {
       var result = await supabase
         .from('owners')
@@ -283,7 +284,8 @@
         phone: phone,
         name: name || '',
         email: email || '',
-        location: location || ''
+        location: location || '',
+        whatsapp: whatsapp || ''
       };
       var ins = await supabase
         .from('owners')
@@ -302,12 +304,12 @@
    * Find a dog by owner_id + dog_name, update empty health fields, or insert new.
    * @param {string} ownerId
    * @param {string} dogName
-   * @param {Object} healthData - Fields: dog_age, dog_gender, dog_breed, sickness, vaccination, deworming, allergy, temperament, vaccination_card_url
+   * @param {Object} healthData - Fields: dog_age, dog_gender, dog_breed, sickness, vaccination, deworming, allergy, temperament, vaccination_card_url, behavioral_issues
    * @returns {Promise<string>} dog_id (UUID)
    */
   async function findOrUpdateDog(ownerId, dogName, healthData) {
     try {
-      var UPDATABLE = ['dog_age','dog_gender','dog_breed','sickness','vaccination','deworming','allergy','temperament','vaccination_card_url'];
+      var UPDATABLE = ['dog_age','dog_gender','dog_breed','sickness','vaccination','deworming','allergy','temperament','vaccination_card_url','behavioral_issues'];
       var result = await supabase
         .from('dogs')
         .select('*')
