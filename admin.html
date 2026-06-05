@@ -181,6 +181,26 @@ input,textarea,select,button{font-family:inherit}
   .login-card input{padding:12px 14px;font-size:.85rem}
 }
 
+/* ── BOOKINGS TABLE ── */
+.bookings-table .status-badge{
+  display:inline-block;padding:4px 12px;border-radius:60px;
+  font-size:.7rem;font-weight:700;text-transform:capitalize;
+}
+.bookings-table .status-badge.pending{background:rgba(201,160,92,.15);color:var(--gold-dark)}
+.bookings-table .status-badge.confirmed{background:rgba(39,174,96,.12);color:var(--green)}
+.bookings-table .status-badge.completed{background:rgba(39,174,96,.12);color:var(--green)}
+.bookings-table .status-badge.cancelled{background:rgba(231,76,60,.12);color:var(--red)}
+.status-select{padding:4px 10px;border-radius:10px;border:1.5px solid var(--border);font-size:.75rem;background:var(--cream);cursor:pointer;outline:none;font-family:inherit;font-weight:600;transition:border-color .3s}
+.status-select:focus{border-color:var(--gold)}
+@media(max-width:768px){
+  .bookings-table th:nth-child(2),.bookings-table td:nth-child(2){display:none}
+  .bookings-table th:nth-child(4),.bookings-table td:nth-child(4){display:none}
+  .bookings-table th:nth-child(7),.bookings-table td:nth-child(7){display:none}
+}
+@media(max-width:480px){
+  .bookings-table th:nth-child(5),.bookings-table td:nth-child(5){display:none}
+}
+
 /* ── MODAL ── */
 .modal-overlay{
   position:fixed;inset:0;z-index:2000;
@@ -380,6 +400,7 @@ input,textarea,select,button{font-family:inherit}
       <button class="tab-btn" data-tab="grooming">✂️ Grooming</button>
       <button class="tab-btn" data-tab="boarding">🏠 Boarding</button>
       <button class="tab-btn" data-tab="eco">🌿 Eco Cottages</button>
+      <button class="tab-btn" data-tab="bookings">📋 CRM / Bookings</button>
     </div>
 
     <div id="tabProducts" class="tab-content active">
@@ -427,6 +448,13 @@ input,textarea,select,button{font-family:inherit}
 
     <div id="tabEco" class="tab-content">
       <div class="content-editor" id="ecoEditor"></div>
+    </div>
+
+    <div id="tabBookings" class="tab-content">
+      <div class="dash-top">
+        <h3>📋 Booking Requests &amp; CRM Profiles</h3>
+      </div>
+      <div id="bookingsContainer"></div>
     </div>
   </div>
 </div>
@@ -1842,6 +1870,7 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
     if(btn.dataset.tab==='grooming')await renderGroomingEditor();
     if(btn.dataset.tab==='boarding')await renderBoardingEditor();
     if(btn.dataset.tab==='eco')await renderEcoEditor();
+    if(btn.dataset.tab==='bookings')await renderBookingsDashboard();
   });
 });
 
@@ -1900,6 +1929,63 @@ document.addEventListener('change', async function(e){
     target.value = '';
   }
 });
+
+// ═══════════════════════════════════════════════
+// CRM / BOOKINGS DASHBOARD
+// ═══════════════════════════════════════════════
+
+async function renderBookingsDashboard() {
+  const bookings = await DB.getBookings();
+  const container = document.getElementById('bookingsContainer');
+  if (!bookings || bookings.length === 0) {
+    container.innerHTML = '<div class="table-wrap" style="padding:60px;text-align:center;color:var(--muted)">No bookings yet. Bookings will appear here once customers submit forms on the site.</div>';
+    return;
+  }
+  const total = bookings.length;
+  const pending = bookings.filter(function(b){return (b.status||'pending')==='pending'}).length;
+  const confirmed = bookings.filter(function(b){return b.status==='confirmed'}).length;
+  const cats = {};
+  bookings.forEach(function(b){if(b.category) cats[b.category]=true});
+  var html = '<div class="dash-stats">' +
+    '<div class="stat-card"><div class="num">'+total+'</div><div class="label">Total Bookings</div></div>' +
+    '<div class="stat-card"><div class="num">'+pending+'</div><div class="label">Pending</div></div>' +
+    '<div class="stat-card"><div class="num">'+confirmed+'</div><div class="label">Confirmed</div></div>' +
+    '<div class="stat-card"><div class="num">'+Object.keys(cats).length+'</div><div class="label">Categories</div></div>' +
+    '</div>';
+  var STATUSES = ['pending','confirmed','completed','cancelled'];
+  html += '<div class="table-wrap"><table class="prod-table bookings-table"><thead><tr>' +
+    '<th>Owner</th><th>Phone</th><th>Dog</th><th>Breed</th><th>Vax</th><th>Category</th><th>Timeframe</th><th>Status</th>' +
+    '</tr></thead><tbody>';
+  bookings.forEach(function(b){
+    var o = b.owner || {};
+    var d = b.dog || {};
+    var st = b.status || 'pending';
+    var vac = d.vaccination;
+    var vacIcon = vac==='Yes' ? '✅' : vac==='No' ? '❌' : '—';
+    html += '<tr>' +
+      '<td style="font-weight:600">'+escHtml(o.name||'—')+'</td>' +
+      '<td>'+escHtml(o.phone||'—')+'</td>' +
+      '<td>'+escHtml(d.dog_name||'—')+'</td>' +
+      '<td>'+escHtml(d.dog_breed||'—')+'</td>' +
+      '<td style="text-align:center;font-size:1rem">'+vacIcon+'</td>' +
+      '<td><span class="prod-cat-badge">'+escHtml(b.category||'—')+'</span>' +
+        (b.service ? ' <span style="font-size:.7rem;color:var(--muted)">('+escHtml(b.service)+')</span>' : '')+'</td>' +
+      '<td style="font-size:.8rem">'+escHtml(b.timeframe||'—')+'</td>' +
+      '<td><select class="status-select" data-id="'+b.booking_id+'">' +
+        STATUSES.map(function(s){return '<option value="'+s+'"'+(s===st?' selected':'')+'>'+s.charAt(0).toUpperCase()+s.slice(1)+'</option>'}).join('') +
+      '</select></td></tr>';
+  });
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
+  container.querySelectorAll('.status-select').forEach(function(sel){
+    sel.addEventListener('change',async function(){
+      try {
+        await DB.updateBookingStatus(this.dataset.id, this.value);
+        await renderBookingsDashboard();
+      } catch(e) { alert('Failed to update status.'); }
+    });
+  });
+}
 
 // ═══════════════════════════════════════════════
 // INIT

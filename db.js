@@ -381,6 +381,78 @@
     }
   }
 
+  /**
+   * Fetch all bookings with owner (name, phone) and dog (name, breed, vaccination) joined manually.
+   * @returns {Promise<Array>} Array of booking objects with .owner and .dog attached.
+   */
+  async function getBookings() {
+    try {
+      var result = await supabase
+        .from('bookings')
+        .select('*')
+        .order('booking_id', { ascending: false });
+      if (result.error) throw result.error;
+      var bookings = result.data || [];
+
+      // Collect unique owner_ids and dog_ids
+      var ownerIds = [];
+      var dogIds = [];
+      bookings.forEach(function(b) {
+        if (b.owner_id && ownerIds.indexOf(b.owner_id) === -1) ownerIds.push(b.owner_id);
+        if (b.dog_id && dogIds.indexOf(b.dog_id) === -1) dogIds.push(b.dog_id);
+      });
+
+      // Fetch related owners
+      var ownersMap = {};
+      if (ownerIds.length > 0) {
+        var ownerResult = await supabase.from('owners').select('*').in('owner_id', ownerIds);
+        if (ownerResult.data) {
+          ownerResult.data.forEach(function(o) { ownersMap[o.owner_id] = o; });
+        }
+      }
+
+      // Fetch related dogs
+      var dogsMap = {};
+      if (dogIds.length > 0) {
+        var dogResult = await supabase.from('dogs').select('*').in('dog_id', dogIds);
+        if (dogResult.data) {
+          dogResult.data.forEach(function(d) { dogsMap[d.dog_id] = d; });
+        }
+      }
+
+      // Attach to bookings
+      bookings.forEach(function(b) {
+        b.owner = ownersMap[b.owner_id] || null;
+        b.dog = dogsMap[b.dog_id] || null;
+      });
+
+      return bookings;
+    } catch (e) {
+      console.error('[DB] getBookings exception:', e);
+      return [];
+    }
+  }
+
+  /**
+   * Update a booking's status.
+   * @param {number|string} bookingId
+   * @param {string} status - e.g. 'pending', 'confirmed', 'completed', 'cancelled'
+   * @returns {Promise<Object>} { success: true }
+   */
+  async function updateBookingStatus(bookingId, status) {
+    try {
+      var result = await supabase
+        .from('bookings')
+        .update({ status: status })
+        .eq('booking_id', bookingId);
+      if (result.error) throw result.error;
+      return { success: true };
+    } catch (e) {
+      console.error('[DB] updateBookingStatus error:', e);
+      throw e;
+    }
+  }
+
   /* ── Expose globally ── */
   window.DB = {
     supabase: supabase,
@@ -396,7 +468,9 @@
     uploadVaccinationCard: uploadVaccinationCard,
     findOrCreateOwner:     findOrCreateOwner,
     findOrUpdateDog:       findOrUpdateDog,
-    insertBooking:         insertBooking
+    insertBooking:         insertBooking,
+    getBookings:           getBookings,
+    updateBookingStatus:   updateBookingStatus
   };
 
   /**
