@@ -540,6 +540,7 @@ footer{
   .future-card .future-body{padding:28px 20px}
   .usp{padding:60px 0}
   .social-resp{padding:60px 0}
+  #smSubs{grid-template-columns:1fr!important}
 }
 @media(max-width:500px){
   .serv-grid{grid-template-columns:1fr;max-width:360px;margin-inline:auto}
@@ -659,45 +660,15 @@ footer{
       <p class="section-sub" style="margin-inline:auto">Professional, ethical, and result-oriented canine services under one trusted brand.</p>
     </div>
     <div class="serv-grid" id="servGrid">
-      <article class="serv-card reveal reveal-delay-1" data-svc="dog-training">
-        <img src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&w=600&q=80" alt="Dog Training" loading="lazy">
+      <article class="serv-card reveal reveal-delay-1" data-svc="dog-training" style="grid-column:1/-1;max-width:700px;margin-inline:auto">
+        <img src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&w=1200&q=80" alt="Dog Training" loading="lazy">
         <div class="serv-overlay"></div>
-        <div class="serv-body"><span class="serv-icon">Dog</span><h3>Dog Training</h3><div class="serv-subs"><span>Basic</span><span>Intermediate</span><span>Advanced</span><span>Protection/Detection</span></div></div>
-      </article>
-      <article class="serv-card reveal reveal-delay-2" data-svc="rehab">
-        <img src="https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?auto=format&fit=crop&w=600&q=80" alt="Rehabilitation" loading="lazy">
-        <div class="serv-overlay"></div>
-        <div class="serv-body"><span class="serv-icon">Rehab</span><h3>Rehabilitation</h3></div>
-      </article>
-      <article class="serv-card reveal reveal-delay-3" data-svc="protection">
-        <img src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?auto=format&fit=crop&w=600&q=80" alt="Protection Training" loading="lazy">
-        <div class="serv-overlay"></div>
-        <div class="serv-body"><span class="serv-icon">Shield</span><h3>Protection Training</h3></div>
-      </article>
-      <article class="serv-card reveal reveal-delay-1" data-svc="detection">
-        <img src="https://images.unsplash.com/photo-1491604612772-6853927639ef?auto=format&fit=crop&w=600&q=80" alt="Detection Training" loading="lazy">
-        <div class="serv-overlay"></div>
-        <div class="serv-body"><span class="serv-icon">Search</span><h3>Detection Training</h3></div>
-      </article>
-      <article class="serv-card reveal reveal-delay-2" data-svc="grooming">
-        <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=600&q=80" alt="Grooming" loading="lazy">
-        <div class="serv-overlay"></div>
-        <div class="serv-body"><span class="serv-icon">Groom</span><h3>Grooming Services</h3></div>
-      </article>
-      <article class="serv-card reveal reveal-delay-3" data-svc="boarding">
-        <img src="https://images.unsplash.com/photo-1560807707-8cc77767d783?auto=format&fit=crop&w=600&q=80" alt="Boarding" loading="lazy">
-        <div class="serv-overlay"></div>
-        <div class="serv-body"><span class="serv-icon">Board</span><h3>Boarding &amp; Kennels</h3></div>
-      </article>
-      <article class="serv-card reveal reveal-delay-1" data-svc="store">
-        <img src="https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?auto=format&fit=crop&w=600&q=80" alt="Pet Store" loading="lazy">
-        <div class="serv-overlay"></div>
-        <div class="serv-body"><span class="serv-icon">Shop</span><h3>Pet Store</h3></div>
-      </article>
-      <article class="serv-card reveal reveal-delay-2" data-svc="working-dog">
-        <img src="https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=600&q=80" alt="Working Dog" loading="lazy">
-        <div class="serv-overlay"></div>
-        <div class="serv-body"><span class="serv-icon">Award</span><h3>Working Dog Development</h3></div>
+        <div class="serv-body">
+          <span class="serv-icon">A-1</span>
+          <h3>Dog Training</h3>
+          <p style="font-size:.82rem;color:rgba(255,255,255,.8);margin-top:6px;line-height:1.5">Professional training, rehabilitation, grooming, boarding, and pet care services — all under one trusted brand.</p>
+          <div class="serv-subs"><span>Basic Obedience</span><span>Intermediate</span><span>Advanced</span><span>Rehabilitation</span><span>Protection Training</span><span>Detection Training</span><span>Grooming</span><span>Boarding &amp; Kennels</span><span>Pet Store</span><span>Working Dog Development</span></div>
+        </div>
       </article>
     </div>
   </div>
@@ -1025,12 +996,13 @@ footer{
 
 <!-- ═══ SERVICE MODAL ═══ -->
 <div class="serv-modal-overlay" id="servModal">
-  <div class="serv-modal" style="position:relative">
+  <div class="serv-modal" style="position:relative;max-width:700px">
     <button class="sm-close" id="smClose">✕</button>
     <div class="sm-icon" id="smIcon"></div>
     <h2 id="smTitle"></h2>
-    <p id="smDesc"></p>
-    <a href id="smLink" class="sm-btn">Visit Page →</a>
+    <p id="smDesc" style="margin-bottom:20px"></p>
+    <div id="smSubs" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px"></div>
+    <a href id="smLink" class="sm-btn">Explore All Services →</a>
   </div>
 </div>
 
@@ -1108,14 +1080,24 @@ lightbox.addEventListener('click',e=>{
 
 // ── Service modal ──
 const SERV_DATA={
-  'dog-training':{icon:'Dog',title:'Dog Training',desc:'Obedience training, behavioral correction, and personalized programs tailored to each dog\'s unique temperament using positive reinforcement methods.',link:'training.html'},
-  'rehab':{icon:'Rehab',title:'Rehabilitation',desc:'Specialized rehabilitation for dogs recovering from trauma, behavioral issues, or physical challenges. Patient, structured programs designed to restore confidence and well-being.',link:'training.html'},
-  'protection':{icon:'Shield',title:'Protection Training',desc:'Advanced personal protection training for responsible owners. Professional-grade programs that build controlled, reliable protective behaviors with expert oversight.',link:'training.html'},
-  'detection':{icon:'Search',title:'Detection Training',desc:'Scent detection and tracking programs for security, search, and specialized working roles. Developing dogs with focused, reliable detection capabilities.',link:'training.html'},
-  'grooming':{icon:'Groom',title:'Grooming Services',desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments. Every pet receives individualized, stress-free care.',link:'grooming.html'},
-  'boarding':{icon:'Board',title:'Boarding & Kennels',desc:'Safe, comfortable boarding facilities with round-the-clock care. Your pet stays in a clean, loving environment with professional supervision.',link:'boarding.html'},
-  'store':{icon:'Shop',title:'Pet Store',desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products. We stock only the best brands for your furry friend.',link:'store.html'},
-  'working-dog':{icon:'Award',title:'Working Dog Development',desc:'Future-ready working dog programs for security, detection, and public service sectors. Collaborations with law enforcement agencies in development.',link:'training.html'},
+  'dog-training':{
+    icon:'A-1',
+    title:'Dog Training',
+    desc:'Professional, ethical, and result-oriented canine services under one trusted brand. From basic obedience to advanced working dog development, A-1 Enterprises offers a complete ecosystem of dog training and pet care services.',
+    link:'training.html',
+    subs:[
+      {name:'Basic Obedience',icon:'🎯',desc:'Foundation training covering sit, stay, heel, recall, and basic manners for a well-behaved companion.'},
+      {name:'Intermediate',icon:'📈',desc:'Building on basics with advanced commands, leash manners, and improved focus in distracting environments.'},
+      {name:'Advanced',icon:'🏆',desc:'Off-leash control, complex commands, and precision handling for reliable real-world performance.'},
+      {name:'Rehabilitation',icon:'🩺',desc:'Specialized rehabilitation for dogs recovering from trauma, behavioral issues, or physical challenges.'},
+      {name:'Protection Training',icon:'🛡️',desc:'Advanced personal protection training building controlled, reliable protective behaviors with expert oversight.'},
+      {name:'Detection Training',icon:'🔍',desc:'Scent detection and tracking programs for security, search, and specialized working roles.'},
+      {name:'Grooming',icon:'✂️',desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments.'},
+      {name:'Boarding & Kennels',icon:'🏠',desc:'Safe, comfortable boarding facilities with round-the-clock care and professional supervision.'},
+      {name:'Pet Store',icon:'🛒',desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products.'},
+      {name:'Working Dog Development',icon:'🎖️',desc:'Future-ready working dog programs for security, detection, and public service sectors.'},
+    ]
+  }
 };
 const servModal=document.getElementById('servModal');
 const smClose=document.getElementById('smClose');
@@ -1132,6 +1114,17 @@ document.getElementById('servGrid').addEventListener('click',function(e){
   smTitle.textContent=d.title;
   smDesc.textContent=d.desc;
   smLink.href=d.link;
+  var subsDiv=document.getElementById('smSubs');
+  if(d.subs){
+    subsDiv.innerHTML=d.subs.map(function(s){
+      return '<div style="background:var(--cream-dark);border-radius:14px;padding:14px;border:1px solid var(--border);display:flex;gap:10px;align-items:flex-start">'+
+        '<span style="font-size:1.3rem;flex-shrink:0">'+s.icon+'</span>'+
+        '<div><div style="font-weight:700;font-size:.82rem;margin-bottom:3px">'+s.name+'</div>'+
+        '<div style="font-size:.75rem;color:var(--muted);line-height:1.4">'+s.desc+'</div></div></div>';
+    }).join('');
+  }else{
+    subsDiv.innerHTML='';
+  }
   servModal.classList.add('open');
   document.body.style.overflow='hidden';
 });
