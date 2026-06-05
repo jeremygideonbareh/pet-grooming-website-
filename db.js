@@ -259,19 +259,144 @@
     }
   }
 
+  /* ── CRM: Owners, Dogs, Bookings ── */
+
+  /**
+   * Find an owner by phone number, or create a new one.
+   * @param {string} phone
+   * @param {string} name
+   * @param {string} email
+   * @param {string} location
+   * @returns {Promise<string>} owner_id (UUID)
+   */
+  async function findOrCreateOwner(phone, name, email, location) {
+    try {
+      var result = await supabase
+        .from('owners')
+        .select('owner_id')
+        .eq('phone', phone)
+        .maybeSingle();
+      if (result.error) throw result.error;
+      if (result.data) return result.data.owner_id;
+
+      var payload = {
+        phone: phone,
+        name: name || '',
+        email: email || '',
+        location: location || ''
+      };
+      var ins = await supabase
+        .from('owners')
+        .insert(payload)
+        .select('owner_id')
+        .single();
+      if (ins.error) throw ins.error;
+      return ins.data.owner_id;
+    } catch (e) {
+      console.error('[DB] findOrCreateOwner error:', e);
+      throw e;
+    }
+  }
+
+  /**
+   * Find a dog by owner_id + dog_name, update empty health fields, or insert new.
+   * @param {string} ownerId
+   * @param {string} dogName
+   * @param {Object} healthData - Fields: dog_age, dog_gender, dog_breed, sickness, vaccination, deworming, allergy, temperament, vaccination_card_url
+   * @returns {Promise<string>} dog_id (UUID)
+   */
+  async function findOrUpdateDog(ownerId, dogName, healthData) {
+    try {
+      var UPDATABLE = ['dog_age','dog_gender','dog_breed','sickness','vaccination','deworming','allergy','temperament','vaccination_card_url'];
+      var result = await supabase
+        .from('dogs')
+        .select('*')
+        .eq('owner_id', ownerId)
+        .eq('dog_name', dogName)
+        .maybeSingle();
+      if (result.error) throw result.error;
+
+      if (result.data) {
+        var updates = {};
+        for (var i = 0; i < UPDATABLE.length; i++) {
+          var field = UPDATABLE[i];
+          if (!result.data[field] && healthData[field]) {
+            updates[field] = healthData[field];
+          }
+        }
+        if (Object.keys(updates).length > 0) {
+          var upd = await supabase
+            .from('dogs')
+            .update(updates)
+            .eq('dog_id', result.data.dog_id);
+          if (upd.error) throw upd.error;
+        }
+        return result.data.dog_id;
+      }
+
+      var payload = { owner_id: ownerId, dog_name: dogName };
+      for (var j = 0; j < UPDATABLE.length; j++) {
+        var f = UPDATABLE[j];
+        if (healthData[f]) payload[f] = healthData[f];
+      }
+      var ins = await supabase
+        .from('dogs')
+        .insert(payload)
+        .select('dog_id')
+        .single();
+      if (ins.error) throw ins.error;
+      return ins.data.dog_id;
+    } catch (e) {
+      console.error('[DB] findOrUpdateDog error:', e);
+      throw e;
+    }
+  }
+
+  /**
+   * Insert a booking record.
+   * @param {string} ownerId
+   * @param {string} dogId
+   * @param {Object} bookingData - Fields: category, service, timeframe, notes
+   * @returns {Promise<Object>} { success: true }
+   */
+  async function insertBooking(ownerId, dogId, bookingData) {
+    try {
+      var payload = {
+        owner_id: ownerId,
+        dog_id: dogId,
+        category: bookingData.category || '',
+        service: bookingData.service || '',
+        timeframe: bookingData.timeframe || '',
+        notes: bookingData.notes || '',
+        status: 'pending'
+      };
+      var result = await supabase
+        .from('bookings')
+        .insert(payload);
+      if (result.error) throw result.error;
+      return { success: true };
+    } catch (e) {
+      console.error('[DB] insertBooking error:', e);
+      throw e;
+    }
+  }
+
   /* ── Expose globally ── */
   window.DB = {
-    supabase: supabase,  // exposed so upload.js can reuse the same client
-    getSiteContent:  getSiteContent,
-    saveSiteContent: saveSiteContent,
-    getProducts:     getProducts,
-    saveAllProducts: saveAllProducts,
-    addProduct:      addProduct,
-    updateProduct:   updateProduct,
-    deleteProduct:   deleteProduct,
-    getProfile:      getProfile,
-    upsertProfile:   upsertProfile,
-    uploadVaccinationCard: uploadVaccinationCard
+    supabase: supabase,
+    getSiteContent:        getSiteContent,
+    saveSiteContent:       saveSiteContent,
+    getProducts:           getProducts,
+    saveAllProducts:       saveAllProducts,
+    addProduct:            addProduct,
+    updateProduct:         updateProduct,
+    deleteProduct:         deleteProduct,
+    getProfile:            getProfile,
+    upsertProfile:         upsertProfile,
+    uploadVaccinationCard: uploadVaccinationCard,
+    findOrCreateOwner:     findOrCreateOwner,
+    findOrUpdateDog:       findOrUpdateDog,
+    insertBooking:         insertBooking
   };
 
   /**

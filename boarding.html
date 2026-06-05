@@ -360,49 +360,6 @@ window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'
 <script src="auth.js"></script>
 <script src="db.js"></script>
 
-<!-- AUTH MODAL -->
-<div class="auth-overlay" id="authOverlay">
-  <div class="auth-modal">
-    <button class="close-btn" id="authClose">&times;</button>
-    <h2>Sign in to Book</h2>
-    <p class="sub">Create an account or sign in to book a boarding stay.</p>
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-auth-tab="login">Sign In</button>
-      <button class="auth-tab" data-auth-tab="signup">Sign Up</button>
-    </div>
-    <form class="auth-form active" id="authLoginForm">
-      <div class="form-group"><label for="authLoginEmail">Email</label><input type="email" id="authLoginEmail" required autocomplete="email" placeholder="your@email.com"></div>
-      <div class="form-group"><label for="authLoginPassword">Password</label><input type="password" id="authLoginPassword" required autocomplete="current-password" placeholder="Enter your password"></div>
-      <button type="submit" class="btn-submit">Sign In</button>
-      <div class="auth-error" id="authLoginError"></div>
-      <div class="auth-switch">Don't have an account? <a id="authSwitchToSignup">Sign up</a></div>
-    </form>
-    <form class="auth-form" id="authSignupForm">
-      <div class="form-group"><label for="authSignupName">Full Name</label><input type="text" id="authSignupName" required autocomplete="name" placeholder="Your full name"></div>
-      <div class="form-group"><label for="authSignupEmail">Email</label><input type="email" id="authSignupEmail" required autocomplete="email" placeholder="your@email.com"></div>
-      <div class="form-group"><label for="authSignupPhone">Phone Number</label><input type="tel" id="authSignupPhone" required autocomplete="tel" placeholder="+91 XXXXXXXXXX"></div>
-      <div class="form-group"><label for="authSignupLocation">Location</label><input type="text" id="authSignupLocation" placeholder="Your area / locality in Shillong"></div>
-      <div class="form-group"><label for="authSignupDogAge">Dog's Age</label><input type="text" id="authSignupDogAge" placeholder="e.g. 2 years, 6 months"></div>
-      <div class="form-group"><label for="authSignupDogGender">Dog's Gender</label><select id="authSignupDogGender"><option value="">Select...</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
-      <div class="form-group"><label for="authSignupDogBreed">Dog's Breed</label><input type="text" id="authSignupDogBreed" placeholder="e.g. Labrador, German Shepherd"></div>
-      <div class="form-group"><label for="authSignupSickness">Any Sickness / Medical Conditions</label><input type="text" id="authSignupSickness" placeholder="None, or describe"></div>
-      <div class="form-group" style="display:flex;gap:12px;flex-wrap:wrap">
-        <div style="flex:1;min-width:120px"><label>Vaccinated?</label><select id="authSignupVaccination"><option value="">Select...</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-        <div style="flex:1;min-width:120px"><label>Deworming (within 3 months)?</label><select id="authSignupDeworming"><option value="">Select...</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-      </div>
-      <div class="form-group"><label for="authSignupAllergy">Any Allergies</label><input type="text" id="authSignupAllergy" placeholder="None, or list"></div>
-      <div class="form-group"><label for="authSignupTemperament">Temperament of the Dog</label><select id="authSignupTemperament"><option value="">Select...</option><option value="Friendly">Friendly</option><option value="Shy">Shy</option><option value="Energetic">Energetic</option><option value="Aggressive">Aggressive</option><option value="Anxious">Anxious</option><option value="Calm">Calm</option></select></div>
-      <div class="form-group"><label for="authSignupPassword">Password</label><input type="password" id="authSignupPassword" required autocomplete="new-password" placeholder="Create a password (min 6 chars)"></div>
-      <button type="submit" class="btn-submit">Create Account &amp; Continue</button>
-      <div class="auth-error" id="authSignupError"></div>
-      <div class="auth-success" id="authSignupSuccess"></div>
-      <div class="auth-switch">Already have an account? <a id="authSwitchToLogin">Sign in</a></div>
-    </form>
-    <div class="auth-divider">or</div>
-    <button class="btn-guest" id="authGuestBtn">Continue as Guest</button>
-  </div>
-</div>
-
 <!-- BOOKING MODAL -->
 <div class="booking-overlay" id="bookingOverlay">
   <div class="booking-modal">
@@ -434,29 +391,38 @@ window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'
 </div>
 
 <script>
-/* ── AUTH STATE ── */
-let _authUser=null,_authSession=null,_guestMode=false;
-async function checkAuthSession(){try{if(typeof Auth==='undefined'||!Auth.getSession)return;const s=await Auth.getSession();if(s){_authSession=s;const u=await Auth.getUser();if(u)_authUser=u}}catch(e){console.warn('[Book] Auth check failed:',e)}}
-async function prefillBookingForm(){if(!_authUser)return;try{const p=typeof DB!=='undefined'&&DB.getProfile?await DB.getProfile(_authUser.id):null;const fields=['bookName','bookPhone','bookEmail','bookLocation','bookDogAge','bookDogGender','bookSickness','bookAllergy'];const pm={'bookName':'full_name','bookPhone':'phone','bookEmail':'email','bookLocation':'location','bookDogAge':'dog_age','bookDogGender':'dog_gender','bookSickness':'sickness','bookAllergy':'allergy'};const m=_authUser.user_metadata||{};fields.forEach(function(id){const el=document.getElementById(id);if(!el)return;let val=null;if(p&&p[pm[id]])val=p[pm[id]];else if(m[pm[id]])val=m[pm[id]];if(val)el.value=val});const src=p||m;if(src.vaccination){const el=document.getElementById('bookVaccination');if(el)el.value=src.vaccination}if(src.deworming){const el=document.getElementById('bookDeworming');if(el)el.value=src.deworming}if(src.temperament){const el=document.getElementById('bookTemperament');if(el)el.value=src.temperament}const ee=document.getElementById('bookEmail');if(ee&&_authUser.email&&!ee.value)ee.value=_authUser.email;const pe=document.getElementById('bookPet');if(pe&&!pe.value){const b=p?p.dog_breed:m.dog_breed;if(b)pe.value=b}}catch(e){console.warn('[Book] Prefill failed:',e)}}
-const aO=document.getElementById('authOverlay'),aC=document.getElementById('authClose'),aT=document.querySelectorAll('.auth-tab'),aLF=document.getElementById('authLoginForm'),aSF=document.getElementById('authSignupForm'),a2s=document.getElementById('authSwitchToSignup'),a2l=document.getElementById('authSwitchToLogin'),aGB=document.getElementById('authGuestBtn'),aLE=document.getElementById('authLoginError'),aSE=document.getElementById('authSignupError'),aSS=document.getElementById('authSignupSuccess');
-function openAuth(){aO.classList.add('open');document.body.style.overflow='hidden'}
-function closeAuth(){aO.classList.remove('open');document.body.style.overflow=''}
-function sAE(el,msg){el.textContent=msg;el.style.display='block'}
-function hAE(el){el.textContent='';el.style.display='none'}
-aT.forEach(function(t){t.addEventListener('click',function(){aT.forEach(function(t2){t2.classList.remove('active')});this.classList.add('active');const tgt=this.getAttribute('data-auth-tab');document.querySelectorAll('.auth-form').forEach(function(f){f.classList.remove('active')});if(tgt==='login')aLF.classList.add('active');else aSF.classList.add('active');hAE(aLE);hAE(aSE);if(aSS)aSS.style.display='none'})});
-a2s.addEventListener('click',function(e){e.preventDefault();document.querySelector('[data-auth-tab="signup"]').click()});
-a2l.addEventListener('click',function(e){e.preventDefault();document.querySelector('[data-auth-tab="login"]').click()});
-aC.addEventListener('click',closeAuth);aO.addEventListener('click',function(e){if(e.target===aO)closeAuth()});
-aGB.addEventListener('click',function(){_guestMode=true;closeAuth();openBookModal()});
-aLF.addEventListener('submit',async function(e){e.preventDefault();hAE(aLE);const email=document.getElementById('authLoginEmail').value.trim(),pw=document.getElementById('authLoginPassword').value;if(!email||!pw){sAE(aLE,'Please fill in all fields.');return}const btn=this.querySelector('.btn-submit');btn.textContent='Signing in...';btn.disabled=true;const r=await Auth.signIn(email,pw);btn.textContent='Sign In';btn.disabled=false;if(r.success){_authUser=r.user;_authSession=r.session;closeAuth();await prefillBookingForm();openBookModal()}else{sAE(aLE,r.error||'Sign-in failed.')}});
-aSF.addEventListener('submit',async function(e){e.preventDefault();hAE(aSE);if(aSS)aSS.style.display='none';const name=document.getElementById('authSignupName').value.trim(),email=document.getElementById('authSignupEmail').value.trim(),phone=document.getElementById('authSignupPhone').value.trim(),loc=document.getElementById('authSignupLocation').value.trim(),da=document.getElementById('authSignupDogAge').value.trim(),dg=document.getElementById('authSignupDogGender').value,db=document.getElementById('authSignupDogBreed').value.trim(),sk=document.getElementById('authSignupSickness').value.trim(),vac=document.getElementById('authSignupVaccination').value,dew=document.getElementById('authSignupDeworming').value,al=document.getElementById('authSignupAllergy').value.trim(),tem=document.getElementById('authSignupTemperament').value,pw=document.getElementById('authSignupPassword').value;if(!name||!email||!phone||!pw){sAE(aSE,'Please fill in all required fields.');return}if(pw.length<6){sAE(aSE,'Password must be at least 6 characters.');return}const pd={full_name:name,phone:phone,location:loc,dog_age:da,dog_gender:dg,dog_breed:db,sickness:sk,vaccination:vac,deworming:dew,allergy:al,temperament:tem};const btn=this.querySelector('.btn-submit');btn.textContent='Creating account...';btn.disabled=true;const r=await Auth.signUp(email,pw,pd);btn.textContent='Create Account & Continue';btn.disabled=false;if(r.success){if(r.session){_authUser=r.user;_authSession=r.session;closeAuth();await prefillBookingForm();openBookModal()}else{if(aSS){aSS.textContent='Account created! Please check your email to confirm before signing in.';aSS.style.display='block'}document.querySelector('[data-auth-tab="login"]').click()}}else{sAE(aSE,r.error||'Sign-up failed.')}});
 const bBtn=document.getElementById('bookStayBtn'),bO=document.getElementById('bookingOverlay'),bC=document.getElementById('bookingClose');
-async function openBook(){if(_guestMode||_authSession){openBookModal();return}await checkAuthSession();if(_authSession){await prefillBookingForm();openBookModal()}else openAuth()}
 function openBookModal(){bO.classList.add('open');document.body.style.overflow='hidden'}
 function closeBook(){bO.classList.remove('open');document.body.style.overflow=''}
-bBtn?.addEventListener('click',openBook);bC?.addEventListener('click',closeBook);bO?.addEventListener('click',function(e){if(e.target===bO)closeBook()});
-document.getElementById('bookingForm')?.addEventListener('submit',async function(e){e.preventDefault();function v(id){const el=document.getElementById(id);return el?el.value.trim():''}const n=v('bookName'),p=v('bookPhone'),e2=v('bookEmail'),loc=v('bookLocation'),pet=v('bookPet'),da=v('bookDogAge'),dg=v('bookDogGender'),sk=v('bookSickness'),vac=v('bookVaccination'),dew=v('bookDeworming'),al=v('bookAllergy'),tem=v('bookTemperament'),sd=v('bookStartDate'),ed=v('bookEndDate'),msg=v('bookMsg');let vu='';const vf=document.getElementById('bookVaccinationCard');if(vf&&vf.files&&vf.files[0]){vu=await DB.uploadVaccinationCard(vf.files[0])||''}let txt='Hi A-1 Enterprises! I would like to book a boarding stay.%0A%0A';txt+=`Name: ${n}%0APhone: ${p}%0AEmail: ${e2}%0ALocation: ${loc}%0APet: ${pet}%0AAge: ${da}%0AGender: ${dg}%0ASickness: ${sk}%0AVaccinated: ${vac}%0ADeworming: ${dew}%0AAllergies: ${al}%0ATemperament: ${tem}%0AFrom: ${sd}%0ATo: ${ed}%0ANotes: ${msg}`;if(vu)txt+=`%0AVaccination Card: ${vu}`;window.open(`https://wa.me/918891000000?text=${txt}`,'_blank');closeBook()});
-checkAuthSession();
+bBtn?.addEventListener('click',openBookModal);bC?.addEventListener('click',closeBook);bO?.addEventListener('click',function(e){if(e.target===bO)closeBook()});
+document.getElementById('bookingForm')?.addEventListener('submit',async function(e){
+  e.preventDefault();
+  function v(id){const el=document.getElementById(id);return el?el.value.trim():''}
+  const n=v('bookName'),p=v('bookPhone'),e2=v('bookEmail'),loc=v('bookLocation'),d=v('bookPet'),da=v('bookDogAge'),dg=v('bookDogGender'),sk=v('bookSickness'),vac=v('bookVaccination'),dew=v('bookDeworming'),al=v('bookAllergy'),tem=v('bookTemperament'),sd=v('bookStartDate'),ed=v('bookEndDate'),msg=v('bookMsg');
+  const btn=this.querySelector('.btn-send');
+  const origText=btn?btn.textContent:'';
+  if(btn){btn.textContent='Submitting...';btn.disabled=true}
+  try{
+    let vacUrl='';
+    const vacFile=document.getElementById('bookVaccinationCard');
+    if(vacFile&&vacFile.files&&vacFile.files[0]){
+      vacUrl=await DB.uploadVaccinationCard(vacFile.files[0])||'';
+    }
+    const ownerId=await DB.findOrCreateOwner(p,n,e2,loc);
+    const dogId=await DB.findOrUpdateDog(ownerId,d,{dog_age:da,dog_gender:dg,sickness:sk,vaccination:vac,deworming:dew,allergy:al,temperament:tem,vaccination_card_url:vacUrl});
+    await DB.insertBooking(ownerId,dogId,{category:'Boarding',service:'',timeframe:`${sd} to ${ed}`,notes:msg});
+    let txt='Hi A-1 Enterprises! I would like to book a boarding stay.%0A%0A';
+    txt+=`Name: ${n}%0APhone: ${p}%0AEmail: ${e2}%0ALocation: ${loc}%0ADog: ${d}%0AAge: ${da}%0AGender: ${dg}%0ASickness: ${sk}%0AVaccinated: ${vac}%0ADeworming: ${dew}%0AAllergies: ${al}%0ATemperament: ${tem}%0AFrom: ${sd}%0ATo: ${ed}%0ANotes: ${msg}`;
+    if(vacUrl)txt+=`%0AVaccination Card: ${vacUrl}`;
+    window.open(`https://wa.me/918891000000?text=${txt}`,'_blank');
+    closeBook();
+  }catch(err){
+    console.error('[Booking] CRM chain failed:',err);
+    alert('Something went wrong. Please try again.');
+  }finally{
+    if(btn){btn.textContent=origText;btn.disabled=false}
+  }
+});
 </script>
 <script src="content-loader.js"></script>
 </body>
