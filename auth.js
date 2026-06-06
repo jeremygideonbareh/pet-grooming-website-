@@ -52,7 +52,7 @@
       /* ── Insert owner record (no auth_user_id — matches actual table schema) ── */
       var ownerPayload = {
         phone: phone,
-        name: profile.full_name || '',
+        full_name: profile.full_name || '',
         whatsapp: profile.whatsapp || phone,
         location: profile.location || ''
       };

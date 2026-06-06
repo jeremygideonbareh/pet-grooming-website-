@@ -862,7 +862,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     await DB.insertBooking(owner.owner_id,dog?dog.dog_id:null,{category:'Grooming',service:svc,timeframe:date+' '+window,notes:''});
     let txt='Hi A-1Pet Shop And Grooming! I would like to book a grooming session.%0A%0A';
     txt+='━━ CUSTOMER DETAILS ━━%0A';
-    txt+=`Name: ${owner.name||''}%0APhone: ${owner.phone||''}%0AWhatsApp: ${owner.whatsapp||''}%0ALocation: ${owner.location||''}%0A%0A`;
+    txt+=`Name: ${owner.full_name||''}%0APhone: ${owner.phone||''}%0AWhatsApp: ${owner.whatsapp||''}%0ALocation: ${owner.location||''}%0A%0A`;
     txt+='━━ DOG DETAILS ━━%0A';
     if(dog){
       txt+=`Name: ${dog.dog_name||''}%0ABreed: ${dog.dog_breed||''}%0AAge: ${dog.dog_age||''}%0AGender: ${dog.dog_gender||''}%0ASickness: ${dog.sickness||'None'}%0AVaccination: ${dog.vaccination||''}%0ADeworming: ${dog.deworming||''}%0AAllergies: ${dog.allergy||'None'}%0ATemperament: ${dog.temperament||''}%0A%0A`;

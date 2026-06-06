@@ -282,7 +282,7 @@
 
       var payload = {
         phone: phone,
-        name: name || '',
+        full_name: name || '',
         email: email || '',
         location: location || '',
         whatsapp: whatsapp || ''
