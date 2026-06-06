@@ -35,35 +35,67 @@
       });
       if (result.error) throw result.error;
 
-      if (result.data && result.data.user) {
-        var userId = result.data.user.id;
-        var ownerPayload = {
-          auth_user_id: userId,
-          phone: phone,
-          name: profile.full_name || '',
-          whatsapp: profile.whatsapp || phone,
-          location: profile.location || ''
-        };
-        var ownerRes = await _supabase.from('owners').insert(ownerPayload).select('owner_id').single();
-        if (ownerRes.error) console.error('[Auth] Owner insert failed:', ownerRes.error);
-        if (ownerRes.data) {
-          var dogPayload = {
-            owner_id: ownerRes.data.owner_id,
-            dog_name: profile.dog_name || '',
-            dog_breed: profile.dog_breed || '',
-            dog_age: profile.dog_age || '',
-            dog_gender: profile.dog_gender || '',
-            sickness: profile.sickness || '',
-            vaccination: profile.vaccination || '',
-            deworming: profile.deworming || '',
-            allergy: profile.allergy || '',
-            temperament: profile.temperament || '',
-            behavioral_issues: profile.behavioral_issues || ''
-          };
-          var dogRes = await _supabase.from('dogs').insert(dogPayload);
-          if (dogRes.error) console.error('[Auth] Dog insert failed:', dogRes.error);
+      if (!result.data || !result.data.user) {
+        return { success: false, error: 'Sign-up did not return a user' };
+      }
+
+      /* ── If auto-confirm is off, sign in to get a session for DB writes ── */
+      if (!result.data.session) {
+        try {
+          var si = await _supabase.auth.signInWithPassword({ email: email, password: password });
+          if (si.error) console.warn('[Auth] Post-signup sign-in failed (DB inserts may be blocked by RLS):', si.error.message);
+        } catch (siErr) {
+          console.warn('[Auth] Post-signup sign-in threw:', siErr.message);
         }
       }
+
+      /* ── Insert owner record (no auth_user_id — matches actual table schema) ── */
+      var ownerPayload = {
+        phone: phone,
+        name: profile.full_name || '',
+        whatsapp: profile.whatsapp || phone,
+        location: profile.location || ''
+      };
+      var ownerRes = await _supabase.from('owners').insert(ownerPayload).select();
+      if (ownerRes.error) {
+        console.error('[Auth] OWNER INSERT FAILED — message:', ownerRes.error.message, '| details:', ownerRes.error.details, '| hint:', ownerRes.error.hint, '| code:', ownerRes.error.code);
+      }
+
+      var ownerId = null;
+      if (ownerRes.data && ownerRes.data.length > 0) {
+        ownerId = ownerRes.data[0].owner_id;
+        console.log('[Auth] Owner record created. owner_id:', ownerId);
+      } else {
+        console.warn('[Auth] Owner insert returned no data. Check RLS policies and column names on the owners table.');
+      }
+
+      /* ── Insert dog record (only after owner succeeds) ── */
+      if (ownerId) {
+        var dogPayload = {
+          owner_id: ownerId,
+          dog_name: profile.dog_name || '',
+          dog_breed: profile.dog_breed || '',
+          dog_age: profile.dog_age || '',
+          dog_gender: profile.dog_gender || '',
+          sickness: profile.sickness || '',
+          vaccination: profile.vaccination || '',
+          deworming: profile.deworming || '',
+          allergy: profile.allergy || '',
+          temperament: profile.temperament || '',
+          behavioral_issues: profile.behavioral_issues || ''
+        };
+        var dogRes = await _supabase.from('dogs').insert(dogPayload).select();
+        if (dogRes.error) {
+          console.error('[Auth] DOG INSERT FAILED — message:', dogRes.error.message, '| details:', dogRes.error.details, '| hint:', dogRes.error.hint, '| code:', dogRes.error.code);
+        } else if (dogRes.data && dogRes.data.length > 0) {
+          console.log('[Auth] Dog record created. dog_id:', dogRes.data[0].dog_id);
+        } else {
+          console.warn('[Auth] Dog insert returned no data. Check RLS policies and column names on the dogs table.');
+        }
+      } else {
+        console.warn('[Auth] Skipping dog insert — no owner_id from previous step.');
+      }
+
       return { success: true, user: result.data.user, session: result.data.session };
     } catch (e) {
       console.error('[Auth] signUp error:', e.message || e);
