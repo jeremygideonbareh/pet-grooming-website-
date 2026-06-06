@@ -498,19 +498,25 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
   const origText=btn?btn.textContent:'';
   if(btn){btn.textContent='Submitting...';btn.disabled=true}
   try{
-    const user=await Auth.getUser();
-    if(!user)throw new Error('Not authenticated');
-    const phone=Auth.getPhoneFromUser(user);
-    console.log('[Booking] Looking up owner for phone:', phone);
-    const owner=await DB.getOwnerByPhone(phone);
-    if(!owner){
-      console.error('[Booking] Owner not found for phone:', phone, '— verify owners table has this phone and column is named correctly');
+    const sb=Auth.supabase;
+    if(!sb)throw new Error('Supabase client not available');
+    const sessRes=await sb.auth.getSession();
+    const session=sessRes.data&&sessRes.data.session?sessRes.data.session:null;
+    if(!session||!session.user)throw new Error('Not authenticated');
+    const userId=session.user.id;
+    console.log('[Booking] Looking up owner by auth id:', userId);
+    const ownerRes=await sb.from('owners').select('*').eq('id',userId).single();
+    if(ownerRes.error){
+      console.error('[Booking] Owner lookup failed — message:',ownerRes.error.message,'| details:',ownerRes.error.details,'| hint:',ownerRes.error.hint,'| code:',ownerRes.error.code);
       throw new Error('Owner profile not found');
     }
-    const dogs=await DB.getDogsByOwner(owner.owner_id);
+    const owner=ownerRes.data;
+    const dogsRes=await sb.from('dogs').select('*').eq('owner_id',userId);
+    if(dogsRes.error)console.error('[Booking] Dog lookup failed:',dogsRes.error.message);
+    const dogs=dogsRes.data||[];
     const dog=dogs&&dogs.length?dogs[0]:null;
     const program=document.getElementById('bookProgram').value;
-    await DB.insertBooking(owner.owner_id,dog?dog.dog_id:null,{category:'Training',service:program,timeframe:date+' '+slot,notes:''});
+    await sb.from('bookings').insert({owner_id:userId,dog_id:dog?dog.dog_id:null,category:'Training',service:program,timeframe:date+' '+slot,notes:'',status:'pending'}).select();
     let txt='Hi A-1 Enterprises! I would like to book a training consultation.%0A%0A';
     txt+='━━ CUSTOMER DETAILS ━━%0A';
     txt+=`Name: ${owner.full_name||''}%0APhone: ${owner.phone||''}%0AWhatsApp: ${owner.whatsapp_number||''}%0ALocation: ${owner.location||''}%0A%0A`;

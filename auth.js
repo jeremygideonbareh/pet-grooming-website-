@@ -49,8 +49,9 @@
         }
       }
 
-      /* ── Insert owner record (no auth_user_id — matches actual table schema) ── */
+      /* ── Insert owner record (id = auth user.id) ── */
       var ownerPayload = {
+        id: userId,
         phone: phone,
         full_name: profile.full_name || '',
         whatsapp_number: profile.whatsapp || phone,
@@ -59,41 +60,31 @@
       var ownerRes = await _supabase.from('owners').insert(ownerPayload).select();
       if (ownerRes.error) {
         console.error('[Auth] OWNER INSERT FAILED — message:', ownerRes.error.message, '| details:', ownerRes.error.details, '| hint:', ownerRes.error.hint, '| code:', ownerRes.error.code);
+      } else {
+        console.log('[Auth] Owner record created with id:', userId);
       }
 
-      var ownerId = null;
-      if (ownerRes.data && ownerRes.data.length > 0) {
-        ownerId = ownerRes.data[0].owner_id;
-        console.log('[Auth] Owner record created. owner_id:', ownerId);
+      /* ── Insert dog record (owner_id = auth user.id) ── */
+      var dogPayload = {
+        owner_id: userId,
+        name: profile.dog_name || '',
+        breed: profile.dog_breed || '',
+        age: profile.dog_age || '',
+        gender: profile.dog_gender || '',
+        sickness: profile.sickness || '',
+        vaccination: profile.vaccination || '',
+        deworming_3_months: profile.deworming || '',
+        allergy: profile.allergy || '',
+        temperament: profile.temperament || '',
+        behavioral_issues: profile.behavioral_issues || ''
+      };
+      var dogRes = await _supabase.from('dogs').insert(dogPayload).select();
+      if (dogRes.error) {
+        console.error('[Auth] DOG INSERT FAILED — message:', dogRes.error.message, '| details:', dogRes.error.details, '| hint:', dogRes.error.hint, '| code:', dogRes.error.code);
+      } else if (dogRes.data && dogRes.data.length > 0) {
+        console.log('[Auth] Dog record created. dog_id:', dogRes.data[0].dog_id);
       } else {
-        console.warn('[Auth] Owner insert returned no data. Check RLS policies and column names on the owners table.');
-      }
-
-      /* ── Insert dog record (only after owner succeeds) ── */
-      if (ownerId) {
-        var dogPayload = {
-          owner_id: ownerId,
-          name: profile.dog_name || '',
-          breed: profile.dog_breed || '',
-          age: profile.dog_age || '',
-          gender: profile.dog_gender || '',
-          sickness: profile.sickness || '',
-          vaccination: profile.vaccination || '',
-          deworming_3_months: profile.deworming || '',
-          allergy: profile.allergy || '',
-          temperament: profile.temperament || '',
-          behavioral_issues: profile.behavioral_issues || ''
-        };
-        var dogRes = await _supabase.from('dogs').insert(dogPayload).select();
-        if (dogRes.error) {
-          console.error('[Auth] DOG INSERT FAILED — message:', dogRes.error.message, '| details:', dogRes.error.details, '| hint:', dogRes.error.hint, '| code:', dogRes.error.code);
-        } else if (dogRes.data && dogRes.data.length > 0) {
-          console.log('[Auth] Dog record created. dog_id:', dogRes.data[0].dog_id);
-        } else {
-          console.warn('[Auth] Dog insert returned no data. Check RLS policies and column names on the dogs table.');
-        }
-      } else {
-        console.warn('[Auth] Skipping dog insert — no owner_id from previous step.');
+        console.warn('[Auth] Dog insert returned no data. Check RLS policies and column names on the dogs table.');
       }
 
       return { success: true, user: result.data.user, session: result.data.session };
