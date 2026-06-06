@@ -670,6 +670,26 @@ footer{
           <div class="serv-subs"><span>Basic Obedience</span><span>Intermediate</span><span>Advanced</span><span>Rehabilitation</span><span>Protection Training</span><span>Detection Training</span><span>Grooming</span><span>Boarding &amp; Kennels</span><span>Pet Store</span><span>Working Dog Development</span></div>
         </div>
       </article>
+      <article class="serv-card reveal reveal-delay-2" data-svc="grooming" style="grid-column:span 2">
+        <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=1200&q=80" alt="Professional Grooming" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body">
+          <span class="serv-icon">✂️</span>
+          <h3>Professional Grooming</h3>
+          <p style="font-size:.82rem;color:rgba(255,255,255,.8);margin-top:6px;line-height:1.5">Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments.</p>
+          <div class="serv-subs"><span>Full Grooming</span><span>Bath &amp; Brush</span><span>Nail &amp; Ear Care</span><span>Spa &amp; Shine</span><span>Pet Styling</span></div>
+        </div>
+      </article>
+      <article class="serv-card reveal reveal-delay-3" data-svc="pet-store" style="grid-column:span 2">
+        <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=1200&q=80" alt="Premium Pet Store" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body">
+          <span class="serv-icon">🛒</span>
+          <h3>Premium Pet Store</h3>
+          <p style="font-size:.82rem;color:rgba(255,255,255,.8);margin-top:6px;line-height:1.5">Curated selection of high-quality pet food, accessories, toys, and wellness products.</p>
+          <div class="serv-subs"><span>Premium Food</span><span>Accessories</span><span>Toys</span><span>Wellness</span></div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -1096,6 +1116,31 @@ const SERV_DATA={
       {name:'Boarding & Kennels',icon:'🏠',desc:'Safe, comfortable boarding facilities with round-the-clock care and professional supervision.'},
       {name:'Pet Store',icon:'🛒',desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products.'},
       {name:'Working Dog Development',icon:'🎖️',desc:'Future-ready working dog programs for security, detection, and public service sectors.'},
+    ]
+  },
+  'grooming':{
+    icon:'✂️',
+    title:'Professional Grooming',
+    desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments for your beloved pet.',
+    link:'grooming.html',
+    subs:[
+      {name:'Full Grooming',icon:'✂️',desc:'Complete grooming service including bath, haircut, nail trim, ear cleaning, and styling.'},
+      {name:'Bath & Brush',icon:'🛁',desc:'Thorough bath with premium shampoo, conditioning, and complete brush-out for a shiny coat.'},
+      {name:'Nail & Ear Care',icon:'🩺',desc:'Professional nail trimming and ear cleaning to maintain your pet\'s health and comfort.'},
+      {name:'Spa & Shine',icon:'✨',desc:'Luxury spa treatment with moisturizing conditioners, paw balm, and finishing sprays.'},
+      {name:'Pet Styling',icon:'💇',desc:'Creative grooming and breed-specific styling for a polished, show-ready look.'},
+    ]
+  },
+  'pet-store':{
+    icon:'🛒',
+    title:'Premium Pet Store',
+    desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products for your furry companion.',
+    link:'store.html',
+    subs:[
+      {name:'Premium Food',icon:'🥩',desc:'High-quality nutrition from trusted brands — dry food, wet food, and raw diet options.'},
+      {name:'Accessories',icon:'🎀',desc:'Collars, leashes, harnesses, beds, and travel gear for every breed and size.'},
+      {name:'Toys & Enrichment',icon:'🎾',desc:'Durable toys, puzzle feeders, and enrichment items to keep your pet entertained.'},
+      {name:'Wellness Products',icon:'💊',desc:'Supplements, flea/tick prevention, dental care, and grooming supplies for home use.'},
     ]
   }
 };
