@@ -31,7 +31,7 @@ A complete multi-page pet services website for **A-1 Enterprises** based in **Sh
 | Company | A-1 Enterprises |
 | Tagline | Passion Turned Profession |
 | Email | a1.enterprises8891@gmail.com |
-| WhatsApp | +91 8891 000 000 |
+| WhatsApp | 9233485873 |
 | Business Hours | Mon–Sat 10:00 AM – 6:00 PM |
 | Address | Block-C, Nongrimmaw, Laitumkhrah, Shillong, Meghalaya 793011 |
 | Google Maps | https://g.co/kg/knmDPK |
@@ -61,7 +61,7 @@ a1-enterprise/
 ├── index.html              # Homepage (loader w/ tagline, hero w/ sliding animations, about, services, why us, gallery, testimonials, footer, nav w/o subpage links, mobile hamburger top-right) — ~960 lines
 ├── training.html           # Training detail page — 363 lines
 ├── eco-cottages.html       # Eco Cottages detail page — 6 sections — 406 lines
-├── grooming.html           # Grooming detail page — 665 lines
+├── grooming.html           # Grooming detail page — 892 lines
 ├── boarding.html           # Boarding detail page — 265 lines
 ├── store.html              # Pet store (30 products, search, filter, inquiry modal, auto-seeds DB) — 660 lines
 ├── admin.html              # Admin dashboard (6 tabs) — 1764 lines
@@ -385,7 +385,7 @@ async function loadProducts() {
 1. User clicks "Inquire Now" on a product card → `openInquiry(p)` stores the product object, populates the modal header with product name, clears the form, shows modal overlay
 2. User fills in name, phone, optional message → submits form
 3. Form submit handler builds a WhatsApp message with product name, price, user name, phone, and message
-4. Opens `https://wa.me/918891000000?text=...` in a new tab → user can send the inquiry via WhatsApp
+4.    Opens `https://wa.me/9233485873?text=...` in a new tab → user can send the inquiry via WhatsApp
 5. Modal closes after submission
 
 **Footer Category Links:** The store footer has category links (`data-cat` attributes) that click → set `currentCategory` → clear search → re-render products → smooth-scroll to the store section (offset by navbar height).
@@ -1230,10 +1230,14 @@ DB.getProducts()
 - ❌ Booking forms had redundant owner/dog fields — STRIPPED, now fetched from saved profiles
 - ❌ No session expiry — ADDED strict 24-hour timeout
 - ❌ Booking flow allowed guest submissions — NOW gated behind authentication
+- ❌ WhatsApp number outdated (918891000000) — REPLACED with 9233485873 across all files
+- ❌ Grooming page outdated (old hero, no service cards, no pricing, no gallery, no FAQ) — FULL OVERHAUL with hero (3 buttons), Why Grooming Matters (6 cards), Our Services (7 cards), Pricing placeholder, Before & After gallery, FAQ accordion, Bottom CTA
+- ❌ Training page missing Consultation & Behaviour Assessment option — ADDED to service dropdown with ₹500 fee note
+- ❌ Booking success messages generic — UPDATED to exact client-specified text for both Training and Grooming
 
 ---
 
-*Last updated: June 2026*
+*Last updated: June 2026 (Session 4 — Grooming overhaul, WhatsApp redirect, booking polish)*
 
 ## Session Summary (June 2026)
 
@@ -1276,7 +1280,30 @@ DB.getProducts()
    - `getDogsByOwner(ownerId)` — fetch dogs for an owner
 3. **Training booking modal simplified:** Stripped all owner/dog fields → only "Consultation Date" + "Time Slot" (Morning/Afternoon/Evening)
 4. **Grooming booking modal simplified:** Stripped all owner/dog fields → only "Service Required" + "Preferred Date" + "Preferred Window"
-5. **Booking flow:** `openBookModal()` now calls `Auth.requireAuth()` first → shows auth modal if logged out → on booking submit, fetches saved profiles from DB → constructs WhatsApp message combining saved data + new date/time → opens wa.me/918891000000
+5. **Booking flow:** `openBookModal()` now calls `Auth.requireAuth()` first → shows auth modal if logged out → on booking submit, fetches saved profiles from DB → constructs WhatsApp message combining saved data + new date/time → opens wa.me/9233485873
+
+### Session 4 — Grooming Page Overhaul + WhatsApp Redirect + Booking Polish
+1. **WhatsApp number redirected:** All 29 occurrences of `918891000000` replaced with `9233485873` across 7 HTML files using bulk search-and-replace
+2. **Grooming page full rebuild (~665 lines → ~892 lines):**
+   - Hero heading → "Professional Dog Grooming Services" with 3 buttons (Book Grooming Appointment, Call Now, WhatsApp Us)
+   - New "Why Grooming Matters" section — 6 benefit cards with icons, frosted glass styling
+   - New "Our Grooming Services" section — 7 service cards (Express Grooming, Premium Full Grooming, Spa & Relaxation, Anti-Fungal Therapy, Anti-Tick Flea & Lice Treatment, De-Shedding Package, De-Tangling & Coat Restoration) each with `.groom-book-btn` that pre-selects service in booking modal
+   - "Grooming Packages & Pricing" placeholder section with WhatsApp/Call CTA
+   - "Before & After Gallery" — 6-image grid with reveal animations
+   - FAQ accordion — 4 questions (How often, Vaccination requirements, Behavioural concerns, Duration)
+   - Bottom CTA section with 3 buttons (Book Appointment, Call Us, WhatsApp Us)
+   - Reviews section retained as-is
+3. **Booking success alerts:** Added exact client-specified text for both Training ("Thank you for your enquiry... ₹500 consultation booking confirmation fee") and Grooming ("Thank you for your booking request... ₹500 booking confirmation fee") with `setTimeout` so alert appears after WhatsApp tab opens
+4. **Training page updates:**
+   - Added "Consultation & Behaviour Assessment (₹500)" option to service dropdown
+   - Updated success alert to exact client text with ₹500 consultation fee note
+5. **Service booking buttons:** Each `.groom-book-btn` has a `data-service` attribute; click handler pre-sets the booking form's service dropdown before opening the auth-gated modal
+
+### Files changed (Session 4):
+- `grooming.html` — full overhaul: hero, Why Grooming Matters, 7 service cards, pricing placeholder, Before & After gallery, FAQ accordion, Bottom CTA, simplified booking form, success alert, auth-gated modal
+- `training.html` — added Consultation & Behaviour Assessment option, updated success alert
+- `index.html` — added Grooming and Pet Store service cards (from Session 2, committed in Session 4 batch)
+- All HTML files — WhatsApp number redirect 918891000000 → 9233485873
 
 ### Files changed (Session 3):
 - `auth.js` — full rewrite: phone-as-email, 24h session, auto owner/dog insert, global auth modal
