@@ -290,10 +290,37 @@
     }
   }
 
+  /* ── Logout button UI ── */
+  async function updateNavUI() {
+    var session = await getSession();
+    var desktopBtn = document.getElementById('navLogoutBtn');
+    var mobileBtn = document.getElementById('mobileLogoutBtn');
+    var display = session ? '' : 'none';
+    if (desktopBtn) desktopBtn.style.display = display;
+    if (mobileBtn) mobileBtn.style.display = display;
+  }
+
+  async function handleLogout(e) {
+    if (e) e.preventDefault();
+    await signOut();
+    localStorage.clear();
+    sessionStorage.clear();
+    location.reload();
+  }
+
+  function wireLogout() {
+    var desktopBtn = document.getElementById('navLogoutBtn');
+    var mobileBtn = document.getElementById('mobileLogoutBtn');
+    if (desktopBtn) desktopBtn.addEventListener('click', handleLogout);
+    if (mobileBtn) mobileBtn.addEventListener('click', handleLogout);
+  }
+
   /* ── Auto-init on DOM ready ── */
   function init() {
     injectAuthStyles();
     injectAuthModal();
+    updateNavUI();
+    wireLogout();
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
@@ -390,6 +417,7 @@
     requireAuth: requireAuth,
     showAuthModal: showAuthModal,
     hideAuthModal: hideAuthModal,
+    updateNavUI: updateNavUI,
     /* Legacy admin auth */
     isAuthenticated: isAuthenticated,
     attemptLogin: attemptLogin,
