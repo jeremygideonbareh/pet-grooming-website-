@@ -38,6 +38,7 @@
       if (!result.data || !result.data.user) {
         return { success: false, error: 'Sign-up did not return a user' };
       }
+      var userId = result.data.user.id;
 
       /* ── If auto-confirm is off, sign in to get a session for DB writes ── */
       if (!result.data.session) {
