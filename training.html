@@ -189,7 +189,7 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
 @media(max-width:1024px){.hero-social{top:16px;right:16px;gap:8px}.hero-social a{width:32px;height:32px}.hero-social svg{width:16px;height:16px}}
 @media(max-width:640px){.hero-social{top:12px;right:12px;gap:6px}.hero-social a{width:28px;height:28px}.hero-social svg{width:14px;height:14px}}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body data-page="train">
 <div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><div class="loader-logo" style="margin-bottom:16px"><img src="images/a1logo.jpeg" alt="A-1 Enterprises" style="width:64px;height:64px;border-radius:50%;object-fit:cover;margin:0 auto;display:block"></div><div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:800;color:var(--charcoal);margin-bottom:20px">A-1 Enterprises</div><div class="loader-spinner"></div></div></div>
@@ -501,8 +501,12 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const user=await Auth.getUser();
     if(!user)throw new Error('Not authenticated');
     const phone=Auth.getPhoneFromUser(user);
+    console.log('[Booking] Looking up owner for phone:', phone);
     const owner=await DB.getOwnerByPhone(phone);
-    if(!owner)throw new Error('Owner profile not found');
+    if(!owner){
+      console.error('[Booking] Owner not found for phone:', phone, '— verify owners table has this phone and column is named correctly');
+      throw new Error('Owner profile not found');
+    }
     const dogs=await DB.getDogsByOwner(owner.owner_id);
     const dog=dogs&&dogs.length?dogs[0]:null;
     const program=document.getElementById('bookProgram').value;

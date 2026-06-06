@@ -482,7 +482,7 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   .float-home{bottom:16px;left:16px;width:42px;height:42px}
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body data-page="groom">
 
@@ -855,8 +855,12 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const user=await Auth.getUser();
     if(!user)throw new Error('Not authenticated');
     const phone=Auth.getPhoneFromUser(user);
+    console.log('[Booking] Looking up owner for phone:', phone);
     const owner=await DB.getOwnerByPhone(phone);
-    if(!owner)throw new Error('Owner profile not found');
+    if(!owner){
+      console.error('[Booking] Owner not found for phone:', phone, '— verify owners table has this phone and column is named correctly');
+      throw new Error('Owner profile not found');
+    }
     const dogs=await DB.getDogsByOwner(owner.owner_id);
     const dog=dogs&&dogs.length?dogs[0]:null;
     await DB.insertBooking(owner.owner_id,dog?dog.dog_id:null,{category:'Grooming',service:svc,timeframe:date+' '+window,notes:''});
