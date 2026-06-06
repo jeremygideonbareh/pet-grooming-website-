@@ -285,7 +285,7 @@
         full_name: name || '',
         email: email || '',
         location: location || '',
-        whatsapp: whatsapp || ''
+        whatsapp_number: whatsapp || ''
       };
       var ins = await supabase
         .from('owners')
@@ -309,12 +309,12 @@
    */
   async function findOrUpdateDog(ownerId, dogName, healthData) {
     try {
-      var UPDATABLE = ['dog_age','dog_gender','dog_breed','sickness','vaccination','deworming','allergy','temperament','vaccination_card_url','behavioral_issues'];
+      var UPDATABLE = ['age','gender','breed','sickness','vaccination','deworming_3_months','allergy','temperament','vaccination_card_url','behavioral_issues'];
       var result = await supabase
         .from('dogs')
         .select('*')
         .eq('owner_id', ownerId)
-        .eq('dog_name', dogName)
+        .eq('name', dogName)
         .maybeSingle();
       if (result.error) throw result.error;
 
@@ -336,7 +336,7 @@
         return result.data.dog_id;
       }
 
-      var payload = { owner_id: ownerId, dog_name: dogName };
+      var payload = { owner_id: ownerId, name: dogName };
       for (var j = 0; j < UPDATABLE.length; j++) {
         var f = UPDATABLE[j];
         if (healthData[f]) payload[f] = healthData[f];

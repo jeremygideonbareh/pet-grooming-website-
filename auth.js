@@ -53,7 +53,7 @@
       var ownerPayload = {
         phone: phone,
         full_name: profile.full_name || '',
-        whatsapp: profile.whatsapp || phone,
+        whatsapp_number: profile.whatsapp || phone,
         location: profile.location || ''
       };
       var ownerRes = await _supabase.from('owners').insert(ownerPayload).select();
@@ -73,13 +73,13 @@
       if (ownerId) {
         var dogPayload = {
           owner_id: ownerId,
-          dog_name: profile.dog_name || '',
-          dog_breed: profile.dog_breed || '',
-          dog_age: profile.dog_age || '',
-          dog_gender: profile.dog_gender || '',
+          name: profile.dog_name || '',
+          breed: profile.dog_breed || '',
+          age: profile.dog_age || '',
+          gender: profile.dog_gender || '',
           sickness: profile.sickness || '',
           vaccination: profile.vaccination || '',
-          deworming: profile.deworming || '',
+          deworming_3_months: profile.deworming || '',
           allergy: profile.allergy || '',
           temperament: profile.temperament || '',
           behavioral_issues: profile.behavioral_issues || ''

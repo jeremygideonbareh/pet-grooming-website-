@@ -509,10 +509,10 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     await DB.insertBooking(owner.owner_id,dog?dog.dog_id:null,{category:'Training',service:program,timeframe:date+' '+slot,notes:''});
     let txt='Hi A-1 Enterprises! I would like to book a training consultation.%0A%0A';
     txt+='━━ CUSTOMER DETAILS ━━%0A';
-    txt+=`Name: ${owner.full_name||''}%0APhone: ${owner.phone||''}%0AWhatsApp: ${owner.whatsapp||''}%0ALocation: ${owner.location||''}%0A%0A`;
+    txt+=`Name: ${owner.full_name||''}%0APhone: ${owner.phone||''}%0AWhatsApp: ${owner.whatsapp_number||''}%0ALocation: ${owner.location||''}%0A%0A`;
     txt+='━━ DOG DETAILS ━━%0A';
     if(dog){
-      txt+=`Name: ${dog.dog_name||''}%0ABreed: ${dog.dog_breed||''}%0AAge: ${dog.dog_age||''}%0AGender: ${dog.dog_gender||''}%0ASickness: ${dog.sickness||'None'}%0AVaccination: ${dog.vaccination||''}%0ADeworming: ${dog.deworming||''}%0AAllergies: ${dog.allergy||'None'}%0ATemperament: ${dog.temperament||''}%0ABehavioural: ${dog.behavioral_issues||'None'}%0A%0A`;
+      txt+=`Name: ${dog.name||''}%0ABreed: ${dog.breed||''}%0AAge: ${dog.age||''}%0AGender: ${dog.gender||''}%0ASickness: ${dog.sickness||'None'}%0AVaccination: ${dog.vaccination||''}%0ADeworming: ${dog.deworming_3_months||''}%0AAllergies: ${dog.allergy||'None'}%0ATemperament: ${dog.temperament||''}%0ABehavioural: ${dog.behavioral_issues||'None'}%0A%0A`;
     }
     txt+=`━━ BOOKING DETAILS ━━%0A`;
     txt+=`Service: ${program}%0ADate: ${date}%0ATime: ${slot}`;
