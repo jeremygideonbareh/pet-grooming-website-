@@ -1190,15 +1190,18 @@ DB.getProducts()
 - **Loader shows tagline + ecosystem description text on every page** — this text is designed for the homepage. If subpages get their own loader text, they should update the loader HTML individually.
 
 ### Future Enhancements
-1. **Real auth** — replace mock with Supabase Auth or Cloudflare Workers
-2. **Contact form** — send inquiries via email API instead of just WhatsApp links
-3. **SEO** — sitemap.xml, JSON-LD structured data, Open Graph tags
-4. **Analytics** — Google Analytics or Cloudflare Web Analytics
-5.  **Vet Clinic page** — currently "Coming Soon" on homepage
-6.  **Working Dog Development page** — full detail page yet to be created
+1. **Supabase RLS policies** — configure proper Row Level Security for owners, dogs, and bookings tables instead of relying on anon key inserts
+2. **Disable email confirmation in Supabase dashboard** — so signUp returns a session immediately without needing post-signup signIn
+3. **Contact form** — send inquiries via email API instead of just WhatsApp links
+4. **SEO** — sitemap.xml, JSON-LD structured data, Open Graph tags
+5. **Analytics** — Google Analytics or Cloudflare Web Analytics
+6. **Vet Clinic page** — currently "Coming Soon" on homepage
+7. **Working Dog Development page** — full detail page yet to be created
 8. **Image management** — delete/replace images via admin panel
 9. **Bulk product import** — CSV upload for products
 10. **Activity log** — track who changed what and when
+11. **Admin auth** — replace mock password `admin123` in auth.js with real Supabase Auth or Cloudflare Workers
+12. **Clean up db.js** — remove obsolete `findOrCreateOwner()` and `findOrUpdateDog()` if booking flows now use direct session-based lookups
 
 ### Items Already Fixed
 - ❌ Mobile responsiveness at 360px — DONE
@@ -1234,10 +1237,18 @@ DB.getProducts()
 - ❌ Grooming page outdated (old hero, no service cards, no pricing, no gallery, no FAQ) — FULL OVERHAUL with hero (3 buttons), Why Grooming Matters (6 cards), Our Services (7 cards), Pricing placeholder, Before & After gallery, FAQ accordion, Bottom CTA
 - ❌ Training page missing Consultation & Behaviour Assessment option — ADDED to service dropdown with ₹500 fee note
 - ❌ Booking success messages generic — UPDATED to exact client-specified text for both Training and Grooming
+- ❌ No logout mechanism for universal auth — ADDED Logout button visibility gated by session, clears all storage on click
+- ❌ owners insert failed with PGRST204 (`name` column does not exist) — FIXED, column is `full_name`
+- ❌ owners insert failed with PGRST204 (`whatsapp` column does not exist) — FIXED, column is `whatsapp_number`
+- ❌ dogs insert failed (wrong column names) — FIXED: `dog_name`→`name`, `dog_breed`→`breed`, `dog_age`→`age`, `dog_gender`→`gender`, `deworming`→`deworming_3_months`
+- ❌ Supabase CDN served ESM instead of UMD — FIXED all 7 HTML files to use explicit `/dist/umd/supabase.js` path
+- ❌ Booking owner lookup by phone fragile/mismatched — PIVOTED to direct `owners.id = session.user.id` lookup
+- ❌ signUp referenced undeclared `userId` — FIXED by adding `var userId = result.data.user.id` after auth call
+- ❌ Dog insert depended on owner insert readback — REMOVED, now uses auth UUID directly
 
 ---
 
-*Last updated: June 2026 (Session 4 — Grooming overhaul, WhatsApp redirect, booking polish)*
+*Last updated: June 2026 (Session 5 — Auth logout, schema alignment, session-based booking pivot)*
 
 ## Session Summary (June 2026)
 
@@ -1299,13 +1310,64 @@ DB.getProducts()
    - Updated success alert to exact client text with ₹500 consultation fee note
 5. **Service booking buttons:** Each `.groom-book-btn` has a `data-service` attribute; click handler pre-sets the booking form's service dropdown before opening the auth-gated modal
 
-### Files changed (Session 4):
-- `grooming.html` — full overhaul: hero, Why Grooming Matters, 7 service cards, pricing placeholder, Before & After gallery, FAQ accordion, Bottom CTA, simplified booking form, success alert, auth-gated modal
-- `training.html` — added Consultation & Behaviour Assessment option, updated success alert
-- `index.html` — added Grooming and Pet Store service cards (from Session 2, committed in Session 4 batch)
-- All HTML files — WhatsApp number redirect 918891000000 → 9233485873
+### Session 5 — Universal Auth Logout, Schema Alignment, Booking Pivot to Session ID
 
-### Files changed (Session 3):
+**Bug #1: No logout mechanism** — Authenticated users had no way to sign out. The auth modal had no logout button in the nav.
+
+**Fix:** Added `navLogoutBtn` (desktop nav-island) and `mobileLogoutBtn` (mobile nav) with `display:none` by default. Created `Auth.updateNavUI()` which checks for a valid session on DOMContentLoaded and shows/hides the buttons. Created `Auth.handleLogout()` which calls `supabase.auth.signOut()`, clears both `localStorage` and `sessionStorage`, then forces `location.reload()`.
+
+**Bug #2: PGRST204 "Could not find the 'name' column of 'owners'"** — The signUp function inserted `name: profile.full_name` but the actual Supabase column is `full_name`.
+
+**Debugging:** Console output: `"Could not find the 'name' column of 'owners' in the schema cache (code: PGRST204)"`.
+
+**Fix:** Changed `name:` → `full_name:` in auth.js signUp owner payload. Also updated db.js `findOrCreateOwner()` and all WhatsApp message references (`owner.name` → `owner.full_name`) in grooming.html and training.html.
+
+**Bug #3: PGRST204 "Could not find the 'whatsapp' column of 'owners'"** — Same issue as Bug #2 but for the `whatsapp` column, which is `whatsapp_number` in the DB.
+
+**Fix:** Changed `whatsapp:` → `whatsapp_number:` in auth.js signUp and db.js findOrCreateOwner. Updated WhatsApp message references (`owner.whatsapp` → `owner.whatsapp_number`).
+
+**Bug #4: Dog table insert failures** — After fixing owners, the dog insert payload used `dog_name`, `dog_breed`, `dog_age`, `dog_gender`, `deworming` but the DB schema uses `name`, `breed`, `age`, `gender`, `deworming_3_months`.
+
+**Fix:** Aligned all dog insert payloads across auth.js signUp and db.js findOrUpdateDog. Updated WhatsApp message references in grooming.html and training.html.
+
+**Bug #5: "Cannot use import statement outside a module"** — The Supabase CDN URL `https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2` was serving the ESM build (which uses `import` statements) instead of the UMD build. Since the project uses vanilla JS with global `window.supabase`, the ESM build crashed the browser parser.
+
+**Fix:** Pinned all 7 HTML files to the explicit UMD path: `https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js`
+
+**Bug #6: Booking owner lookup failing** — Even after schema fixes, `getOwnerByPhone(phone)` was returning null because the phone string from the email hack (e.g., `9876543210@a1.com` → `9876543210`) didn't reliably match the stored phone format.
+
+**Root cause:** The phone lookup was fragile across different phone formats (country code, punctuation, etc.). Also, the signUp wasn't storing `id: userId` in the owners table, so there was no direct link from auth session to owner record.
+
+**Fix:**
+- Added `id: userId` to owner insert payload so `owners.id` stores the Supabase auth UUID
+- Changed dog `owner_id` to use `userId` directly (instead of relying on owner insert readback)
+- Replaced the entire booking lookup in grooming.html and training.html:
+  - Before: `Auth.getUser()` → `Auth.getPhoneFromUser()` → `DB.getOwnerByPhone(phone)` → `DB.getDogsByOwner(owner.owner_id)`
+  - After: `Auth.supabase.auth.getSession()` → `session.user.id` → direct queries: `owners.select('*').eq('id', userId)` and `dogs.select('*').eq('owner_id', userId)`
+- Booking inserts now use `owner_id: userId` directly
+- Removed dependency on `owner_id` being returned from owner insert
+
+**Bug #7: "ReferenceError: userId is not defined"** — During the Bug #6 refactoring, the `var userId` declaration was accidentally removed from signUp, causing a crash at runtime.
+
+**Fix:** Added `var userId = result.data.user.id;` immediately after the user null check in signUp.
+
+**Development workflow commands used:**
+```bash
+git add -A
+git commit -m "..."
+git push
+```
+The `git push` triggers Cloudflare Pages auto-deploy.
+
+### Files changed (Session 5):
+- `auth.js` — updateNavUI(), handleLogout(), schema-aligned column names, id=userId in signUp, explicit error logging
+- `db.js` — schema-aligned column names in findOrCreateOwner/findOrUpdateDog
+- `index.html` — added navLogoutBtn + mobileLogoutBtn, supabase UMD path
+- `grooming.html` — added navLogoutBtn + mobileLogoutBtn, booking pivot to session.user.id, supabase UMD path
+- `training.html` — added navLogoutBtn + mobileLogoutBtn, booking pivot to session.user.id, supabase UMD path
+- `store.html`, `eco-cottages.html`, `boarding.html`, `admin.html` — supabase UMD path
+
+### Files changed (Session 4):
 - `auth.js` — full rewrite: phone-as-email, 24h session, auto owner/dog insert, global auth modal
 - `db.js` — added `getOwnerByPhone()`, `getDogsByOwner()`
 - `training.html` — simplified booking form + auth-gated openBookModal + WhatsApp routing
