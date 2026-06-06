@@ -1223,6 +1223,13 @@ DB.getProducts()
 - ❌ Loader spinner too large — REDUCED to 22px, positioned 28px below text
 - ❌ Training card lacked sub-headings — ADDED Basic, Intermediate, Advanced, Protection/Detection pill tags
 - ❌ "Rehabilitation Training" too long — RENAMED to "Rehabilitation"
+- ❌ Training program cards call undefined `openBook()` — FIXED to `openBookModal()`
+- ❌ Service grid missing Grooming and Pet Store cards — ADDED with modal data
+- ❌ Working Dog Development was text badge only, no image — ADDED as standalone card with image
+- ❌ No universal auth system — IMPLEMENTED Phone + Password auth gate with global modal
+- ❌ Booking forms had redundant owner/dog fields — STRIPPED, now fetched from saved profiles
+- ❌ No session expiry — ADDED strict 24-hour timeout
+- ❌ Booking flow allowed guest submissions — NOW gated behind authentication
 
 ---
 
@@ -1230,7 +1237,7 @@ DB.getProducts()
 
 ## Session Summary (June 2026)
 
-### What was done this session:
+### Session 1:
 1. **Store page:** Fixed `DB` undefined bug (script load order) + added `typeof DB` guard + try/catch so 30 default products render even if Supabase is down
 2. **content-loader.js:** Added guard against undefined `DB` to prevent crash when Supabase CDN fails
 3. **Product images:** Replaced all 12 duplicate Unsplash photos (p17-p28) with unique images — every product now has its own photo
@@ -1241,7 +1248,38 @@ DB.getProducts()
 8. **Training card:** Added `.serv-subs` pill tags (Basic, Intermediate, Advanced, Protection/Detection) to Dog Training service card
 9. **Renamed "Rehabilitation Training"** → "Rehabilitation" in both card and modal data
 
+### Session 2:
+1. **Training page booking modal:** Program cards and "Enquire Now" button called undefined `openBook()` instead of `openBookModal()` — clicking did nothing. Fixed both call sites.
+2. **Service grid (index.html):** Added Professional Grooming and Premium Pet Store cards with matching `SERV_DATA` entries so clicking them opens the liquid-glass modal with sub-service details.
+3. **Working Dog Development (training.html):** Was just a text badge in the "All Training Programs" card with no image. Added as a standalone card with Unsplash image alongside Puppy Socialisation and Owner-Centric Training.
+
 ### Files changed:
+**Session 1:**
 - `index.html` — loader text, hero animations, nav link removals, mobile CSS, training subs, rehab rename
 - `store.html` — DEFAULT_PRODUCTS expanded to 30, loadProducts() DB guard + try/catch, script load order fix, duplicate image replacements
 - `content-loader.js` — DB undefined guard at top of IIFE
+**Session 2:**
+- `training.html` — `openBook()` → `openBookModal()` (2 places); added Working Dog Development card with image
+- `index.html` — added Grooming + Pet Store service cards and `SERV_DATA` entries
+
+### Session 3 — Upfront Universal Auth Gate (Phone + Password)
+1. **auth.js — complete rewrite:**
+   - Phone → Email hack: appends `@a1.com` to phone digits for Supabase email auth
+   - `signUp(phone, password, profile)` creates Supabase auth user + auto-inserts owner/dog records into public tables
+   - `signIn(phone, password)` transparently formats phone as email
+   - `getSession()` enforces strict 24-hour timeout — logs out and clears storage if exceeded
+   - Global Auth Modal injected into DOM on load (Login/Sign Up tabs), consistent liquid-glass styling
+   - `requireAuth(callback)` gates any booking action behind authentication
+   - Sign Up collects: Phone, Password, Full Name, WhatsApp, Location, Dog Name, Breed, Age, Gender, Sickness, Vaccination, Deworming, Allergy, Temperament, Behavioral Issues
+2. **db.js — added lookup functions:**
+   - `getOwnerByPhone(phone)` — fetch owner record by phone
+   - `getDogsByOwner(ownerId)` — fetch dogs for an owner
+3. **Training booking modal simplified:** Stripped all owner/dog fields → only "Consultation Date" + "Time Slot" (Morning/Afternoon/Evening)
+4. **Grooming booking modal simplified:** Stripped all owner/dog fields → only "Service Required" + "Preferred Date" + "Preferred Window"
+5. **Booking flow:** `openBookModal()` now calls `Auth.requireAuth()` first → shows auth modal if logged out → on booking submit, fetches saved profiles from DB → constructs WhatsApp message combining saved data + new date/time → opens wa.me/918891000000
+
+### Files changed (Session 3):
+- `auth.js` — full rewrite: phone-as-email, 24h session, auto owner/dog insert, global auth modal
+- `db.js` — added `getOwnerByPhone()`, `getDogsByOwner()`
+- `training.html` — simplified booking form + auth-gated openBookModal + WhatsApp routing
+- `grooming.html` — simplified booking form + auth-gated openBookModal + WhatsApp routing

@@ -436,6 +436,45 @@
   }
 
   /**
+   * Fetch owner record by phone number.
+   * @param {string} phone
+   * @returns {Promise<Object|null>}
+   */
+  async function getOwnerByPhone(phone) {
+    try {
+      var result = await supabase
+        .from('owners')
+        .select('*')
+        .eq('phone', phone)
+        .maybeSingle();
+      if (result.error) throw result.error;
+      return result.data || null;
+    } catch (e) {
+      console.error('[DB] getOwnerByPhone error:', e);
+      return null;
+    }
+  }
+
+  /**
+   * Fetch dogs for a given owner.
+   * @param {string} ownerId
+   * @returns {Promise<Array>}
+   */
+  async function getDogsByOwner(ownerId) {
+    try {
+      var result = await supabase
+        .from('dogs')
+        .select('*')
+        .eq('owner_id', ownerId);
+      if (result.error) throw result.error;
+      return result.data || [];
+    } catch (e) {
+      console.error('[DB] getDogsByOwner error:', e);
+      return [];
+    }
+  }
+
+  /**
    * Update a booking's status.
    * @param {number|string} bookingId
    * @param {string} status - e.g. 'pending', 'confirmed', 'completed', 'cancelled'
@@ -472,7 +511,9 @@
     findOrUpdateDog:       findOrUpdateDog,
     insertBooking:         insertBooking,
     getBookings:           getBookings,
-    updateBookingStatus:   updateBookingStatus
+    updateBookingStatus:   updateBookingStatus,
+    getOwnerByPhone:       getOwnerByPhone,
+    getDogsByOwner:        getDogsByOwner
   };
 
   /**
