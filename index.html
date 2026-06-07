@@ -220,10 +220,11 @@ ul{list-style:none}
 /* ── SERVICES GRID ── */
 .services{padding:80px 0;background:var(--cream-dark)}
 .services-header{text-align:center;margin-bottom:56px}
-.serv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.serv-grid{display:flex;flex-wrap:nowrap;gap:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+.serv-grid::-webkit-scrollbar{display:none}
 .serv-card{
   position:relative;border-radius:24px;overflow:hidden;cursor:pointer;
-  aspect-ratio:3/4;display:flex;align-items:flex-end;
+  flex:1;min-width:260px;min-height:320px;display:flex;align-items:flex-end;scroll-snap-align:start;
   transition:transform .4s ease,box-shadow .4s ease;
 }
 .serv-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(0,0,0,.15)}
@@ -650,7 +651,7 @@ footer{
       <p class="section-sub" style="margin-inline:auto">Professional, ethical, and result-oriented canine services under one trusted brand.</p>
     </div>
     <div class="serv-grid" id="servGrid">
-      <article class="serv-card reveal reveal-delay-1" data-svc="dog-training" style="grid-column:1/-1;max-width:700px;margin-inline:auto">
+      <article class="serv-card reveal reveal-delay-1" data-svc="dog-training">
         <img src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&w=1200&q=80" alt="Dog Training" loading="lazy">
         <div class="serv-overlay"></div>
         <div class="serv-body">
@@ -660,7 +661,7 @@ footer{
           <div class="serv-subs"><span>Basic Obedience</span><span>Intermediate</span><span>Advanced</span><span>Rehabilitation</span><span>Protection Training</span><span>Detection Training</span><span>Grooming</span><span>Boarding &amp; Kennels</span><span>Pet Store</span><span>Working Dog Development</span></div>
         </div>
       </article>
-      <article class="serv-card reveal reveal-delay-2" data-svc="grooming" style="grid-column:span 2">
+      <article class="serv-card reveal reveal-delay-2" data-svc="grooming">
         <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=1200&q=80" alt="Professional Grooming" loading="lazy">
         <div class="serv-overlay"></div>
         <div class="serv-body">
@@ -670,7 +671,7 @@ footer{
           <div class="serv-subs"><span>Full Grooming</span><span>Bath &amp; Brush</span><span>Nail &amp; Ear Care</span><span>Spa &amp; Shine</span><span>Pet Styling</span></div>
         </div>
       </article>
-      <article class="serv-card reveal reveal-delay-3" data-svc="pet-store" style="grid-column:span 2">
+      <article class="serv-card reveal reveal-delay-3" data-svc="pet-store">
         <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=1200&q=80" alt="Premium Pet Store" loading="lazy">
         <div class="serv-overlay"></div>
         <div class="serv-body">
