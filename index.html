@@ -19,30 +19,14 @@ html{scroll-behavior:smooth;scroll-padding-top:70px}
   transition:opacity .5s ease,visibility .5s ease;
 }
 .page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
-.loader-content{text-align:center}
-.loader-logo{margin-bottom:16px}
-.loader-logo img{width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto;animation:loaderPulse 1.2s ease-in-out infinite}
+.loader-content{text-align:center;padding-top:35vh}
 .loader-brand{
   font-family:'Playfair Display',Georgia,serif;
   font-size:1.5rem;font-weight:800;color:#fff;
   margin-bottom:28px;letter-spacing:-.01em;
 }
-.loader-spinner{
-  width:22px;height:22px;margin:28px auto 0;
-  border:2.5px solid rgba(255,255,255,.2);
-  border-top-color:var(--gold);
-  border-radius:50%;
-  animation:loaderSpin .8s linear infinite;
-}
 .loader-tagline{font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.7;margin-top:12px;max-width:480px;margin-inline:auto;animation:loaderSlideUp .6s both}
-.loader-tagline:nth-child(3){animation-delay:.2s}
-.loader-tagline:nth-child(4){animation-delay:.4s}
 @keyframes loaderSlideUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
-@keyframes loaderSpin{to{transform:rotate(360deg)}}
-@keyframes loaderPulse{
-  0%,100%{transform:scale(1);opacity:1}
-  50%{transform:scale(1.08);opacity:.8}
-}
 @media(max-width:768px){.page-loader{background-size:cover}}
 body{
   font-family:'Inter',-apple-system,sans-serif;
@@ -569,13 +553,9 @@ footer{
 <!-- ═══ PAGE LOADER ═══ -->
 <div id="pageLoader" class="page-loader">
   <div class="loader-content">
-    <div class="loader-logo">
-      <img src="images/logo1.jpeg" alt="A-1 Enterprises">
-    </div>
     <div class="loader-brand">Think Pet, Think A-1</div>
     <p class="loader-tagline" style="font-size:.9rem">The Complete Pet Ecosystem &amp; Solution</p>
     <p class="loader-tagline" style="font-size:.75rem;opacity:.6">ESTD. 2020</p>
-    <div class="loader-spinner"></div>
   </div>
 </div>
 
