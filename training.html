@@ -41,6 +41,7 @@ ul{list-style:none}
 .loader-bar{position:absolute;bottom:0;left:0;width:100%;height:4px;background:rgba(255,255,255,.08)}
 .loader-bar::after{content:'';display:block;height:100%;width:30%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:0 2px 2px 0;animation:loaderBar 1.5s ease-in-out infinite}
 @keyframes loaderBar{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── FLOATING LOGO ── */
 .floating-logo{position:fixed;top:12px;left:16px;z-index:1001;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.65);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.25);border-radius:60px;padding:6px 16px 6px 6px;font-family:'Playfair Display',serif;font-weight:800;font-size:1rem;color:var(--charcoal);box-shadow:0 4px 20px rgba(0,0,0,.04);transition:box-shadow .3s ease;text-decoration:none;white-space:nowrap}
@@ -191,9 +192,10 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
 @media(max-width:640px){.hero-social{top:12px;right:12px;gap:6px}.hero-social a{width:28px;height:28px}.hero-social svg{width:14px;height:14px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>window.scrollTo(0,0)</script>
 </head>
 <body data-page="train">
-<div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em">A-1 Enterprises</div><div style="font-size:.85rem;color:var(--gold);margin-bottom:4px">Passion Turned Profession</div><div style="font-size:.78rem;color:rgba(255,255,255,.5)">Dog Training</div></div><div class="loader-bar"></div></div>
+<div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block;animation:slideUp .6s ease both"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em;animation:slideUp .6s ease .15s both">A-1 Enterprises</div><div style="font-size:.85rem;color:var(--gold);margin-bottom:4px;animation:slideUp .6s ease .3s both">Passion Turned Profession</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);animation:slideUp .6s ease .45s both">Dog Training</div></div><div class="loader-bar"></div></div>
 <a href="index.html" class="floating-logo" id="floatingLogo"><img src="images/logo1.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
 <nav class="nav-island" id="navIsland">
   <ul class="nav-links">

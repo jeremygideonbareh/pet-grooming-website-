@@ -105,6 +105,7 @@ img{display:block;max-width:100%;height:auto}
 .loader-bar{position:absolute;bottom:0;left:0;width:100%;height:4px;background:rgba(255,255,255,.08)}
 .loader-bar::after{content:'';display:block;height:100%;width:30%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:0 2px 2px 0;animation:loaderBar 1.5s ease-in-out infinite}
 @keyframes loaderBar{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 .loading-brand{
   font-size:2.4rem;font-weight:900;text-align:center;line-height:1.2;
   background:linear-gradient(135deg,#fff 0%,#EAA172 25%,#F2C6A8 50%,#EAA172 75%,#fff 100%);
@@ -459,15 +460,16 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>window.scrollTo(0,0)</script>
 </head>
 <body data-page="groom">
 
   <div class="loading-overlay" id="loadingOverlay">
     <div style="text-align:center">
-      <img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block">
-      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em">A-1 Enterprises</div>
-      <div style="font-size:.85rem;color:var(--gold);margin-bottom:4px">Passion Turned Profession</div>
-      <div style="font-size:.78rem;color:rgba(255,255,255,.5)">Pet Grooming</div>
+      <img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block;animation:slideUp .6s ease both">
+      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em;animation:slideUp .6s ease .15s both">A-1 Enterprises</div>
+      <div style="font-size:.85rem;color:var(--gold);margin-bottom:4px;animation:slideUp .6s ease .3s both">Passion Turned Profession</div>
+      <div style="font-size:.78rem;color:rgba(255,255,255,.5);animation:slideUp .6s ease .45s both">Pet Grooming</div>
     </div>
     <div class="loader-bar"></div>
   </div>
