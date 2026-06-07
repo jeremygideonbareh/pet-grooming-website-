@@ -14,7 +14,10 @@ html{scroll-behavior:smooth;scroll-padding-top:70px}
 /* ── PAGE LOADER ── */
 .page-loader{
   position:fixed;inset:0;z-index:9999;
-  background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.65)),url('images/logo1.jpeg') center/contain no-repeat #0E0A08;
+  background:
+    linear-gradient(180deg,rgba(10,8,6,.15) 0%,rgba(10,8,6,.35) 50%,rgba(10,8,6,.55) 100%),
+    radial-gradient(ellipse at center,transparent 0%,rgba(10,8,6,.25) 100%),
+    url('images/logo1.jpeg') center/contain no-repeat #0E0A08;
   display:flex;align-items:center;justify-content:center;
   transition:opacity .5s ease,visibility .5s ease;
 }
@@ -25,8 +28,6 @@ html{scroll-behavior:smooth;scroll-padding-top:70px}
   font-size:1.5rem;font-weight:800;color:#fff;
   margin-bottom:28px;letter-spacing:-.01em;
 }
-.loader-tagline{font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.7;margin-top:12px;max-width:480px;margin-inline:auto;animation:loaderSlideUp .6s both}
-@keyframes loaderSlideUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
 @media(max-width:768px){.page-loader{background-size:cover}}
 body{
   font-family:'Inter',-apple-system,sans-serif;
@@ -554,8 +555,6 @@ footer{
 <div id="pageLoader" class="page-loader">
   <div class="loader-content">
     <div class="loader-brand">Think Pet, Think A-1</div>
-    <p class="loader-tagline" style="font-size:.9rem">The Complete Pet Ecosystem &amp; Solution</p>
-    <p class="loader-tagline" style="font-size:.75rem;opacity:.6">ESTD. 2020</p>
   </div>
 </div>
 
