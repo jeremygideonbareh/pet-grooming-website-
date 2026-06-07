@@ -14,7 +14,7 @@ html{scroll-behavior:smooth;scroll-padding-top:70px}
 /* ── PAGE LOADER ── */
 .page-loader{
   position:fixed;inset:0;z-index:9999;
-  background:var(--cream);
+  background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.7)),url('images/logo1.jpeg') center/cover no-repeat;
   display:flex;align-items:center;justify-content:center;
   transition:opacity .5s ease,visibility .5s ease;
 }
@@ -24,17 +24,17 @@ html{scroll-behavior:smooth;scroll-padding-top:70px}
 .loader-logo img{width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto;animation:loaderPulse 1.2s ease-in-out infinite}
 .loader-brand{
   font-family:'Playfair Display',Georgia,serif;
-  font-size:1.5rem;font-weight:800;color:var(--charcoal);
+  font-size:1.5rem;font-weight:800;color:#fff;
   margin-bottom:28px;letter-spacing:-.01em;
 }
 .loader-spinner{
   width:22px;height:22px;margin:28px auto 0;
-  border:2.5px solid var(--border);
+  border:2.5px solid rgba(255,255,255,.2);
   border-top-color:var(--gold);
   border-radius:50%;
   animation:loaderSpin .8s linear infinite;
 }
-.loader-tagline{font-size:.78rem;color:var(--muted);line-height:1.7;margin-top:12px;max-width:480px;margin-inline:auto;animation:loaderSlideUp .6s both}
+.loader-tagline{font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.7;margin-top:12px;max-width:480px;margin-inline:auto;animation:loaderSlideUp .6s both}
 .loader-tagline:nth-child(3){animation-delay:.2s}
 .loader-tagline:nth-child(4){animation-delay:.4s}
 @keyframes loaderSlideUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
@@ -569,7 +569,7 @@ footer{
 <div id="pageLoader" class="page-loader">
   <div class="loader-content">
     <div class="loader-logo">
-      <img src="images/a1logo.jpeg" alt="A-1 Enterprises">
+      <img src="images/logo1.jpeg" alt="A-1 Enterprises">
     </div>
     <div class="loader-brand">Think Pet, Think A-1</div>
     <p class="loader-tagline" style="font-size:.9rem">The Complete Pet Ecosystem &amp; Solution</p>
@@ -580,7 +580,7 @@ footer{
 
 <!-- ═══ FLOATING LOGO ═══ -->
 <a href="index.html" class="floating-logo" id="floatingLogo">
-  <img src="images/a1logo.jpeg" alt="A-1 Enterprises" loading="lazy">
+  <img src="images/logo1.jpeg" alt="A-1 Enterprises" loading="lazy">
   <span class="logo-text">A-1 Enterprises</span>
 </a>
 
@@ -964,7 +964,7 @@ footer{
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="footer-logo">
-          <img src="images/a1logo.jpeg" alt="A-1 Enterprises" loading="lazy">
+          <img src="images/logo1.jpeg" alt="A-1 Enterprises" loading="lazy">
           A-1 Enterprises
         </div>
         <p>Building the future of pet and working dog services in Northeast India. Professional training, grooming, boarding, and pet care under one trusted brand.</p>
