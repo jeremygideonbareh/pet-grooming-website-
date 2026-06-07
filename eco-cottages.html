@@ -38,6 +38,9 @@ ul{list-style:none}
 /* ── PAGE LOADER ── */
 .page-loader{position:fixed;inset:0;z-index:9999;background:#0E0A08;display:flex;align-items:center;justify-content:center;transition:opacity .7s ease,visibility .7s ease}
 .page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.loader-bar{position:absolute;bottom:0;left:0;width:100%;height:4px;background:rgba(255,255,255,.08)}
+.loader-bar::after{content:'';display:block;height:100%;width:30%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:0 2px 2px 0;animation:loaderBar 1.5s ease-in-out infinite}
+@keyframes loaderBar{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
 
 /* ── FLOATING LOGO ── */
 .floating-logo{position:fixed;top:12px;left:16px;z-index:1001;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.65);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.25);border-radius:60px;padding:6px 16px 6px 6px;font-family:'Playfair Display',serif;font-weight:800;font-size:1rem;color:var(--charcoal);box-shadow:0 4px 20px rgba(0,0,0,.04);transition:box-shadow .3s ease;text-decoration:none;white-space:nowrap}
@@ -146,7 +149,7 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body data-page="eco">
-<div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em">A-1 Enterprises</div><div style="font-size:.85rem;color:var(--gold);margin-bottom:4px">Passion Turned Profession</div><div style="font-size:.78rem;color:rgba(255,255,255,.5)">Eco Cottages</div></div></div>
+<div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em">A-1 Enterprises</div><div style="font-size:.85rem;color:var(--gold);margin-bottom:4px">Passion Turned Profession</div><div style="font-size:.78rem;color:rgba(255,255,255,.5)">Eco Cottages</div></div><div class="loader-bar"></div></div>
 <a href="index.html" class="floating-logo" id="floatingLogo"><img src="images/logo1.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
 <nav class="nav-island" id="navIsland">
   <ul class="nav-links">
