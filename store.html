@@ -64,9 +64,8 @@ ul{list-style:none}
 @media(max-width:640px){.nav-island .nav-links{display:none}.hamburger{display:flex}}
 
 /* ── PAGE LOADER ── */
-.page-loader{position:fixed;inset:0;z-index:9999;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.65)),url('images/logo1.jpeg') center/contain no-repeat #0E0A08;display:flex;align-items:center;justify-content:center;transition:opacity .7s ease,visibility .7s ease}
+.page-loader{position:fixed;inset:0;z-index:9999;background:#0E0A08;display:flex;align-items:center;justify-content:center;transition:opacity .7s ease,visibility .7s ease}
 .page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
-@media(max-width:768px){.page-loader{background-size:cover}}
 
 /* ── STORE HERO ── */
 .store-hero{
@@ -306,7 +305,7 @@ footer{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body data-page="store">
-<div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center;padding-top:35vh"><div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:6px">A-1 Enterprises</div><div style="font-size:.85rem;color:rgba(255,255,255,.6)">Pet Store — Passion Turned Profession</div></div></div>
+<div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:120px;height:120px;border-radius:20px;object-fit:cover;margin:0 auto 24px;display:block"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em">A-1 Enterprises</div><div style="font-size:.85rem;color:var(--gold);margin-bottom:4px">Passion Turned Profession</div><div style="font-size:.78rem;color:rgba(255,255,255,.5)">Pet Store</div></div></div>
 
 <!-- NAV -->
 <a href="index.html" class="floating-logo" id="floatingLogo"><img src="images/logo1.jpeg" alt="A1-Enterprises" loading="lazy">A1-Enterprises</a>

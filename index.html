@@ -14,21 +14,20 @@ html{scroll-behavior:smooth;scroll-padding-top:70px}
 /* ── PAGE LOADER ── */
 .page-loader{
   position:fixed;inset:0;z-index:9999;
-  background:
-    linear-gradient(180deg,rgba(10,8,6,.15) 0%,rgba(10,8,6,.35) 50%,rgba(10,8,6,.55) 100%),
-    radial-gradient(ellipse at center,transparent 0%,rgba(10,8,6,.25) 100%),
-    url('images/logo1.jpeg') center/contain no-repeat #0E0A08;
+  background:#0E0A08;
   display:flex;align-items:center;justify-content:center;
   transition:opacity .5s ease,visibility .5s ease;
 }
 .page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
-.loader-content{text-align:center;padding-top:35vh}
+.loader-content{text-align:center}
+.loader-logo{width:120px;height:120px;border-radius:20px;object-fit:cover;margin:0 auto 24px;display:block}
 .loader-brand{
   font-family:'Playfair Display',Georgia,serif;
   font-size:1.5rem;font-weight:800;color:#fff;
-  margin-bottom:28px;letter-spacing:-.01em;
+  margin-bottom:8px;letter-spacing:-.01em;
 }
-@media(max-width:768px){.page-loader{background-size:cover}}
+.loader-desc{font-size:.85rem;color:var(--gold);margin-bottom:4px}
+.loader-info{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:2px}
 body{
   font-family:'Inter',-apple-system,sans-serif;
   background:#FBF7F2;color:#1A1412;
@@ -554,7 +553,11 @@ footer{
 <!-- ═══ PAGE LOADER ═══ -->
 <div id="pageLoader" class="page-loader">
   <div class="loader-content">
-    <div class="loader-brand">Think Pet, Think A-1</div>
+    <img src="images/logo1.jpeg" alt="A-1 Enterprises" class="loader-logo">
+    <div class="loader-brand">A-1 Enterprises</div>
+    <p class="loader-desc">Passion Turned Profession</p>
+    <p class="loader-info">The Complete Pet Ecosystem &amp; Solution</p>
+    <p class="loader-info">Est. 2020</p>
   </div>
 </div>
 

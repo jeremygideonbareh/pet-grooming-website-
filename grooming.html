@@ -97,12 +97,11 @@ img{display:block;max-width:100%;height:auto}
 
 /* ── LOADING ── */
 .loading-overlay{
-  position:fixed;inset:0;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.65)),url('images/logo1.jpeg') center/contain no-repeat #0E0A08;z-index:9999;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;
+  position:fixed;inset:0;background:#0E0A08;z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
   transition:opacity .7s ease,visibility .7s ease;
 }
 .loading-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
-@media(max-width:768px){.loading-overlay{background-size:cover}}
 .loading-brand{
   font-size:2.4rem;font-weight:900;text-align:center;line-height:1.2;
   background:linear-gradient(135deg,#fff 0%,#EAA172 25%,#F2C6A8 50%,#EAA172 75%,#fff 100%);
@@ -116,31 +115,6 @@ img{display:block;max-width:100%;height:auto}
   background:none;-webkit-background-clip:unset;
   animation:fadeSlideIn .8s .3s both;
 }
-.paw-loader{display:flex;align-items:center;gap:8px;animation:scaleIn .5s .6s both}
-.paw-loader .bar{
-  width:4px;height:24px;border-radius:4px;
-  background:linear-gradient(to top,#EAA172,#F2C6A8);
-  animation:barGrow .6s ease-in-out infinite alternate;
-}
-.paw-loader .bar:nth-child(1){animation-delay:0s;height:16px}
-.paw-loader .bar:nth-child(2){animation-delay:.1s;height:28px}
-.paw-loader .bar:nth-child(3){animation-delay:.2s;height:36px}
-.paw-loader .bar:nth-child(4){animation-delay:.3s;height:28px}
-.paw-loader .bar:nth-child(5){animation-delay:.4s;height:16px}
-.paw-dots{
-  display:flex;gap:10px;
-  animation:scaleIn .5s .8s both;
-}
-.paw-dots div{
-  width:14px;height:14px;border-radius:50%;
-  background:#EAA172;opacity:.2;
-  animation:pawPulse .8s ease-in-out infinite alternate;
-}
-.paw-dots div:nth-child(1){animation-delay:0s}
-.paw-dots div:nth-child(2){animation-delay:.15s;background:#D98E5B}
-.paw-dots div:nth-child(3){animation-delay:.3s;background:#C26A3C}
-.paw-dots div:nth-child(4){animation-delay:.45s;background:#A85A30}
-.paw-dots div:nth-child(5){animation-delay:.6s;background:#8A4A26}
 .loading-bg-shapes{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .loading-bg-shapes .shape{
   position:absolute;border-radius:50%;
@@ -152,9 +126,7 @@ img{display:block;max-width:100%;height:auto}
 @keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@keyframes scaleIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
-@keyframes barGrow{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
-@keyframes pawPulse{0%{opacity:.2;transform:scale(.8)}100%{opacity:1;transform:scale(1.2)}}
+
 @keyframes shapeFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(20px,-20px) scale(1.1)}66%{transform:translate(-10px,10px) scale(.95)}}
 
 /* ── HERO ── */
@@ -488,13 +460,13 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
 <body data-page="groom">
 
   <div class="loading-overlay" id="loadingOverlay">
-    <div style="text-align:center;padding-top:35vh">
-      <div style="font-size:1.3rem;font-weight:800;font-family:'Playfair Display',serif;color:#fff;letter-spacing:-.01em">A-1 Enterprises</div>
-      <div style="font-size:.85rem;color:rgba(255,255,255,.5);margin-top:4px">A-1Pet Shop And Grooming — Passion Turned Profession</div>
+    <div style="text-align:center">
+      <img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:120px;height:120px;border-radius:20px;object-fit:cover;margin:0 auto 24px;display:block">
+      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em">A-1 Enterprises</div>
+      <div style="font-size:.85rem;color:var(--gold);margin-bottom:4px">Passion Turned Profession</div>
+      <div style="font-size:.78rem;color:rgba(255,255,255,.5)">Pet Grooming</div>
     </div>
   </div>
-  <div class="paw-loader"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
-  <div class="paw-dots"><div></div><div></div><div></div><div></div><div></div></div>
 </div>
 
 <a href="index.html" class="floating-logo" id="floatingLogo"><img src="images/logo1.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
