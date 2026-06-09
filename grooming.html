@@ -734,11 +734,13 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
         <label for="bookService">Service Required</label>
         <select id="bookService" required>
           <option value="">Select a service...</option>
-          <option value="Full Grooming">Full Grooming</option>
-          <option value="Bath & Brush">Bath &amp; Brush</option>
-          <option value="Nail & Ear Care">Nail &amp; Ear Care</option>
-          <option value="Spa & Shine">Spa &amp; Shine</option>
-          <option value="Pet Styling">Pet Styling</option>
+          <option value="Express Grooming">Express Grooming</option>
+          <option value="Premium Full Grooming">Premium Full Grooming</option>
+          <option value="Spa & Relaxation Package">Spa &amp; Relaxation Package</option>
+          <option value="Anti-Fungal Therapy">Anti-Fungal Therapy</option>
+          <option value="Anti-Tick Flea & Lice Treatment">Anti-Tick Flea &amp; Lice Treatment</option>
+          <option value="De-Shedding Package">De-Shedding Package</option>
+          <option value="De-Tangling & Coat Restoration">De-Tangling &amp; Coat Restoration</option>
         </select>
       </div>
       <div class="form-group">
@@ -858,7 +860,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     txt+=`Service: ${svc}%0ADate: ${date}%0AWindow: ${window}`;
     window.open(`https://wa.me/9233485873?text=${txt}`,'_blank');
     closeBook();
-    setTimeout(function(){alert('Thank you for your booking request. Appointment confirmation is subject to availability. Our team will review your request and contact you with the confirmed appointment details. Please note that a booking confirmation fee of ₹500 is required to secure a grooming appointment. This amount will be adjusted against your final grooming bill. Grooming duration and appointment timing may vary depending on breed, coat condition, temperament and services selected. Think Pet 🐾 Think A-1')},500);
+    setTimeout(function(){alert('Thank you for your booking request. Appointment confirmation is subject to availability. Our team will review your request and contact you with the confirmed appointment details. Grooming duration and appointment timing may vary depending on breed, coat condition, temperament and services selected. Think Pet 🐾 Think A-1')},500);
   }catch(err){
     console.error('[Booking] Failed:',err);
     alert('Something went wrong. Please try again.');

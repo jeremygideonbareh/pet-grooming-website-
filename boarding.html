@@ -363,32 +363,45 @@ window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'
 <script src="auth.js"></script>
 <script src="db.js"></script>
 
+<style>
+.boarding-summary{background:rgba(255,255,255,.4);backdrop-filter:blur(8px);border-radius:16px;padding:16px 18px;margin-bottom:18px;border:1px solid rgba(255,255,255,.3)}
+.boarding-summary h4{font-size:.85rem;font-weight:700;margin-bottom:10px;color:var(--charcoal)}
+.boarding-summary .row{display:flex;justify-content:space-between;padding:4px 0;font-size:.8rem;color:var(--muted);border-bottom:1px solid rgba(0,0,0,.04)}
+.boarding-summary .row:last-child{border:none}
+.boarding-summary .row strong{color:var(--charcoal);font-weight:600}
+</style>
+
 <!-- BOOKING MODAL -->
 <div class="booking-overlay" id="bookingOverlay">
   <div class="booking-modal">
     <button class="close-btn" id="bookingClose">&times;</button>
     <h2>Book a Boarding Stay</h2>
-    <p class="sub">Fill in your details and your pet's information to book a stay.</p>
+    <p class="sub">Your profile is on file. Just select your dates and any special notes.</p>
+    <div id="profileSummary" class="boarding-summary" style="display:none">
+      <h4>Your Profile</h4>
+      <div class="row"><span>Owner</span><strong id="summaryName">—</strong></div>
+      <div class="row"><span>Phone</span><strong id="summaryPhone">—</strong></div>
+      <div class="row"><span>Dog</span><strong id="summaryDog">—</strong></div>
+      <div class="row"><span>Breed</span><strong id="summaryBreed">—</strong></div>
+    </div>
     <form id="bookingForm">
-      <div class="form-group"><label for="bookName">Your Name</label><input type="text" id="bookName" required autocomplete="name"></div>
-      <div class="form-group"><label for="bookPhone">Phone Number</label><input type="tel" id="bookPhone" required autocomplete="tel"></div>
-      <div class="form-group"><label for="bookWhatsApp">WhatsApp Number</label><input type="tel" id="bookWhatsApp" autocomplete="tel" placeholder="Same or different from phone"></div>
-      <div class="form-group"><label for="bookEmail">Email</label><input type="email" id="bookEmail" autocomplete="email"></div>
-      <div class="form-group"><label for="bookLocation">Location</label><input type="text" id="bookLocation" placeholder="Your area / locality in Shillong"></div>
-      <div class="form-group"><label for="bookPet">Pet's Name &amp; Breed</label><input type="text" id="bookPet" required></div>
-      <div class="form-group"><label for="bookDogAge">Dog's Age</label><input type="text" id="bookDogAge" placeholder="e.g. 2 years, 6 months"></div>
-      <div class="form-group"><label for="bookDogGender">Dog's Gender</label><select id="bookDogGender"><option value="">Select...</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
-      <div class="form-group"><label for="bookSickness">Any Sickness / Medical Conditions</label><input type="text" id="bookSickness" placeholder="None, or describe"></div>
-      <div class="form-group" style="display:flex;gap:12px;flex-wrap:wrap">
-        <div style="flex:1;min-width:120px"><label>Vaccinated?</label><select id="bookVaccination"><option value="">Select...</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-        <div style="flex:1;min-width:120px"><label>Deworming (within 3 months)?</label><select id="bookDeworming"><option value="">Select...</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-      </div>
+      <input type="hidden" id="bookName">
+      <input type="hidden" id="bookPhone">
+      <input type="hidden" id="bookWhatsApp">
+      <input type="hidden" id="bookEmail">
+      <input type="hidden" id="bookLocation">
+      <input type="hidden" id="bookPet">
+      <input type="hidden" id="bookDogAge">
+      <input type="hidden" id="bookDogGender">
+      <input type="hidden" id="bookSickness">
+      <input type="hidden" id="bookVaccination">
+      <input type="hidden" id="bookDeworming">
+      <input type="hidden" id="bookAllergy">
+      <input type="hidden" id="bookTemperament">
+      <input type="hidden" id="bookBehavioral">
+      <div class="form-group"><label for="bookStartDate">Boarding Start Date <span style="color:#C0392B">*</span></label><input type="date" id="bookStartDate" required></div>
+      <div class="form-group"><label for="bookEndDate">Boarding End Date <span style="color:#C0392B">*</span></label><input type="date" id="bookEndDate" required></div>
       <div class="form-group"><label for="bookVaccinationCard">Attach Vaccination Card (optional)</label><input type="file" id="bookVaccinationCard" accept="image/jpeg,image/png,image/webp,application/pdf"></div>
-      <div class="form-group"><label for="bookAllergy">Any Allergies</label><input type="text" id="bookAllergy" placeholder="None, or list"></div>
-      <div class="form-group"><label for="bookTemperament">Temperament of the Dog</label><select id="bookTemperament"><option value="">Select...</option><option value="Friendly">Friendly</option><option value="Shy">Shy</option><option value="Energetic">Energetic</option><option value="Aggressive">Aggressive</option><option value="Anxious">Anxious</option><option value="Calm">Calm</option></select></div>
-      <div class="form-group"><label for="bookBehavioral">Behavioural Issues / Training Goals</label><textarea id="bookBehavioral" placeholder="Describe any behavioural issues or special care instructions..."></textarea></div>
-      <div class="form-group"><label for="bookStartDate">Boarding Start Date <span style="color:var(--red)">*</span></label><input type="date" id="bookStartDate" required></div>
-      <div class="form-group"><label for="bookEndDate">Boarding End Date <span style="color:var(--red)">*</span></label><input type="date" id="bookEndDate" required></div>
       <div class="form-group"><label for="bookMsg">Additional Notes</label><textarea id="bookMsg" placeholder="Any special requests, dietary needs, or medical instructions..."></textarea></div>
       <button type="submit" class="btn-send"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Send Booking Request</button>
     </form>
@@ -397,9 +410,54 @@ window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'
 
 <script>
 const bBtn=document.getElementById('bookStayBtn'),bO=document.getElementById('bookingOverlay'),bC=document.getElementById('bookingClose');
-function openBookModal(){bO.classList.add('open');document.body.style.overflow='hidden'}
 function closeBook(){bO.classList.remove('open');document.body.style.overflow=''}
-bBtn?.addEventListener('click',openBookModal);bC?.addEventListener('click',closeBook);bO?.addEventListener('click',function(e){if(e.target===bO)closeBook()});
+function openBookModal(){
+  Auth.requireAuth(async function(){
+    bO.classList.add('open');
+    document.body.style.overflow='hidden';
+    try{
+      const sb=Auth.supabase;
+      if(!sb)return;
+      const sessRes=await sb.auth.getSession();
+      const session=sessRes.data?.session;
+      if(!session?.user)return;
+      const userId=session.user.id;
+      const ownerRes=await sb.from('owners').select('*').eq('id',userId).single();
+      if(ownerRes.error)return;
+      const owner=ownerRes.data;
+      const dogsRes=await sb.from('dogs').select('*').eq('owner_id',userId);
+      const dogs=dogsRes.data||[];
+      const dog=dogs&&dogs.length?dogs[0]:null;
+      document.getElementById('bookName').value=owner.full_name||'';
+      document.getElementById('bookPhone').value=owner.phone||'';
+      document.getElementById('bookWhatsApp').value=owner.whatsapp_number||'';
+      document.getElementById('bookEmail').value=owner.email||'';
+      document.getElementById('bookLocation').value=owner.location||'';
+      document.getElementById('bookPet').value=dog?`${dog.name||''} / ${dog.breed||''}`:'';
+      document.getElementById('bookDogAge').value=dog?dog.age||'':'';
+      document.getElementById('bookDogGender').value=dog?dog.gender||'':'';
+      document.getElementById('bookSickness').value=dog?dog.sickness||'':'';
+      document.getElementById('bookVaccination').value=dog?dog.vaccination||'':'';
+      document.getElementById('bookDeworming').value=dog?dog.deworming_3_months||'':'';
+      document.getElementById('bookAllergy').value=dog?dog.allergy||'':'';
+      document.getElementById('bookTemperament').value=dog?dog.temperament||'':'';
+      document.getElementById('bookBehavioral').value=dog?dog.behavioral_issues||'':'';
+      const ps=document.getElementById('profileSummary');
+      if(ps){
+        ps.style.display='block';
+        document.getElementById('summaryName').textContent=owner.full_name||'—';
+        document.getElementById('summaryPhone').textContent=owner.phone||'—';
+        document.getElementById('summaryDog').textContent=dog?dog.name||'—':'—';
+        document.getElementById('summaryBreed').textContent=dog?dog.breed||'—':'—';
+      }
+    }catch(err){
+      console.error('[Auth] Profile load error:',err);
+    }
+  });
+}
+bBtn?.addEventListener('click',openBookModal);
+bC?.addEventListener('click',closeBook);
+bO?.addEventListener('click',function(e){if(e.target===bO)closeBook()});
 document.getElementById('bookingForm')?.addEventListener('submit',async function(e){
   e.preventDefault();
   function v(id){const el=document.getElementById(id);return el?el.value.trim():''}
@@ -408,21 +466,41 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
   const origText=btn?btn.textContent:'';
   if(btn){btn.textContent='Submitting...';btn.disabled=true}
   try{
+    const sb=Auth.supabase;
+    if(!sb)throw new Error('Supabase not available');
+    const sessRes=await sb.auth.getSession();
+    const session=sessRes.data?.session;
+    if(!session?.user)throw new Error('Not authenticated');
+    const userId=session.user.id;
+    const ownerRes=await sb.from('owners').select('*').eq('id',userId).single();
+    if(ownerRes.error)throw new Error('Owner not found');
+    const owner=ownerRes.data;
+    const dogsRes=await sb.from('dogs').select('*').eq('owner_id',userId);
+    const dogs=dogsRes.data||[];
+    const dog=dogs&&dogs.length?dogs[0]:null;
     let vacUrl='';
     const vacFile=document.getElementById('bookVaccinationCard');
     if(vacFile&&vacFile.files&&vacFile.files[0]){
       vacUrl=await DB.uploadVaccinationCard(vacFile.files[0])||'';
     }
-    const ownerId=await DB.findOrCreateOwner(p,n,e2,loc,w);
-    const dogId=await DB.findOrUpdateDog(ownerId,d,{dog_age:da,dog_gender:dg,sickness:sk,vaccination:vac,deworming:dew,allergy:al,temperament:tem,behavioral_issues:bh,vaccination_card_url:vacUrl});
-    await DB.insertBooking(ownerId,dogId,{category:'Boarding',service:'',timeframe:`${sd} to ${ed}`,notes:msg});
+    const dogId=dog?dog.dog_id:null;
+    if(dogId&&(da||dg||sk||vac||dew||al||tem||bh||vacUrl)){
+      await DB.findOrUpdateDog(userId,d,{dog_age:da,dog_gender:dg,sickness:sk,vaccination:vac,deworming:dew,allergy:al,temperament:tem,behavioral_issues:bh,vaccination_card_url:vacUrl});
+    }
+    await sb.from('bookings').insert({owner_id:userId,dog_id:dogId,category:'Boarding',service:'',timeframe:`${sd} to ${ed}`,notes:msg}).select();
     let txt='Hi A-1 Enterprises! I would like to book a boarding stay.%0A%0A';
-    txt+=`Name: ${n}%0APhone: ${p}%0AWhatsApp: ${w}%0AEmail: ${e2}%0ALocation: ${loc}%0ADog: ${d}%0AAge: ${da}%0AGender: ${dg}%0ASickness: ${sk}%0AVaccinated: ${vac}%0ADeworming: ${dew}%0AAllergies: ${al}%0ATemperament: ${tem}%0ABehavioural Issues: ${bh}%0AFrom: ${sd}%0ATo: ${ed}%0ANotes: ${msg}`;
+    txt+='━━ CUSTOMER DETAILS ━━%0A';
+    txt+=`Name: ${n||owner.full_name||''}%0APhone: ${p||owner.phone||''}%0AWhatsApp: ${w||owner.whatsapp_number||''}%0AEmail: ${e2||owner.email||''}%0ALocation: ${loc||owner.location||''}%0A%0A`;
+    txt+='━━ DOG DETAILS ━━%0A';
+    txt+=`Dog: ${d||(dog?dog.name+'/'+dog.breed:'')}%0AAge: ${da||(dog?dog.age:'')}%0AGender: ${dg||(dog?dog.gender:'')}%0ASickness: ${sk||(dog?dog.sickness:'None')}%0AVaccinated: ${vac||(dog?dog.vaccination:'')}%0ADeworming: ${dew||(dog?dog.deworming_3_months:'')}%0AAllergies: ${al||(dog?dog.allergy:'None')}%0ATemperament: ${tem||(dog?dog.temperament:'')}%0ABehavioural: ${bh||(dog?dog.behavioral_issues:'None')}%0A%0A`;
+    txt+=`━━ BOOKING DETAILS ━━%0A`;
+    txt+=`From: ${sd}%0ATo: ${ed}%0ANotes: ${msg||'None'}`;
     if(vacUrl)txt+=`%0AVaccination Card: ${vacUrl}`;
     window.open(`https://wa.me/9233485873?text=${txt}`,'_blank');
     closeBook();
+    setTimeout(function(){alert('Thank you for your boarding request. Our team will review your booking and contact you to confirm availability and finalise the details. Boarding rates may vary based on breed, size, duration of stay and any special care requirements. Think Pet 🐾 Think A-1')},500);
   }catch(err){
-    console.error('[Booking] CRM chain failed:',err);
+    console.error('[Booking] Failed:',err);
     alert('Something went wrong. Please try again.');
   }finally{
     if(btn){btn.textContent=origText;btn.disabled=false}
