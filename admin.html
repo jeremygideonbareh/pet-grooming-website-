@@ -366,22 +366,12 @@ input,textarea,select,button{font-family:inherit}
 </head>
 <body>
 
-<!-- ── LOGIN OVERLAY ── -->
-<div class="login-overlay" id="loginOverlay">
+<div id="accessDenied" class="login-overlay" style="display:none">
   <div class="login-card">
     <div class="lock-icon">🔒</div>
-    <h1>Admin Access</h1>
-    <p>Sign in with your authorized email to manage the site.</p>
-    <div class="form-group">
-      <label for="adminEmail">Email</label>
-      <input type="email" id="adminEmail" autocomplete="email" placeholder="admin@example.com">
-    </div>
-    <div class="form-group">
-      <label for="adminPass">Password</label>
-      <input type="password" id="adminPass" autocomplete="new-password" placeholder="Enter password">
-    </div>
-    <div class="login-error" id="loginError"></div>
-    <button class="login-btn" id="loginBtn">Sign In</button>
+    <h1>Access Denied</h1>
+    <p style="margin-bottom:20px">You are not authorized to access this page.</p>
+    <a href="index.html" style="display:inline-block;padding:12px 28px;border-radius:60px;background:var(--gold);color:var(--charcoal);font-weight:700;font-size:.9rem;text-decoration:none">Go Home</a>
   </div>
 </div>
 
@@ -531,60 +521,27 @@ input,textarea,select,button{font-family:inherit}
 <script src="db.js"></script>
 <script>
 // ═══════════════════════════════════════════════
-// AUTH (delegated to auth.js)
+// ADMIN ACCESS CHECK
 // ═══════════════════════════════════════════════
-function requireAuth(){
-  if(!Auth.isAuthenticated()){
-    document.getElementById('loginOverlay').classList.remove('hidden');
+async function checkAdminAccess(){
+  var admin = await Auth.isAdmin();
+  if(admin){
+    document.getElementById('accessDenied').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    document.getElementById('sessionInfo').textContent='Session active';
+    await renderDashboard();
+  }else{
+    document.getElementById('accessDenied').style.display='flex';
     document.getElementById('dashboard').style.display='none';
-    return false;
-  }
-  document.getElementById('loginOverlay').classList.add('hidden');
-  document.getElementById('dashboard').style.display='block';
-  document.getElementById('sessionInfo').textContent='Session active';
-  return true;
-}
-
-// ── Login handler ──
-async function handleLogin(){
-  const email=document.getElementById('adminEmail').value.trim();
-  const pass=document.getElementById('adminPass').value;
-  const errorEl=document.getElementById('loginError');
-  const btn=document.getElementById('loginBtn');
-
-  if(!email){errorEl.textContent='Please enter your email.';return}
-  if(!pass){errorEl.textContent='Please enter your password.';return}
-
-  btn.disabled=true;
-  btn.classList.add('loading');
-  errorEl.textContent='';
-
-  try{
-    const result=await Auth.adminSignIn(email,pass);
-    if(result.success){
-      requireAuth();
-      await renderDashboard();
-    }else{
-      errorEl.textContent=result.error||'Login failed.';
-      document.getElementById('adminPass').value='';
-    document.getElementById('adminEmail').focus();
-    }
-  }catch(e){
-    errorEl.textContent='An error occurred. Please try again.';
-  }finally{
-    btn.disabled=false;
-    btn.classList.remove('loading');
   }
 }
 
 // ── Logout ──
 function logout(){
-  Auth.adminSignOut();
+  Auth.signOut();
   document.getElementById('dashboard').style.display='none';
-  document.getElementById('loginOverlay').classList.remove('hidden');
-  document.getElementById('adminEmail').value='';
-  document.getElementById('adminPass').value='';
-  document.getElementById('loginError').textContent='';
+  document.getElementById('accessDenied').style.display='none';
+  window.location.href='index.html';
 }
 
 // ═══════════════════════════════════════════════
@@ -833,9 +790,6 @@ document.addEventListener('keydown',e=>{
 // ═══════════════════════════════════════════════
 // EVENT BINDING
 // ═══════════════════════════════════════════════
-document.getElementById('loginBtn').addEventListener('click',handleLogin);
-document.getElementById('adminEmail').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('adminPass').focus()});
-document.getElementById('adminPass').addEventListener('keydown',function(e){if(e.key==='Enter')handleLogin()});
 document.getElementById('logoutBtn').addEventListener('click',logout);
 document.getElementById('addBtn').addEventListener('click',openAdd);
 document.getElementById('formModalClose').addEventListener('click',closeFormModal);
@@ -1994,11 +1948,7 @@ async function renderBookingsDashboard() {
 // INIT
 // ═══════════════════════════════════════════════
 (async function(){
-  if(!requireAuth()){
-    document.getElementById('adminPass').focus();
-  }else{
-    await renderDashboard();
-  }
+  await checkAdminAccess();
 })();
 </script>
 

@@ -95,11 +95,11 @@
     }
   }
 
-  /* ── Sign In (phone + password) ── */
-  async function signIn(phone, password) {
+  /* ── Sign In (email or phone + password) ── */
+  async function signIn(identifier, password) {
     try {
       if (!_supabase) throw new Error('Supabase SDK not loaded yet');
-      var email = phoneToEmail(phone);
+      var email = identifier.indexOf('@') !== -1 ? identifier : phoneToEmail(identifier);
       var result = await _supabase.auth.signInWithPassword({ email: email, password: password });
       if (result.error) throw result.error;
       return { success: true, user: result.data.user, session: result.data.session };
@@ -158,10 +158,22 @@
     }
   }
 
+  /* ── Admin email constant ── */
+  var ADMIN_EMAIL = 'a1.enterprises8891@gmail.com';
+
   /* ── Extract phone from auth email ── */
   function getPhoneFromUser(user) {
     if (!user || !user.email) return '';
     return user.email.replace('@a1.com', '');
+  }
+
+  /* ── Check if current user is admin ── */
+  async function isAdmin() {
+    try {
+      var user = await getCurrentUser();
+      if (!user || !user.email) return false;
+      return user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim();
+    } catch(e) { return false; }
   }
 
   /* ── Auth state listener ── */
@@ -195,7 +207,7 @@
           '<form id="authLoginForm" class="auth-form active">' +
             '<h3>Welcome Back</h3>' +
             '<p class="auth-sub">Login to book your service.</p>' +
-            '<div class="auth-field"><label>Phone Number</label><input type="tel" id="authLoginPhone" required placeholder="9876543210"></div>' +
+            '<div class="auth-field"><label>Phone or Email</label><input type="text" id="authLoginPhone" required placeholder="Phone or email"></div>' +
             '<div class="auth-field"><label>Password</label><input type="password" id="authLoginPassword" required></div>' +
             '<div class="auth-error" id="authLoginError"></div>' +
             '<button type="submit" class="auth-btn">Login</button>' +
@@ -314,14 +326,20 @@
     }
   }
 
-  /* ── Logout button UI ── */
+  /* ── Nav UI (logout + admin buttons) ── */
   async function updateNavUI() {
     var session = await getSession();
+    var isAdminUser = session ? await isAdmin() : false;
+    var show = session ? '' : 'none';
+    var adminShow = isAdminUser ? '' : 'none';
     var desktopBtn = document.getElementById('navLogoutBtn');
     var mobileBtn = document.getElementById('mobileLogoutBtn');
-    var display = session ? '' : 'none';
-    if (desktopBtn) desktopBtn.style.display = display;
-    if (mobileBtn) mobileBtn.style.display = display;
+    var adminDesktop = document.getElementById('navAdminBtn');
+    var adminMobile = document.getElementById('mobileAdminBtn');
+    if (desktopBtn) desktopBtn.style.display = show;
+    if (mobileBtn) mobileBtn.style.display = show;
+    if (adminDesktop) adminDesktop.style.display = adminShow;
+    if (adminMobile) adminMobile.style.display = adminShow;
   }
 
   async function handleLogout(e) {
@@ -407,6 +425,7 @@
     showAuthModal: showAuthModal,
     hideAuthModal: hideAuthModal,
     updateNavUI: updateNavUI,
+    isAdmin: isAdmin,
     isAuthenticated: isAuthenticated,
     adminSignIn: adminSignIn,
     adminSignOut: adminSignOut,
