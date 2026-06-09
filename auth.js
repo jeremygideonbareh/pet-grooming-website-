@@ -352,80 +352,45 @@
     init();
   }
 
-  /* ── Legacy admin auth (unchanged) ── */
+  /* ── Admin auth (Supabase email/password) ── */
   var SESSION_KEY = 'a1_admin_session';
-  var LOCKOUT_KEY = 'a1_admin_lockout';
-  var MAX_ATTEMPTS = 5;
-
-  function generateToken() {
-    var arr = new Uint8Array(32);
-    crypto.getRandomValues(arr);
-    return Array.from(arr).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
-  }
+  var ADMIN_EMAIL = 'a1.enterprises8891@gmail.com';
 
   function isAuthenticated() {
     var raw = sessionStorage.getItem(SESSION_KEY);
     if (!raw) return false;
     try {
       var data = JSON.parse(raw);
-      return data && data.token && data.expiry > Date.now();
+      return data && data.expiry > Date.now();
     } catch(e) { return false; }
   }
 
-  function getLockout() {
+  async function adminSignIn(email, password) {
     try {
-      var raw = sessionStorage.getItem(LOCKOUT_KEY);
-      if (!raw) return { attempts: 0, lockedUntil: 0 };
-      return JSON.parse(raw);
-    } catch(e) { return { attempts: 0, lockedUntil: 0 }; }
-  }
-
-  function setLockout(data) {
-    sessionStorage.setItem(LOCKOUT_KEY, JSON.stringify(data));
-  }
-
-  function checkLocked() {
-    var lock = getLockout();
-    if (lock.attempts >= MAX_ATTEMPTS) {
-      var wait = Math.min(60000 * Math.pow(2, lock.attempts - MAX_ATTEMPTS), 300000);
-      var elapsed = Date.now() - lock.lockedUntil;
-      if (elapsed < wait) return wait - elapsed;
-      setLockout({ attempts: 0, lockedUntil: 0 });
-    }
-    return 0;
-  }
-
-  async function login(password) {
-    await new Promise(function(resolve) { setTimeout(resolve, 300 + Math.random() * 400); });
-    if (password === 'admin123') return { success: true };
-    return { success: false, error: 'Invalid password' };
-  }
-
-  async function attemptLogin(password) {
-    var remaining = checkLocked();
-    if (remaining > 0) {
-      var secs = Math.ceil(remaining / 1000);
-      return { success: false, locked: true, error: 'Too many attempts. Try again in ' + secs + 's.' };
-    }
-    var result = await login(password);
-    if (result.success) {
-      var token = generateToken();
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ token: token, expiry: Date.now() + 86400000 }));
-      setLockout({ attempts: 0, lockedUntil: 0 });
+      if (!_supabase) throw new Error('Supabase SDK not loaded yet');
+      var result = await _supabase.auth.signInWithPassword({ email: email, password: password });
+      if (result.error) throw result.error;
+      if (!result.data || !result.data.user) throw new Error('No user returned');
+      var authedEmail = (result.data.user.email || '').toLowerCase().trim();
+      if (authedEmail !== ADMIN_EMAIL.toLowerCase().trim()) {
+        await _supabase.auth.signOut();
+        return { success: false, error: 'This email is not authorized for admin access.' };
+      }
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ expiry: Date.now() + 86400000 }));
       return { success: true };
+    } catch (e) {
+      var msg = e.message || 'Login failed';
+      if (msg.indexOf('Invalid login credentials') !== -1) msg = 'Invalid email or password.';
+      return { success: false, error: msg };
     }
-    var lock = getLockout();
-    lock.attempts++;
-    lock.lockedUntil = Date.now();
-    setLockout(lock);
-    if (lock.attempts >= MAX_ATTEMPTS) {
-      return { success: false, locked: true, error: 'Too many attempts. Try again in 60s.' };
-    }
-    return { success: false, error: result.error, remaining: MAX_ATTEMPTS - lock.attempts };
   }
 
-  function adminLogout() {
+  async function adminSignOut() {
+    try {
+      if (_supabase) await _supabase.auth.signOut();
+    } catch (e) { /* ignore */ }
     sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem('a1_admin_lockout');
   }
 
   /* ── Expose globally ── */
@@ -442,10 +407,10 @@
     showAuthModal: showAuthModal,
     hideAuthModal: hideAuthModal,
     updateNavUI: updateNavUI,
-    /* Legacy admin auth */
     isAuthenticated: isAuthenticated,
-    attemptLogin: attemptLogin,
-    logout: adminLogout,
+    adminSignIn: adminSignIn,
+    adminSignOut: adminSignOut,
+    logout: adminSignOut,
     SESSION_KEY: SESSION_KEY
   };
 })();

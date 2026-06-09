@@ -371,14 +371,17 @@ input,textarea,select,button{font-family:inherit}
   <div class="login-card">
     <div class="lock-icon">🔒</div>
     <h1>Admin Access</h1>
-    <p>Enter the admin password to manage your store inventory.</p>
+    <p>Sign in with your authorized email to manage the site.</p>
+    <div class="form-group">
+      <label for="adminEmail">Email</label>
+      <input type="email" id="adminEmail" autocomplete="email" placeholder="admin@example.com">
+    </div>
     <div class="form-group">
       <label for="adminPass">Password</label>
-      <input type="password" id="adminPass" autocomplete="new-password" placeholder="Enter admin password">
+      <input type="password" id="adminPass" autocomplete="new-password" placeholder="Enter password">
     </div>
     <div class="login-error" id="loginError"></div>
     <button class="login-btn" id="loginBtn">Sign In</button>
-    <div class="lockout-msg" id="lockoutMsg"></div>
   </div>
 </div>
 
@@ -544,28 +547,27 @@ function requireAuth(){
 
 // ── Login handler ──
 async function handleLogin(){
+  const email=document.getElementById('adminEmail').value.trim();
   const pass=document.getElementById('adminPass').value;
   const errorEl=document.getElementById('loginError');
-  const lockoutEl=document.getElementById('lockoutMsg');
   const btn=document.getElementById('loginBtn');
+
+  if(!email){errorEl.textContent='Please enter your email.';return}
+  if(!pass){errorEl.textContent='Please enter your password.';return}
 
   btn.disabled=true;
   btn.classList.add('loading');
   errorEl.textContent='';
-  lockoutEl.textContent='';
 
   try{
-    const result=await Auth.attemptLogin(pass);
+    const result=await Auth.adminSignIn(email,pass);
     if(result.success){
       requireAuth();
       await renderDashboard();
     }else{
-      lockoutEl.textContent=result.error||'';
-      if(!result.locked){
-        errorEl.textContent=(result.remaining?`Invalid password. ${result.remaining} attempt(s) remaining.`:'Invalid password.');
-      }
+      errorEl.textContent=result.error||'Login failed.';
       document.getElementById('adminPass').value='';
-      document.getElementById('adminPass').focus();
+    document.getElementById('adminEmail').focus();
     }
   }catch(e){
     errorEl.textContent='An error occurred. Please try again.';
@@ -577,12 +579,12 @@ async function handleLogin(){
 
 // ── Logout ──
 function logout(){
-  Auth.logout();
+  Auth.adminSignOut();
   document.getElementById('dashboard').style.display='none';
   document.getElementById('loginOverlay').classList.remove('hidden');
+  document.getElementById('adminEmail').value='';
   document.getElementById('adminPass').value='';
   document.getElementById('loginError').textContent='';
-  document.getElementById('lockoutMsg').textContent='';
 }
 
 // ═══════════════════════════════════════════════
@@ -832,7 +834,8 @@ document.addEventListener('keydown',e=>{
 // EVENT BINDING
 // ═══════════════════════════════════════════════
 document.getElementById('loginBtn').addEventListener('click',handleLogin);
-document.getElementById('adminPass').addEventListener('keydown',e=>{if(e.key==='Enter')handleLogin()});
+document.getElementById('adminEmail').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('adminPass').focus()});
+document.getElementById('adminPass').addEventListener('keydown',function(e){if(e.key==='Enter')handleLogin()});
 document.getElementById('logoutBtn').addEventListener('click',logout);
 document.getElementById('addBtn').addEventListener('click',openAdd);
 document.getElementById('formModalClose').addEventListener('click',closeFormModal);
