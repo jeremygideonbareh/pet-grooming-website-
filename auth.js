@@ -159,7 +159,7 @@
   }
 
   /* ── Admin email constant ── */
-  var ADMIN_EMAIL = 'a1.enterprises8891@gmail.com';
+  var ADMIN_EMAILS = ['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com'];
 
   /* ── Extract phone from auth email ── */
   function getPhoneFromUser(user) {
@@ -172,7 +172,7 @@
     try {
       var user = await getCurrentUser();
       if (!user || !user.email) return false;
-      return user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim();
+      return ADMIN_EMAILS.includes(user.email.toLowerCase().trim());
     } catch(e) { return false; }
   }
 
@@ -372,7 +372,7 @@
 
   /* ── Admin auth (Supabase email/password) ── */
   var SESSION_KEY = 'a1_admin_session';
-  var ADMIN_EMAIL = 'a1.enterprises8891@gmail.com';
+  var ADMIN_EMAILS = ['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com'];
 
   function isAuthenticated() {
     var raw = sessionStorage.getItem(SESSION_KEY);
@@ -390,7 +390,7 @@
       if (result.error) throw result.error;
       if (!result.data || !result.data.user) throw new Error('No user returned');
       var authedEmail = (result.data.user.email || '').toLowerCase().trim();
-      if (authedEmail !== ADMIN_EMAIL.toLowerCase().trim()) {
+      if (!ADMIN_EMAILS.includes(authedEmail)) {
         await _supabase.auth.signOut();
         return { success: false, error: 'This email is not authorized for admin access.' };
       }
