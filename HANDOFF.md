@@ -58,13 +58,13 @@ A complete multi-page pet services website for **A-1 Enterprises** based in **Sh
 
 ```
 a1-enterprise/
-├── index.html              # Homepage (loader w/ tagline, hero w/ sliding animations, about, services, why us, gallery, testimonials, footer, nav w/o subpage links, mobile hamburger top-right) — ~960 lines
-├── training.html           # Training detail page (enquiry system) — 532 lines
-├── eco-cottages.html       # Eco Cottages detail page — 6 sections — 406 lines
-├── grooming.html           # Grooming detail page (7 services, auth-gated booking) — 883 lines
-├── boarding.html           # Boarding detail page (auth-gated session-based booking) — 512 lines
-├── store.html              # Pet store (30 products, search, filter, inquiry modal, auto-seeds DB) — 660 lines
-├── admin.html              # Admin dashboard (6 tabs) — 1764 lines
+├── index.html              # Homepage (loader w/ tagline, hero w/ video bg, about, services, why us, gallery, testimonials, footer, nav w/ admin + logout buttons) — 1145 lines
+├── training.html           # Training detail page (enquiry system, auth-gated booking) — 510 lines
+├── eco-cottages.html       # Eco Cottages detail page — 6 sections — 320 lines
+├── grooming.html           # Grooming detail page (7 services, auth-gated booking, static image hero) — 845 lines
+├── boarding.html           # Boarding detail page (auth-gated session-based booking with profile summary) — 498 lines
+├── store.html              # Pet store (30 products, search, filter, inquiry modal, auto-seeds DB) — 658 lines
+├── admin.html              # Admin dashboard (6 tabs, Supabase email auth, access-denied gate) — 1862 lines
 │
 ├── auth.js                 # Auth layer — mock async API, lockout, session token
 ├── upload.js               # Upload layer — Supabase Storage + type validation + auto-compression
@@ -428,11 +428,12 @@ Single-page app inside `admin.html`. No frameworks. All JS is vanilla (ES5-compa
 | Eco Cottages | `data-tab="eco"` | `tabEco` | `renderEcoEditor()` | `saveAllContent()` → `DB.saveSiteContent()` |
 
 ### Login Flow
-1. Page loads → `requireAuth()` checks `Auth.isAuthenticated()` (sessionStorage token + 24h expiry)
-2. If not authenticated → login overlay shown
-3. User enters password → `handleLogin()` → `Auth.attemptLogin(password)` (async mock API)
-4. On success → session token stored → `renderDashboard()` called
-5. On failure → lockout tracking (5 attempts max, exponential backoff up to 5min)
+1. Page loads → `checkAdminAccess()` calls `Auth.isAdmin()` (checks Supabase session email against `ADMIN_EMAILS` array)
+2. If the logged-in user's email is in the authorized list → dashboard is shown, session info displayed, `renderDashboard()` called
+3. If not logged in or not admin → "Access Denied" overlay with "Go Home" link shown
+4. Admin login uses the **shared auth modal** (same as customer auth) — no separate admin login UI
+5. On any page, if the logged-in user's email matches `a1.enterprises8891@gmail.com`, `cloudlyconfusing@gmail.com`, or phone `9233485873` (→ `9233485873@a1.com`), an **Admin button** appears in the desktop + mobile nav
+6. Authorized admin emails must be created manually in the Supabase dashboard (Authentication → Users → Add User) before they can sign in
 
 ### Tab: Products
 **Schema (saved to `products` Supabase table):**
@@ -785,43 +786,114 @@ window.DB = {
 ## Auth Layer (auth.js)
 
 ### Location
-`auth.js` — loaded via `<script src="auth.js">` before `db.js` and `upload.js`.
+`auth.js` — loaded via `<script src="auth.js">` before `upload.js` and `db.js`. Present on every page including `admin.html`.
 
-### Functions
+### Supabase Client
+```javascript
+var SUPABASE_URL = 'https://hqgdifxecxrxhjsbavkl.supabase.co';
+var SUPABASE_ANON_KEY = 'sb_publishable_...';
+var _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: true, storageKey: 'a1_booking_auth', autoRefreshToken: true }
+});
+```
+The client uses a custom `storageKey` (`a1_booking_auth`) to avoid collisions with other Supabase apps on the same domain.
 
-#### `Auth.isAuthenticated()` → `boolean`
-Checks `sessionStorage` for a token with valid 24h expiry.
+### Phone → Email Hack
+```javascript
+function phoneToEmail(phone) {
+  return phone.replace(/[^0-9]/g, '') + '@a1.com';
+}
+```
+Supabase Auth requires an email for password-based login. Phone numbers are converted to `{digits}@a1.com`. If the identifier already contains `@`, it is used directly as an email.
 
-#### `Auth.attemptLogin(password)` → `{success, error?, locked?, remaining?}`
-- Async mock API (300–700ms simulated delay)
-- Checks password against `admin123`
-- Lockout: 5 max attempts, exponential backoff (60s → 120s → 240s → 300s max)
-- On success: generates crypto token, stores in sessionStorage
+### Key Functions
 
-#### `Auth.logout()`
-Removes session token from sessionStorage.
+#### `signUp(phone, password, profile)` → `{success, user?, session?, error?}`
+- Converts phone to email via `phoneToEmail()`
+- Calls `_supabase.auth.signUp()` with the profile stored in `user_metadata`
+- After sign-up, auto-inserts an **owner record** (`owners.id = auth.user.id`) and a **dog record** (`dogs.owner_id = auth.user.id`) into the public Supabase tables
+- If auto-confirm is disabled in Supabase, performs a post-signup `signInWithPassword` to get a session for DB writes
+
+#### `signIn(identifier, password)` → `{success, user?, session?, error?}`
+- Detects email vs phone: if identifier contains `@`, uses it directly; otherwise converts via `phoneToEmail()`
+- Calls `_supabase.auth.signInWithPassword()`
+- After success, the auth modal calls `await Auth.updateNavUI()` so the admin/nav UI updates without page reload
+
+#### `signOut()` → `{success, error?}`
+- Calls `_supabase.auth.signOut()`
+- Removes `a1_booking_auth` from localStorage
+- Triggers `location.reload()` via `handleLogout()`
+
+#### `getSession()` → `Session|null`
+- Calls `_supabase.auth.getSession()`
+- Enforces strict **24-hour timeout** — if session is older than 24h, signs out and clears storage
+- Returns the session object, or `null` if no valid session exists
+
+#### `getCurrentUser()` → `User|null`
+- Calls `_supabase.auth.getUser()`
+- Returns the authenticated user object (contains `id`, `email`, `user_metadata`), or `null`
+
+#### `isAdmin()` → `boolean`
+```javascript
+var ADMIN_EMAILS = ['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com', '9233485873@a1.com'];
+
+async function isAdmin() {
+  var user = await getCurrentUser();
+  if (!user || !user.email) return false;
+  return ADMIN_EMAILS.includes(user.email.toLowerCase().trim());
+}
+```
+- Gets the current user from Supabase
+- Checks if the user's email (lowercased) is in the allowed `ADMIN_EMAILS` array
+- Phone users who signed up as `9233485873` → email `9233485873@a1.com` — this string is included in the array
+- Admin users must be created manually in Supabase Auth dashboard; the email-based hack accounts (`@a1.com`) already exist via sign-up flow
+
+#### `showAuthModal(callback)` / `hideAuthModal()`
+- Injects the auth overlay and modal dynamically into the DOM (idempotent — only injects once)
+- Shows Login and Sign Up tabs with consistent liquid-glass styling
+- `showAuthModal(callback)` stores an optional callback that fires after successful auth
+- Login form accepts "Phone or Email" (`type="text"`) — any string with `@` is treated as email, digits as phone
+- Sign Up form collects: Phone, Password, Full Name, WhatsApp, Location, Dog Name, Breed, Age, Gender, Sickness, Vaccination, Deworming, Allergy, Temperament, Behavioral Issues
+
+#### `requireAuth(callback)`
+- Checks `getSession()` — if valid session exists, calls callback immediately
+- If no session, calls `showAuthModal(callback)` to gate the action
+
+#### `updateNavUI()`
+- Fetches the current session and checks `isAdmin()`
+- Shows/hides `#navLogoutBtn`, `#mobileLogoutBtn`, `#navAdminBtn`, `#mobileAdminBtn` based on session state and admin status
+- Called on page load via `init()` and after every login/signup success
+
+### Auth State Change Listener
+```javascript
+_supabase.auth.onAuthStateChange(callback)
+```
+Available via `Auth.onAuthStateChange()`. Currently not used for automatic UI updates (nav UI is refreshed explicitly after login/signup).
+
+### Nav Auth Buttons (Admin + Logout)
+Every content page has 4 hidden nav elements:
+
+| ID | Location | Purpose |
+|---|---|---|
+| `#navLogoutBtn` | Desktop nav `<ul class="nav-links">` | Logout link, shown when session active |
+| `#mobileLogoutBtn` | Mobile nav `<div class="mobile-nav">` | Logout link, shown when session active |
+| `#navAdminBtn` | Desktop nav `<ul class="nav-links">` | Admin dashboard link, shown only when admin email |
+| `#mobileAdminBtn` | Mobile nav `<div class="mobile-nav">` | Admin dashboard link, shown only when admin email |
+
+All 4 have `style="display:none"` in HTML. `updateNavUI()` toggles their visibility.
 
 ### Exposed Global
 ```javascript
 window.Auth = {
-  isAuthenticated,
-  attemptLogin,
-  logout,
+  supabase: _supabase,
+  signUp, signIn, signOut,
+  getSession, getUser: getCurrentUser,
+  getPhoneFromUser, onAuthStateChange,
+  requireAuth, showAuthModal, hideAuthModal,
+  updateNavUI, isAdmin,
+  isAuthenticated, adminSignIn, adminSignOut, logout,
   SESSION_KEY: 'a1_admin_session'
 };
-```
-
-### Production TODO
-Replace the `if (password === 'admin123')` mock check with a real backend call (Cloudflare Worker, Firebase Auth, Supabase Auth, etc.).
-
-```javascript
-// Example production replacement:
-// const res = await fetch('https://api.example.com/auth/login', {
-//   method: 'POST',
-//   headers: { 'Content-Type': 'application/json' },
-//   body: JSON.stringify({ password })
-// });
-// return res.json();
 ```
 
 ---
@@ -1082,16 +1154,16 @@ The project previously used a Cloudflare Worker deployment at `aenterprisewebsit
 ## Security Notes
 
 ### What's Exposed
-- Supabase URL and anon key are in `db.js` (client-side) — this is by design (anon key is publishable)
-- Admin password `admin123` is in `auth.js` as a mock check — this is NOT real security
+- Supabase URL and anon key are in `db.js` and `auth.js` (client-side) — this is by design (anon key is publishable)
+- Admin access is controlled by email matching on the client side (`isAdmin()` checks against `ADMIN_EMAILS` array) — the actual auth barrier is Supabase's email/password authentication
 - All data operations go through Supabase with the anon key — RLS must be configured for production
 
-### Real Authentication (Production TODO)
-Replace the mock auth with one of:
-- **Supabase Auth** — email/password or magic link
-- **Firebase Auth** — anonymous or email/password
-- **Cloudflare Workers** — server-side auth endpoint
-- **Cloudflare Access** — if using Cloudflare as reverse proxy
+### Authentication Model
+- Admin auth uses **Supabase Auth with email/password** — all sign-ins go through Supabase's backend
+- Authorized admin emails (`a1.enterprises8891@gmail.com`, `cloudlyconfusing@gmail.com`, `9233485873@a1.com`) must be created as users in the Supabase Auth dashboard
+- Phone-number users (`9233485873` → `9233485873@a1.com`) need their password set via the sign-up flow or admin dashboard
+- There is no separate admin login UI — the shared auth modal handles both customer and admin auth
+- Admin privileges are purely a client-side role derived from email matching; anyone who gains access to an admin email account can access the dashboard
 
 ### Image Upload
 - File type is validated client-side (JPG/PNG/WebP only). This is convenience, not security. Add server-side validation.
@@ -1191,7 +1263,6 @@ DB.getProducts()
 ## Known Issues & Roadmap
 
 ### Current Limitations
-- **Auth is mock-only** — password `admin123` is hardcoded in `auth.js`. Replace with real auth for production.
 - **No RLS policies** — Supabase anon key has full write access. Configure RLS before going public.
 - **Store page isn't content-loaded** — product data comes from `DB.getProducts()` but the page's text sections (hero, about) aren't managed by the admin content editor.
 - **No image deletion** — uploaded images accumulate in the Supabase Storage bucket forever. Add an admin UI to list/delete orphaned images.
@@ -1204,6 +1275,7 @@ DB.getProducts()
 - **`base.html` is empty** — unused template file. Can be deleted.
 - **Product images are generic Unsplash dog photos** — none show the actual product (e.g., dog food bag, brush, life jacket). Acceptable for now since this is a free stock photo site, but would benefit from real product photography.
 - **Loader shows tagline + ecosystem description text on every page** — this text is designed for the homepage. If subpages get their own loader text, they should update the loader HTML individually.
+- **Admin role is client-side only** — `isAdmin()` checks against a hardcoded email array. This is not a security boundary; anyone who gains access to an authorized email's Supabase password can access the dashboard. Future improvement: move admin verification to a server endpoint or RLS policy.
 
 ### Future Enhancements
 1. **Supabase RLS policies** — configure proper Row Level Security for owners, dogs, and bookings tables instead of relying on anon key inserts
@@ -1216,8 +1288,9 @@ DB.getProducts()
 8. **Image management** — delete/replace images via admin panel
 9. **Bulk product import** — CSV upload for products
 10. **Activity log** — track who changed what and when
-11. **Admin auth** — replace mock password `admin123` in auth.js with real Supabase Auth or Cloudflare Workers
-12. **Clean up db.js** — remove obsolete `findOrCreateOwner()` and `findOrUpdateDog()` if booking flows now use direct session-based lookups
+11. **Admin user management UI** — add/remove admin emails directly from the admin dashboard
+12. **Server-side admin verification** — move admin email checking to a server endpoint instead of client-side comparison
+13. **Clean up db.js** — remove obsolete `findOrCreateOwner()` and `findOrUpdateDog()` if booking flows now use direct session-based lookups
 
 ### Items Already Fixed
 - ❌ Mobile responsiveness at 360px — DONE
@@ -1261,10 +1334,14 @@ DB.getProducts()
 - ❌ Booking owner lookup by phone fragile/mismatched — PIVOTED to direct `owners.id = session.user.id` lookup
 - ❌ signUp referenced undeclared `userId` — FIXED by adding `var userId = result.data.user.id` after auth call
 - ❌ Dog insert depended on owner insert readback — REMOVED, now uses auth UUID directly
+- ❌ Mock admin password `admin123` in auth.js — REPLACED with Supabase email/password auth via shared auth modal
+- ❌ Admin login UI separate from customer login — REMOVED admin.html login overlay, now uses shared auth modal with automatic admin role detection
+- ❌ No admin button in nav — ADDED `#navAdminBtn` + `#mobileAdminBtn` to all 6 content pages, shown only when admin email user is logged in
+- ❌ Hero video not used on homepage — SWAPPED: homepage now shows grooming's `herosectionvideo.mp4` with overlay gradient; grooming now shows homepage's former Unsplash photo as CSS background-image
 
 ---
 
-*Last updated: June 2026 (Session 6 — Training enquiry, grooming dropdown sync, boarding auth gate)*
+*Last updated: June 2026 (Session 7 — Admin auth Supabase migration, hero swap, nav admin buttons)*
 
 ## Session Summary (June 2026)
 
@@ -1426,3 +1503,76 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - `grooming.html` — updated service dropdown options, removed ₹500 fee mention from confirmation alert
 - `boarding.html` — auth-gated openBookModal, session-based profile prefill with hidden fields, Profile Summary card, updated submit handler
 - `HANDOFF.md` — updated line counts, page breakdowns, added Session 6 summary
+
+### Session 7 — Supabase Admin Auth Migration, Hero Background Swap, Nav Admin Buttons
+
+**1. Hero background swap between index and grooming:**
+- Homepage (`index.html`) hero background changed from static Unsplash image to grooming page's video (`herosectionvideo.mp4`):
+  - Added separate `.hero-overlay` div for the 3-stop gradient overlay (keeps original homepage gradient styling)
+  - Video is set with `object-fit: cover` and positioned as absolute background
+- Grooming page (`grooming.html`) hero changed from video to static CSS background-image:
+  - Uses the homepage's former Unsplash photo (`https://images.unsplash.com/photo-1544568100-847a948585b9`)
+  - Gradient baked directly into the CSS `background` property as `linear-gradient(to bottom, ...), url(...) center/cover`
+
+**2. Admin auth — Supabase email-based login (replaced mock password `admin123`):**
+- `auth.js` — `signIn()` enhanced to accept email OR phone:
+  - If identifier contains `@`, passes directly to `supabase.auth.signInWithPassword()`
+  - If identifier is digits only, converts via `phoneToEmail()` (original hack: `digits@a1.com`)
+- Auth modal login field changed: label "Phone Number" → "Phone or Email", input `type="tel"` → `type="text"`
+- Added `isAdmin()` function:
+  - Calls `getCurrentUser()` to get the Supabase user
+  - Compares `user.email` against `ADMIN_EMAILS` array (lowercased, trimmed)
+  - Initially a single string, then converted to array: `['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com', '9233485873@a1.com']`
+- Added `adminSignIn(email, password)` — alternative login path that calls Supabase directly, checks authorized email, stores sessionStorage session (legacy, used by admin.html for backwards compatibility)
+- `updateNavUI()` enhanced: also shows `#navAdminBtn` / `#mobileAdminBtn` when `isAdmin()` returns true
+- Added `await updateNavUI()` call after login and signup success handlers — without this, the admin button only appeared after page reload
+- `updateNavUI()` was already async but `init()` didn't await it; this was not an issue since the DOM updates are asynchronous anyway
+
+**3. Admin page overhaul (`admin.html`):**
+- Removed entire login overlay HTML and all associated CSS (`.login-overlay`, `.login-card`, `.login-btn`, `.login-error`, `.lockout-msg`, etc.)
+- Removed all login-related JS: `handleLogin()`, event listeners for `#loginBtn`, `#adminEmail`, `#adminPass`, lockout tracking, attempt counting, exponential backoff
+- Replaced with `checkAdminAccess()`:
+  ```javascript
+  async function checkAdminAccess(){
+    var admin = await Auth.isAdmin();
+    if(admin){
+      document.getElementById('accessDenied').style.display='none';
+      document.getElementById('dashboard').style.display='block';
+      document.getElementById('sessionInfo').textContent='Session active';
+      await renderDashboard();
+    }else{
+      document.getElementById('accessDenied').style.display='flex';
+      document.getElementById('dashboard').style.display='none';
+    }
+  }
+  ```
+- Replaced init: was `requireAuth()` → focus password field or show dashboard; now calls `await checkAdminAccess()` directly
+- Added "Access Denied" div with lock icon, "Access Denied" heading, explanation text, and "Go Home" button linking to `index.html`
+- The access-denied div reuses the legacy `login-overlay` and `login-card` CSS classes (still present in stylesheet) to keep consistent styling
+
+**4. Admin nav buttons on all pages:**
+- Added `#navAdminBtn` (desktop nav `<ul class="nav-links">`) and `#mobileAdminBtn` (mobile nav `<div class="mobile-nav">`) with `style="display:none"` to all 6 content pages:
+  - `index.html` (had logout buttons from Session 5)
+  - `training.html` (had logout buttons)
+  - `grooming.html` (had logout buttons)
+  - `boarding.html` (no auth buttons before — added both admin + logout)
+  - `store.html` (no auth buttons before — added both admin + logout)
+  - `eco-cottages.html` (no auth buttons before — added both admin + logout)
+- Pages that didn't have logout buttons before (boarding, store, eco-cottages) now have both admin and logout buttons
+
+**5. Admin email system:**
+- Changed from single `ADMIN_EMAIL` string to `ADMIN_EMAILS` array (two occurrences in auth.js — one for `isAdmin()`, one for `adminSignIn()`)
+- Initially: `['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com']` (2 emails)
+- Final: `['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com', '9233485873@a1.com']` (2 emails + 1 phone-to-email)
+- Admin users with phone number `9233485873` sign in via the shared auth modal → `phoneToEmail()` converts to `9233485873@a1.com` → matches the array
+
+### Files changed (Session 7):
+- `index.html` — video hero background with overlay div, added navAdminBtn + mobileAdminBtn
+- `grooming.html` — static image hero background (CSS background-image), added navAdminBtn + mobileAdminBtn
+- `training.html` — added navAdminBtn + mobileAdminBtn
+- `boarding.html` — added navAdminBtn + mobileAdminBtn + navLogoutBtn + mobileLogoutBtn (first auth buttons on this page)
+- `store.html` — added navAdminBtn + mobileAdminBtn + navLogoutBtn + mobileLogoutBtn (first auth buttons on this page)
+- `eco-cottages.html` — added navAdminBtn + mobileAdminBtn + navLogoutBtn + mobileLogoutBtn (first auth buttons on this page)
+- `admin.html` — removed login overlay HTML/CSS/JS, added checkAdminAccess() + access-denied div, logout event only
+- `auth.js` — signIn() email/phone detection, isAdmin(), updateNavUI() admin button toggling, ADMIN_EMAILS array (3 entries), updateNavUI() call after login/signup, auth modal field change
+- `HANDOFF.md` — comprehensive update
