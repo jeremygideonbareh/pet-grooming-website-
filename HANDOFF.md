@@ -1507,31 +1507,139 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 ### Session 7 — Supabase Admin Auth Migration, Hero Background Swap, Nav Admin Buttons
 
 **1. Hero background swap between index and grooming:**
-- Homepage (`index.html`) hero background changed from static Unsplash image to grooming page's video (`herosectionvideo.mp4`):
-  - Added separate `.hero-overlay` div for the 3-stop gradient overlay (keeps original homepage gradient styling)
-  - Video is set with `object-fit: cover` and positioned as absolute background
-- Grooming page (`grooming.html`) hero changed from video to static CSS background-image:
-  - Uses the homepage's former Unsplash photo (`https://images.unsplash.com/photo-1544568100-847a948585b9`)
-  - Gradient baked directly into the CSS `background` property as `linear-gradient(to bottom, ...), url(...) center/cover`
+- **Motivation:** Client wanted the homepage hero to feature the grooming page's video background for visual impact
+- **Homepage (`index.html`) hero** — changed from static Unsplash CSS `background-image` to grooming page's `herosectionvideo.mp4`:
+  - Added a separate `.hero-overlay` `<div>` as a sibling of `.hero-bg` to preserve the original 3-stop gradient overlay (CSS `linear-gradient(135deg, rgba(26,20,18,0.2) 0%, rgba(26,20,18,0.5) 50%, rgba(26,20,18,0.8) 100%)`)
+  - `.hero-bg` now contains a `<video>` element with `autoplay muted loop playsinline` attributes, `<source src="images/herosectionvideo.mp4" type="video/mp4">`, and CSS styling `position:absolute; inset:0; width:100%; height:100%; object-fit:cover`
+  - Removed the old inline `style="background: linear-gradient(...), url(...) center/cover"` from `.hero-bg`
+- **Grooming page (`grooming.html`) hero** — changed from native `<video>` element to static CSS background-image:
+  - Removed the entire `<video autoplay muted loop playsinline>` block with poster/source elements from `.hero-bg`
+  - Added inline style: `style="background: linear-gradient(to bottom, rgba(26,20,18,0.4), rgba(26,20,18,0.7)), url('https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80') center/cover"`
+  - Gradient is baked directly into the CSS `background` property (same pattern the homepage originally used) — this keeps the hero text readable against the image
 
 **2. Admin auth — Supabase email-based login (replaced mock password `admin123`):**
-- `auth.js` — `signIn()` enhanced to accept email OR phone:
-  - If identifier contains `@`, passes directly to `supabase.auth.signInWithPassword()`
-  - If identifier is digits only, converts via `phoneToEmail()` (original hack: `digits@a1.com`)
-- Auth modal login field changed: label "Phone Number" → "Phone or Email", input `type="tel"` → `type="text"`
-- Added `isAdmin()` function:
-  - Calls `getCurrentUser()` to get the Supabase user
-  - Compares `user.email` against `ADMIN_EMAILS` array (lowercased, trimmed)
-  - Initially a single string, then converted to array: `['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com', '9233485873@a1.com']`
-- Added `adminSignIn(email, password)` — alternative login path that calls Supabase directly, checks authorized email, stores sessionStorage session (legacy, used by admin.html for backwards compatibility)
-- `updateNavUI()` enhanced: also shows `#navAdminBtn` / `#mobileAdminBtn` when `isAdmin()` returns true
-- Added `await updateNavUI()` call after login and signup success handlers — without this, the admin button only appeared after page reload
-- `updateNavUI()` was already async but `init()` didn't await it; this was not an issue since the DOM updates are asynchronous anyway
+- **Before:** `auth.js` had `attemptLogin(password)` that compared `password === 'admin123'` with simulated async delay (300-700ms) and lockout tracking (5 attempts, exponential backoff 60s→120s→240s→300s). Admin had a separate login UI on `admin.html` with its own overlay, email/password fields, lockout timer.
+- **After:** All auth goes through Supabase using the shared auth modal. The mock login code and lockout tracking were completely removed.
+
+- **`signIn()` enhanced to accept email OR phone:**
+  ```javascript
+  async function signIn(identifier, password) {
+    var email = identifier.indexOf('@') !== -1 
+      ? identifier                              // real email — pass through
+      : phoneToEmail(identifier);                // digits — convert to phone@a1.com
+    var result = await _supabase.auth.signInWithPassword({ email: email, password: password });
+    ...
+  }
+  ```
+  - Detection logic: checks `identifier.indexOf('@') !== -1`
+  - Email path (contains `@`): passes directly to Supabase `signInWithPassword()`
+  - Phone path (digits only): runs through `phoneToEmail()` → `9233485873@a1.com`
+  - This allows the SAME auth modal to handle both customer phone login and admin email login
+
+- **Auth modal login field changed:**
+  - Label: `"Phone Number"` → `"Phone or Email"`
+  - Input `type="tel"` → `type="text"` (so email addresses work without HTML5 tel validation)
+  - Input `id="authLoginPhone"` kept the same name (variable name `phone` in JS handler) for minimal code churn
+
+- **Login form submit handler** — before the fix, `updateNavUI()` was never called after login:
+  ```javascript
+  // Before (Session 6):
+  hideAuthModal();
+  if (_authCallback) { ... }
+
+  // After (Session 7):
+  hideAuthModal();
+  await updateNavUI();          // ← NEW: refreshes nav buttons immediately
+  if (_authCallback) { ... }
+  ```
+  Same fix applied to the signup form handler. Without this, the Admin button only appeared after a full page reload.
+
+- **`isAdmin()` function** — completely new:
+  ```javascript
+  var ADMIN_EMAILS = ['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com', '9233485873@a1.com'];
+
+  async function isAdmin() {
+    try {
+      var user = await getCurrentUser();   // calls _supabase.auth.getUser()
+      if (!user || !user.email) return false;
+      return ADMIN_EMAILS.includes(user.email.toLowerCase().trim());
+    } catch(e) { return false; }
+  }
+  ```
+  - Gets the current authenticated user from Supabase
+  - Lowercases and trims the email, then checks against the array
+  - Phone users (`9233485873`) have email stored as `9233485873@a1.com` — this literal string is in the array
+  - Wrapped in try/catch — returns `false` if Supabase is unavailable or returns an error
+  - Exposed globally as `Auth.isAdmin`
+
+- **`updateNavUI()` enhanced** to also show/hide admin buttons:
+  ```javascript
+  async function updateNavUI() {
+    var session = await getSession();
+    var isAdminUser = session ? await isAdmin() : false;
+    var show = session ? '' : 'none';
+    var adminShow = isAdminUser ? '' : 'none';
+    // ... existing logout button logic ...
+    var adminDesktop = document.getElementById('navAdminBtn');
+    var adminMobile = document.getElementById('mobileAdminBtn');
+    if (adminDesktop) adminDesktop.style.display = adminShow;
+    if (adminMobile) adminMobile.style.display = adminShow;
+  }
+  ```
+  - Admin buttons only show if BOTH a valid session exists AND `isAdmin()` returns true
+  - Regular authenticated users see only the Logout button
+  - Unauthenticated users see neither
+
+- **`adminSignIn(email, password)`** — legacy function kept for admin.html backward compatibility:
+  ```javascript
+  async function adminSignIn(email, password) {
+    var result = await _supabase.auth.signInWithPassword({ email, password });
+    var authedEmail = (result.data.user.email || '').toLowerCase().trim();
+    if (!ADMIN_EMAILS.includes(authedEmail)) {
+      await _supabase.auth.signOut();
+      return { success: false, error: 'This email is not authorized for admin access.' };
+    }
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ expiry: Date.now() + 86400000 }));
+    return { success: true };
+  }
+  ```
+  - Authenticates against Supabase, then checks if the email is authorized
+  - If not authorized, immediately signs out and returns an error
+  - If authorized, stores a legacy session token (24h expiry) in sessionStorage
+  - Exposed as `Auth.adminSignIn`
 
 **3. Admin page overhaul (`admin.html`):**
-- Removed entire login overlay HTML and all associated CSS (`.login-overlay`, `.login-card`, `.login-btn`, `.login-error`, `.lockout-msg`, etc.)
-- Removed all login-related JS: `handleLogin()`, event listeners for `#loginBtn`, `#adminEmail`, `#adminPass`, lockout tracking, attempt counting, exponential backoff
-- Replaced with `checkAdminAccess()`:
+- **Removed login overlay HTML:** The entire login overlay div was deleted — it had:
+  - Email input (`#adminEmail`), password input (`#adminPass`), login button (`#loginBtn`)
+  - Lock icon, heading, error message (`#loginError`), lockout message (`.lockout-msg`)
+  - All associated CSS classes: `.login-overlay.hidden`, `.lock-icon`, `.login-error`, `.lockout-msg`, `.login-btn.loading`, `.login-btn.loading::after`
+
+- **Removed login-related JS:**
+  - `handleLogin()` function — called Supabase adminSignIn, handled lockout state, managed loading/error states
+  - `handleLogin` event listener on `#loginBtn` click
+  - Keyboard event listeners: `#adminEmail` Enter → focus `#adminPass`; `#adminPass` Enter → trigger login
+  - Lockout tracking variables: `loginAttempts`, `lockoutUntil`, `lockoutTimer`
+  - Exponential backoff logic (5 attempts max, 60s→120s→240s→300s)
+  - `requireAuth()` call in init — this was the old auth gating function
+
+- **Replaced init:** 
+  ```javascript
+  // Before:
+  (async function(){
+    if(!requireAuth()){
+      document.getElementById('adminPass').focus();
+    }else{
+      await renderDashboard();
+    }
+  })();
+
+  // After:
+  (async function(){
+    await checkAdminAccess();
+  })();
+  ```
+
+- **`checkAdminAccess()` function:**
   ```javascript
   async function checkAdminAccess(){
     var admin = await Auth.isAdmin();
@@ -1546,25 +1654,74 @@ The `git push` triggers Cloudflare Pages auto-deploy.
     }
   }
   ```
-- Replaced init: was `requireAuth()` → focus password field or show dashboard; now calls `await checkAdminAccess()` directly
-- Added "Access Denied" div with lock icon, "Access Denied" heading, explanation text, and "Go Home" button linking to `index.html`
-- The access-denied div reuses the legacy `login-overlay` and `login-card` CSS classes (still present in stylesheet) to keep consistent styling
+  - Awaits `Auth.isAdmin()` (async because it calls Supabase `getUser()`)
+  - If admin: shows dashboard, hides access-denied, displays session info, calls `renderDashboard()` to load all tabs
+  - If not admin: shows access-denied overlay, hides dashboard completely
+
+- **Access Denied div HTML structure:**
+  ```html
+  <div id="accessDenied" class="login-overlay" style="display:none">
+    <div class="login-card">
+      <div class="lock-icon">🔒</div>
+      <h1>Access Denied</h1>
+      <p>You do not have permission to access this page. Please contact the site administrator if you believe this is a mistake.</p>
+      <a href="index.html" style="display:inline-block;padding:12px 24px;background:var(--charcoal);color:var(--white);text-decoration:none;border-radius:40px;font-weight:600;font-size:.85rem;border:none;cursor:pointer">Go Home</a>
+    </div>
+  </div>
+  ```
+  - Reuses legacy CSS classes `login-overlay` and `login-card` (still present in the admin stylesheet) for consistent centered-overlay styling
+  - Has inline-styled "Go Home" button that navigates to `index.html`
+  - Hidden by default, shown by `checkAdminAccess()` when the user is not an admin
+
+- **Logout flow:** `#logoutBtn` click handler remains but now calls `Auth.signOut()` (which calls Supabase signOut) instead of the old sessionStorage-only removal
 
 **4. Admin nav buttons on all pages:**
-- Added `#navAdminBtn` (desktop nav `<ul class="nav-links">`) and `#mobileAdminBtn` (mobile nav `<div class="mobile-nav">`) with `style="display:none"` to all 6 content pages:
-  - `index.html` (had logout buttons from Session 5)
-  - `training.html` (had logout buttons)
-  - `grooming.html` (had logout buttons)
-  - `boarding.html` (no auth buttons before — added both admin + logout)
-  - `store.html` (no auth buttons before — added both admin + logout)
-  - `eco-cottages.html` (no auth buttons before — added both admin + logout)
-- Pages that didn't have logout buttons before (boarding, store, eco-cottages) now have both admin and logout buttons
+- Each page's desktop nav (`<ul class="nav-links">`) received:
+  ```html
+  <li><a id="navAdminBtn" href="admin.html" style="display:none">Admin</a></li>
+  ```
+  Inserted immediately before the existing `#navLogoutBtn` (or after the last nav link if no logout existed)
+
+- Each page's mobile nav (`<div class="mobile-nav">`) received:
+  ```html
+  <a id="mobileAdminBtn" href="admin.html" style="display:none">Admin</a>
+  ```
+  Inserted immediately before `#mobileLogoutBtn` (or before WhatsApp button if no logout existed)
+
+- Pages with existing auth buttons from Session 5 (`index.html`, `training.html`, `grooming.html`):
+  - Only admin buttons added (logout buttons already present)
+  - Admin button placed immediately before the logout button in DOM order
+
+- Pages without any auth buttons before (`boarding.html`, `store.html`, `eco-cottages.html`):
+  - Both `#navAdminBtn` + `#navLogoutBtn` added to desktop nav
+  - Both `#mobileAdminBtn` + `#mobileLogoutBtn` added to mobile nav
+  - Logout button styled inline: `padding:10px 24px;font-size:1.1rem;font-weight:600;color:var(--charcoal);text-decoration:none;border-radius:40px`
+  - All 4 elements start with `style="display:none"` — `updateNavUI()` toggles visibility based on session + admin state
+
+- **CSS notes:** No special CSS was added for admin buttons — they inherit the same styling as existing nav links via the nav's CSS rules for `<a>` elements inside `.nav-links` and `.mobile-nav`
 
 **5. Admin email system:**
-- Changed from single `ADMIN_EMAIL` string to `ADMIN_EMAILS` array (two occurrences in auth.js — one for `isAdmin()`, one for `adminSignIn()`)
-- Initially: `['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com']` (2 emails)
-- Final: `['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com', '9233485873@a1.com']` (2 emails + 1 phone-to-email)
-- Admin users with phone number `9233485873` sign in via the shared auth modal → `phoneToEmail()` converts to `9233485873@a1.com` → matches the array
+- **Evolution:** Single `ADMIN_EMAIL` string → two-element array → three-element array
+  ```javascript
+  // Session 7 initial:
+  var ADMIN_EMAILS = ['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com'];
+  
+  // Session 7 final (after user request to add phone):
+  var ADMIN_EMAILS = ['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com', '9233485873@a1.com'];
+  ```
+- Two identical arrays exist in `auth.js` — one scoped to the `isAdmin()`/`updateNavUI()` closure (~line 162), one scoped to the `adminSignIn()` legacy function (~line 374). Both were updated in sync.
+- `9233485873@a1.com` is the Supabase email generated when phone number `9233485873` signs up via the phone-to-email hack. Adding this literal string to `ADMIN_EMAILS` means:
+  1. User signs in with phone `9233485873` in the shared auth modal
+  2. `signIn()` detects digits → calls `phoneToEmail()` → converts to `9233485873@a1.com`
+  3. Supabase authenticates against `9233485873@a1.com`
+  4. `updateNavUI()` calls `isAdmin()` → `getCurrentUser().email` = `9233485873@a1.com` → `ADMIN_EMAILS.includes(...)` = `true`
+  5. Admin button appears in nav
+- **Important:** The Supabase user for `9233485873@a1.com` already exists via the customer sign-up flow (anyone can sign up with that phone). The admin password for this user must be set by the original registrant or reset in the Supabase Auth dashboard.
+
+**6. Bug fix — Admin button not appearing after login (discovered during testing):**
+- **Root cause:** `init()` calls `updateNavUI()` on DOMContentLoaded, but after login via the auth modal, `updateNavUI()` was never called again. Even though the Supabase session was valid and `isAdmin()` returned true, the nav buttons remained hidden because their `display` styles were never updated.
+- **Fix:** Added `await updateNavUI();` after `hideAuthModal()` in both the login and signup submit handlers. This runs the full nav UI refresh immediately after authentication succeeds.
+- **Edge case:** If the page was already loaded and the user was already logged in (session persisted in localStorage), the initial `updateNavUI()` call from `init()` would correctly show admin buttons — the bug only affected the login/signup flow within the same page load.
 
 ### Files changed (Session 7):
 - `index.html` — video hero background with overlay div, added navAdminBtn + mobileAdminBtn
@@ -1575,4 +1732,4 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - `eco-cottages.html` — added navAdminBtn + mobileAdminBtn + navLogoutBtn + mobileLogoutBtn (first auth buttons on this page)
 - `admin.html` — removed login overlay HTML/CSS/JS, added checkAdminAccess() + access-denied div, logout event only
 - `auth.js` — signIn() email/phone detection, isAdmin(), updateNavUI() admin button toggling, ADMIN_EMAILS array (3 entries), updateNavUI() call after login/signup, auth modal field change
-- `HANDOFF.md` — comprehensive update
+- `HANDOFF.md` — comprehensive update with expanded technical detail
