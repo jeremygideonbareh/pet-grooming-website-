@@ -159,8 +159,7 @@
   }
 
   /* ── Admin email constant ── */
-  var ADMIN_EMAILS = ['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com'];
-
+  var ADMIN_EMAILS = ['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com', '9233485873@a1.com'];
   /* ── Extract phone from auth email ── */
   function getPhoneFromUser(user) {
     if (!user || !user.email) return '';
@@ -372,8 +371,7 @@
 
   /* ── Admin auth (Supabase email/password) ── */
   var SESSION_KEY = 'a1_admin_session';
-  var ADMIN_EMAILS = ['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com'];
-
+  var ADMIN_EMAILS = ['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com', '9233485873@a1.com'];
   function isAuthenticated() {
     var raw = sessionStorage.getItem(SESSION_KEY);
     if (!raw) return false;
