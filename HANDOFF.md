@@ -59,10 +59,10 @@ A complete multi-page pet services website for **A-1 Enterprises** based in **Sh
 ```
 a1-enterprise/
 ├── index.html              # Homepage (loader w/ tagline, hero w/ sliding animations, about, services, why us, gallery, testimonials, footer, nav w/o subpage links, mobile hamburger top-right) — ~960 lines
-├── training.html           # Training detail page — 363 lines
+├── training.html           # Training detail page (enquiry system) — 532 lines
 ├── eco-cottages.html       # Eco Cottages detail page — 6 sections — 406 lines
-├── grooming.html           # Grooming detail page — 892 lines
-├── boarding.html           # Boarding detail page — 265 lines
+├── grooming.html           # Grooming detail page (7 services, auth-gated booking) — 883 lines
+├── boarding.html           # Boarding detail page (auth-gated session-based booking) — 512 lines
 ├── store.html              # Pet store (30 products, search, filter, inquiry modal, auto-seeds DB) — 660 lines
 ├── admin.html              # Admin dashboard (6 tabs) — 1764 lines
 │
@@ -300,9 +300,17 @@ This prevents ugly broken image icons when Supabase Storage URLs become invalid 
 | Gallery (image grid) | Yes (Training tab) | DB/fallback |
 | Process (4 steps) | Yes (Training tab) | DB/fallback |
 | Approach (text + benefits + image) | Yes (Training tab) | DB/fallback |
-| CTA (WhatsApp) | Yes (Training tab) | DB/fallback |
+| CTA (WhatsApp + Enquire) | Yes (Training tab) | DB/fallback |
 | Footer | Yes (Training tab) | DB/fallback |
 | `<body data-page="train">` | ✅ |
+
+**Booking Modal (Enquiry System):**
+- Auth-gated via `Auth.requireAuth()`
+- Fields: Service Interested In (dropdown matching 8 services), Preferred Contact Method (WhatsApp/Phone Call), Additional Notes (textarea)
+- On submit: session-based owner/dog lookup → inserts into `bookings` table as category `Training` with `timeframe` storing contact method → opens WhatsApp with enquiry details
+- Success alert: "Thank you for your training enquiry..."
+- Removed Puppy Socialisation and Owner-Centric Training cards from "Stages & Process" section
+- Hero and CTA buttons labelled "Enquire Now"
 
 ### `grooming.html` — Grooming Detail Page
 | Section | Managed by Admin? | Content source |
@@ -337,6 +345,14 @@ This prevents ugly broken image icons when Supabase Storage URLs become invalid 
 | CTA (WhatsApp) | Yes (Boarding tab) | DB/fallback |
 | Footer | Yes (Boarding tab) | DB/fallback |
 | `<body data-page="board">` | ✅ |
+
+**Booking Modal (Auth-Gated Session-Based):**
+- Auth-gated via `Auth.requireAuth()` — same pattern as Training and Grooming
+- On modal open: fetches owner + dog from Supabase using session user ID
+- Shows a Profile Summary card (name, phone, dog name, breed) with frosted glass styling
+- All personal/pet detail fields are hidden inputs (pre-filled from DB) — user only sees: Boarding Start Date, Boarding End Date, Vaccination Card upload, Additional Notes
+- On submit: uses `session.user.id` directly as `owner_id`, updates dog info via `DB.findOrUpdateDog()`, inserts booking via `supabase.from('bookings').insert()`, then opens WhatsApp with complete details
+- Success alert: "Thank you for your boarding request..."
 
 ### `store.html` — Pet Store Page
 | Section | Managed by Admin? | Content source |
@@ -1248,7 +1264,7 @@ DB.getProducts()
 
 ---
 
-*Last updated: June 2026 (Session 5 — Auth logout, schema alignment, session-based booking pivot)*
+*Last updated: June 2026 (Session 6 — Training enquiry, grooming dropdown sync, boarding auth gate)*
 
 ## Session Summary (June 2026)
 
@@ -1372,3 +1388,41 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - `db.js` — added `getOwnerByPhone()`, `getDogsByOwner()`
 - `training.html` — simplified booking form + auth-gated openBookModal + WhatsApp routing
 - `grooming.html` — simplified booking form + auth-gated openBookModal + WhatsApp routing
+
+### Session 6 — Training Enquiry System, Grooming Dropdown Sync, Boarding Auth Gate
+
+**1. Training page — Enquiry system:**
+- Removed Puppy Socialisation and Owner-Centric Training program cards (2 of 3 cards in "Stages & Process" section)
+- Updated section subtext from "Beyond our core programs..." to "Every training program is tailored..."
+- Booking modal reworked from appointment booking to enquiry:
+  - Removed "Preferred Consultation Date" and "Preferred Time Slot" fields
+  - Added "Preferred Contact Method" (WhatsApp/Phone Call) dropdown
+  - Added "Additional Notes" textarea with placeholder suggesting what to include (leash pulling, barking, aggression, etc.)
+  - Modal heading: "Training Enquiry" (was "Book a Training Session")
+  - Button text: "Send Enquiry" (was "Confirm Booking")
+  - WhatsApp message: "Hi A-1 Enterprises! I would like to enquire about training..."
+  - Success alert: "Thank you for your training enquiry..."
+  - Inserted into `bookings` table with `timeframe` storing contact method, `notes` storing enquiry text
+
+**2. Grooming page — Service dropdown + confirmation cleanup:**
+- Service dropdown (`#bookService`) updated from 5 generic options to match the 7 service cards exactly:
+  - Express Grooming, Premium Full Grooming, Spa & Relaxation Package, Anti-Fungal Therapy, Anti-Tick Flea & Lice Treatment, De-Shedding Package, De-Tangling & Coat Restoration
+- Confirmation message: removed "Please note that a booking confirmation fee of ₹500..." sentence
+
+**3. Boarding page — Auth gating + session-based profile lookup:**
+- `openBookModal()` now wrapped with `Auth.requireAuth()` — same pattern as Training and Grooming
+- On modal open: fetches owner and dog from Supabase using session user ID (`owners.select('*').eq('id', userId)`, `dogs.select('*').eq('owner_id', userId)`)
+- Shows Profile Summary card (Owner, Phone, Dog, Breed) with frosted glass `.boarding-summary` styling
+- All personal/pet detail fields converted to `<input type="hidden">` — pre-filled from DB but not visible to user
+- Only visible fields remain: Boarding Start Date, Boarding End Date, Vaccination Card upload, Additional Notes
+- Submit handler uses `session.user.id` directly as `owner_id` (instead of `DB.findOrCreateOwner`)
+- Updates dog info via `DB.findOrUpdateDog()` if any fields changed
+- Inserts booking via `supabase.from('bookings').insert()` directly
+- WhatsApp message includes all saved profile details + dates + notes
+- Success alert: "Thank you for your boarding request..."
+
+### Files changed (Session 6):
+- `training.html` — removed 2 program cards, enquiry modal fields, updated WhatsApp/submit handler, hero/CTA button labels
+- `grooming.html` — updated service dropdown options, removed ₹500 fee mention from confirmation alert
+- `boarding.html` — auth-gated openBookModal, session-based profile prefill with hidden fields, Profile Summary card, updated submit handler
+- `HANDOFF.md` — updated line counts, page breakdowns, added Session 6 summary

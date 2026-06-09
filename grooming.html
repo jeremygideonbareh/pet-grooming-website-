@@ -140,11 +140,14 @@ img{display:block;max-width:100%;height:auto}
   text-align:center;
 }
 .hero-bg{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;
+  position:absolute;inset:0;width:100%;height:100%;
+  background:
+    linear-gradient(180deg,rgba(14,10,8,.15) 0%,rgba(14,10,8,.55) 100%),
+    url('https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80') center 30%/cover no-repeat;
   pointer-events:none;
-  animation:heroZoom 5s 1.3s ease both;
+  animation:heroZoom 8s ease-out;
 }
-@keyframes heroZoom{from{transform:scale(1.08);opacity:.7}to{transform:scale(1);opacity:1}}
+@keyframes heroZoom{0%{transform:scale(1.08)}100%{transform:scale(1)}}
 .hero-social{position:absolute;top:24px;right:24px;z-index:5;display:flex;gap:10px}
 .hero-social a{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);transition:all .3s ease;color:#fff;text-decoration:none}
 .hero-social a:hover{background:rgba(255,255,255,0.25);transform:translateY(-2px)}
@@ -512,9 +515,7 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
 
   <!-- HERO -->
   <section class="hero">
-    <video class="hero-bg" autoplay muted loop playsinline poster="images/herosection.jpg">
-      <source src="images/herosectionvideo.mp4" type="video/mp4">
-    </video>
+    <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <div class="hero-badge">★ 5.0 · 20 Ratings</div>
