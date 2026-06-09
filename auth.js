@@ -264,6 +264,7 @@
         return;
       }
       hideAuthModal();
+      await updateNavUI();
       if (_authCallback) { var cb = _authCallback; _authCallback = null; cb(); }
     });
     document.getElementById('authSignupForm').addEventListener('submit', async function(e) {
@@ -297,6 +298,7 @@
         return;
       }
       hideAuthModal();
+      await updateNavUI();
       if (_authCallback) { var cb2 = _authCallback; _authCallback = null; cb2(); }
     });
   }
