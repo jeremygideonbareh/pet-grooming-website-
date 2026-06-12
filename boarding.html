@@ -491,7 +491,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     if(dogId&&(da||dg||sk||vac||dew||al||tem||bh||vacUrl)){
       await DB.findOrUpdateDog(userId,d,{dog_age:da,dog_gender:dg,sickness:sk,vaccination:vac,deworming:dew,allergy:al,temperament:tem,behavioral_issues:bh,vaccination_card_url:vacUrl});
     }
-    await sb.from('bookings').insert({owner_id:userId,dog_id:dogId,category:'Boarding',service:'',timeframe:`${sd} to ${ed}`,notes:msg}).select();
+    await sb.from('bookings').insert({owner_id:userId,dog_id:dogId,service_category:'Boarding',service_specific:'',start_date:sd,end_date:ed,notes:msg}).select();
     let txt='Hi A-1 Enterprises! I would like to book a boarding stay.%0A%0A';
     txt+='━━ CUSTOMER DETAILS ━━%0A';
     txt+=`Name: ${n||owner.full_name||''}%0APhone: ${p||owner.phone||''}%0AWhatsApp: ${w||owner.whatsapp_number||''}%0AEmail: ${e2||owner.email||''}%0ALocation: ${loc||owner.location||''}%0A%0A`;

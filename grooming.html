@@ -872,7 +872,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     if(dogsRes.error)console.error('[Booking] Dog lookup failed:',dogsRes.error.message);
     const dogs=dogsRes.data||[];
     const dog=dogs&&dogs.length?dogs[0]:null;
-    var bookingPayload={owner_id:userId,dog_id:dog?dog.id:null,category:'Grooming',service:svc,timeframe:date+' '+timeWindow,notes:'',status:'pending'};
+    var bookingPayload={owner_id:userId,dog_id:dog?dog.id:null,service_category:'Grooming',service_specific:svc,start_date:date,time_slot:timeWindow,notes:'',status:'pending'};
     console.log("Booking Payload:",bookingPayload);
     var bookingRes=await sb.from('bookings').insert(bookingPayload).select();
     if(bookingRes.error){

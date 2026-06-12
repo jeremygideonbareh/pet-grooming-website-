@@ -366,9 +366,12 @@
       var payload = {
         owner_id: ownerId,
         dog_id: dogId,
-        category: bookingData.category || '',
-        service: bookingData.service || '',
-        timeframe: bookingData.timeframe || '',
+        service_category: bookingData.service_category || '',
+        service_specific: bookingData.service_specific || '',
+        start_date: bookingData.start_date || '',
+        time_slot: bookingData.time_slot || '',
+        end_date: bookingData.end_date || '',
+        contact_method: bookingData.contact_method || '',
         notes: bookingData.notes || '',
         status: 'pending'
       };
