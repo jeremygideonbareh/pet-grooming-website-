@@ -59,12 +59,12 @@ A complete multi-page pet services website for **A-1 Enterprises** based in **Sh
 ```
 a1-enterprise/
 ├── index.html              # Homepage (loader w/ tagline, hero w/ video bg, about, services, why us, gallery, testimonials, footer, nav w/ admin + logout buttons) — 1145 lines
-├── training.html           # Training detail page (enquiry system, auth-gated booking) — 510 lines
+├── training.html           # Training detail page (enquiry system, auth-gated booking, Email contact option) — 553 lines
 ├── eco-cottages.html       # Eco Cottages detail page — 6 sections — 320 lines
-├── grooming.html           # Grooming detail page (7 services, auth-gated booking, static image hero) — 845 lines
-├── boarding.html           # Boarding detail page (auth-gated session-based booking with profile summary) — 498 lines
+├── grooming.html           # Grooming detail page (7 services, auth-gated booking, static image hero, zombie session heal) — 905 lines
+├── boarding.html           # Boarding detail page (auth-gated session-based booking with profile summary) — 516 lines
 ├── store.html              # Pet store (30 products, search, filter, inquiry modal, auto-seeds DB) — 658 lines
-├── admin.html              # Admin dashboard (6 tabs, Supabase email auth, access-denied gate) — 1862 lines
+├── admin.html              # Admin dashboard (7 tabs incl. Bookings, Supabase email auth, access-denied gate, FK-joined bookings table) — 1972 lines
 │
 ├── auth.js                 # Auth layer — mock async API, lockout, session token
 ├── upload.js               # Upload layer — Supabase Storage + type validation + auto-compression
@@ -419,13 +419,14 @@ Single-page app inside `admin.html`. No frameworks. All JS is vanilla (ES5-compa
 - Products tab uniquely calls `await renderDashboard()` on every switch to refresh the product table from the database
 
 | Tab | Button | Tab ID | Editor Function | Save Function |
-|---|---|---|---|---|
+|---|---|---|---|---|---|
 | Products | `data-tab="products"` | `tabProducts` | `renderDashboard()` | `saveProducts()` → `DB.saveAllProducts()` |
 | Content | `data-tab="content"` | `tabContent` | `renderContentEditor()` | `saveAllContent()` → `DB.saveSiteContent()` |
 | Training | `data-tab="training"` | `tabTraining` | `renderTrainingEditor()` | `saveAllContent()` → `DB.saveSiteContent()` |
 | Grooming | `data-tab="grooming"` | `tabGrooming` | `renderGroomingEditor()` | `saveAllContent()` → `DB.saveSiteContent()` |
 | Boarding | `data-tab="boarding"` | `tabBoarding` | `renderBoardingEditor()` | `saveAllContent()` → `DB.saveSiteContent()` |
 | Eco Cottages | `data-tab="eco"` | `tabEco` | `renderEcoEditor()` | `saveAllContent()` → `DB.saveSiteContent()` |
+| Bookings | `data-tab="bookings"` | `tabBookings` | `renderBookingsDashboard()` (reads only) | Status updates via `DB.updateBookingStatus()` |
 
 ### Login Flow
 1. Page loads → `checkAdminAccess()` calls `Auth.isAdmin()` (checks Supabase session email against `ADMIN_EMAILS` array)
@@ -1094,6 +1095,30 @@ CREATE TABLE products (
 );
 ```
 
+#### `bookings` (one row per booking)
+```sql
+CREATE TABLE bookings (
+  booking_id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  owner_id UUID REFERENCES owners(id),
+  dog_id UUID REFERENCES dogs(id),
+  service_category TEXT NOT NULL DEFAULT '',
+  service_specific TEXT NOT NULL DEFAULT '',
+  start_date TEXT NOT NULL DEFAULT '',
+  time_slot TEXT NOT NULL DEFAULT '',
+  end_date TEXT NOT NULL DEFAULT '',
+  contact_method TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+**Note:** After creating the table, add foreign key constraints to enable Supabase FK join queries:
+```sql
+ALTER TABLE bookings ADD CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES owners(id);
+ALTER TABLE bookings ADD CONSTRAINT fk_dog FOREIGN KEY (dog_id) REFERENCES dogs(id);
+```
+This enables `select('*, owners(full_name, phone), dogs(name)')` — the FK join used by `DB.getBookings()`.
+
 ### Storage Bucket
 1. Go to **Storage** → **New bucket**
 2. Name: `a1-images`
@@ -1276,6 +1301,9 @@ DB.getProducts()
 - **Product images are generic Unsplash dog photos** — none show the actual product (e.g., dog food bag, brush, life jacket). Acceptable for now since this is a free stock photo site, but would benefit from real product photography.
 - **Loader shows tagline + ecosystem description text on every page** — this text is designed for the homepage. If subpages get their own loader text, they should update the loader HTML individually.
 - **Admin role is client-side only** — `isAdmin()` checks against a hardcoded email array. This is not a security boundary; anyone who gains access to an authorized email's Supabase password can access the dashboard. Future improvement: move admin verification to a server endpoint or RLS policy.
+- **No FK constraints on bookings table** — `owner_id` and `dog_id` columns in `bookings` need foreign key constraints added to `owners(id)` and `dogs(id)` for Supabase FK joins to work reliably. See Supabase Setup section for SQL.
+- **Edge Function webhook not configured** — The `send-booking-email` function is deployed but no Database Webhook has been created to trigger it on `bookings` INSERT. Must be configured in Supabase Dashboard → Database → Webhooks.
+- **No email template customization** — The Resend email uses a hardcoded HTML template in the Edge Function. For production, move to a templating system or store templates in Supabase.
 
 ### Future Enhancements
 1. **Supabase RLS policies** — configure proper Row Level Security for owners, dogs, and bookings tables instead of relying on anon key inserts
@@ -1341,7 +1369,7 @@ DB.getProducts()
 
 ---
 
-*Last updated: June 2026 (Session 7 — Admin auth Supabase migration, hero swap, nav admin buttons)*
+*Last updated: June 2026 (Session 8 — Email edge function, zombie session healing, bookings dashboard)*
 
 ## Session Summary (June 2026)
 
@@ -1733,3 +1761,116 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - `admin.html` — removed login overlay HTML/CSS/JS, added checkAdminAccess() + access-denied div, logout event only
 - `auth.js` — signIn() email/phone detection, isAdmin(), updateNavUI() admin button toggling, ADMIN_EMAILS array (3 entries), updateNavUI() call after login/signup, auth modal field change
 - `HANDOFF.md` — comprehensive update with expanded technical detail
+
+### Session 8 — Email Edge Function, Zombie Session Healing, Bookings Dashboard
+
+**1. WhatsApp Redirect Removed + Success UI (already complete):**
+- The old WhatsApp `encodeURIComponent`/`window.open` booking flow was removed in Session 6
+- Both grooming.html and training.html show a Success UI (green checkmark, "Booking Request Received!", "Our team will contact you shortly", Close button) after DB insert
+- The `bookingSuccess` div is rendered via `style.display='block'` on success, form is hidden via `style.display='none'`
+
+**2. Supabase Edge Function (`send-booking-email`) created:**
+- Directory: `supabase/functions/send-booking-email/index.ts`
+- Deno runtime (Deno.serve), no npm imports
+- Receives Supabase Database Webhook POST payload on `bookings` table INSERT
+- Extracts `record` from payload → builds HTML email table (service_category, service_specific, date/time, owner_id, status)
+- Sends via native `fetch` to `https://api.resend.com/emails`
+- From: `onboarding@resend.dev`, To: `cloudlyconfusing@gmail.com`
+- HTML template auto-builds date string from `start_date` + `time_slot` / `end_date` / `contact_method`
+- Escapes all user values via `escapeHtml()` to prevent injection
+- Returns 200 with `{success: true, id: ...}` on success, propagates Resend status code + error detail on failure
+- `console.log("Resend Success:", data)` on success; `console.error("Resend API Error:", res.status, errData)` on failure
+- Subject line: `"New Booking: {service_specific} — {service_category}"`
+- **Deploy:** `supabase secrets set RESEND_API_KEY=re_...` then `supabase functions deploy send-booking-email`
+- **Webhook required:** Database → Webhooks → INSERT on bookings → POST to function URL
+
+**3. Zombie Session Auto-Healing (`grooming.html`, `training.html`):**
+- **Problem:** Users with a Supabase Auth session but no `owners` table row (PGRST116 "0 rows") got stuck — the booking form silently crashed
+- **Root cause:** `owners.select('*').eq('id', userId).single()` returned 0 rows when the auth user existed but the owner insert failed during sign-up
+- **Fix — Step 1 (inline):** Added PGRST116 detection in the owner lookup error block → `signOut()`, `localStorage.clear()`, `sessionStorage.clear()`, alert, `window.location.reload()`
+- **Bug — `window.location.reload()` crashed:** The `const window = document.getElementById('bookWindow').value` declaration in grooming.html shadowed the global `window` object. `window.location` was `undefined` because `window` was a string.
+- **Fix — Step 2 (global function):** Extracted all healing logic into a top-level `handleZombieSessionError()` function:
+  ```javascript
+  function handleZombieSessionError(){
+    try{ Auth.supabase.auth.signOut(); }catch(e){}
+    localStorage.clear();
+    sessionStorage.clear();
+    alert('Your session was incomplete or has expired...');
+    window.location.replace(window.location.pathname);
+  }
+  ```
+  - Defined at global scope (before the booking modal code) — captures the real global `window`
+  - Uses `window.location.replace(window.location.pathname)` — hard redirect immune to scope shadowing
+- **Variable rename:** `const window` → `const timeWindow` in grooming.html to eliminate the shadowing entirely
+- **Result:** On PGRST116, the user sees the alert, storage is wiped, and the page hard-redirects to a clean state
+
+**4. Booking Insert Error Handling (`grooming.html`, `training.html`):**
+- **Problem:** Success UI showed even when the `bookings.insert()` HTTP 400 failed
+- **Fix:** Captured the insert result as `bookingRes`, checked `if (bookingRes.error)`, logged it, alerted user, re-enabled button, returned early — success UI is NEVER shown on failure
+- Added `console.log("Booking Payload:", bookingPayload)` right before each insert for debugging
+
+**5. Dogs Table PK Column Fix:**
+- **Problem:** `dog.dog_id` was always `undefined` because the dogs table primary key column is `id`, not `dog_id`. The booking payload was sent with `dog_id: null`.
+- **Auth.js fix:** `console.log('[Auth] Dog record created. dog_id:', dogRes.data[0].dog_id)` → `dogRes.data[0].id` (cosmetic log fix)
+- **Booking handler fix:** `dog ? dog.dog_id : null` → `dog ? dog.id : null` in both grooming.html and training.html
+
+**6. Booking Payload Column Mapping Overhaul — 5 files updated:**
+- **Problem:** PGRST204 errors for multiple columns — the frontend sent `category`, `service`, `timeframe`, `notes` but the Supabase table uses different names
+- **Mapping changes:**
+
+| File | Old Key | New Key |
+|---|---|---|
+| `grooming.html` | `category:'Grooming'` → `service_category:'Grooming'` |
+|  | `service:svc` → `service_specific:svc` |
+|  | `timeframe:date+' '+timeWindow` → `start_date:date, time_slot:timeWindow` |
+|  | `notes:''` → *(removed)* |
+| `training.html` | `category:'Training'` → `service_category:'Training'` |
+|  | `service:program` → `service_specific:program` |
+|  | `timeframe:contactMethod` → `contact_method:contactMethod` |
+|  | `notes:notes` → *(removed)* |
+| `boarding.html` | `category:'Boarding'` → `service_category:'Boarding'` |
+|  | `service:''` → `service_specific:''` |
+|  | ``timeframe:\`${sd} to ${ed}\`` → `start_date:sd, end_date:ed` |
+|  | `notes:msg` → *(removed)* |
+| `db.js` | `category`, `service`, `timeframe`, `notes` insertBooking payload → updated to match |
+| `admin.html` | `b.category` → `b.service_category`, `b.service` → `b.service_specific`, `b.timeframe` → `b.start_date / b.end_date / b.contact_method` |
+
+**7. Admin Bookings Dashboard Rebuild:**
+- **`DB.getBookings()` (db.js):** Replaced the 3-query manual join (fetch bookings → collect IDs → fetch owners → fetch dogs → merge) with a single Supabase FK join query:
+  ```javascript
+  supabase.from('bookings').select('*, owners(full_name, phone), dogs(name)').order('created_at', { ascending: false })
+  ```
+  Returns joined data with `b.owners.full_name`, `b.owners.phone`, `b.dogs.name`
+- **`renderBookingsDashboard()` (admin.html):** Replaced old table (Owner, Phone, Dog, Breed, Vax, Category, Timeframe, Status) with new columns:
+  - **Date Received** — `created_at` formatted via `toLocaleDateString('en-IN', {day, month, year, hour, minute})`
+  - **Service Category** — `b.service_category` with badge styling
+  - **Specific Service** — `b.service_specific`
+  - **Date / Time** — `start_date` + `time_slot` / `end_date` / `contact_method`
+  - **Owner Name** — `b.owners.full_name`
+  - **Phone Number** — `b.owners.phone`
+  - **Dog Name** — `b.dogs.name`
+  - **Status** — dropdown (pending/confirmed/completed/cancelled) with `DB.updateBookingStatus()` on change
+  - Stats row retained: Total, Pending, Confirmed, Categories
+
+**8. Training Enquiry — Email Contact Option Added:**
+- Added `<option value="Email">Email</option>` to the `#bookContactMethod` dropdown in training.html
+
+**9. Resend Edge Function v2 — Error Handling + Column Sync:**
+- Updated HTML email template to use new column names (`service_category`, `service_specific`, `start_date`, `time_slot`, etc.)
+- Improved error logging: tries `res.json()` first, falls back to `res.text()`, logs with `console.error("Resend API Error:", res.status, JSON.stringify(errData))`
+- Returns `res.status` (actual Resend status code) instead of hardcoded 500
+- Added `console.log("Resend Success:", JSON.stringify(data))` on successful send
+
+**10. Resend API Key Setup:**
+- `supabase secrets set RESEND_API_KEY=re_100e49db-ab45-4ecd-93f4-70db25f7a920`
+- API key belongs to `cloudlyconfusing@gmail.com` Resend account
+
+### Files changed (Session 8):
+- `supabase/functions/send-booking-email/index.ts` — NEW: Edge Function for Resend email on booking insert (updated twice: column mapping + error logging)
+- `grooming.html` — zombie session healing (global function + PGRST116 check), `timeWindow` rename, booking error check, payload column mapping (`service_category`, `service_specific`, `start_date`, `time_slot`)
+- `training.html` — zombie session healing (global function + PGRST116 check), booking error check, payload column mapping (`service_category`, `service_specific`, `contact_method`), added Email contact option
+- `boarding.html` — payload column mapping (`service_category`, `service_specific`, `start_date`, `end_date`)
+- `db.js` — `getBookings()` rewritten with Supabase FK join (`owners(full_name, phone)`, `dogs(name)`), `insertBooking()` payload aligned
+- `admin.html` — `renderBookingsDashboard()` rebuilt with new table columns and FK-joined data paths
+- `auth.js` — dog_id log fix: `dogRes.data[0].dog_id` → `dogRes.data[0].id`
+- `HANDOFF.md` — Session 8 summary added
