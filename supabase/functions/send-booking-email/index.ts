@@ -18,6 +18,11 @@ Deno.serve(async (req) => {
       });
     }
 
+    var dateStr = record.start_date || "";
+    if (record.time_slot) dateStr += " (" + record.time_slot + ")";
+    if (record.end_date) dateStr += (dateStr ? " to " : "") + record.end_date;
+    if (record.contact_method) dateStr += (dateStr ? " — " : "") + "Contact: " + record.contact_method;
+
     const html = `
       <!DOCTYPE html>
       <html>
@@ -30,11 +35,10 @@ Deno.serve(async (req) => {
           </div>
           <div style="padding:28px 24px">
             <table style="width:100%;border-collapse:collapse;font-size:0.9rem">
-              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Service</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.service || "—")}</td></tr>
-              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Category</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.category || "—")}</td></tr>
-              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Date / Time</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.timeframe || "—")}</td></tr>
+              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Category</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.service_category || "—")}</td></tr>
+              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Service</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.service_specific || "—")}</td></tr>
+              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Date / Time</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(dateStr || "—")}</td></tr>
               <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Owner ID</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.owner_id || "—")}</td></tr>
-              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Notes</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.notes || "None")}</td></tr>
               <tr><td style="padding:10px 0;color:#7A6B5E">Status</td><td style="padding:10px 0;font-weight:600;text-align:right">${escapeHtml(record.status || "pending")}</td></tr>
             </table>
             <p style="margin:24px 0 0;color:#7A6B5E;font-size:0.85rem;text-align:center;border-top:1px solid #eee;padding-top:20px">
@@ -55,21 +59,25 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "onboarding@resend.dev",
         to: "cloudlyconfusing@gmail.com",
-        subject: `New Booking: ${record.service || "Inquiry"} — ${record.category || "A-1 Enterprises"}`,
+        subject: `New Booking: ${record.service_specific || "Inquiry"} — ${record.service_category || "A-1 Enterprises"}`,
         html,
       }),
     });
 
     if (!res.ok) {
-      const errText = await res.text();
-      console.error("[send-booking-email] Resend API error:", res.status, errText);
-      return new Response(JSON.stringify({ error: "Failed to send email" }), {
-        status: 500,
+      var errData;
+      try { errData = await res.json(); } catch (_) { errData = await res.text(); }
+      console.error("[send-booking-email] Resend API Error:", res.status, JSON.stringify(errData));
+      return new Response(JSON.stringify({ error: "Resend rejected", detail: errData }), {
+        status: res.status,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    var data = await res.json();
+    console.log("[send-booking-email] Resend Success:", JSON.stringify(data));
+
+    return new Response(JSON.stringify({ success: true, id: data.id }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
