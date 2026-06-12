@@ -431,6 +431,7 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
           <option value="">Select...</option>
           <option value="WhatsApp">WhatsApp</option>
           <option value="Phone Call">Phone Call</option>
+          <option value="Email">Email</option>
         </select>
       </div>
       <div class="form-group">
@@ -512,7 +513,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
         localStorage.clear();
         sessionStorage.clear();
         alert('Your session was incomplete or has expired. We are refreshing the page so you can start fresh!');
-        window.location.reload();
+        window.location.href = window.location.href;
         return;
       }
       console.error('[Booking] Owner lookup failed — message:',ownerRes.error.message,'| details:',ownerRes.error.details,'| hint:',ownerRes.error.hint,'| code:',ownerRes.error.code);
