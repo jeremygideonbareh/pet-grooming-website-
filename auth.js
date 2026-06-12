@@ -83,7 +83,7 @@
       if (dogRes.error) {
         console.error('[Auth] DOG INSERT FAILED — message:', dogRes.error.message, '| details:', dogRes.error.details, '| hint:', dogRes.error.hint, '| code:', dogRes.error.code);
       } else if (dogRes.data && dogRes.data.length > 0) {
-        console.log('[Auth] Dog record created. dog_id:', dogRes.data[0].dog_id);
+        console.log('[Auth] Dog record created. dog_id:', dogRes.data[0].id);
       } else {
         console.warn('[Auth] Dog insert returned no data. Check RLS policies and column names on the dogs table.');
       }
