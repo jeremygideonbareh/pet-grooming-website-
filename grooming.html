@@ -764,6 +764,14 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
         Confirm Booking
       </button>
     </form>
+    <div id="bookingSuccess" style="display:none;text-align:center;padding:40px 20px">
+      <div style="width:64px;height:64px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--charcoal);margin:0 0 8px">Booking Request Received!</h2>
+      <p style="color:var(--muted);font-size:.9rem;line-height:1.6;max-width:380px;margin:0 auto 24px">Thank you. Our team at A-1 Enterprises will contact you shortly.</p>
+      <button class="btn-send" id="successCloseBtn" style="margin:0 auto">Close</button>
+    </div>
   </div>
 </div>
 
@@ -818,8 +826,8 @@ if(navIsland){window.addEventListener('scroll',()=>{
 const bookOverlay=document.getElementById('bookingOverlay');
 const bookClose=document.getElementById('bookingClose');
 
-function openBookModal(presetService){if(presetService){const el=document.getElementById('bookService');if(el)el.value=presetService}Auth.requireAuth(function(){bookOverlay.classList.add('open');document.body.style.overflow='hidden'})}
-function closeBook(){bookOverlay.classList.remove('open');document.body.style.overflow=''}
+function openBookModal(presetService){resetBookingModal();if(presetService){const el=document.getElementById('bookService');if(el)el.value=presetService}Auth.requireAuth(function(){bookOverlay.classList.add('open');document.body.style.overflow='hidden'})}
+function closeBook(){bookOverlay.classList.remove('open');document.body.style.overflow='';resetBookingModal()}
 if(bookClose)bookClose.addEventListener('click',closeBook);
 if(bookOverlay)bookOverlay.addEventListener('click',e=>{if(e.target===bookOverlay)closeBook()});
 document.querySelectorAll('.groom-book-btn').forEach(function(b){
@@ -843,6 +851,14 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     console.log('[Booking] Looking up owner by auth id:', userId);
     const ownerRes=await sb.from('owners').select('*').eq('id',userId).single();
     if(ownerRes.error){
+      if(ownerRes.error.code==='PGRST116'){
+        await sb.auth.signOut();
+        localStorage.clear();
+        sessionStorage.clear();
+        alert('Your session was incomplete or has expired. We are refreshing the page so you can start fresh!');
+        window.location.reload();
+        return;
+      }
       console.error('[Booking] Owner lookup failed — message:',ownerRes.error.message,'| details:',ownerRes.error.details,'| hint:',ownerRes.error.hint,'| code:',ownerRes.error.code);
       throw new Error('Owner profile not found');
     }
@@ -852,25 +868,23 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const dogs=dogsRes.data||[];
     const dog=dogs&&dogs.length?dogs[0]:null;
     await sb.from('bookings').insert({owner_id:userId,dog_id:dog?dog.dog_id:null,category:'Grooming',service:svc,timeframe:date+' '+window,notes:'',status:'pending'}).select();
-    let txt='Hi A-1Pet Shop And Grooming! I would like to book a grooming session.%0A%0A';
-    txt+='━━ CUSTOMER DETAILS ━━%0A';
-    txt+=`Name: ${owner.full_name||''}%0APhone: ${owner.phone||''}%0AWhatsApp: ${owner.whatsapp_number||''}%0ALocation: ${owner.location||''}%0A%0A`;
-    txt+='━━ DOG DETAILS ━━%0A';
-    if(dog){
-      txt+=`Name: ${dog.name||''}%0ABreed: ${dog.breed||''}%0AAge: ${dog.age||''}%0AGender: ${dog.gender||''}%0ASickness: ${dog.sickness||'None'}%0AVaccination: ${dog.vaccination||''}%0ADeworming: ${dog.deworming_3_months||''}%0AAllergies: ${dog.allergy||'None'}%0ATemperament: ${dog.temperament||''}%0A%0A`;
-    }
-    txt+=`━━ BOOKING DETAILS ━━%0A`;
-    txt+=`Service: ${svc}%0ADate: ${date}%0AWindow: ${window}`;
-    window.open(`https://wa.me/9233485873?text=${txt}`,'_blank');
-    closeBook();
-    setTimeout(function(){alert('Thank you for your booking request. Appointment confirmation is subject to availability. Our team will review your request and contact you with the confirmed appointment details. Grooming duration and appointment timing may vary depending on breed, coat condition, temperament and services selected. Think Pet 🐾 Think A-1')},500);
+    document.getElementById('bookingForm').style.display='none';
+    document.getElementById('bookingSuccess').style.display='block';
   }catch(err){
     console.error('[Booking] Failed:',err);
     alert('Something went wrong. Please try again.');
-  }finally{
     if(btn){btn.textContent=origText;btn.disabled=false}
   }
 });
+
+function resetBookingModal(){
+  document.getElementById('bookingForm').style.display='';
+  document.getElementById('bookingSuccess').style.display='none';
+  document.getElementById('bookingForm').reset();
+  const btn=document.getElementById('bookingForm').querySelector('.btn-send');
+  if(btn){btn.textContent='Confirm Booking';btn.disabled=false}
+}
+document.getElementById('successCloseBtn')?.addEventListener('click',function(){closeBook();resetBookingModal()});
 
 // ── BUTTONS ──
 document.getElementById('heroBookBtn')?.addEventListener('click',e=>{e.preventDefault();openBookModal()});
