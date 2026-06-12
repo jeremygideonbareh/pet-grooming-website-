@@ -822,6 +822,15 @@ if(navIsland){window.addEventListener('scroll',()=>{
   floatingLogo.classList.toggle('scrolled',s);
 });}
 
+/* ── ZOMBIE SESSION HEALER ── */
+function handleZombieSessionError(){
+  try{ Auth.supabase.auth.signOut(); }catch(e){}
+  localStorage.clear();
+  sessionStorage.clear();
+  alert('Your session was incomplete or has expired. We are refreshing the page so you can start fresh!');
+  window.location.replace(window.location.pathname);
+}
+
 /* ── BOOKING MODAL ── */
 const bookOverlay=document.getElementById('bookingOverlay');
 const bookClose=document.getElementById('bookingClose');
@@ -837,7 +846,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
   e.preventDefault();
   const svc=document.getElementById('bookService').value;
   const date=document.getElementById('bookDate').value;
-  const window=document.getElementById('bookWindow').value;
+  const timeWindow=document.getElementById('bookWindow').value;
   const btn=this.querySelector('.btn-send');
   const origText=btn?btn.textContent:'';
   if(btn){btn.textContent='Submitting...';btn.disabled=true}
@@ -852,11 +861,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const ownerRes=await sb.from('owners').select('*').eq('id',userId).single();
     if(ownerRes.error){
       if(ownerRes.error.code==='PGRST116'){
-        await sb.auth.signOut();
-        localStorage.clear();
-        sessionStorage.clear();
-        alert('Your session was incomplete or has expired. We are refreshing the page so you can start fresh!');
-        window.location.href = window.location.href;
+        handleZombieSessionError();
         return;
       }
       console.error('[Booking] Owner lookup failed — message:',ownerRes.error.message,'| details:',ownerRes.error.details,'| hint:',ownerRes.error.hint,'| code:',ownerRes.error.code);
@@ -867,7 +872,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     if(dogsRes.error)console.error('[Booking] Dog lookup failed:',dogsRes.error.message);
     const dogs=dogsRes.data||[];
     const dog=dogs&&dogs.length?dogs[0]:null;
-    await sb.from('bookings').insert({owner_id:userId,dog_id:dog?dog.dog_id:null,category:'Grooming',service:svc,timeframe:date+' '+window,notes:'',status:'pending'}).select();
+    await sb.from('bookings').insert({owner_id:userId,dog_id:dog?dog.dog_id:null,category:'Grooming',service:svc,timeframe:date+' '+timeWindow,notes:'',status:'pending'}).select();
     document.getElementById('bookingForm').style.display='none';
     document.getElementById('bookingSuccess').style.display='block';
   }catch(err){

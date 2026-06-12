@@ -475,6 +475,14 @@ window.addEventListener('scroll',()=>{
   navIsland.classList.toggle('scrolled',s);
   floatingLogo.classList.toggle('scrolled',s);
 });
+/* ── ZOMBIE SESSION HEALER ── */
+function handleZombieSessionError(){
+  try{ Auth.supabase.auth.signOut(); }catch(e){}
+  localStorage.clear();
+  sessionStorage.clear();
+  alert('Your session was incomplete or has expired. We are refreshing the page so you can start fresh!');
+  window.location.replace(window.location.pathname);
+}
 const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('active');observer.unobserve(e.target)}})},{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 const loader=document.getElementById('pageLoader');
@@ -509,11 +517,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const ownerRes=await sb.from('owners').select('*').eq('id',userId).single();
     if(ownerRes.error){
       if(ownerRes.error.code==='PGRST116'){
-        await sb.auth.signOut();
-        localStorage.clear();
-        sessionStorage.clear();
-        alert('Your session was incomplete or has expired. We are refreshing the page so you can start fresh!');
-        window.location.href = window.location.href;
+        handleZombieSessionError();
         return;
       }
       console.error('[Booking] Owner lookup failed — message:',ownerRes.error.message,'| details:',ownerRes.error.details,'| hint:',ownerRes.error.hint,'| code:',ownerRes.error.code);
