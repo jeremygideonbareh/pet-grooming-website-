@@ -372,7 +372,6 @@
         time_slot: bookingData.time_slot || '',
         end_date: bookingData.end_date || '',
         contact_method: bookingData.contact_method || '',
-        notes: bookingData.notes || '',
         status: 'pending'
       };
       var result = await supabase
