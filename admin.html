@@ -1911,23 +1911,23 @@ async function renderBookingsDashboard() {
     '</div>';
   var STATUSES = ['pending','confirmed','completed','cancelled'];
   html += '<div class="table-wrap"><table class="prod-table bookings-table"><thead><tr>' +
-    '<th>Owner</th><th>Phone</th><th>Dog</th><th>Breed</th><th>Vax</th><th>Category</th><th>Timeframe</th><th>Status</th>' +
+    '<th>Date Received</th><th>Service Category</th><th>Specific Service</th><th>Date / Time</th><th>Owner Name</th><th>Phone Number</th><th>Dog Name</th><th>Status</th>' +
     '</tr></thead><tbody>';
   bookings.forEach(function(b){
-    var o = b.owner || {};
-    var d = b.dog || {};
+    var o = b.owners || {};
+    var d = b.dogs || {};
     var st = b.status || 'pending';
-    var vac = d.vaccination;
-    var vacIcon = vac==='Yes' ? '✅' : vac==='No' ? '❌' : '—';
+    var created = b.created_at ? new Date(b.created_at).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+    var dateTime = b.start_date || b.end_date || b.contact_method || '—';
+    if (b.time_slot) dateTime += ' ('+b.time_slot+')';
     html += '<tr>' +
-      '<td style="font-weight:600">'+escHtml(o.name||'—')+'</td>' +
+      '<td style="font-size:.8rem;white-space:nowrap">'+escHtml(created)+'</td>' +
+      '<td><span class="prod-cat-badge">'+escHtml(b.service_category||'—')+'</span></td>' +
+      '<td style="font-size:.85rem">'+escHtml(b.service_specific||'—')+'</td>' +
+      '<td style="font-size:.8rem">'+escHtml(dateTime)+'</td>' +
+      '<td style="font-weight:600">'+escHtml(o.full_name||'—')+'</td>' +
       '<td>'+escHtml(o.phone||'—')+'</td>' +
-      '<td>'+escHtml(d.dog_name||'—')+'</td>' +
-      '<td>'+escHtml(d.dog_breed||'—')+'</td>' +
-      '<td style="text-align:center;font-size:1rem">'+vacIcon+'</td>' +
-      '<td><span class="prod-cat-badge">'+escHtml(b.service_category||'—')+'</span>' +
-        (b.service_specific ? ' <span style="font-size:.7rem;color:var(--muted)">('+escHtml(b.service_specific)+')</span>' : '')+'</td>' +
-      '<td style="font-size:.8rem">'+escHtml(b.start_date||b.end_date||b.contact_method||'—')+'</td>' +
+      '<td>'+escHtml(d.name||'—')+'</td>' +
       '<td><select class="status-select" data-id="'+b.booking_id+'">' +
         STATUSES.map(function(s){return '<option value="'+s+'"'+(s===st?' selected':'')+'>'+s.charAt(0).toUpperCase()+s.slice(1)+'</option>'}).join('') +
       '</select></td></tr>';
