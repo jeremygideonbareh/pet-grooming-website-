@@ -516,13 +516,16 @@ async function loadProducts(){
       return DEFAULT_PRODUCTS;
     }
     // Sync image paths from DEFAULT_PRODUCTS (for new uploaded images)
+    var defaultMap = {};
+    for (var d = 0; d < DEFAULT_PRODUCTS.length; d++) {
+      defaultMap[DEFAULT_PRODUCTS[d].id] = DEFAULT_PRODUCTS[d];
+    }
     var needsSync = false;
-    for (var i = 0; i < products.length; i++) {
-      if (DEFAULT_PRODUCTS[i] && products[i].id === DEFAULT_PRODUCTS[i].id) {
-        if (products[i].img !== DEFAULT_PRODUCTS[i].img) {
-          products[i].img = DEFAULT_PRODUCTS[i].img;
-          needsSync = true;
-        }
+    for (var p = 0; p < products.length; p++) {
+      var match = defaultMap[products[p].id];
+      if (match && products[p].img !== match.img) {
+        products[p].img = match.img;
+        needsSync = true;
       }
     }
     if (needsSync) {
