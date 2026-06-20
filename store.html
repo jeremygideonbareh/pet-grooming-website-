@@ -515,6 +515,19 @@ async function loadProducts(){
       await DB.saveAllProducts(DEFAULT_PRODUCTS);
       return DEFAULT_PRODUCTS;
     }
+    // Sync image paths from DEFAULT_PRODUCTS (for new uploaded images)
+    var needsSync = false;
+    for (var i = 0; i < products.length; i++) {
+      if (DEFAULT_PRODUCTS[i] && products[i].id === DEFAULT_PRODUCTS[i].id) {
+        if (products[i].img !== DEFAULT_PRODUCTS[i].img) {
+          products[i].img = DEFAULT_PRODUCTS[i].img;
+          needsSync = true;
+        }
+      }
+    }
+    if (needsSync) {
+      await DB.saveAllProducts(products);
+    }
     return products;
   } catch(e){
     console.warn('[Store] DB error, using defaults:', e);
