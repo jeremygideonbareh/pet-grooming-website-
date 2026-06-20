@@ -1916,28 +1916,27 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - `auth.js` — dog_id log fix: `dogRes.data[0].dog_id` → `dogRes.data[0].id`
 - `HANDOFF.md` — Session 8 summary added
 
-### Session 9 — Custom Store Product Images + DB Sync Fix
+### Session 9 — Custom Store Product Images + DB Sync Fix (Two Batches)
 
-**1. Product images replaced with user's custom photos:**
+**Batch 1 (initial):**
 - 17 new user images renamed to descriptive slugs in `images/store/` (e.g. `ruff-dog-food.jpg`, `rope-tug-toy.jpg`, `dog-vitamins.jpg`)
 - 4 old unused images deleted (`bellosan_*`, `pet_food_in_bowl_*`, `dry_dog_food_*`, `toy-figure-of-a-dog_*`)
 - 7 old images kept and renamed to match new schema
 - 24 of 30 products now use local images; 6 products kept Unsplash URLs (no matching photo provided)
 - `DEFAULT_PRODUCTS` array in `store.html` updated: all `img:` paths replaced, everything else untouched
+- DB image sync added to `loadProducts()`: on page load, compares DB images vs. `DEFAULT_PRODUCTS` images and syncs if mismatched
+- **Bug v1 fix (commit `98b8df9`):** sync was positional (failed on alphabetically-sorted Supabase IDs); changed to ID-based lookup
 
-**2. DB image sync added to `loadProducts()`:**
-- Products load from Supabase DB (`DB.getProducts()`), NOT from `DEFAULT_PRODUCTS` in store.html
-- On first page load after deploy, `loadProducts()` compares DB images vs. `DEFAULT_PRODUCTS` images
-- If mismatched, it updates the Supabase DB with the new image paths (one-time sync)
-- **Bug v1:** Sync compared by array position — Supabase sorts IDs alphabetically (`p1, p10, p11...`) while `DEFAULT_PRODUCTS` is numeric (`p1, p2, p3...`). Only `p1` matched at index 0.
-- **Fix (commit `98b8df9`):** Changed to ID-based lookup — builds a `defaultMap` keyed by product ID, then matches each Supabase product to its `DEFAULT_PRODUCTS` entry by ID regardless of array ordering.
-
-**3. Hosting:**
-- GitHub Pages auto-deploys from `main` branch at `https://jeremygideonbareh.github.io/pet-grooming-website-/`
-- Cloudflare Pages auto-deploys on push (connected to same repo) but URL unknown — no Cloudflare API token with Pages permissions was available to verify
-- First visit to store page triggers DB image sync; thereafter new images display for all users
+**Batch 2 (5 more images, deleted 1 old):**
+- User deleted `squeaky-tennis-ball.jpg` (was on p30 Tennis Ball 3-Pack)
+- User added 5 new images: dog jelly food, dog food/water dispenser, dog portrait (Andrea Fay), pet food Unsplash, dog crate (Precision Pet)
+- All 5 renamed to descriptive slugs: `jelly-dog-food.jpg`, `dog-dispenser.jpg`, `dog-portrait.jpg`, `pet-food-unsplash.jpg`, `dog-crate.jpg`
+- **New image assignments:** p18 (jelly-dog-food), p23 (dog-dispenser), p24 (dog-crate), p27 (pet-food-unsplash), p28 (dog-portrait)
+- **Freed images reassigned:** p13 (wet-dog-food-pouches), p25 (daisy-pet-bowls), p26 (pet-video-ad)
+- **Deleted product:** p29 (Dog Life Jacket) removed from `DEFAULT_PRODUCTS` — no new image was available for the 6th Unsplash product
+- **p30:** switched from deleted local file to Unsplash URL
 
 ### Files changed (Session 9):
-- `images/store/` — 24 local product images (17 new, 7 old renamed), 4 old images deleted
-- `store.html` — `DEFAULT_PRODUCTS` image paths updated; `loadProducts()` sync logic rewritten from positional to ID-based lookup
-- `HANDOFF.md` — Session 9 summary added
+- `images/store/` — Batch 1: 24 local product images (17 new, 7 old renamed), 4 old deleted. Batch 2: 5 new files added, 1 deleted (squeaky-tennis-ball.jpg), all 5 renamed
+- `store.html` — `DEFAULT_PRODUCTS` image paths updated (two rounds); `loadProducts()` sync logic rewritten from positional to ID-based lookup; p29 removed from array
+- `HANDOFF.md` — Session 9 summary added and updated
