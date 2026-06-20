@@ -99,43 +99,54 @@ a1-enterprise/
 ## Architecture Diagram
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                     Cloudflare Pages                     │
-│  (auto-deployed from GitHub on git push to main branch)  │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-  │  index.html  training.html  eco-cottages.html           │
-  │  grooming.html  boarding.html  store.html  admin.html   │
-  │       ↑                        ↑                        │
-  │       │ content-loader.js      │ auth.js                 │
-  │       │ reads from             │ login/logout            │
-  │       │ DB.getSiteContent()    │                        │
-  │       │                        │                        │
-  │  ┌────┴─────────────┐   ┌──────┴──────────┐             │
-  │  │    db.js         │   │   upload.js     │             │
-  │  │  Supabase client │   │  file upload    │             │
-│  │  7 CRUD fns      │   │  type check     │             │
-│  │                  │   │  compression    │             │
-│  └────┬─────────────┘   └──────┬──────────┘             │
-│       │                        │                        │
-└───────┼────────────────────────┼────────────────────────┘
-        │                        │
-        ▼                        ▼
-┌─────────────────────────────────────────────────────────┐
-│                     Supabase                             │
-│                                                          │
-│  ┌─────────────────────┐   ┌─────────────────────────┐  │
-│  │  Table: site_content│   │  Storage: a1-images     │  │
-│  │  id (PK, int=1)     │   │  Public bucket          │  │
-│  │  data (jsonb)       │   │  Uploaded images at:    │  │
-│  │  updated_at (ts)    │   │  /public/{filename}     │  │
-│  ├─────────────────────┤   └─────────────────────────┘  │
-│  │  Table: products    │                                │
-│  │  id (PK, text)      │                                │
-│  │  name, price, cat   │                                │
-│  │  catLabel, desc, img│                                │
-│  └─────────────────────┘                                │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                      Cloudflare Pages                         │
+│   (auto-deployed from GitHub on git push to main branch)      │
+├──────────────────────────────────────────────────────────────┤
+│                                                               │
+│   index.html  training.html  eco-cottages.html                │
+│   grooming.html  boarding.html  store.html  admin.html        │
+│        ↑                        ↑                             │
+│        │ content-loader.js      │ auth.js                      │
+│        │ reads from             │ login/logout/signup          │
+│        │ DB.getSiteContent()    │                              │
+│        │                        │                              │
+│   ┌────┴─────────────┐   ┌──────┴──────────┐                  │
+│   │    db.js          │   │   upload.js     │                  │
+│   │  Supabase client  │   │  file upload    │                  │
+│   │  7 CRUD fns      │   │  type check     │                  │
+│   │  FK joins        │   │  compression    │                  │
+│   └────┬─────────────┘   └──────┬──────────┘                  │
+│        │                        │                             │
+└────────┼────────────────────────┼─────────────────────────────┘
+         │                        │
+         ▼                        ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                         Supabase                                  │
+│                                                                   │
+│  ┌─────────────────────┐  ┌─────────────────────────┐            │
+│  │  Table: site_content│  │  Storage: a1-images     │            │
+│  │  id (PK, int=1)     │  │  Public bucket          │            │
+│  │  data (jsonb)       │  │  /public/{filename}     │            │
+│  │  updated_at (ts)    │  └─────────────────────────┘            │
+│  ├─────────────────────┤                                         │
+│  │  Table: products    │                                         │
+│  │  id (PK, text)      │                                         │
+│  │  name, price, ...   │                                         │
+│  ├─────────────────────┤         ┌──────────────────────┐        │
+│  │  Table: bookings    │────────▶│  Edge Function        │        │
+│  │  booking_id (PK)    │  Webhook│  send-booking-email  │        │
+│  │  owner_id → owners  │────────▶│  → POST to Resend    │        │
+│  │  dog_id → dogs      │  INSERT │  fetch API           │        │
+│  │  service_category   │         └──────────────────────┘        │
+│  │  service_specific   │                                         │
+│  │  start_date / ...   │         ┌──────────────────────┐        │
+│  ├─────────────────────┤         │  Table: owners       │        │
+│  │  Table: dogs        │         │  id (PK, UUID)       │        │
+│  │  id (PK, UUID)      │         │  full_name, phone    │        │
+│  │  name, breed, ...   │         │  whatsapp_number     │        │
+│  └─────────────────────┘         └──────────────────────┘        │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 ### Data Flow Summary
@@ -166,6 +177,36 @@ admin.html <input type="file"> → uploadImageToCloud(file)
   → supabase.storage.from('a1-images').upload(filename, blob)
   → supabase.storage.from('a1-images').getPublicUrl(filename)
   → return public URL string → stored in hidden input → saved to DB
+```
+
+**Customer submits booking (e.g. Grooming):**
+```
+grooming.html booking form submit → Auth.requireAuth() → session check
+  → owners.select('*').eq('id', userId) → lookup saved profile
+  → dogs.select('*').eq('owner_id', userId) → lookup saved dog
+  → bookings.insert({owner_id, dog_id, service_category, service_specific, start_date, time_slot, status:'pending'})
+  → if insert OK: hide form, show success UI (green checkmark "Booking Request Received!")
+  → if insert error (e.g. PGRST204): alert, re-enable button, DO NOT show success
+  → if owner lookup error === 'PGRST116' (zombie session):
+      handleZombieSessionError() → signOut + clearStorage + alert + window.location.replace()
+```
+
+**Edge Function email notification:**
+```
+Supabase Database Webhook (INSERT on bookings table)
+  → POST to https://{project}.supabase.co/functions/v1/send-booking-email
+  → Deno.serve() extracts payload.record
+  → fetch POST to https://api.resend.com/emails with HTML email
+  → if 200: console.log("Resend Success:", data)
+  → if !ok: console.error("Resend API Error:", status, errData), return res.status
+```
+
+**Admin views bookings:**
+```
+admin.html #tabBookings → renderBookingsDashboard() → DB.getBookings()
+  → supabase.from('bookings').select('*, owners(full_name, phone), dogs(name)').order('created_at', {ascending: false})
+  → render <table> with Date Received, Service Category, Specific Service, Date/Time, Owner Name, Phone, Dog Name, Status dropdown
+  → status change → DB.updateBookingStatus(bookingId, newStatus)
 ```
 
 ---
@@ -1874,3 +1915,29 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - `admin.html` — `renderBookingsDashboard()` rebuilt with new table columns and FK-joined data paths
 - `auth.js` — dog_id log fix: `dogRes.data[0].dog_id` → `dogRes.data[0].id`
 - `HANDOFF.md` — Session 8 summary added
+
+### Session 9 — Custom Store Product Images + DB Sync Fix
+
+**1. Product images replaced with user's custom photos:**
+- 17 new user images renamed to descriptive slugs in `images/store/` (e.g. `ruff-dog-food.jpg`, `rope-tug-toy.jpg`, `dog-vitamins.jpg`)
+- 4 old unused images deleted (`bellosan_*`, `pet_food_in_bowl_*`, `dry_dog_food_*`, `toy-figure-of-a-dog_*`)
+- 7 old images kept and renamed to match new schema
+- 24 of 30 products now use local images; 6 products kept Unsplash URLs (no matching photo provided)
+- `DEFAULT_PRODUCTS` array in `store.html` updated: all `img:` paths replaced, everything else untouched
+
+**2. DB image sync added to `loadProducts()`:**
+- Products load from Supabase DB (`DB.getProducts()`), NOT from `DEFAULT_PRODUCTS` in store.html
+- On first page load after deploy, `loadProducts()` compares DB images vs. `DEFAULT_PRODUCTS` images
+- If mismatched, it updates the Supabase DB with the new image paths (one-time sync)
+- **Bug v1:** Sync compared by array position — Supabase sorts IDs alphabetically (`p1, p10, p11...`) while `DEFAULT_PRODUCTS` is numeric (`p1, p2, p3...`). Only `p1` matched at index 0.
+- **Fix (commit `98b8df9`):** Changed to ID-based lookup — builds a `defaultMap` keyed by product ID, then matches each Supabase product to its `DEFAULT_PRODUCTS` entry by ID regardless of array ordering.
+
+**3. Hosting:**
+- GitHub Pages auto-deploys from `main` branch at `https://jeremygideonbareh.github.io/pet-grooming-website-/`
+- Cloudflare Pages auto-deploys on push (connected to same repo) but URL unknown — no Cloudflare API token with Pages permissions was available to verify
+- First visit to store page triggers DB image sync; thereafter new images display for all users
+
+### Files changed (Session 9):
+- `images/store/` — 24 local product images (17 new, 7 old renamed), 4 old images deleted
+- `store.html` — `DEFAULT_PRODUCTS` image paths updated; `loadProducts()` sync logic rewritten from positional to ID-based lookup
+- `HANDOFF.md` — Session 9 summary added
