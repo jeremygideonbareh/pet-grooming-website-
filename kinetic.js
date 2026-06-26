@@ -1,4 +1,4 @@
-(function() {
+﻿(function() {
   'use strict';
 
   function splitChars(el) {
@@ -130,9 +130,9 @@
       opts = opts || {};
       var els = document.querySelectorAll(selector);
       els.forEach(function(el) {
-        gsap.from(el, {
-          y: opts.y || 60,
-          opacity: 0,
+        gsap.fromTo(el, {opacity: 0, y: opts.y || 60}, {
+          y: 0,
+          opacity: 1,
           duration: opts.duration || 0.9,
           ease: opts.ease || 'power2.out',
           scrollTrigger: {

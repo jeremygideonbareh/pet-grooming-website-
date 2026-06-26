@@ -1,4 +1,4 @@
-# A-1 Enterprises Website — Complete Handover & Architecture Guide
+﻿# A-1 Enterprises Website — Complete Handover & Architecture Guide
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
@@ -1940,3 +1940,45 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - `images/store/` — Batch 1: 24 local product images (17 new, 7 old renamed), 4 old deleted. Batch 2: 5 new files added, 1 deleted (squeaky-tennis-ball.jpg), all 5 renamed
 - `store.html` — `DEFAULT_PRODUCTS` image paths updated (two rounds); `loadProducts()` sync logic rewritten from positional to ID-based lookup; p29 removed from array
 - `HANDOFF.md` — Session 9 summary added and updated
+
+### Session 10 — Fix Invisible Sections, Hero Overlay, Gallery, Duplicate Animations (Bug Hunt)
+
+**Bugs fixed:**
+
+**1. Universal GSAP kinetic.js bug (ALL pages):**
+- kinetic.js:133 — evealSection() used gsap.from(el, {opacity:0}) which animates TO the current computed value. Since CSS .reveal already sets opacity:0, GSAP animated  →0 — elements stayed permanently invisible.
+- **Fix:** Changed to gsap.fromTo(el, {opacity:0, y:60}, {y:0, opacity:1, ...}) — always animates to explicit opacity:1.
+
+**2. Hero overlay removed (index.html):**
+- Removed <div class="hero-overlay"> with dark green gradient that obscured the hero video.
+- Removed .hero-overlay CSS block.
+
+**3. Gallery uses happy clients photos (index.html):**
+- Replaced hardcoded stock photo array const GALLERY_IMAGES with 13 client photos (images/clients/client-01.jpeg through client-13.jpeg).
+
+**4. IntersectionObserver removed (index.html, training.html):**
+- Removed IntersectionObserver that added .active class — now redundant with GSAP Kinetic handling all scroll-reveal.
+
+**5. Duplicate Kinetic.revealSection calls removed (training.html, grooming.html, boarding.html):**
+- All pages had duplicate (or triplicate) contentLoaded handlers calling Kinetic.revealSection() on the same selectors already covered in DOMContentLoaded. Each duplicate created conflicting ScrollTrigger instances.
+- **Fix:** Removed entire contentLoaded handlers from training.html, grooming.html, boarding.html.
+
+**6. Training/Training in Action (training.html):**
+- Fixed by kinetic.js romTo fix + IntersectionObserver removal + contentLoaded duplicate removal.
+- .video-card and .client-gal elements now animate in correctly.
+
+**7. Grooming/content after videos (grooming.html):**
+- Fixed by kinetic.js romTo fix + contentLoaded duplicate removal.
+- All sections after "See Our Grooming in Action" now animate in.
+
+**8. Boarding page (boarding.html):**
+- Fixed by kinetic.js romTo fix + contentLoaded duplicate removal.
+
+### Files changed (Session 10):
+- kinetic.js — gsap.from() → gsap.fromTo() in evealSection
+- index.html — hero overlay removed, gallery uses 13 client photos, IntersectionObserver removed
+- 	raining.html — IntersectionObserver removed, duplicate contentLoaded handler removed
+- grooming.html — duplicate contentLoaded handler removed
+- oarding.html — duplicate contentLoaded handler removed
+- HANDOFF.md — Session 10 summary added
+- AGENTS.md — added instruction to read HANDOFF.md before/after commits

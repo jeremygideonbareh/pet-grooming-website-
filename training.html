@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -548,8 +548,6 @@ function handleZombieSessionError(){
   alert('Your session was incomplete or has expired. We are refreshing the page so you can start fresh!');
   window.location.replace(window.location.pathname);
 }
-const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('active');observer.unobserve(e.target)}})},{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 const loader=document.getElementById('pageLoader');
 window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'),400)});
 
@@ -637,12 +635,6 @@ document.addEventListener('DOMContentLoaded', function(){
   Kinetic.revealSection('.client-gal');
   Kinetic.revealSection('.step-card');
   Kinetic.revealSection('.cta-section');
-});
-document.addEventListener('contentLoaded', function(){
-  if(typeof Kinetic==='undefined')return;
-  Kinetic.revealSection('.program-card');
-  Kinetic.revealSection('.video-card');
-  Kinetic.revealSection('.client-gal');
 });
 </script>
 </body>
