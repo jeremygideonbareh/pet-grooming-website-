@@ -1,8 +1,8 @@
-(async function() {
+﻿(async function() {
   'use strict';
 
   if (typeof DB === 'undefined' || typeof DB.getSiteContent !== 'function') { document.dispatchEvent(new Event('contentLoaded')); return; }
-  var data = await DB.getSiteContent().catch(function(){ document.dispatchEvent(new Event('contentLoaded')); return null; });
+  var data = await DB.getSiteContent().catch(function(err){ console.error('[ContentLoader] DB fetch failed:', err); document.dispatchEvent(new Event('contentLoaded')); return null; });
   if (!data) { document.dispatchEvent(new Event('contentLoaded')); return; }
 
   var page = document.body && document.body.dataset.page;

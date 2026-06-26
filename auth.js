@@ -1,4 +1,4 @@
-(function() {
+﻿(function() {
   'use strict';
 
   var SUPABASE_URL = 'https://hqgdifxecxrxhjsbavkl.supabase.co';
@@ -346,8 +346,9 @@
   async function handleLogout(e) {
     if (e) e.preventDefault();
     await signOut();
-    localStorage.clear();
-    sessionStorage.clear();
+    localStorage.removeItem('a1_booking_auth');
+    sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem('a1_admin_lockout');
     location.reload();
   }
 

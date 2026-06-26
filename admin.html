@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -527,17 +527,52 @@ input,textarea,select,button{font-family:inherit}
 // ADMIN ACCESS CHECK
 // ═══════════════════════════════════════════════
 async function checkAdminAccess(){
-  var admin = await Auth.isAdmin();
-  if(admin){
+  document.getElementById('adminLoading').style.display='block';
+  try {
+    var admin = await Auth.isAdmin();
+    if(admin){
+      document.getElementById('adminLoading').style.display='none';
+      document.getElementById('accessDenied').style.display='none';
+      document.getElementById('dashboard').style.display='block';
+      document.getElementById('sessionInfo').textContent='Session active';
+      await renderDashboard();
+    }else{
+      document.getElementById('adminLoading').style.display='none';
+      document.getElementById('accessDenied').style.display='flex';
+      document.getElementById('dashboard').style.display='none';
+    }
+  } catch(e) {
+    document.getElementById('adminLoading').style.display='none';
+    document.getElementById('accessDenied').style.display='flex';
+    document.getElementById('dashboard').style.display='none';
+  }
+}
+
+// ── Admin Login Handler ──
+async function handleAdminLogin(){
+  var email = document.getElementById('adminEmail').value.trim();
+  var pass = document.getElementById('adminPassword').value;
+  var errEl = document.getElementById('loginError');
+  errEl.style.display='none';
+  if(!email||!pass){ errEl.textContent='Please enter email and password.'; errEl.style.display='block'; return; }
+  var result = await Auth.adminSignIn(email, pass);
+  if(result.success){
     document.getElementById('accessDenied').style.display='none';
     document.getElementById('dashboard').style.display='block';
     document.getElementById('sessionInfo').textContent='Session active';
     await renderDashboard();
   }else{
-    document.getElementById('accessDenied').style.display='flex';
-    document.getElementById('dashboard').style.display='none';
+    errEl.textContent=result.error||'Login failed.';
+    errEl.style.display='block';
   }
 }
+
+// Enter key triggers login
+document.addEventListener('keydown', function(e){
+  if(e.key==='Enter'&&document.getElementById('accessDenied').style.display!=='none'){
+    handleAdminLogin();
+  }
+});
 
 // ── Logout ──
 function logout(){
@@ -1147,7 +1182,7 @@ async function renderTrainingEditor(){
         <div class="cf-group"><label>Copyright Text</label><input id="trFootCopyright" value="${escHtml(s.footer.copyright)}"></div>
       </div>
     </div>
-    <button class="cf-save" id="saveAllBtn" style="margin-top:0">💾 Save All Changes</button>
+    <button class="cf-save" id="saveAllBtnTr" class="cf-save" style="margin-top:0">💾 Save Training</button>
   `;
   document.querySelectorAll('#trainingEditor .sec-hd').forEach(function(hd){
     hd.addEventListener('click',function(){
@@ -1317,7 +1352,7 @@ async function renderGroomingEditor(){
         </div>
       </div>
     </div>
-    <button class="cf-save" id="saveAllBtn" style="margin-top:0">💾 Save All Changes</button>
+    <button class="cf-save" id="saveAllBtnGr" class="cf-save" style="margin-top:0">💾 Save Grooming</button>
   `;
   document.querySelectorAll('#groomingEditor .sec-hd').forEach(function(hd){
     hd.addEventListener('click',function(){
@@ -1415,7 +1450,7 @@ async function renderBoardingEditor(){
         <div class="cf-group"><label>Copyright Text</label><input id="boFootCopy" value="${escHtml(s.footer.copyright)}"></div>
       </div>
     </div>
-    <button class="cf-save" id="saveAllBtn" style="margin-top:0">💾 Save All Changes</button>
+    <button class="cf-save" id="saveAllBtnBo" class="cf-save" style="margin-top:0">💾 Save Boarding</button>
   `;
   document.querySelectorAll('#boardingEditor .sec-hd').forEach(function(hd){
     hd.addEventListener('click',function(){
@@ -1527,7 +1562,7 @@ async function renderEcoEditor(){
         <div class="cf-group"><label>Copyright Text</label><input id="ecFootCopy" value="${escHtml(s.footer.copyright)}"></div>
       </div>
     </div>
-    <button class="cf-save" id="saveAllBtn" style="margin-top:0">💾 Save All Changes</button>
+    <button class="cf-save" id="saveAllBtnEc" class="cf-save" style="margin-top:0">💾 Save Eco Changes</button>
   `;
   document.querySelectorAll('#ecoEditor .sec-hd').forEach(function(hd){
     hd.addEventListener('click',function(){
@@ -1738,7 +1773,7 @@ document.getElementById('saveContentBtn').addEventListener('click',async functio
   await saveAllContent();
 });
 document.addEventListener('click',async function(e){
-  if(e.target && e.target.id==='saveAllBtn') await saveAllContent();
+  if(e.target && e.target.id.match(/^saveAllBtn(Tr|Gr|Bo|Ec)$/)) await saveAllContent();
 });
 
 async function saveAllContent(){
@@ -1750,6 +1785,8 @@ async function saveAllContent(){
     data.hero.headline=document.getElementById('cHeroHeadline').value;
     data.hero.badge=document.getElementById('cHeroBadge').value;
     data.hero.bgImage=document.getElementById('cHeroBg').value;
+    data.hero.videoUrl=document.getElementById('cHeroVideo').value;
+    data.hero.posterUrl=document.getElementById('cHeroPoster').value;
     data.hero.btnText=document.getElementById('cHeroBtn').value;
     data.about.label=document.getElementById('cAboutLabel').value;
     data.about.heading=document.getElementById('cAboutHeading').value;

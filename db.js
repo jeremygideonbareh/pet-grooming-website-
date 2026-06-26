@@ -1,4 +1,4 @@
-/*
+﻿/*
  * db.js — Data layer (Supabase)
  *
  * All site data operations go through these async functions.
@@ -95,16 +95,18 @@
    */
   async function saveAllProducts(products) {
     try {
-      // Fetch existing IDs to delete
-      var existing = await supabase
+      // Backup existing products before modifying
+      var backup = await supabase
         .from('products')
-        .select('id');
-      if (existing.error) {
-        console.error('[DB] saveAllProducts fetch error:', existing.error);
+        .select('*');
+      if (backup.error) {
+        console.error('[DB] saveAllProducts fetch error:', backup.error);
         return;
       }
-      if (existing.data && existing.data.length > 0) {
-        var ids = existing.data.map(function(r) { return r.id; });
+      var backupData = backup.data || [];
+      // Delete all existing products
+      if (backupData.length > 0) {
+        var ids = backupData.map(function(r) { return r.id; });
         var delResult = await supabase
           .from('products')
           .delete()
@@ -121,6 +123,11 @@
           .insert(products);
         if (insResult.error) {
           console.error('[DB] saveAllProducts insert error:', insResult.error);
+          // Restore backup on insert failure
+          if (backupData.length > 0) {
+            console.warn('[DB] Restoring backup...');
+            await supabase.from('products').insert(backupData);
+          }
         }
       }
     } catch (e) {
