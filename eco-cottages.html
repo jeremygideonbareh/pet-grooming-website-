@@ -26,10 +26,7 @@ ul{list-style:none}
 .btn-primary:active{transform:scale(.97)}
 .btn-whatsapp{background:var(--whatsapp);color:var(--white);box-shadow:0 4px 16px rgba(37,211,102,.3)}
 .btn-whatsapp:hover{background:#1DA851;transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.35)}
-.reveal{opacity:0;transform:translateY(36px);transition:all .7s cubic-bezier(.16,1,.3,1)}
-.reveal.active{opacity:1;transform:translateY(0)}
-.reveal-delay-1{transition-delay:.1s}
-.reveal-delay-2{transition-delay:.2s}
+.reveal{} .reveal-delay-1{} .reveal-delay-2{}
 
 /* ── HERO ── */
 .page-hero{background:linear-gradient(135deg,rgba(26,20,18,.75),rgba(26,20,18,.55)),url('https://images.unsplash.com/photo-1440778303588-435521a205bc?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;text-align:center;color:#fff}
@@ -149,7 +146,7 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script>window.scrollTo(0,0)</script>
+<script>if('scrollRestoration'in history)history.scrollRestoration='manual';window.scrollTo(0,0)</script>
 </head>
 <body data-page="eco">
 <div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block;animation:slideUp .6s ease both"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em;animation:slideUp .6s ease .15s both">A-1 Enterprises</div><div style="font-size:.85rem;color:var(--sunbeam);margin-bottom:4px;animation:slideUp .6s ease .3s both">Passion Turned Profession</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);animation:slideUp .6s ease .45s both">Eco Cottages</div></div><div class="loader-bar"></div></div>
@@ -326,8 +323,7 @@ window.addEventListener('scroll',()=>{
   navIsland.classList.toggle('scrolled',s);
   floatingLogo.classList.toggle('scrolled',s);
 });
-const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('active');observer.unobserve(e.target)}})},{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+// Reveal handled by GSAP Kinetic.revealSection
 const loader=document.getElementById('pageLoader');
 window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'),400)});
 </script>
@@ -342,10 +338,13 @@ document.addEventListener('DOMContentLoaded', function(){
   gsap.registerPlugin(ScrollTrigger);
   var h1=document.querySelector('h1');
   if(h1)Kinetic.wordReveal(h1,{y:40});
-  Kinetic.revealSection('.section-title');
+  Kinetic.revealSection('.reveal');
   Kinetic.revealSection('.feature-card');
   Kinetic.revealSection('.gal-item');
   Kinetic.revealSection('.cta-section');
+  Kinetic.revealSection('.details-image');
+  Kinetic.revealSection('.page-hero');
+  Kinetic.revealSection('footer');
 });
 </script>
 </body>

@@ -365,6 +365,7 @@ input,textarea,select,button{font-family:inherit}
 .confirm-actions .btn-no:hover{background:var(--sage-dark)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>if('scrollRestoration'in history)history.scrollRestoration='manual';window.scrollTo(0,0)</script>
 </head>
 <body>
 
@@ -1957,6 +1958,16 @@ async function renderBookingsDashboard() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="kinetic.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(typeof gsap==='undefined')return;
+  gsap.registerPlugin(ScrollTrigger);
+  Kinetic.revealSection('.dash-header');
+  Kinetic.revealSection('.dash-tabs');
+  Kinetic.revealSection('.tab-content');
+  Kinetic.revealSection('footer');
+});
+</script>
 <footer style="background:var(--forest);color:var(--champagne);padding:24px;text-align:center;font-size:.8rem;border-top:1px solid var(--sage-dark)">
   <div style="display:flex;justify-content:center;gap:12px;margin-bottom:10px;flex-wrap:wrap">
     <a href="https://www.facebook.com/SANGPRETI/" target="_blank" rel="noopener" style="color:rgba(255,255,255,.4);text-decoration:none;font-size:.75rem">📘 Facebook</a>

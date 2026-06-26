@@ -309,7 +309,7 @@ footer{
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script>window.scrollTo(0,0)</script>
+<script>if('scrollRestoration'in history)history.scrollRestoration='manual';window.scrollTo(0,0)</script>
 </head>
 <body data-page="store">
 <div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block;animation:slideUp .6s ease both"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em;animation:slideUp .6s ease .15s both">A-1 Enterprises</div><div style="font-size:.85rem;color:var(--sunbeam);margin-bottom:4px;animation:slideUp .6s ease .3s both">Passion Turned Profession</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);animation:slideUp .6s ease .45s both">Pet Store</div></div><div class="loader-bar"></div></div>
@@ -714,9 +714,9 @@ document.addEventListener('DOMContentLoaded', function(){
   gsap.registerPlugin(ScrollTrigger);
   var h1=document.querySelector('h1');
   if(h1)Kinetic.wordReveal(h1,{y:40});
-  Kinetic.revealSection('.section-title');
-  Kinetic.revealSection('.product-card');
-  Kinetic.revealSection('.product-card-upgrade');
+  Kinetic.revealSection('.store-hero');
+  Kinetic.revealSection('.products-section');
+  Kinetic.revealSection('footer');
 });
 </script>
 </body>
