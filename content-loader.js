@@ -54,7 +54,17 @@
       text('.hero-content h1', d.hero.headline);
       text('.hero-badge', d.hero.badge);
       text('.hero-btns .btn-primary', d.hero.btnText);
-      styleBg('.hero-bg', d.hero.bgImage);
+      var heroVideo = document.querySelector('.hero-bg');
+      if (heroVideo) {
+        if (d.hero.bgImage) heroVideo.poster = d.hero.bgImage;
+        if (d.hero.videoUrl) {
+          var source = heroVideo.querySelector('source');
+          if (source) {
+            source.src = d.hero.videoUrl;
+            heroVideo.load();
+          }
+        }
+      }
     }
     if (d.about) {
       text('.about-text .section-label', d.about.label);
@@ -109,11 +119,11 @@
       });
     }
     if (d.whyUs) {
-      text('.why-us .section-label', d.whyUs.label);
-      text('.why-us .section-title', d.whyUs.heading);
-      text('.why-us .section-sub', d.whyUs.subtext);
-      clearAndFill('.wu-grid', d.whyUs.items, function(item) {
-        var el = div('wu-item');
+      text('.why-choose .section-label', d.whyUs.label);
+      text('.why-choose .section-title', d.whyUs.heading);
+      text('.why-choose .section-sub', d.whyUs.subtext);
+      clearAndFill('.wc-grid', d.whyUs.items, function(item) {
+        var el = div('wc-item');
         var icon = div('icon');
         icon.textContent = item.icon || '⭐';
         var h4 = document.createElement('h4');
@@ -127,8 +137,8 @@
       });
     }
     if (d.social) {
-      clearAndFill('.wu-sr', d.social, function(item) {
-        var el = div('wu-sr-item');
+      clearAndFill('.wc-sr', d.social, function(item) {
+        var el = div('wc-sr-item');
         var icon = div('icon');
         icon.textContent = item.icon || '🤝';
         var h4 = document.createElement('h4');

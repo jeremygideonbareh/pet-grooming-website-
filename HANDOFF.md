@@ -1982,3 +1982,88 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - oarding.html — duplicate contentLoaded handler removed
 - HANDOFF.md — Session 10 summary added
 - AGENTS.md — added instruction to read HANDOFF.md before/after commits
+### Session 11 — Admin Login Form, Hero Video Editing, Product Save Safety, Bug Fixes
+
+**1. Admin login form (admin.html):**
+- Added email + password login form directly inside the "Access Denied" section — no longer need to login via booking modal first
+- Added loading spinner during initial auth check
+- Enter key triggers login automatically
+- Login errors shown inline
+- Logout now stays on admin page (shows login form) instead of redirecting to index
+
+**2. Hero video editing (admin.html + content-loader.js):**
+- Added "Background Video URL (mp4)" and "Video Poster URL" fields to Content tab's Hero Section
+- saveAllContent() now saves ideoUrl and posterUrl alongside other hero data
+- content-loader.js pplyHome() now sets video source + poster and calls .load() when DB video data exists
+
+**3. Product save safety (db.js):**
+- saveAllProducts() now creates a full backup before deleting
+- If the insert fails after delete, the backup is automatically restored
+- Prevents permanent data loss from network errors during save
+
+**4. localStorage cleanup (auth.js):**
+- handleLogout() changed from localStorage.clear() / sessionStorage.clear() (wipes ALL data) to targeted removal of app-specific keys only (1_booking_auth, 1_admin_session, 1_admin_lockout)
+
+**5. Save button duplicate IDs fixed (admin.html):**
+- Training editor: #saveAllBtnTr
+- Grooming editor: #saveAllBtnGr
+- Boarding editor: #saveAllBtnBo
+- Eco editor: #saveAllBtnEc
+- Event delegation handler updated to match all with regex /^saveAllBtn(Tr|Gr|Bo|Ec)$/
+
+**6. .gitignore updated:**
+- Added .github/workflows/, .wrangler/, 1-promo-video/, clients photos/ to prevent junk files from being committed
+
+**7. Error logging added (content-loader.js):**
+- console.warn when DB module is unavailable
+- console.warn when no data returned from DB
+- console.error with error details when DB fetch fails
+- All failures still dispatch contentLoaded event so static HTML is preserved
+
+### Files changed (Session 11):
+- dmin.html — login form, loading state, hero video fields, save button IDs, logout behavior
+- uth.js — localStorage.clear() → targeted removal
+- db.js — backup/restore in saveAllProducts()
+- content-loader.js — hero video support, store case, error logging
+- .gitignore — added junk file patterns
+- HANDOFF.md — Session 11 summary
+
+### Session 12 — Admin Edit Fix (Save crash + selector mismatches)
+
+**Date:** June 26, 2026
+
+**Problem:** Admin Content tab save was broken — `saveAllContent()` crashed on `null.value` because `cHeroVideo`/`cHeroPoster` form fields didn't exist in `renderContentEditor()`. Also, existing DB data missing `hero` key caused `undefined.headline` crash preventing form rendering. Several content-loader selectors used wrong CSS classes.
+
+**Root causes:**
+1. **CRITICAL**: `admin.html:1788-1789` read `cHeroVideo`/`cHeroPoster` IDs that were never created in `renderContentEditor()` — TypeError crash prevented all saves
+2. **CRITICAL**: Existing DB data lacked `hero` top-level key — `loadContent()` returned it as-is (truthy object bypassing DEFAULT_CONTENT), causing `undefined.headline` crash in `renderContentEditor()` line 875
+3. content-loader.js used `.why-us` (wrong), `.wu-grid`/`.wu-sr` (wrong) — index.html uses `why-choose`, `wc-grid`, `wc-sr`
+4. `styleBg('.hero-bg', url)` on `<video>` does nothing
+5. No `.wc-sr` container in index.html HTML — Social Responsibility items never rendered
+
+**Fixes applied:**
+- `admin.html`: Added `cHeroVideo` and `cHeroPoster` form fields in `renderContentEditor()` after `cHeroBg`
+- `admin.html`: Added `videoUrl:''` and `posterUrl:''` to `DEFAULT_CONTENT.hero`
+- `admin.html`: Rewrote `loadContent()` to deep-merge DB data with DEFAULT_CONTENT (fill missing keys)
+- `content-loader.js`: Replaced `styleBg('.hero-bg', ...)` with poster attribute + source src + `.load()` for video
+- `content-loader.js`: `.why-us` → `.why-choose`, `.wu-grid` → `.wc-grid`, `wu-item` → `wc-item`, `.wu-sr` → `.wc-sr`, `wu-sr-item` → `wc-sr-item`
+- `index.html`: Added `<div class="wc-sr">` container inside `why-choose` section
+- `index.html`: `Kinetic.revealSection('.wu-grid')` → `.wc-grid`
+
+**Verified by browser test:**
+- Content tab renders all fields including video/poster URL inputs
+- Changing hero headline + badge → Save → DB persisted
+- Homepage reflects changes after reload
+- Original values restored after test
+
+**Key lessons:**
+- `loadContent()` must ALWAYS produce a complete data structure — deep-merge with defaults
+- When adding new form fields to admin, always create matching `<input>` elements in `renderContentEditor()`
+- Don't use `styleBg()` on `<video>` elements — set `poster` attribute directly
+- Verify DB has expected structure before rendering — old data can lack new fields
+
+### Files changed (Session 12):
+- `admin.html` — added video/poster form fields, deep-merge loadContent(), DEFAULT_CONTENT extended
+- `content-loader.js` — fixed 6 selector mismatches, added homepage hero video handling
+- `index.html` — added wc-sr container, fixed Kinetic selector
+- `HANDOFF.md` — Session 12 summary
