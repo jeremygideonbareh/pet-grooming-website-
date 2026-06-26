@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>A-1Pet Shop And Grooming — Shillong</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="upgrade.css">
 <style>
-:root{--cream:#FBF7F2;--cream-dark:#F5EDE4;--charcoal:#1A1412;--charcoal-soft:#2C2420;--gold:#C9A05C;--gold-light:#E8C88A;--gold-dark:#A77F3E;--muted:#7A6B5E;--border:#E3D9CE;--white:#FFFFFF;--whatsapp:#25D366;--green:#27ae60;--red:#e74c3c}
+:root{--vanilla:#FCF8E8;--vanilla-dark:#F0ECD8;--sage:#E2EFE6;--sage-dark:#C8D9CE;--sunbeam:#FCE38A;--sunbeam-dark:#E8C96A;--peach:#F9D5D3;--peach-dark:#EDC0BE;--forest:#004225;--forest-light:#005C33;--forest-muted:#4A7C5C;--bronze:#8A631C;--champagne:#D4CEBA;--white:#FFFFFF;--whatsapp:#25D366;--green:#27ae60;--red:#e74c3c}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
@@ -57,43 +58,43 @@ img{display:block;max-width:100%;height:auto}
 .booking-modal .form-group{margin-bottom:16px}
 .booking-modal .form-group label{display:block;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.8);margin-bottom:6px}
 .booking-modal .form-group input,.booking-modal .form-group textarea,.booking-modal .form-group select{width:100%;padding:12px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);backdrop-filter:blur(8px);font-family:'Inter',sans-serif;font-size:.9rem;color:#fff;outline:none;transition:border-color .3s}
-.booking-modal .form-group input:focus,.booking-modal .form-group textarea:focus,.booking-modal .form-group select:focus{border-color:var(--gold)}
+.booking-modal .form-group input:focus,.booking-modal .form-group textarea:focus,.booking-modal .form-group select:focus{border-color:var(--sunbeam)}
 .booking-modal .form-group textarea{resize:vertical;min-height:80px}
 .booking-modal .btn-send{width:100%;padding:14px;border-radius:60px;border:none;background:var(--whatsapp);color:var(--white);font-family:'Inter',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:background .3s,transform .2s;display:flex;align-items:center;justify-content:center;gap:10px}
 .booking-modal .btn-send:hover{background:#1DA851}
 .booking-modal .btn-send:active{transform:scale(.97)}
-.tslot:hover{border-color:var(--gold)!important;background:rgba(255,255,255,.12)!important}
+.tslot:hover{border-color:var(--sunbeam)!important;background:rgba(255,255,255,.12)!important}
 
 /* ── AUTH MODAL ── */
 .auth-overlay{position:fixed;inset:0;z-index:3000;background:rgba(26,20,18,.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:24px}
 .auth-overlay.open{display:flex}
 .auth-modal{background:#fff;border-radius:28px;max-width:420px;width:100%;padding:36px 32px;animation:modalIn .3s ease;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-.auth-modal .close-btn{float:right;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted);transition:color .3s;line-height:1}
-.auth-modal .close-btn:hover{color:var(--charcoal)}
-.auth-modal h2{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;color:var(--charcoal);margin-bottom:4px}
-.auth-modal .sub{font-size:.85rem;color:var(--muted);margin-bottom:20px}
-.auth-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border)}
-.auth-tab{flex:1;padding:10px 0;text-align:center;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .3s}
-.auth-tab.active{color:var(--gold-dark);border-bottom-color:var(--gold)}
+.auth-modal .close-btn{float:right;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--forest-muted);transition:color .3s;line-height:1}
+.auth-modal .close-btn:hover{color:var(--forest)}
+.auth-modal h2{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;color:var(--forest);margin-bottom:4px}
+.auth-modal .sub{font-size:.85rem;color:var(--forest-muted);margin-bottom:20px}
+.auth-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--sage-dark)}
+.auth-tab{flex:1;padding:10px 0;text-align:center;font-size:.85rem;font-weight:600;color:var(--forest-muted);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .3s}
+.auth-tab.active{color:var(--sunbeam-dark);border-bottom-color:var(--sunbeam)}
 .auth-form{display:none}
 .auth-form.active{display:block}
 .auth-form .form-group{margin-bottom:14px}
-.auth-form .form-group label{display:block;font-size:.75rem;font-weight:600;color:var(--charcoal);margin-bottom:5px}
-.auth-form .form-group input{width:100%;padding:11px 16px;border-radius:12px;border:1px solid var(--border);background:var(--cream);font-family:'Inter',sans-serif;font-size:.9rem;color:var(--charcoal);outline:none;transition:border-color .3s}
-.auth-form .form-group input:focus{border-color:var(--gold)}
-.auth-form .btn-submit{width:100%;padding:13px;border-radius:60px;border:none;background:var(--gold);color:var(--charcoal);font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:background .3s,transform .2s}
-.auth-form .btn-submit:hover{background:var(--gold-dark)}
+.auth-form .form-group label{display:block;font-size:.75rem;font-weight:600;color:var(--forest);margin-bottom:5px}
+.auth-form .form-group input{width:100%;padding:11px 16px;border-radius:12px;border:1px solid var(--sage-dark);background:var(--vanilla);font-family:'Inter',sans-serif;font-size:.9rem;color:var(--forest);outline:none;transition:border-color .3s}
+.auth-form .form-group input:focus{border-color:var(--sunbeam)}
+.auth-form .btn-submit{width:100%;padding:13px;border-radius:60px;border:none;background:var(--sunbeam);color:var(--forest);font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:background .3s,transform .2s}
+.auth-form .btn-submit:hover{background:var(--sunbeam-dark)}
 .auth-form .btn-submit:active{transform:scale(.97)}
 .auth-error{font-size:.8rem;color:var(--red);margin-top:8px;display:none}
 .auth-success{font-size:.8rem;color:var(--green);margin-top:8px;display:none}
-.auth-form .auth-switch{font-size:.8rem;color:var(--muted);text-align:center;margin-top:14px}
-.auth-form .auth-switch a{color:var(--gold-dark);cursor:pointer;text-decoration:underline}
-.auth-form .auth-divider{text-align:center;font-size:.75rem;color:var(--muted);margin:18px 0 10px;position:relative}
-.auth-form .auth-divider::before,.auth-form .auth-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border)}
+.auth-form .auth-switch{font-size:.8rem;color:var(--forest-muted);text-align:center;margin-top:14px}
+.auth-form .auth-switch a{color:var(--sunbeam-dark);cursor:pointer;text-decoration:underline}
+.auth-form .auth-divider{text-align:center;font-size:.75rem;color:var(--forest-muted);margin:18px 0 10px;position:relative}
+.auth-form .auth-divider::before,.auth-form .auth-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--sage-dark)}
 .auth-form .auth-divider::before{left:0}
 .auth-form .auth-divider::after{right:0}
-.auth-form .btn-guest{width:100%;padding:12px;border-radius:60px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Inter',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .3s}
-.auth-form .btn-guest:hover{background:var(--cream-dark);color:var(--charcoal)}
+.auth-form .btn-guest{width:100%;padding:12px;border-radius:60px;border:1px solid var(--sage-dark);background:transparent;color:var(--forest-muted);font-family:'Inter',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .3s}
+.auth-form .btn-guest:hover{background:var(--cream-dark);color:var(--forest)}
 
 /* ── LOADING ── */
 .loading-overlay{
@@ -103,7 +104,7 @@ img{display:block;max-width:100%;height:auto}
 }
 .loading-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
 .loader-bar{position:absolute;bottom:0;left:0;width:100%;height:4px;background:rgba(255,255,255,.08)}
-.loader-bar::after{content:'';display:block;height:100%;width:30%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:0 2px 2px 0;animation:loaderBar 1.5s ease-in-out infinite}
+.loader-bar::after{content:'';display:block;height:100%;width:30%;background:linear-gradient(90deg,var(--sunbeam),var(--sunbeam-dark));border-radius:0 2px 2px 0;animation:loaderBar 1.5s ease-in-out infinite}
 @keyframes loaderBar{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 .loading-brand{
@@ -471,7 +472,7 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
     <div style="text-align:center">
       <img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block;animation:slideUp .6s ease both">
       <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em;animation:slideUp .6s ease .15s both">A-1 Enterprises</div>
-      <div style="font-size:.85rem;color:var(--gold);margin-bottom:4px;animation:slideUp .6s ease .3s both">Passion Turned Profession</div>
+      <div style="font-size:.85rem;color:var(--sunbeam);margin-bottom:4px;animation:slideUp .6s ease .3s both">Passion Turned Profession</div>
       <div style="font-size:.78rem;color:rgba(255,255,255,.5);animation:slideUp .6s ease .45s both">Pet Grooming</div>
     </div>
     <div class="loader-bar"></div>
@@ -537,20 +538,20 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
 </section>
 
   <!-- WHY GROOMING MATTERS -->
-  <section style="padding:64px 24px;background:var(--cream)">
+  <section style="padding:64px 24px;background:var(--vanilla)">
     <div style="max-width:900px;margin:0 auto">
       <div style="text-align:center;margin-bottom:36px" class="reveal">
-        <span style="display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:12px">Why Grooming Matters</span>
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;color:var(--charcoal)">More Than Just a Bath</h2>
-        <p style="font-size:.9rem;line-height:1.7;color:var(--muted);margin-top:10px;max-width:600px;margin-inline:auto">Regular grooming is essential for your dog's health and happiness. Here's why it matters:</p>
+        <span style="display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sunbeam-dark);margin-bottom:12px">Why Grooming Matters</span>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;color:var(--forest)">More Than Just a Bath</h2>
+        <p style="font-size:.9rem;line-height:1.7;color:var(--forest-muted);margin-top:10px;max-width:600px;margin-inline:auto">Regular grooming is essential for your dog's health and happiness. Here's why it matters:</p>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
-        <div class="reveal reveal-delay-1" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--border);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">🩺</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Healthy Skin &amp; Coat</h4><p style="font-size:.8rem;color:var(--muted);line-height:1.5">Regular grooming stimulates natural oils, removes dirt, and promotes a healthy, shiny coat.</p></div>
-        <div class="reveal reveal-delay-2" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--border);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">🌀</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Reduced Shedding</h4><p style="font-size:.8rem;color:var(--muted);line-height:1.5">Professional deshedding removes loose fur before it ends up on your furniture and clothes.</p></div>
-        <div class="reveal reveal-delay-3" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--border);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">🧼</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Better Hygiene</h4><p style="font-size:.8rem;color:var(--muted);line-height:1.5">Regular ear cleaning, nail trimming, and sanitary trims prevent infections and keep your pet fresh.</p></div>
-        <div class="reveal reveal-delay-1" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--border);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">🔍</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Early Detection of Issues</h4><p style="font-size:.8rem;color:var(--muted);line-height:1.5">Groomers often spot lumps, bumps, skin infections, and parasites before they become serious.</p></div>
-        <div class="reveal reveal-delay-2" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--border);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">😊</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Improved Comfort &amp; Wellbeing</h4><p style="font-size:.8rem;color:var(--muted);line-height:1.5">Regular grooming prevents matting, overgrown nails, and ear issues that cause discomfort.</p></div>
-        <div class="reveal reveal-delay-3" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--border);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">🐩</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Maintaining Breed Appearance</h4><p style="font-size:.8rem;color:var(--muted);line-height:1.5">Breed-specific grooming keeps your dog looking their best and preserves coat health standards.</p></div>
+        <div class="reveal reveal-delay-1" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--sage-dark);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">🩺</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Healthy Skin &amp; Coat</h4><p style="font-size:.8rem;color:var(--forest-muted);line-height:1.5">Regular grooming stimulates natural oils, removes dirt, and promotes a healthy, shiny coat.</p></div>
+        <div class="reveal reveal-delay-2" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--sage-dark);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">🌀</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Reduced Shedding</h4><p style="font-size:.8rem;color:var(--forest-muted);line-height:1.5">Professional deshedding removes loose fur before it ends up on your furniture and clothes.</p></div>
+        <div class="reveal reveal-delay-3" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--sage-dark);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">🧼</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Better Hygiene</h4><p style="font-size:.8rem;color:var(--forest-muted);line-height:1.5">Regular ear cleaning, nail trimming, and sanitary trims prevent infections and keep your pet fresh.</p></div>
+        <div class="reveal reveal-delay-1" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--sage-dark);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">🔍</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Early Detection of Issues</h4><p style="font-size:.8rem;color:var(--forest-muted);line-height:1.5">Groomers often spot lumps, bumps, skin infections, and parasites before they become serious.</p></div>
+        <div class="reveal reveal-delay-2" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--sage-dark);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">😊</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Improved Comfort &amp; Wellbeing</h4><p style="font-size:.8rem;color:var(--forest-muted);line-height:1.5">Regular grooming prevents matting, overgrown nails, and ear issues that cause discomfort.</p></div>
+        <div class="reveal reveal-delay-3" style="background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border-radius:20px;padding:24px 20px;border:1px solid var(--sage-dark);text-align:center"><span style="font-size:1.8rem;display:block;margin-bottom:8px">🐩</span><h4 style="font-size:.9rem;font-weight:700;margin-bottom:4px">Maintaining Breed Appearance</h4><p style="font-size:.8rem;color:var(--forest-muted);line-height:1.5">Breed-specific grooming keeps your dog looking their best and preserves coat health standards.</p></div>
       </div>
     </div>
   </section>
@@ -559,31 +560,31 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   <section style="padding:64px 24px;background:var(--cream-dark)" id="grooming-services">
     <div style="max-width:1100px;margin:0 auto">
       <div style="text-align:center;margin-bottom:36px" class="reveal">
-        <span style="display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:12px">Our Services</span>
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;color:var(--charcoal)">Professional Grooming Services</h2>
-        <p style="font-size:.9rem;line-height:1.7;color:var(--muted);margin-top:10px;max-width:600px;margin-inline:auto">Every service is tailored to your dog's breed, coat type, and individual needs.</p>
+        <span style="display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sunbeam-dark);margin-bottom:12px">Our Services</span>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;color:var(--forest)">Professional Grooming Services</h2>
+        <p style="font-size:.9rem;line-height:1.7;color:var(--forest-muted);margin-top:10px;max-width:600px;margin-inline:auto">Every service is tailored to your dog's breed, coat type, and individual needs.</p>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
-        <div class="reveal reveal-delay-1" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">⚡</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">Express Grooming</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:6px">Bath, Blow Dry, Nail Trim, Ear Cleaning</p><p style="font-size:.75rem;color:var(--gold-dark);font-weight:600;margin-bottom:14px">Quick refresh for dogs who need a light groom</p><button class="groom-book-btn" data-service="Express Grooming" style="padding:10px 24px;border-radius:60px;border:none;background:var(--gold);color:var(--charcoal);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
-        <div class="reveal reveal-delay-2" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">🌟</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">Premium Full Grooming</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:6px">Bath, Hair Trim, Brushing, Blow Dry, Nail Trim, Ear Cleaning, Sanitary Trim</p><p style="font-size:.75rem;color:var(--gold-dark);font-weight:600;margin-bottom:14px">Complete grooming for a polished look</p><button class="groom-book-btn" data-service="Premium Full Grooming" style="padding:10px 24px;border-radius:60px;border:none;background:var(--gold);color:var(--charcoal);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
-        <div class="reveal reveal-delay-3" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">💆</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">Spa &amp; Relaxation Package</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:6px">Premium Full Grooming + Massage + Coat Conditioning</p><p style="font-size:.75rem;color:var(--gold-dark);font-weight:600;margin-bottom:14px">Ultimate pampering experience for your pet</p><button class="groom-book-btn" data-service="Spa & Relaxation Package" style="padding:10px 24px;border-radius:60px;border:none;background:var(--gold);color:var(--charcoal);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
-        <div class="reveal reveal-delay-1" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">🛡️</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">Anti-Fungal Therapy</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:6px">Medicated Grooming &amp; Skin Care Support</p><p style="font-size:.75rem;color:var(--gold-dark);font-weight:600;margin-bottom:14px">Therapeutic care for skin conditions</p><button class="groom-book-btn" data-service="Anti-Fungal Therapy" style="padding:10px 24px;border-radius:60px;border:none;background:var(--gold);color:var(--charcoal);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
-        <div class="reveal reveal-delay-2" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">🦟</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">Anti-Tick, Flea &amp; Lice Treatment</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:6px">Premium Parasite Control Treatment</p><p style="font-size:.75rem;color:var(--gold-dark);font-weight:600;margin-bottom:14px">Complete parasite removal and prevention</p><button class="groom-book-btn" data-service="Anti-Tick Flea & Lice Treatment" style="padding:10px 24px;border-radius:60px;border:none;background:var(--gold);color:var(--charcoal);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
-        <div class="reveal reveal-delay-3" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">✂️</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">De-Shedding Package</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:6px">For Huskies, GSDs, Goldens, Labs, and heavy-shedding breeds</p><p style="font-size:.75rem;color:var(--gold-dark);font-weight:600;margin-bottom:14px">Reduce shedding by up to 90%</p><button class="groom-book-btn" data-service="De-Shedding Package" style="padding:10px 24px;border-radius:60px;border:none;background:var(--gold);color:var(--charcoal);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
-        <div class="reveal reveal-delay-1" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">🔄</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">De-Tangling &amp; Coat Restoration</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:6px">For matted and long-coated dogs</p><p style="font-size:.75rem;color:var(--gold-dark);font-weight:600;margin-bottom:14px">Gentle dematting and coat recovery</p><button class="groom-book-btn" data-service="De-Tangling & Coat Restoration" style="padding:10px 24px;border-radius:60px;border:none;background:var(--gold);color:var(--charcoal);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
+        <div class="reveal reveal-delay-1" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">⚡</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">Express Grooming</h3><p style="font-size:.82rem;color:var(--forest-muted);line-height:1.6;margin-bottom:6px">Bath, Blow Dry, Nail Trim, Ear Cleaning</p><p style="font-size:.75rem;color:var(--sunbeam-dark);font-weight:600;margin-bottom:14px">Quick refresh for dogs who need a light groom</p><button class="groom-book-btn" data-service="Express Grooming" style="padding:10px 24px;border-radius:60px;border:none;background:var(--sunbeam);color:var(--forest);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
+        <div class="reveal reveal-delay-2" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">🌟</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">Premium Full Grooming</h3><p style="font-size:.82rem;color:var(--forest-muted);line-height:1.6;margin-bottom:6px">Bath, Hair Trim, Brushing, Blow Dry, Nail Trim, Ear Cleaning, Sanitary Trim</p><p style="font-size:.75rem;color:var(--sunbeam-dark);font-weight:600;margin-bottom:14px">Complete grooming for a polished look</p><button class="groom-book-btn" data-service="Premium Full Grooming" style="padding:10px 24px;border-radius:60px;border:none;background:var(--sunbeam);color:var(--forest);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
+        <div class="reveal reveal-delay-3" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">💆</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">Spa &amp; Relaxation Package</h3><p style="font-size:.82rem;color:var(--forest-muted);line-height:1.6;margin-bottom:6px">Premium Full Grooming + Massage + Coat Conditioning</p><p style="font-size:.75rem;color:var(--sunbeam-dark);font-weight:600;margin-bottom:14px">Ultimate pampering experience for your pet</p><button class="groom-book-btn" data-service="Spa & Relaxation Package" style="padding:10px 24px;border-radius:60px;border:none;background:var(--sunbeam);color:var(--forest);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
+        <div class="reveal reveal-delay-1" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">🛡️</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">Anti-Fungal Therapy</h3><p style="font-size:.82rem;color:var(--forest-muted);line-height:1.6;margin-bottom:6px">Medicated Grooming &amp; Skin Care Support</p><p style="font-size:.75rem;color:var(--sunbeam-dark);font-weight:600;margin-bottom:14px">Therapeutic care for skin conditions</p><button class="groom-book-btn" data-service="Anti-Fungal Therapy" style="padding:10px 24px;border-radius:60px;border:none;background:var(--sunbeam);color:var(--forest);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
+        <div class="reveal reveal-delay-2" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">🦟</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">Anti-Tick, Flea &amp; Lice Treatment</h3><p style="font-size:.82rem;color:var(--forest-muted);line-height:1.6;margin-bottom:6px">Premium Parasite Control Treatment</p><p style="font-size:.75rem;color:var(--sunbeam-dark);font-weight:600;margin-bottom:14px">Complete parasite removal and prevention</p><button class="groom-book-btn" data-service="Anti-Tick Flea & Lice Treatment" style="padding:10px 24px;border-radius:60px;border:none;background:var(--sunbeam);color:var(--forest);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
+        <div class="reveal reveal-delay-3" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">✂️</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">De-Shedding Package</h3><p style="font-size:.82rem;color:var(--forest-muted);line-height:1.6;margin-bottom:6px">For Huskies, GSDs, Goldens, Labs, and heavy-shedding breeds</p><p style="font-size:.75rem;color:var(--sunbeam-dark);font-weight:600;margin-bottom:14px">Reduce shedding by up to 90%</p><button class="groom-book-btn" data-service="De-Shedding Package" style="padding:10px 24px;border-radius:60px;border:none;background:var(--sunbeam);color:var(--forest);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
+        <div class="reveal reveal-delay-1" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:24px;padding:28px 24px;border:1px solid rgba(255,255,255,.2);transition:all .4s ease"><span style="font-size:2rem;display:block;margin-bottom:12px">🔄</span><h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">De-Tangling &amp; Coat Restoration</h3><p style="font-size:.82rem;color:var(--forest-muted);line-height:1.6;margin-bottom:6px">For matted and long-coated dogs</p><p style="font-size:.75rem;color:var(--sunbeam-dark);font-weight:600;margin-bottom:14px">Gentle dematting and coat recovery</p><button class="groom-book-btn" data-service="De-Tangling & Coat Restoration" style="padding:10px 24px;border-radius:60px;border:none;background:var(--sunbeam);color:var(--forest);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .3s">Book Now</button></div>
       </div>
     </div>
   </section>
 
   <!-- PRICING MENU PLACEHOLDER -->
-  <section style="padding:64px 24px;background:var(--cream)" id="pricing">
+  <section style="padding:64px 24px;background:var(--vanilla)" id="pricing">
     <div style="max-width:700px;margin:0 auto;text-align:center" class="reveal">
-      <span style="display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:12px">Packages &amp; Pricing</span>
-      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;color:var(--charcoal)">Grooming Packages &amp; Pricing</h2>
-      <p style="font-size:.9rem;line-height:1.7;color:var(--muted);margin-top:10px;max-width:500px;margin-inline:auto">Our pricing menu is being updated. Please contact us for detailed pricing based on your dog's breed, coat condition, and services selected.</p>
+      <span style="display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sunbeam-dark);margin-bottom:12px">Packages &amp; Pricing</span>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;color:var(--forest)">Grooming Packages &amp; Pricing</h2>
+      <p style="font-size:.9rem;line-height:1.7;color:var(--forest-muted);margin-top:10px;max-width:500px;margin-inline:auto">Our pricing menu is being updated. Please contact us for detailed pricing based on your dog's breed, coat condition, and services selected.</p>
       <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
         <a href="https://wa.me/9233485873" target="_blank" rel="noopener" style="padding:14px 28px;border-radius:60px;background:var(--whatsapp);color:#fff;font-weight:700;font-size:.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px">💬 Enquire on WhatsApp</a>
-        <a href="tel:9233485873" style="padding:14px 28px;border-radius:60px;background:var(--charcoal);color:#fff;font-weight:700;font-size:.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px">📞 Call for Pricing</a>
+        <a href="tel:9233485873" style="padding:14px 28px;border-radius:60px;background:var(--forest);color:#fff;font-weight:700;font-size:.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px">📞 Call for Pricing</a>
       </div>
     </div>
   </section>
@@ -592,44 +593,44 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   <section style="padding:64px 24px;background:var(--cream-dark)" id="before-after">
     <div style="max-width:900px;margin:0 auto">
       <div style="text-align:center;margin-bottom:32px" class="reveal">
-        <span style="display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:12px">Before &amp; After</span>
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;color:var(--charcoal)">See the Transformation</h2>
-        <p style="font-size:.9rem;line-height:1.7;color:var(--muted);margin-top:10px;max-width:500px;margin-inline:auto">Real results from our grooming sessions. Follow us on Instagram for more transformations.</p>
+        <span style="display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sunbeam-dark);margin-bottom:12px">Before &amp; After</span>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;color:var(--forest)">See the Transformation</h2>
+        <p style="font-size:.9rem;line-height:1.7;color:var(--forest-muted);margin-top:10px;max-width:500px;margin-inline:auto">Real results from our grooming sessions. Follow us on Instagram for more transformations.</p>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
-        <div class="reveal reveal-delay-1" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--border)"><img src="images/review1.png" alt="Before & After 1" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
-        <div class="reveal reveal-delay-2" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--border)"><img src="images/review2.png" alt="Before & After 2" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
-        <div class="reveal reveal-delay-3" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--border)"><img src="images/review3.png" alt="Before & After 3" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
-        <div class="reveal reveal-delay-1" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--border)"><img src="images/review4.png" alt="Before & After 4" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
-        <div class="reveal reveal-delay-2" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--border)"><img src="images/review5.png" alt="Before & After 5" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
-        <div class="reveal reveal-delay-3" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--border)"><img src="images/4081455907607392.jpg" alt="Before & After 6" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
+        <div class="reveal reveal-delay-1" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--sage-dark)"><img src="images/review1.png" alt="Before & After 1" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
+        <div class="reveal reveal-delay-2" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--sage-dark)"><img src="images/review2.png" alt="Before & After 2" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
+        <div class="reveal reveal-delay-3" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--sage-dark)"><img src="images/review3.png" alt="Before & After 3" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
+        <div class="reveal reveal-delay-1" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--sage-dark)"><img src="images/review4.png" alt="Before & After 4" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
+        <div class="reveal reveal-delay-2" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--sage-dark)"><img src="images/review5.png" alt="Before & After 5" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
+        <div class="reveal reveal-delay-3" style="border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--sage-dark)"><img src="images/4081455907607392.jpg" alt="Before & After 6" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>
       </div>
     </div>
   </section>
 
   <!-- FAQ -->
-  <section style="padding:64px 24px;background:var(--cream)" id="faq">
+  <section style="padding:64px 24px;background:var(--vanilla)" id="faq">
     <div style="max-width:700px;margin:0 auto">
       <div style="text-align:center;margin-bottom:32px" class="reveal">
-        <span style="display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:12px">FAQ</span>
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;color:var(--charcoal)">Frequently Asked Questions</h2>
+        <span style="display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sunbeam-dark);margin-bottom:12px">FAQ</span>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;color:var(--forest)">Frequently Asked Questions</h2>
       </div>
       <div class="faq-list">
-        <div class="faq-item reveal" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:20px;margin-bottom:10px;border:1px solid var(--border);overflow:hidden">
-          <button class="faq-q" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-size:.9rem;font-weight:600;color:var(--charcoal);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;gap:12px" onclick="this.parentElement.classList.toggle('open');this.querySelector('.faq-icon').textContent=this.parentElement.classList.contains('open')?'−':'+'"><span>How often should my dog be groomed?</span><span class="faq-icon" style="font-size:1.2rem;flex-shrink:0">+</span></button>
-          <div class="faq-a" style="padding:0 22px 18px;font-size:.85rem;color:var(--muted);line-height:1.6;display:none">It depends on your dog's breed and coat type. Short-haired breeds benefit from grooming every 4–8 weeks, while long-haired or double-coated breeds like Huskies, GSDs, and Goldens may need grooming every 3–6 weeks. Regular brushing at home helps maintain coat health between professional sessions.</div>
+        <div class="faq-item reveal" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:20px;margin-bottom:10px;border:1px solid var(--sage-dark);overflow:hidden">
+          <button class="faq-q" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-size:.9rem;font-weight:600;color:var(--forest);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;gap:12px" onclick="this.parentElement.classList.toggle('open');this.querySelector('.faq-icon').textContent=this.parentElement.classList.contains('open')?'−':'+'"><span>How often should my dog be groomed?</span><span class="faq-icon" style="font-size:1.2rem;flex-shrink:0">+</span></button>
+          <div class="faq-a" style="padding:0 22px 18px;font-size:.85rem;color:var(--forest-muted);line-height:1.6;display:none">It depends on your dog's breed and coat type. Short-haired breeds benefit from grooming every 4–8 weeks, while long-haired or double-coated breeds like Huskies, GSDs, and Goldens may need grooming every 3–6 weeks. Regular brushing at home helps maintain coat health between professional sessions.</div>
         </div>
-        <div class="faq-item reveal reveal-delay-1" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:20px;margin-bottom:10px;border:1px solid var(--border);overflow:hidden">
-          <button class="faq-q" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-size:.9rem;font-weight:600;color:var(--charcoal);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;gap:12px" onclick="this.parentElement.classList.toggle('open');this.querySelector('.faq-icon').textContent=this.parentElement.classList.contains('open')?'−':'+'"><span>Do I need to provide vaccination records?</span><span class="faq-icon" style="font-size:1.2rem;flex-shrink:0">+</span></button>
-          <div class="faq-a" style="padding:0 22px 18px;font-size:.85rem;color:var(--muted);line-height:1.6;display:none">Yes, we require up-to-date vaccination records for all grooming appointments to ensure the safety of your pet and other dogs in our care. Please bring your vaccination card or share a copy when booking.</div>
+        <div class="faq-item reveal reveal-delay-1" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:20px;margin-bottom:10px;border:1px solid var(--sage-dark);overflow:hidden">
+          <button class="faq-q" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-size:.9rem;font-weight:600;color:var(--forest);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;gap:12px" onclick="this.parentElement.classList.toggle('open');this.querySelector('.faq-icon').textContent=this.parentElement.classList.contains('open')?'−':'+'"><span>Do I need to provide vaccination records?</span><span class="faq-icon" style="font-size:1.2rem;flex-shrink:0">+</span></button>
+          <div class="faq-a" style="padding:0 22px 18px;font-size:.85rem;color:var(--forest-muted);line-height:1.6;display:none">Yes, we require up-to-date vaccination records for all grooming appointments to ensure the safety of your pet and other dogs in our care. Please bring your vaccination card or share a copy when booking.</div>
         </div>
-        <div class="faq-item reveal reveal-delay-2" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:20px;margin-bottom:10px;border:1px solid var(--border);overflow:hidden">
-          <button class="faq-q" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-size:.9rem;font-weight:600;color:var(--charcoal);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;gap:12px" onclick="this.parentElement.classList.toggle('open');this.querySelector('.faq-icon').textContent=this.parentElement.classList.contains('open')?'−':'+'"><span>Can aggressive dogs be groomed?</span><span class="faq-icon" style="font-size:1.2rem;flex-shrink:0">+</span></button>
-          <div class="faq-a" style="padding:0 22px 18px;font-size:.85rem;color:var(--muted);line-height:1.6;display:none">Yes, we can groom dogs with behavioural concerns. Please inform us about your dog's temperament and any specific triggers during booking so we can assign experienced groomers and take appropriate precautions. A muzzle may be used if necessary for safety.</div>
+        <div class="faq-item reveal reveal-delay-2" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:20px;margin-bottom:10px;border:1px solid var(--sage-dark);overflow:hidden">
+          <button class="faq-q" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-size:.9rem;font-weight:600;color:var(--forest);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;gap:12px" onclick="this.parentElement.classList.toggle('open');this.querySelector('.faq-icon').textContent=this.parentElement.classList.contains('open')?'−':'+'"><span>Can aggressive dogs be groomed?</span><span class="faq-icon" style="font-size:1.2rem;flex-shrink:0">+</span></button>
+          <div class="faq-a" style="padding:0 22px 18px;font-size:.85rem;color:var(--forest-muted);line-height:1.6;display:none">Yes, we can groom dogs with behavioural concerns. Please inform us about your dog's temperament and any specific triggers during booking so we can assign experienced groomers and take appropriate precautions. A muzzle may be used if necessary for safety.</div>
         </div>
-        <div class="faq-item reveal reveal-delay-3" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:20px;margin-bottom:10px;border:1px solid var(--border);overflow:hidden">
-          <button class="faq-q" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-size:.9rem;font-weight:600;color:var(--charcoal);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;gap:12px" onclick="this.parentElement.classList.toggle('open');this.querySelector('.faq-icon').textContent=this.parentElement.classList.contains('open')?'−':'+'"><span>How long does grooming take?</span><span class="faq-icon" style="font-size:1.2rem;flex-shrink:0">+</span></button>
-          <div class="faq-a" style="padding:0 22px 18px;font-size:.85rem;color:var(--muted);line-height:1.6;display:none">Grooming duration varies by service and your dog's breed, coat condition, and temperament. Express grooming typically takes 45–60 minutes, while full grooming or de-shedding packages may take 2–3 hours. We'll provide a time estimate when you book.</div>
+        <div class="faq-item reveal reveal-delay-3" style="background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:20px;margin-bottom:10px;border:1px solid var(--sage-dark);overflow:hidden">
+          <button class="faq-q" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-size:.9rem;font-weight:600;color:var(--forest);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;gap:12px" onclick="this.parentElement.classList.toggle('open');this.querySelector('.faq-icon').textContent=this.parentElement.classList.contains('open')?'−':'+'"><span>How long does grooming take?</span><span class="faq-icon" style="font-size:1.2rem;flex-shrink:0">+</span></button>
+          <div class="faq-a" style="padding:0 22px 18px;font-size:.85rem;color:var(--forest-muted);line-height:1.6;display:none">Grooming duration varies by service and your dog's breed, coat condition, and temperament. Express grooming typically takes 45–60 minutes, while full grooming or de-shedding packages may take 2–3 hours. We'll provide a time estimate when you book.</div>
         </div>
       </div>
     </div>
@@ -768,8 +769,8 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
       <div style="width:64px;height:64px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--charcoal);margin:0 0 8px">Booking Request Received!</h2>
-      <p style="color:var(--muted);font-size:.9rem;line-height:1.6;max-width:380px;margin:0 auto 24px">Thank you. Our team at A-1 Enterprises will contact you shortly.</p>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--forest);margin:0 0 8px">Booking Request Received!</h2>
+      <p style="color:var(--forest-muted);font-size:.9rem;line-height:1.6;max-width:380px;margin:0 auto 24px">Thank you. Our team at A-1 Enterprises will contact you shortly.</p>
       <button class="btn-send" id="successCloseBtn" style="margin:0 auto">Close</button>
     </div>
   </div>
@@ -904,6 +905,28 @@ document.getElementById('heroBookBtn')?.addEventListener('click',e=>{e.preventDe
 document.getElementById('ctaBookBtn')?.addEventListener('click',e=>{e.preventDefault();openBookModal()});
 </script>
 <script src="content-loader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="kinetic.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(typeof gsap==='undefined')return;
+  gsap.registerPlugin(ScrollTrigger);
+  var h1=document.querySelector('h1');
+  if(h1)Kinetic.wordReveal(h1,{y:40});
+  Kinetic.revealSection('.section-title');
+  Kinetic.revealSection('.serv-card');
+  Kinetic.revealSection('.review-card');
+  Kinetic.revealSection('.groom-card');
+  Kinetic.revealSection('.cta-section');
+});
+document.addEventListener('contentLoaded', function(){
+  if(typeof Kinetic==='undefined')return;
+  Kinetic.revealSection('.serv-card');
+  Kinetic.revealSection('.review-card');
+  Kinetic.revealSection('.groom-card');
+});
+</script>
 
 <a href="index.html" class="float-home">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>

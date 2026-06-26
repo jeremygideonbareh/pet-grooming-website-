@@ -1,9 +1,9 @@
 (async function() {
   'use strict';
 
-  if (typeof DB === 'undefined' || typeof DB.getSiteContent !== 'function') return;
-  var data = await DB.getSiteContent().catch(function(){ return null; });
-  if (!data) return;
+  if (typeof DB === 'undefined' || typeof DB.getSiteContent !== 'function') { document.dispatchEvent(new Event('contentLoaded')); return; }
+  var data = await DB.getSiteContent().catch(function(){ document.dispatchEvent(new Event('contentLoaded')); return null; });
+  if (!data) { document.dispatchEvent(new Event('contentLoaded')); return; }
 
   var page = document.body && document.body.dataset.page;
 
@@ -272,7 +272,7 @@
             img.src = url;
             img.alt = 'Training session';
             img.loading = 'lazy';
-            img.onerror = function() { this.style.display = 'none'; this.parentElement.style.background = 'linear-gradient(135deg,var(--gold-light),var(--gold))'; };
+            img.onerror = function() { this.style.display = 'none'; this.parentElement.style.background = 'linear-gradient(135deg,var(--sunbeam-dark),var(--gold))'; };
             item.appendChild(img);
             gal.appendChild(item);
           });
@@ -634,7 +634,7 @@
             img.src = url;
             img.alt = 'Eco cottage';
             img.loading = 'lazy';
-            img.onerror = function() { this.style.display = 'none'; this.parentElement.style.background = 'linear-gradient(135deg,var(--gold-light),var(--gold))'; };
+            img.onerror = function() { this.style.display = 'none'; this.parentElement.style.background = 'linear-gradient(135deg,var(--sunbeam-dark),var(--gold))'; };
             item.appendChild(img);
             gal.appendChild(item);
           });
@@ -701,4 +701,5 @@
     });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal:not(.active)').forEach(function(el) { ro.observe(el); });
+  document.dispatchEvent(new Event('contentLoaded'));
 })();

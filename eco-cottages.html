@@ -7,21 +7,22 @@
   <meta name="description" content="A-1 Eco Cottages: Pet-friendly eco stay in Shillong, Meghalaya. Comfortable cottages, nature trails, and a relaxing retreat for you and your furry friend.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="upgrade.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
-body{font-family:'Inter',-apple-system,sans-serif;background:#FBF7F2;color:#1A1412;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--vanilla);color:var(--forest);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{display:block;max-width:100%;height:auto}
 a{text-decoration:none;color:inherit}
 ul{list-style:none}
 .container{max-width:1200px;margin:0 auto;padding:0 24px}
-:root{--cream:#FBF7F2;--cream-dark:#F5EDE4;--charcoal:#1A1412;--charcoal-soft:#2C2420;--gold:#C9A05C;--gold-light:#E8C88A;--gold-dark:#A77F3E;--muted:#7A6B5E;--border:#E3D9CE;--white:#FFFFFF;--whatsapp:#25D366}
-.section-label{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:12px}
-.section-title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.15;color:var(--charcoal)}
-.section-sub{font-size:.95rem;line-height:1.7;color:var(--muted);margin-top:14px;max-width:600px}
+:root{--vanilla:#FCF8E8;--vanilla-dark:#F0ECD8;--sage:#E2EFE6;--sage-dark:#C8D9CE;--sunbeam:#FCE38A;--sunbeam-dark:#E8C96A;--peach:#F9D5D3;--peach-dark:#EDC0BE;--forest:#004225;--forest-light:#005C33;--forest-muted:#4A7C5C;--bronze:#8A631C;--champagne:#D4CEBA;--white:#FFFFFF;--whatsapp:#25D366}
+.section-label{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sunbeam-dark);margin-bottom:12px}
+.section-title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.15;color:var(--forest)}
+.section-sub{font-size:.95rem;line-height:1.7;color:var(--forest-muted);margin-top:14px;max-width:600px}
 .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:60px;font-weight:600;font-size:.9rem;cursor:pointer;transition:all .35s cubic-bezier(.16,1,.3,1);border:none;font-family:inherit}
-.btn-primary{background:var(--gold);color:var(--charcoal);box-shadow:0 4px 20px rgba(201,160,92,.35)}
-.btn-primary:hover{background:var(--gold-dark);transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,160,92,.4)}
+.btn-primary{background:var(--sunbeam);color:var(--forest);box-shadow:0 4px 20px rgba(201,160,92,.35)}
+.btn-primary:hover{background:var(--sunbeam-dark);transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,160,92,.4)}
 .btn-primary:active{transform:scale(.97)}
 .btn-whatsapp{background:var(--whatsapp);color:var(--white);box-shadow:0 4px 16px rgba(37,211,102,.3)}
 .btn-whatsapp:hover{background:#1DA851;transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.35)}
@@ -39,27 +40,27 @@ ul{list-style:none}
 .page-loader{position:fixed;inset:0;z-index:9999;background:#0E0A08;display:flex;align-items:center;justify-content:center;transition:opacity .7s ease,visibility .7s ease}
 .page-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
 .loader-bar{position:absolute;bottom:0;left:0;width:100%;height:4px;background:rgba(255,255,255,.08)}
-.loader-bar::after{content:'';display:block;height:100%;width:30%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:0 2px 2px 0;animation:loaderBar 1.5s ease-in-out infinite}
+.loader-bar::after{content:'';display:block;height:100%;width:30%;background:linear-gradient(90deg,var(--sunbeam),var(--sunbeam-dark));border-radius:0 2px 2px 0;animation:loaderBar 1.5s ease-in-out infinite}
 @keyframes loaderBar{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── FLOATING LOGO ── */
-.floating-logo{position:fixed;top:12px;left:16px;z-index:1001;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.65);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.25);border-radius:60px;padding:6px 16px 6px 6px;font-family:'Playfair Display',serif;font-weight:800;font-size:1rem;color:var(--charcoal);box-shadow:0 4px 20px rgba(0,0,0,.04);transition:box-shadow .3s ease;text-decoration:none;white-space:nowrap}
+.floating-logo{position:fixed;top:12px;left:16px;z-index:1001;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.65);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.25);border-radius:60px;padding:6px 16px 6px 6px;font-family:'Playfair Display',serif;font-weight:800;font-size:1rem;color:var(--forest);box-shadow:0 4px 20px rgba(0,0,0,.04);transition:box-shadow .3s ease;text-decoration:none;white-space:nowrap}
 .floating-logo img{width:32px;height:32px;border-radius:50%;object-fit:cover}
 .floating-logo.scrolled{box-shadow:0 4px 20px rgba(0,0,0,.08)}
 .nav-island{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.6);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.25);border-radius:60px;padding:6px 20px;display:flex;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.04);transition:box-shadow .3s ease}
 .nav-island.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.1)}
 .nav-island .nav-links{display:flex;align-items:center;gap:4px;margin:0;padding:0}
-.nav-island .nav-links a{font-size:.78rem;font-weight:500;color:var(--muted);padding:6px 14px;border-radius:40px;transition:all .3s ease;white-space:nowrap;text-decoration:none}
-.nav-island .nav-links a:hover{background:rgba(255,255,255,0.4);color:var(--charcoal)}
+.nav-island .nav-links a{font-size:.78rem;font-weight:500;color:var(--forest-muted);padding:6px 14px;border-radius:40px;transition:all .3s ease;white-space:nowrap;text-decoration:none}
+.nav-island .nav-links a:hover{background:rgba(255,255,255,0.4);color:var(--forest)}
 .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:8px;margin-left:4px;min-width:36px;min-height:36px;align-items:center;justify-content:center}
-.hamburger span{width:20px;height:2px;background:var(--charcoal);border-radius:2px;transition:all .3s ease;transform-origin:center}
+.hamburger span{width:20px;height:2px;background:var(--forest);border-radius:2px;transition:all .3s ease;transform-origin:center}
 .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
 .hamburger.active span:nth-child(2){opacity:0}
 .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
 .mobile-nav{position:fixed;inset:0;background:rgba(251,247,242,.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index:998;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:80px 24px 40px}
 .mobile-nav.open{display:flex}
-.mobile-nav a{font-size:1.1rem;font-weight:600;color:var(--charcoal);padding:10px 24px;border-radius:40px;transition:background .3s;text-decoration:none}
+.mobile-nav a{font-size:1.1rem;font-weight:600;color:var(--forest);padding:10px 24px;border-radius:40px;transition:background .3s;text-decoration:none}
 .mobile-nav a:hover{background:rgba(255,255,255,0.4)}
 .mobile-nav .btn-whatsapp{margin-top:12px;padding:12px 28px;border-radius:60px;display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);font-weight:600;font-size:.9rem;text-decoration:none}
 .whatsapp-fab{position:fixed;bottom:24px;right:24px;z-index:1001;width:56px;height:56px;border-radius:50%;background:var(--whatsapp);color:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.35);transition:all .3s ease;text-decoration:none}
@@ -72,13 +73,13 @@ ul{list-style:none}
 /* ── FEATURES ── */
 .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
 .feature-card{background:rgba(255,255,255,0.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.2);transition:all .4s ease;text-align:center}
-.feature-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(0,0,0,.1);border-color:var(--gold)}
+.feature-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(0,0,0,.1);border-color:var(--sunbeam)}
 .feature-img{width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--cream-dark)}
 .feature-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
 .feature-card:hover .feature-img img{transform:scale(1.08)}
 .feature-card .icon{font-size:2rem;margin-bottom:16px}
 .feature-card h3{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:10px}
-.feature-card p{font-size:.85rem;line-height:1.6;color:var(--muted)}
+.feature-card p{font-size:.85rem;line-height:1.6;color:var(--forest-muted)}
 .feature-body{padding:24px}
 
 /* ── ECO GALLERY ── */
@@ -94,20 +95,20 @@ ul{list-style:none}
 .details-image img{width:100%;height:100%;object-fit:cover}
 .features-list{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .features-list li{display:flex;align-items:center;gap:10px;font-size:.88rem;padding:12px 16px;background:rgba(255,255,255,0.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:14px;font-weight:500}
-.features-list li .ck{color:var(--gold);font-weight:700}
+.features-list li .ck{color:var(--sunbeam);font-weight:700}
 
 /* ── CTA ── */
-.cta-section{padding:80px 0;background:var(--charcoal);text-align:center;color:var(--white)}
+.cta-section{padding:80px 0;background:var(--forest);text-align:center;color:var(--white)}
 .cta-section h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800}
 .cta-section p{color:rgba(255,255,255,.65);margin-top:12px;max-width:440px;margin-inline:auto}
 .cta-section .btn-whatsapp{margin-top:28px;background:var(--whatsapp);color:var(--white);box-shadow:0 4px 16px rgba(37,211,102,.3)}
 
 /* ── FOOTER ── */
-footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,255,.7);font-size:.82rem;line-height:1.6}
+footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255,.7);font-size:.82rem;line-height:1.6}
 .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
 .footer-inner .links{display:flex;gap:20px}
 .footer-inner a{transition:color .3s ease;color:rgba(255,255,255,.5)}
-.footer-inner a:hover{color:var(--gold)}@media(max-width:900px){
+.footer-inner a:hover{color:var(--sunbeam)}@media(max-width:900px){
   .eco-gal{grid-template-columns:repeat(2,1fr)}
   .details-grid{grid-template-columns:1fr}
   .features-list{grid-template-columns:1fr}
@@ -151,7 +152,7 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
 <script>window.scrollTo(0,0)</script>
 </head>
 <body data-page="eco">
-<div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block;animation:slideUp .6s ease both"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em;animation:slideUp .6s ease .15s both">A-1 Enterprises</div><div style="font-size:.85rem;color:var(--gold);margin-bottom:4px;animation:slideUp .6s ease .3s both">Passion Turned Profession</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);animation:slideUp .6s ease .45s both">Eco Cottages</div></div><div class="loader-bar"></div></div>
+<div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block;animation:slideUp .6s ease both"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em;animation:slideUp .6s ease .15s both">A-1 Enterprises</div><div style="font-size:.85rem;color:var(--sunbeam);margin-bottom:4px;animation:slideUp .6s ease .3s both">Passion Turned Profession</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);animation:slideUp .6s ease .45s both">Eco Cottages</div></div><div class="loader-bar"></div></div>
 <a href="index.html" class="floating-logo" id="floatingLogo"><img src="images/logo1.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
 <nav class="nav-island" id="navIsland">
   <ul class="nav-links">
@@ -176,7 +177,7 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
   <a href="boarding.html">Boarding</a>
   <a href="store.html">Store</a>
   <a id="mobileAdminBtn" href="admin.html" style="display:none">Admin</a>
-  <a id="mobileLogoutBtn" style="display:none;cursor:pointer;padding:10px 24px;font-size:1.1rem;font-weight:600;color:var(--charcoal);text-decoration:none;border-radius:40px">Logout</a>
+  <a id="mobileLogoutBtn" style="display:none;cursor:pointer;padding:10px 24px;font-size:1.1rem;font-weight:600;color:var(--forest);text-decoration:none;border-radius:40px">Logout</a>
   <a href="https://wa.me/9233485873" target="_blank" rel="noopener" class="btn-whatsapp">WhatsApp Us</a>
 </div>
 <a href="https://wa.me/9233485873" target="_blank" rel="noopener" class="whatsapp-fab" id="whatsappFab" aria-label="Chat on WhatsApp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
@@ -243,12 +244,12 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
       <p class="section-sub" style="margin-inline:auto">Peaceful surroundings, cozy accommodations, and happy pets — experience the eco difference.</p>
     </div>
     <div class="eco-gal reveal reveal-delay-2">
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=800&q=80" alt="Eco cottage" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?auto=format&fit=crop&w=800&q=80" alt="Nature trail" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?auto=format&fit=crop&w=800&q=80" alt="Bonfire" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=800&q=80" alt="Dog in nature" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80" alt="Camping" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1572947650440-e8a97ef053b2?auto=format&fit=crop&w=800&q=80" alt="Cabin retreat" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=800&q=80" alt="Eco cottage" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam-dark),var(--sunbeam))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?auto=format&fit=crop&w=800&q=80" alt="Nature trail" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam-dark),var(--sunbeam))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?auto=format&fit=crop&w=800&q=80" alt="Bonfire" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam-dark),var(--sunbeam))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=800&q=80" alt="Dog in nature" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam-dark),var(--sunbeam))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80" alt="Camping" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam-dark),var(--sunbeam))'"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1572947650440-e8a97ef053b2?auto=format&fit=crop&w=800&q=80" alt="Cabin retreat" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam-dark),var(--sunbeam))'"></div>
     </div>
   </div>
 </section>
@@ -272,7 +273,7 @@ footer{background:var(--charcoal-soft);padding:48px 0 28px;color:rgba(255,255,25
         </ul>
       </div>
       <div class="details-image reveal reveal-delay-2">
-        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80" alt="Eco cottage exterior" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--gold-light),var(--gold))'">
+        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80" alt="Eco cottage exterior" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam-dark),var(--sunbeam))'">
       </div>
     </div>
   </div>
@@ -332,5 +333,20 @@ window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'
 </script>
 <script src="db.js"></script>
 <script src="content-loader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="kinetic.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(typeof gsap==='undefined')return;
+  gsap.registerPlugin(ScrollTrigger);
+  var h1=document.querySelector('h1');
+  if(h1)Kinetic.wordReveal(h1,{y:40});
+  Kinetic.revealSection('.section-title');
+  Kinetic.revealSection('.feature-card');
+  Kinetic.revealSection('.gal-item');
+  Kinetic.revealSection('.cta-section');
+});
+</script>
 </body>
 </html>
