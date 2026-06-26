@@ -69,7 +69,7 @@ ul{list-style:none}
 .mobile-nav .btn-whatsapp{margin-top:12px;padding:12px 28px;border-radius:60px;display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);font-weight:600;font-size:.9rem;text-decoration:none}
 .whatsapp-fab{position:fixed;bottom:24px;right:24px;z-index:1001;width:56px;height:56px;border-radius:50%;background:var(--whatsapp);color:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.35);transition:all .3s ease;text-decoration:none}
 .whatsapp-fab:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(37,211,102,.4)}
-@media(max-width:1024px){.nav-island .nav-links{display:none}.nav-island .nav-social{display:none}.hamburger{display:flex}.floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}.floating-logo img{width:28px;height:28px}.nav-island{padding:4px 10px;top:10px}.whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}}
+@media(max-width:1024px){.nav-island .nav-links{display:none}.nav-island .nav-social{display:none}.hamburger{display:flex}.floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}.floating-logo img{width:28px;height:28px}.nav-island{padding:4px 10px;top:10px}.whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}section[style*="background-attachment:fixed"]{background-attachment:scroll!important}}
 
 /* ── CONTENT ── */
 .content-section{padding:80px 0}
@@ -90,12 +90,26 @@ ul{list-style:none}
 .program-card .card-img{width:100%;height:160px;border-radius:16px;overflow:hidden;margin-bottom:16px;background:var(--vanilla-dark)}
 .program-card .card-img img{width:100%;height:100%;object-fit:cover}
 
-/* ── TRAINING GALLERY ── */
-.train-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
-.train-gal .gal-item{border-radius:20px;overflow:hidden;aspect-ratio:4/3;background:rgba(255,255,255,0.3);transition:transform .4s ease;cursor:pointer}
-.train-gal .gal-item:hover{transform:scale(1.04)}
-.train-gal .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
-.train-gal .gal-item:hover img{transform:scale(1.1)}
+/* ── VIDEO CARDS ── */
+.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:36px}
+.video-card{position:relative;border-radius:24px;overflow:hidden;background:rgba(255,255,255,0.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.2);transition:all .4s ease;display:block;text-decoration:none;color:inherit;cursor:pointer}
+.video-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(0,0,0,.1);border-color:var(--sunbeam)}
+.video-card .thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--vanilla-dark)}
+.video-card .play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--forest);transition:all .35s ease;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.video-card:hover .play-btn{transform:translate(-50%,-50%) scale(1.1);background:var(--sunbeam)}
+.video-card .video-info{padding:16px 20px 20px}
+.video-card .video-info h4{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:4px}
+.video-card .video-info p{font-size:.82rem;color:var(--forest-muted);line-height:1.5}
+
+/* ── CLIENT GALLERY ── */
+.client-gal{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:36px}
+.client-gal .gal-item{border-radius:20px;overflow:hidden;aspect-ratio:4/3;background:rgba(255,255,255,0.3);transition:transform .4s ease;cursor:pointer}
+.client-gal .gal-item:hover{transform:scale(1.04)}
+.client-gal .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.client-gal .gal-item:hover img{transform:scale(1.1)}
+@media(max-width:1024px){.train-gal,.client-gal{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.train-gal,.client-gal{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.train-gal,.client-gal{grid-template-columns:1fr;max-width:400px;margin-inline:auto}}
 
 /* ── TRAINING PROCESS ── */
 .process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:32px}
@@ -119,10 +133,11 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
 .footer-inner a:hover{color:var(--sunbeam)}
 
 @media(max-width:900px){
-  .train-gal{grid-template-columns:repeat(2,1fr)}
+  .train-gal,.client-gal{grid-template-columns:repeat(2,1fr)}
   .process-grid{grid-template-columns:repeat(2,1fr);max-width:480px;margin-inline:auto}
 }
 @media(max-width:768px){
+  .video-grid{grid-template-columns:1fr}
   .programs{grid-template-columns:1fr}
   .approach-grid{grid-template-columns:1fr}
   .benefits{grid-template-columns:1fr}
@@ -147,7 +162,7 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
   .content-section{padding:40px 0}
   .section-title{font-size:clamp(1.4rem,5vw,1.6rem)}
   .section-sub{font-size:.85rem}
-  .train-gal{grid-template-columns:1fr;max-width:400px;margin-inline:auto}
+  .train-gal,.client-gal{grid-template-columns:1fr;max-width:400px;margin-inline:auto}
   .process-grid{grid-template-columns:1fr;max-width:380px;margin-inline:auto}
   .program-card h3{font-size:1rem}
   .program-card p{font-size:.8rem}
@@ -280,6 +295,14 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
   </div>
 </section>
 
+<!-- ═══ ABSTRACT BREAK 2 ═══ -->
+<section style="padding:0;position:relative;overflow:hidden;min-height:40vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(0,66,37,.7),rgba(74,124,92,.6)),url('https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;text-align:center;color:#fff">
+  <div class="container reveal" style="padding:80px 24px">
+    <span class="section-label" style="color:var(--sunbeam)">Beyond Obedience</span>
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;max-width:650px;margin:0 auto">Every dog deserves a chance to reach their full potential — with patience, purpose, and the right guidance.</h2>
+  </div>
+</section>
+
 <!-- ═══ STAGES & PROCESS ═══ -->
 <section class="content-section" style="background:var(--vanilla-dark)">
   <div class="container">
@@ -299,21 +322,53 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
   </div>
 </section>
 
-<!-- ═══ GALLERY ═══ -->
+<!-- ═══ VIDEOS & HAPPY CLIENTS ═══ -->
 <section class="content-section" style="background:var(--white)">
   <div class="container">
     <div class="reveal" style="text-align:center">
-      <span class="section-label">Gallery</span>
-      <h2 class="section-title">Training in Action</h2>
-      <p class="section-sub" style="margin-inline:auto">Real moments from our training sessions — building skills, trust, and lasting bonds.</p>
+      <span class="section-label">Showcase</span>
+      <h2 class="section-title">See Our Training<br>in Action</h2>
+      <p class="section-sub" style="margin-inline:auto">Watch real training sessions and see the transformation in every dog we work with — from first command to lifelong partnership.</p>
     </div>
-    <div class="train-gal reveal reveal-delay-2">
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam),var(--sunbeam))'"></div>
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam),var(--sunbeam))'"></div>
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam),var(--sunbeam))'"></div>
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam),var(--sunbeam))'"></div>
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam),var(--sunbeam))'"></div>
-      <div class="gal-item"><img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80" alt="Training session" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam),var(--sunbeam))'"></div>
+    <div class="video-grid reveal reveal-delay-1">
+      <a href="https://youtu.be/LqrxxXx9e0Y" target="_blank" rel="noopener" class="video-card">
+        <img class="thumb" src="https://img.youtube.com/vi/LqrxxXx9e0Y/maxresdefault.jpg" alt="Dog Training Session" loading="lazy" onerror="this.style.display='none'">
+        <div class="play-btn">&#9654;</div>
+        <div class="video-info">
+          <h4>Training Excellence in Action</h4>
+          <p>Watch our training methodology in practice — building obedience, trust, and real results with every session.</p>
+        </div>
+      </a>
+      <a href="https://youtu.be/Lgpqqi8ZEQI" target="_blank" rel="noopener" class="video-card">
+        <img class="thumb" src="https://img.youtube.com/vi/Lgpqqi8ZEQI/maxresdefault.jpg" alt="Dog Training Session" loading="lazy" onerror="this.style.display='none'">
+        <div class="play-btn">&#9654;</div>
+        <div class="video-info">
+          <h4>Real Results, Real Dogs</h4>
+          <p>See how our personalized approach transforms behavior and strengthens the bond between dogs and their owners.</p>
+        </div>
+      </a>
+    </div>
+    <div style="margin-top:56px">
+      <div class="reveal" style="text-align:center;margin-bottom:8px">
+        <span class="section-label" style="color:var(--forest-muted)">Happy Clients</span>
+        <h2 class="section-title" style="font-size:clamp(1.4rem,3vw,2rem)">Every Tail Wag<br>Tells a Story</h2>
+        <p class="section-sub" style="margin-inline:auto;font-size:.88rem">The joy, trust, and transformation we witness in every dog we work with — captured in moments that remind us why we do what we do.</p>
+      </div>
+      <div class="client-gal reveal reveal-delay-2">
+        <div class="gal-item"><img src="images/clients/client-01.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-02.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-03.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-04.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-05.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-06.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-07.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-08.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-09.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-10.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-11.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-12.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="gal-item"><img src="images/clients/client-13.jpeg" alt="Happy client" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -372,6 +427,15 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
         <img src="images/4081455907607392.jpg" alt="Dog training approach" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--sunbeam),var(--sunbeam))'">
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ═══ ABSTRACT BREAK ═══ -->
+<section style="padding:0;position:relative;overflow:hidden;min-height:50vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(0,66,37,.85),rgba(0,66,37,.6)),url('https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;background-attachment:fixed;text-align:center;color:#fff">
+  <div class="container reveal" style="padding:100px 24px">
+    <span class="section-label" style="color:var(--sunbeam)">Transformation</span>
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;max-width:700px;margin:0 auto">"Training is not about teaching a dog to obey — it's about earning their trust and building a language you both understand."</h2>
+    <p style="color:rgba(255,255,255,.6);margin-top:16px;font-size:.9rem">— A-1 Enterprises Training Philosophy</p>
   </div>
 </section>
 
@@ -569,13 +633,16 @@ document.addEventListener('DOMContentLoaded', function(){
   if(h1)Kinetic.wordReveal(h1,{y:40});
   Kinetic.revealSection('.section-title');
   Kinetic.revealSection('.program-card');
+  Kinetic.revealSection('.video-card');
+  Kinetic.revealSection('.client-gal');
   Kinetic.revealSection('.step-card');
   Kinetic.revealSection('.cta-section');
 });
 document.addEventListener('contentLoaded', function(){
   if(typeof Kinetic==='undefined')return;
   Kinetic.revealSection('.program-card');
-  Kinetic.revealSection('.train-gal img');
+  Kinetic.revealSection('.video-card');
+  Kinetic.revealSection('.client-gal');
 });
 </script>
 </body>
