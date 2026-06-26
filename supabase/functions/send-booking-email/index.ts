@@ -18,10 +18,31 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Look up owner details
+    var ownerName = "—", ownerPhone = "—", ownerWhatsApp = "—", ownerEmail = "—";
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+      const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+      if (supabaseUrl && supabaseKey && record.owner_id) {
+        const ownerRes = await fetch(supabaseUrl + "/rest/v1/owners?id=eq." + record.owner_id + "&select=full_name,phone,whatsapp_number,email", {
+          headers: { "apikey": supabaseKey, "Authorization": "Bearer " + supabaseKey },
+        });
+        if (ownerRes.ok) {
+          var owners = await ownerRes.json();
+          if (owners && owners.length > 0) {
+            var o = owners[0];
+            if (o.full_name) ownerName = o.full_name;
+            if (o.phone) ownerPhone = o.phone;
+            if (o.whatsapp_number) ownerWhatsApp = o.whatsapp_number;
+            if (o.email) ownerEmail = o.email;
+          }
+        }
+      }
+    } catch (_) { /* owner lookup failed non-fatally */ }
+
     var dateStr = record.start_date || "";
     if (record.time_slot) dateStr += " (" + record.time_slot + ")";
     if (record.end_date) dateStr += (dateStr ? " to " : "") + record.end_date;
-    if (record.contact_method) dateStr += (dateStr ? " — " : "") + "Contact: " + record.contact_method;
 
     const html = `
       <!DOCTYPE html>
@@ -38,8 +59,14 @@ Deno.serve(async (req) => {
               <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Category</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.service_category || "—")}</td></tr>
               <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Service</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.service_specific || "—")}</td></tr>
               <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Date / Time</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(dateStr || "—")}</td></tr>
-              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Owner ID</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.owner_id || "—")}</td></tr>
-              <tr><td style="padding:10px 0;color:#7A6B5E">Status</td><td style="padding:10px 0;font-weight:600;text-align:right">${escapeHtml(record.status || "pending")}</td></tr>
+              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Preferred Contact</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.contact_method || "—")}</td></tr>
+            </table>
+            <h3 style="margin:24px 0 12px;font-size:0.95rem;color:#1A1412">Customer Details</h3>
+            <table style="width:100%;border-collapse:collapse;font-size:0.9rem">
+              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Name</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(ownerName)}</td></tr>
+              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Phone</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(ownerPhone)}</td></tr>
+              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">WhatsApp</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(ownerWhatsApp)}</td></tr>
+              <tr><td style="padding:10px 0;color:#7A6B5E">Email</td><td style="padding:10px 0;font-weight:600;text-align:right">${escapeHtml(ownerEmail)}</td></tr>
             </table>
             <p style="margin:24px 0 0;color:#7A6B5E;font-size:0.85rem;text-align:center;border-top:1px solid #eee;padding-top:20px">
               This notification was sent automatically from A-1 Enterprises.

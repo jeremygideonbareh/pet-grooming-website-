@@ -918,6 +918,14 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
       return;
     }
     document.getElementById('bookingForm').style.display='none';
+
+    let txt='Hi A-1 Enterprises! I would like to book a grooming session.%0A%0A';
+    txt+='━━ CUSTOMER DETAILS ━━%0A';
+    txt+='Name: '+(owner.full_name||'')+'%0APhone: '+(owner.phone||'')+'%0AWhatsApp: '+(owner.whatsapp_number||'')+'%0AEmail: '+(owner.email||'')+'%0ALocation: '+(owner.location||'')+'%0A%0A';
+    txt+='━━ BOOKING DETAILS ━━%0A';
+    txt+='Service: '+svc+'%0ADate: '+date+'%0AWindow: '+timeWindow;
+    window.open('https://wa.me/9233485873?text='+txt,'_blank');
+
     document.getElementById('bookingSuccess').style.display='block';
   }catch(err){
     console.error('[Booking] Failed:',err);
