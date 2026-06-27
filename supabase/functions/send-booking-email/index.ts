@@ -60,6 +60,7 @@ Deno.serve(async (req) => {
               <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Service</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.service_specific || "—")}</td></tr>
               <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Date / Time</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(dateStr || "—")}</td></tr>
               <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Preferred Contact</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${escapeHtml(record.contact_method || "—")}</td></tr>
+              <tr><td style="padding:10px 0;color:#7A6B5E;border-bottom:1px solid #eee">Pick-up &amp; Drop</td><td style="padding:10px 0;font-weight:600;text-align:right;border-bottom:1px solid #eee">${record.pickup_required ? "✅ Yes" : "No"}${record.pickup_address ? "<br><span style=\"font-size:0.8rem;color:#7A6B5E;font-weight:400\">" + escapeHtml(record.pickup_address) + "</span>" : ""}</td></tr>
             </table>
             <h3 style="margin:24px 0 12px;font-size:0.95rem;color:#1A1412">Customer Details</h3>
             <table style="width:100%;border-collapse:collapse;font-size:0.9rem">

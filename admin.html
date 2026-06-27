@@ -1965,7 +1965,7 @@ async function renderBookingsDashboard() {
     '</div>';
   var STATUSES = ['pending','confirmed','completed','cancelled'];
   html += '<div class="table-wrap"><table class="prod-table bookings-table"><thead><tr>' +
-    '<th>Date Received</th><th>Service Category</th><th>Specific Service</th><th>Date / Time</th><th>Owner Name</th><th>Phone Number</th><th>Dog Name</th><th>Status</th>' +
+    '<th>Date Received</th><th>Service Category</th><th>Specific Service</th><th>Date / Time</th><th>Owner Name</th><th>Phone Number</th><th>Dog Name</th><th>Pick-up</th><th>Status</th>' +
     '</tr></thead><tbody>';
   bookings.forEach(function(b){
     var o = b.owners || {};
@@ -1982,6 +1982,7 @@ async function renderBookingsDashboard() {
       '<td style="font-weight:600">'+escHtml(o.full_name||'—')+'</td>' +
       '<td>'+escHtml(o.phone||'—')+'</td>' +
       '<td>'+escHtml(d.name||'—')+'</td>' +
+      '<td style="font-size:.8rem;text-align:center">' + (b.pickup_required ? '<span style="color:var(--forest);font-weight:600">✅ Yes</span>' : '<span style="color:var(--forest-muted)">—</span>') + (b.pickup_address ? '<br><span style="font-size:.7rem;color:var(--forest-muted);cursor:help" title="'+escHtml(b.pickup_address)+'">📍 <u>view</u></span>' : '') + '</td>' +
       '<td><select class="status-select" data-id="'+b.booking_id+'">' +
         STATUSES.map(function(s){return '<option value="'+s+'"'+(s===st?' selected':'')+'>'+s.charAt(0).toUpperCase()+s.slice(1)+'</option>'}).join('') +
       '</select></td></tr>';

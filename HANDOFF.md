@@ -2067,3 +2067,54 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - `content-loader.js` — fixed 6 selector mismatches, added homepage hero video handling
 - `index.html` — added wc-sr container, fixed Kinetic selector
 - `HANDOFF.md` — Session 12 summary
+
+### Session 13 — Pick-up & Drop Service for Grooming and Boarding
+
+**Date:** June 27, 2026
+
+**Feature:** Added "Require Pick-up & Drop Service" checkbox to Grooming and Boarding booking modals, with conditional address field and disclaimer notice.
+
+**Changes:**
+
+1. **Supabase Schema Migration:**
+   - Added `pickup_required BOOLEAN DEFAULT false` column to `bookings` table
+   - Added `pickup_address TEXT DEFAULT ''` column to `bookings` table
+   - Executed via `supabase db push --linked`
+
+2. **grooming.html — Dark-themed Pickup UI:**
+   - Added `.pickup-row` CSS (checkbox + label in flex row, sunbeam accent color)
+   - Added `#pickupSection` with address textarea + `.pickup-notice` (translucent background, sunbeam left border)
+   - Checkbox toggle JS: `change` listener shows/hides the address + notice section
+   - Submit handler: reads `pickup_required` and `pickup_address`, appends to `bookingPayload`
+   - WhatsApp message: appends `━━ PICK-UP & DROP ━━` section when checked
+   - `resetBookingModal()`: resets pickup section state
+
+3. **boarding.html — Light-themed Pickup UI:**
+   - Same structure as grooming but styled for boarding's light frosted glass modal
+   - `.pickup-notice` uses `rgba(0,66,37,.04)` background with `var(--forest-muted)` text
+   - `closeBook()`: resets form + hides pickup section
+
+4. **supabase Edge Function — Email Notification:**
+   - Added Pick-up & Drop row to the Resend email HTML template
+   - Shows ✅ Yes + address when `pickup_required` is true, "No" otherwise
+   - Redeployed via `supabase functions deploy send-booking-email`
+
+5. **admin.html — Bookings Dashboard:**
+   - Added `<th>Pick-up</th>` column between Dog Name and Status
+   - Each row shows ✅ Yes or — based on `b.pickup_required`
+   - If address exists, shows 📍 view link with tooltip
+
+**Key design decisions:**
+- Pick-up fields are NOT required — unchecked by default, no validation
+- `pickup_required` stored as boolean in DB, `pickup_address` as text
+- WhatsApp message only appends pickup section when checkbox is checked
+- Both modals maintain their existing visual theme (grooming = dark frost, boarding = light frost)
+- No auth.js, db.js, content-loader.js, kinetic.js, or upgrade.css changes needed
+
+### Files changed (Session 13):
+- `supabase/migrations/20260627000001_pickup_drop_service.sql` — NEW: ALTER TABLE bookings ADD COLUMNS
+- `grooming.html` — pickup checkbox, address field, notice, CSS, JS toggle, payload/WhatsApp update
+- `boarding.html` — same pickup feature with light theme styling
+- `admin.html` — Pick-up column in bookings dashboard table
+- `supabase/functions/send-booking-email/index.ts` — added Pick-up & Drop row to email template, redeployed
+- `HANDOFF.md` — Session 13 summary
