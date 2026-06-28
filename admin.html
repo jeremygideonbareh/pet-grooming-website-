@@ -670,7 +670,7 @@ async function renderDashboard(){
     console.log('[Admin] Drawing table row for:', p.name);
     var imgSrc = p.img || '';
     var imgHtml = imgSrc
-      ? '<img class="thumb" src="' + imgSrc + '" alt="' + (p.name || '') + '" onerror="this.style.display=\'none\'">'
+      ? '<img class="thumb" src="' + escapeHtml(imgSrc) + '" alt="' + escapeHtml(p.name || '') + '" onerror="this.style.display=\'none\'">'
       : '<div class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--forest-muted)">📷</div>';
     var desc = p.desc || '—';
     return '<tr>' +

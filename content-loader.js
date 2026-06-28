@@ -14,7 +14,12 @@
   }
   function html(sel, val) {
     var el = document.querySelector(sel);
-    if (el && val !== undefined && val !== null) el.innerHTML = val.replace(/<script[\s\S]*?<\/script>/gi, '');
+    if (el && val !== undefined && val !== null) {
+      val = val.replace(/<script[\s\S]*?<\/script>/gi, '');
+      val = val.replace(/\son\w+\s*=\s*["'][^"']*["']/gi, '');
+      val = val.replace(/\son\w+\s*=\s*\S+/gi, '');
+      el.innerHTML = val;
+    }
   }
   function attr(sel, attrName, val) {
     var el = document.querySelector(sel);
