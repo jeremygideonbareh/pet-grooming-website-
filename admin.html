@@ -894,7 +894,14 @@ async function renderContentEditor(){
       <div class="sec-bd open" id="secHero">
         <div class="cf-group"><label>Headline</label><input id="cHeroHeadline" value="${escHtml(data.hero.headline)}"></div>
         <div class="cf-group"><label>Badge Text</label><input id="cHeroBadge" value="${escHtml(data.hero.badge)}"></div>
-        <div class="cf-group"><label>Background Image URL</label><input id="cHeroBg" value="${escHtml(data.hero.bgImage)}"></div>
+        <div class="cf-group"><label>Background Image URL</label>
+          <div class="img-upload-row">
+            <input id="cHeroBg" value="${escHtml(data.hero.bgImage)}">
+            <input type="file" accept="image/jpeg, image/png, image/webp" class="content-upload-btn" data-target="cHeroBg">
+            <span class="img-upload-status"></span>
+          </div>
+          <div class="img-upload-preview"${data.hero.bgImage?'':' style="display:none"'}><img src="${escHtml(data.hero.bgImage)}" onerror="this.parentNode.style.display='none'"></div>
+        </div>
         <div class="cf-group"><label>Hero Video URL (MP4)</label><input id="cHeroVideo" value="${escHtml(data.hero.videoUrl||'')}"></div>
         <div class="cf-group"><label>Video Poster URL</label><input id="cHeroPoster" value="${escHtml(data.hero.posterUrl||'')}"></div>
         <div class="cf-group"><label>Button Text</label><input id="cHeroBtn" value="${escHtml(data.hero.btnText)}"></div>
@@ -912,7 +919,14 @@ async function renderContentEditor(){
         <div class="cf-group"><label>Paragraph 2</label><textarea id="cAboutPara2" rows="3">${escHtml(data.about.para2)}</textarea></div>
         <div class="cf-group"><label>Paragraph 3</label><textarea id="cAboutPara3" rows="3">${escHtml(data.about.para3)}</textarea></div>
         <div class="cf-group"><label>Paragraph 4</label><textarea id="cAboutPara4" rows="3">${escHtml(data.about.para4)}</textarea></div>
-        <div class="cf-group"><label>About Image URL</label><input id="cAboutImage" value="${escHtml(data.about.image)}"></div>
+        <div class="cf-group"><label>About Image URL</label>
+          <div class="img-upload-row">
+            <input id="cAboutImage" value="${escHtml(data.about.image)}">
+            <input type="file" accept="image/jpeg, image/png, image/webp" class="content-upload-btn" data-target="cAboutImage">
+            <span class="img-upload-status"></span>
+          </div>
+          <div class="img-upload-preview"${data.about.image?'':' style="display:none"'}><img src="${escHtml(data.about.image)}" onerror="this.parentNode.style.display='none'"></div>
+        </div>
         <div class="cf-group"><label>Quote Text</label><textarea id="cAboutQuote" rows="2">${escHtml(data.about.quoteText)}</textarea></div>
         <div class="cf-group"><label>Quote Attribution</label><input id="cAboutCite" value="${escHtml(data.about.quoteCite)}"></div>
         <div class="cf-group"><label>Founder's Note</label><textarea id="cFounderNote" rows="3">${escHtml(data.about.founderNote)}</textarea></div>
@@ -1024,7 +1038,14 @@ async function renderContentEditor(){
         <div class="cf-group"><label>Paragraph 1</label><textarea id="cA1Para1" rows="2">${escHtml(data.a1Diff.para1)}</textarea></div>
         <div class="cf-group"><label>Paragraph 2</label><textarea id="cA1Para2" rows="2">${escHtml(data.a1Diff.para2)}</textarea></div>
         <div class="cf-row">
-          <div class="cf-group"><label>Image URL</label><input id="cA1Image" value="${escHtml(data.a1Diff.image)}"></div>
+          <div class="cf-group"><label>Image URL</label>
+            <div class="img-upload-row">
+              <input id="cA1Image" value="${escHtml(data.a1Diff.image)}">
+              <input type="file" accept="image/jpeg, image/png, image/webp" class="content-upload-btn" data-target="cA1Image">
+              <span class="img-upload-status"></span>
+            </div>
+            <div class="img-upload-preview"${data.a1Diff.image?'':' style="display:none"'}><img src="${escHtml(data.a1Diff.image)}" onerror="this.parentNode.style.display='none'"></div>
+          </div>
           <div class="cf-group"><label>Button Text</label><input id="cA1Btn" value="${escHtml(data.a1Diff.btnText)}"></div>
         </div>
         <div class="cf-group"><label>Button Link</label><input id="cA1Link" value="${escHtml(data.a1Diff.btnLink)}"></div>
@@ -1102,12 +1123,19 @@ function renderService(item,i){
       <div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">${escHtml(item.desc)}</textarea></div>
       <div class="cf-group"><label>Link</label><input class="r-link" value="${escHtml(item.link||'')}"></div>
     </div>
-    <div class="cf-group"><label>Image URL (leave blank for default)</label><input class="r-image" value="${escHtml(item.image||'')}"></div>
+    <div class="cf-group"><label>Image URL</label>
+      <div class="img-upload-row">
+        <input class="r-image" value="${escHtml(item.image||'')}">
+        <input type="file" accept="image/jpeg, image/png, image/webp" class="image-upload-btn">
+        <span class="img-upload-status">${item.image?'Uploaded':'No file'}</span>
+      </div>
+      <div class="img-upload-preview"${item.image?'':' style="display:none"'}><img src="${escHtml(item.image||'')}" onerror="this.parentNode.style.display='none'"></div>
+    </div>
   </div>`;
 }
 function addService(){
   const d=document.getElementById('servRepeater');
-  d.insertAdjacentHTML('beforeend',renderService({icon:'🐾',title:'New Service',desc:'Service description',link:''},d.children.length));
+  d.insertAdjacentHTML('beforeend',renderService({icon:'🐾',title:'New Service',desc:'Service description',image:'',link:''},d.children.length));
 }
 
 // Why Us repeater
@@ -1183,10 +1211,15 @@ function renderFutureItem(item,i){
       <div class="cf-group"><label>Title</label><input class="r-title" value="${escHtml(item.title)}"></div>
     </div>
     <div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">${escHtml(item.desc)}</textarea></div>
-    <div class="cf-row">
-      <div class="cf-group"><label>Image URL</label><input class="r-image" value="${escHtml(item.image||'')}"></div>
-      <div class="cf-group"><label>Badge Text (e.g. ⏳ Coming Soon)</label><input class="r-badge" value="${escHtml(item.badge||'')}"></div>
+    <div class="cf-group"><label>Image URL</label>
+      <div class="img-upload-row">
+        <input class="r-image" value="${escHtml(item.image||'')}">
+        <input type="file" accept="image/jpeg, image/png, image/webp" class="image-upload-btn">
+        <span class="img-upload-status">${item.image?'Uploaded':'No file'}</span>
+      </div>
+      <div class="img-upload-preview"${item.image?'':' style="display:none"'}><img src="${escHtml(item.image||'')}" onerror="this.parentNode.style.display='none'"></div>
     </div>
+    <div class="cf-group"><label>Badge Text (e.g. ⏳ Coming Soon)</label><input class="r-badge" value="${escHtml(item.badge||'')}"></div>
     <div class="cf-group"><label>Link (optional, e.g. eco-cottages.html)</label><input class="r-link" value="${escHtml(item.link||'')}"></div>
   </div>`;
 }
@@ -1204,10 +1237,15 @@ function renderOfferItem(item,i){
       <div class="cf-group"><label>Badge / Tag</label><input class="r-badge" value="${escHtml(item.badge||'')}"></div>
     </div>
     <div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">${escHtml(item.desc)}</textarea></div>
-    <div class="cf-row">
-      <div class="cf-group"><label>Image URL</label><input class="r-image" value="${escHtml(item.image||'')}"></div>
-      <div class="cf-group"><label>Link (optional)</label><input class="r-link" value="${escHtml(item.link||'')}"></div>
+    <div class="cf-group"><label>Image URL</label>
+      <div class="img-upload-row">
+        <input class="r-image" value="${escHtml(item.image||'')}">
+        <input type="file" accept="image/jpeg, image/png, image/webp" class="image-upload-btn">
+        <span class="img-upload-status">${item.image?'Uploaded':'No file'}</span>
+      </div>
+      <div class="img-upload-preview"${item.image?'':' style="display:none"'}><img src="${escHtml(item.image||'')}" onerror="this.parentNode.style.display='none'"></div>
     </div>
+    <div class="cf-group"><label>Link (optional)</label><input class="r-link" value="${escHtml(item.link||'')}"></div>
   </div>`;
 }
 function addOfferItem(){
@@ -2097,7 +2135,7 @@ document.addEventListener('change', async function(e){
     var file = target.files[0];
     if (!file) return;
     var row = target.parentNode;
-    var hidden = row.querySelector('.r-img');
+    var hidden = row.querySelector('.r-img, .r-image');
     var status = row.querySelector('.img-upload-status');
     var preview = row.nextElementSibling;
     if (!preview || !preview.classList.contains('img-upload-preview')) preview = null;
@@ -2116,6 +2154,31 @@ document.addEventListener('change', async function(e){
       status.textContent = err.message || 'Upload failed';
     }
     // Reset so the same file can be re-selected
+    target.value = '';
+  }
+
+  // ── Content tab image upload (single fields) ──
+  if (target.classList.contains('content-upload-btn')) {
+    var file = target.files[0];
+    if (!file) return;
+    var targetId = target.getAttribute('data-target');
+    var input = document.getElementById(targetId);
+    var status = target.parentNode.querySelector('.img-upload-status');
+    var preview = target.parentNode.nextElementSibling;
+
+    status.textContent = 'Uploading...';
+    try {
+      var url = await window.uploadImageToCloud(file);
+      if (input) input.value = url;
+      status.textContent = '✅';
+      if (preview && preview.classList.contains('img-upload-preview')) {
+        preview.style.display = '';
+        var img = preview.querySelector('img');
+        if (img) img.src = url;
+      }
+    } catch (err) {
+      status.textContent = '❌ ' + (err.message || 'Failed');
+    }
     target.value = '';
   }
 
