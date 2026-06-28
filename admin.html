@@ -450,6 +450,13 @@ input,textarea,select,button{font-family:inherit}
       <div class="dash-top">
         <h3>📋 Booking Requests &amp; CRM Profiles</h3>
       </div>
+      <div class="bookings-filters" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+        <select id="bookingCategoryFilter" style="padding:8px 14px;border-radius:10px;border:1px solid var(--sage-dark);background:var(--cream);font-family:inherit;font-size:.85rem;min-width:170px;color:var(--forest)">
+          <option value="">All Categories</option>
+        </select>
+        <input id="bookingSearchInput" type="text" placeholder="Search owner, dog, phone, service..." style="flex:1;min-width:200px;padding:8px 14px;border-radius:10px;border:1px solid var(--sage-dark);background:var(--cream);font-family:inherit;font-size:.85rem;color:var(--forest)">
+        <span id="bookingCount" style="font-size:.82rem;color:var(--forest-muted);white-space:nowrap"></span>
+      </div>
       <div id="bookingsContainer"></div>
     </div>
   </div>
@@ -2145,41 +2152,78 @@ document.addEventListener('change', async function(e){
 
 async function renderBookingsDashboard() {
   var container=document.getElementById('bookingsContainer');
-  var bookings;
+  var catFilter=document.getElementById('bookingCategoryFilter');
+  var searchInput=document.getElementById('bookingSearchInput');
+  var countEl=document.getElementById('bookingCount');
+  if (!catFilter||!searchInput) return;
+  var allBookings;
   try{
-    bookings=await DB.getBookings();
+    allBookings=await DB.getBookings();
   }catch(e){
     console.error('[Admin] getBookings failed:',e);
     container.innerHTML='<div class="table-wrap" style="padding:60px;text-align:center;color:var(--red)"><strong>Error loading bookings.</strong> Please check the console or try again.<br><br><button class="btn btn-ghost" onclick="renderBookingsDashboard()">Retry</button></div>';
     return;
   }
-  if (!bookings || bookings.length === 0) {
+  if (!allBookings || allBookings.length === 0) {
     container.innerHTML = '<div class="table-wrap" style="padding:60px;text-align:center;color:var(--forest-muted)">No bookings yet. Bookings will appear here once customers submit forms on the site.</div>';
+    catFilter.innerHTML='<option value="">All Categories</option>';
+    countEl.textContent='';
     return;
   }
-  const total = bookings.length;
-  const pending = bookings.filter(function(b){return (b.status||'pending')==='pending'}).length;
-  const confirmed = bookings.filter(function(b){return b.status==='confirmed'}).length;
-  const cats = {};
-  bookings.forEach(function(b){if(b.service_category) cats[b.service_category]=true});
-  var html = '<div class="dash-stats">' +
-    '<div class="stat-card"><div class="num">'+total+'</div><div class="label">Total Bookings</div></div>' +
+
+  // Populate category filter
+  var catSet={};
+  allBookings.forEach(function(b){if(b.service_category) catSet[b.service_category]=true});
+  var cats=Object.keys(catSet).sort();
+  catFilter.innerHTML='<option value="">All Categories</option>'+cats.map(function(c){return '<option value="'+escHtml(c)+'">'+escHtml(c)+'</option>'}).join('');
+
+  // Read filters
+  var selectedCat=catFilter.value;
+  var query=(searchInput.value||'').toLowerCase();
+
+  // Apply filters
+  var bookings=allBookings.filter(function(b){
+    if(selectedCat && b.service_category!==selectedCat) return false;
+    if(query){
+      var o=b.owners||{};
+      var d=b.dogs||{};
+      var haystack=((o.full_name||'')+' '+(o.phone||'')+' '+(d.name||'')+' '+(b.service_category||'')+' '+(b.service_specific||'')).toLowerCase();
+      if(haystack.indexOf(query)===-1) return false;
+    }
+    return true;
+  });
+
+  // Stats
+  var total=bookings.length;
+  var pending=bookings.filter(function(b){return(b.status||'pending')==='pending'}).length;
+  var confirmed=bookings.filter(function(b){return b.status==='confirmed'}).length;
+  var allCats={};
+  bookings.forEach(function(b){if(b.service_category) allCats[b.service_category]=true});
+  countEl.textContent='Showing '+total+' of '+allBookings.length;
+  var html='<div class="dash-stats">' +
+    '<div class="stat-card"><div class="num">'+total+'</div><div class="label">Filtered Bookings</div></div>' +
     '<div class="stat-card"><div class="num">'+pending+'</div><div class="label">Pending</div></div>' +
     '<div class="stat-card"><div class="num">'+confirmed+'</div><div class="label">Confirmed</div></div>' +
-    '<div class="stat-card"><div class="num">'+Object.keys(cats).length+'</div><div class="label">Categories</div></div>' +
+    '<div class="stat-card"><div class="num">'+Object.keys(allCats).length+'</div><div class="label">Categories</div></div>' +
     '</div>';
-  var STATUSES = ['pending','confirmed','completed','cancelled'];
-  html += '<div class="table-wrap"><table class="prod-table bookings-table"><thead><tr>' +
+
+  if(bookings.length===0){
+    container.innerHTML=html+'<div class="table-wrap" style="padding:60px;text-align:center;color:var(--forest-muted)">No bookings match your filter.</div>';
+    return;
+  }
+
+  var STATUSES=['pending','confirmed','completed','cancelled'];
+  html+='<div class="table-wrap"><table class="prod-table bookings-table"><thead><tr>' +
     '<th>Date Received</th><th>Service Category</th><th>Specific Service</th><th>Date / Time</th><th>Owner Name</th><th>Phone Number</th><th>Dog Name</th><th>Pick-up</th><th>Status</th>' +
     '</tr></thead><tbody>';
   bookings.forEach(function(b){
-    var o = b.owners || {};
-    var d = b.dogs || {};
-    var st = b.status || 'pending';
-    var created = b.created_at ? new Date(b.created_at).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
-    var dateTime = b.start_date || b.end_date || b.contact_method || '—';
-    if (b.time_slot) dateTime += ' ('+b.time_slot+')';
-    html += '<tr>' +
+    var o=b.owners||{};
+    var d=b.dogs||{};
+    var st=b.status||'pending';
+    var created=b.created_at?new Date(b.created_at).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+    var dateTime=b.start_date||b.end_date||b.contact_method||'—';
+    if(b.time_slot) dateTime+=' ('+b.time_slot+')';
+    html+='<tr>' +
       '<td style="font-size:.8rem;white-space:nowrap">'+escHtml(created)+'</td>' +
       '<td><span class="prod-cat-badge">'+escHtml(b.service_category||'—')+'</span></td>' +
       '<td style="font-size:.85rem">'+escHtml(b.service_specific||'—')+'</td>' +
@@ -2187,22 +2231,26 @@ async function renderBookingsDashboard() {
       '<td style="font-weight:600">'+escHtml(o.full_name||'—')+'</td>' +
       '<td>'+escHtml(o.phone||'—')+'</td>' +
       '<td>'+escHtml(d.name||'—')+'</td>' +
-      '<td style="font-size:.8rem;text-align:center">' + (b.pickup_required ? '<span style="color:var(--forest);font-weight:600">✅ Yes</span>' : '<span style="color:var(--forest-muted)">—</span>') + (b.pickup_address ? '<br><span style="font-size:.7rem;color:var(--forest-muted);cursor:help" title="'+escHtml(b.pickup_address)+'">📍 <u>view</u></span>' : '') + '</td>' +
-      '<td><select class="status-select" data-id="'+escHtml(b.id)+'">' +
-        STATUSES.map(function(s){return '<option value="'+escHtml(s)+'"'+(s===st?' selected':'')+'>'+escHtml(s.charAt(0).toUpperCase()+s.slice(1))+'</option>'}).join('') +
+      '<td style="font-size:.8rem;text-align:center">'+(b.pickup_required?'<span style="color:var(--forest);font-weight:600">✅ Yes</span>':'<span style="color:var(--forest-muted)">—</span>')+(b.pickup_address?'<br><span style="font-size:.7rem;color:var(--forest-muted);cursor:help" title="'+escHtml(b.pickup_address)+'">📍 <u>view</u></span>':'')+'</td>' +
+      '<td><select class="status-select" data-id="'+escHtml(b.id)+'">'+
+        STATUSES.map(function(s){return '<option value="'+escHtml(s)+'"'+(s===st?' selected':'')+'>'+escHtml(s.charAt(0).toUpperCase()+s.slice(1))+'</option>'}).join('')+
       '</select></td></tr>';
   });
-  html += '</tbody></table></div>';
-  container.innerHTML = html;
+  html+='</tbody></table></div>';
+  container.innerHTML=html;
   container.querySelectorAll('.status-select').forEach(function(sel){
     sel.addEventListener('change',async function(){
-      try {
-        await DB.updateBookingStatus(this.dataset.id, this.value);
+      try{
+        await DB.updateBookingStatus(this.dataset.id,this.value);
         await renderBookingsDashboard();
-      } catch(e) { alert('Failed to update status.'); }
+      }catch(e){alert('Failed to update status.');}
     });
   });
 }
+
+// Bind filter/search for bookings
+document.getElementById('bookingCategoryFilter')&&document.getElementById('bookingCategoryFilter').addEventListener('change',function(){renderBookingsDashboard()});
+document.getElementById('bookingSearchInput')&&document.getElementById('bookingSearchInput').addEventListener('input',function(){renderBookingsDashboard()});
 
 // ═══════════════════════════════════════════════
 // INIT
