@@ -2118,3 +2118,104 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - `admin.html` — Pick-up column in bookings dashboard table
 - `supabase/functions/send-booking-email/index.ts` — added Pick-up & Drop row to email template, redeployed
 - `HANDOFF.md` — Session 13 summary
+
+### Session 14 — Booking CRM filter/search + Auth fix + RLS tightening + XSS fix
+
+**Date:** June 28, 2026
+
+**Summary:** Fixed critical Supabase auth sharing bug causing bookings/products to show as anonymous. Enhanced Bookings CRM with category filter and search. Tightened all RLS policies for production. Fixed XSS vectors.
+
+**Changes:**
+
+1. **db.js — Auth fix:**
+   - Added `storageKey: 'a1_booking_auth'` to Supabase client constructor (was missing — caused DB queries to run as anonymous, making bookings/products invisible after login)
+   - Exposed `DB.supabase` so upload.js can use the same authenticated client
+
+2. **admin.html — Bookings CRM:**
+   - Added category filter dropdown + search input + count indicator
+   - Fixed category filter selection reset on re-render (save/restore selected value)
+   - Fixed products not showing (removed `isAuthenticated()` check that was tab-specific)
+   - Fixed search bars unresponsive (changed to inline `oninput` handlers)
+   - Escaped product image src and name in Products tab table
+
+3. **content-loader.js — XSS fix:**
+   - `html()` function strips event handler attributes (`onclick`, `onerror`, etc.) before setting innerHTML
+   - `text()` uses textContent (safe by default)
+   - `clearAndFill()` uses textContent for all item fields
+
+4. **Supabase RLS Migration `20260628000002_fix_rls_production.sql`:**
+   - `products`: public SELECT only, admin write via email whitelist (`a1.enterprises8891@gmail.com`)
+   - `site_content`: public SELECT only, admin write via email whitelist
+   - Storage `a1-images`: public SELECT, admin upload/update/delete via email whitelist
+   - `bookings`: removed over-permissive `authenticated(true)` admin policies; scoped public INSERT to anon only
+   - `owners`/`dogs`: removed over-permissive policies; scoped public INSERT to anon only
+
+**Files changed:** `db.js`, `admin.html`, `content-loader.js`, `supabase/migrations/20260628000002_fix_rls_production.sql`, `HANDOFF.md`
+
+### Session 15 — Product sync (names → desc, prices, categories)
+
+**Date:** June 29, 2026
+
+**Summary:** User updated product names in admin panel. Synced descriptions, prices, and categories to match the new names across DB and store.html. Only trusted names — everything else regenerated.
+
+**Changes:**
+
+1. **DB Updates (14 products fixed):**
+   - **p3** "hair collector and scraper": dog-food → **grooming**, ₹2,100→₹520
+   - **p8** "shark pet bed": toys → **accessories**, ₹260→₹1,060
+   - **p10** "dog shampoo and conditioner": accessories → **grooming**, ₹890
+   - **p11** "Premium Dog food station": desc fixed, ₹650
+   - **p12** "premium towel and shampoo combo": ₹340→**₹540** (later →**₹799**)
+   - **p15** "dog leash": health → **accessories**, ₹620
+   - **p16** "cat play area": health → **toys**, ₹1,100→**₹2,499**
+   - **p19** "pet friendly play balls": treats → **toys**, desc fixed
+   - **p21** "extendable dog leash": toys → **accessories**, ₹390→**₹599**
+   - **p23** "food station for pets": desc fixed
+   - **p24** "Pet cage": desc fixed
+   - **p25** "food bowl": grooming → **accessories**
+   - **p26** "premium dog food": grooming → **dog-food**
+   - **p28** "dog house": health → **accessories**, ₹580→₹2,500
+
+2. **Added missing products to DB:** p9 (Interactive Treat Dispenser Ball), p22 (Kong Classic Dog Toy), p30 (Squeaky Tennis Ball 3-Pack)
+
+3. **store.html:** Sync'd `DEFAULT_PRODUCTS` array to match corrected DB data (14 entries updated + 3 added)
+
+**Key decisions:**
+- Product names from admin panel are the source of truth
+- Descriptions/prices/categories regenerated to match new names
+- Existing IDs preserved so admin edit/delete still works
+- Prices adjusted for market realism (cat play area ₹2,499, dog house ₹2,500, etc.)
+
+**Files changed:** `store.html`, `HANDOFF.md`
+
+### Session 16 — Emoji encoding fix + admin image upload buttons
+
+**Date:** June 29, 2026
+
+**Summary:** Fixed emoji/unicode corruption across entire index.html (mojibake from non-UTF-8 encoding). Added file upload buttons with preview to 6 image fields in admin Content tab.
+
+**Changes:**
+
+1. **index.html — Emoji fix:**
+   - Fixed ~40 corrupted multi-byte sequences throughout the file
+   - Replaced garbled characters with correct emoji: `ðŸŽ¯→🎯`, `â€”→—`, `ðŸŒ¿→🌿`, `â•→═`, `ðŸ¥→🏥`, `ðŸŽ–→🎖️`, `ðŸ¤→🤝`, `ðŸ“˜→📘`, etc.
+   - Fixed all sections: hero badge, services, A-1 difference, why choose us, testimonials, future expansion, CTA social links, footer
+
+2. **admin.html — Upload buttons + previews:**
+   - **Single fields (3):** Hero bg image, About image, A-1 Diff image — added file input + upload status + thumbnail preview
+   - **Repeater fields (3):** Services items, Future Expansion cards, Offers items — replaced plain `.r-image` input with `img-upload-row` (text input + file upload + status + preview)
+   - Extended event handler with `.content-upload-btn` handler for single fields
+   - Modified `.image-upload-btn` handler to also fill `.r-image` inputs (not just `.r-img`)
+   - Uses existing `uploadImageToCloud()` with Supabase Storage `a1-images` bucket
+   - Uploaded URL auto-fills the text input; thumbnail preview updates in real-time
+
+3. **Git:** Merged `upgrade` → `main`, pushed both branches
+
+**How to use image upload:**
+1. Open admin → **Content** tab
+2. Scroll to any section with an Image URL field (Hero, About, A-1 Diff, Services, Future, Offers)
+3. Click the **Choose File** button next to the URL input
+4. Select a JPG/PNG/WebP image (auto-compresses if >2MB)
+5. URL auto-fills; thumbnail preview appears below
+
+**Files changed:** `index.html`, `admin.html`, `HANDOFF.md`
