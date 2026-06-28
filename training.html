@@ -592,7 +592,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const dogs=dogsRes.data||[];
     const dog=dogs&&dogs.length?dogs[0]:null;
     const program=document.getElementById('bookProgram').value;
-    var bookingPayload={owner_id:userId,dog_id:dog?dog.id:null,service_category:'Training',service_specific:program,contact_method:contactMethod,status:'pending'};
+    var bookingPayload={owner_id:userId,dog_id:dog?(dog.dog_id||dog.id):null,service_category:'Training',service_specific:program,contact_method:contactMethod,status:'pending'};
     console.log("Booking Payload:",bookingPayload);
     var bookingRes=await sb.from('bookings').insert(bookingPayload).select();
     if(bookingRes.error){

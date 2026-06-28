@@ -939,7 +939,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const dog=dogs&&dogs.length?dogs[0]:null;
     var pickupReq=document.getElementById('bookPickupRequired').checked;
     var pickupAddr=pickupReq?document.getElementById('bookPickupAddress').value.trim():'';
-    var bookingPayload={owner_id:userId,dog_id:dog?dog.id:null,service_category:'Grooming',service_specific:svc,start_date:date,time_slot:timeWindow,status:'pending',pickup_required:pickupReq,pickup_address:pickupAddr};
+    var bookingPayload={owner_id:userId,dog_id:dog?(dog.dog_id||dog.id):null,service_category:'Grooming',service_specific:svc,start_date:date,time_slot:timeWindow,status:'pending',pickup_required:pickupReq,pickup_address:pickupAddr};
     console.log("Booking Payload:",bookingPayload);
     var bookingRes=await sb.from('bookings').insert(bookingPayload).select();
     if(bookingRes.error){

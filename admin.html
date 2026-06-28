@@ -848,11 +848,16 @@ document.getElementById('dashSearch').addEventListener('input',function(){
 const DEFAULT_CONTENT={
   hero:{headline:'A-1 Enterprises',badge:'Since 2020 · Shillong, Meghalaya',bgImage:'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80',videoUrl:'',posterUrl:'',btnText:'About Us'},
   about:{label:'About A-1 Enterprises',heading:'Passion Turned Profession',para1:'A-1 Enterprises was founded from pure passion, dedication, and a lifelong connection with dogs. What began as a hobby during college days gradually transformed into a professional venture with a vision to elevate pet care and canine training standards in Meghalaya and across Northeast India.',para2:'From a small dream driven by love for dogs to becoming one of Meghalaya\'s growing canine service providers, A-1 Enterprises is committed to building a complete ecosystem for pets, training, grooming, boarding, rehabilitation, and future working dog development.',para3:'The founders personally experienced the challenges faced by pet parents, including housing limitations and the lack of professional canine facilities in the region. Instead of allowing those struggles to become obstacles, they became the motivation behind building something meaningful for the pet community.',para4:'Professionally established in 2020, A-1 Enterprises has steadily grown into a trusted name in dog training, grooming, rehabilitation, and pet services while continuously expanding its long-term vision of creating a complete pet ecosystem.',image:'images/welcome.jpeg',quoteText:'"We started as college students and passionate pet parents who were often thrown out of rental houses for having too many dogs. What began as an obsession and passion for dogs eventually turned into a profession, and later into a larger vision for the Northeast."',quoteCite:'— Founder, A-1 Enterprises',founderNote:'"A-1 Enterprises was built from passion, struggle, and dedication towards dogs. What started as a personal obsession gradually evolved into a profession, and today, into a larger vision of creating a complete ecosystem for pets and working dogs in the Northeast."',founderSub:'Mrs. Francisca S. Sangma',founderSign:'— Founder, A-1 Enterprises'},
-  services:{label:'Passion Turned Profession',heading:'Complete Canine Care Ecosystem',subtext:'Professional, ethical, and result-oriented canine services under one trusted brand.',items:[{icon:'🐕',title:'Dog Training',desc:'Obedience training, behavioral correction, and rehabilitation tailored to each dog\'s unique temperament.',link:'training.html'},{icon:'✂️',title:'Professional Grooming',desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments.',link:'grooming.html'},{icon:'🏠',title:'Boarding & Kennels',desc:'Safe, comfortable boarding facilities with round-the-clock care and professional supervision.',link:'boarding.html'},{icon:'🛒',title:'Premium Pet Store',desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products.',link:'store.html'},{icon:'🌿',title:'A-1 Eco Cottages',desc:'A pet-friendly eco retreat in Shillong — comfortable cottages, nature trails, and a relaxing getaway.',link:'eco-cottages.html'},{icon:'🎖️',title:'Working Dog Development',desc:'Future-ready working dog programs for security, detection, and public service sectors.',link:'training.html'}]},
+  services:{label:'Passion Turned Profession',heading:'Complete Canine Care Ecosystem',subtext:'Professional, ethical, and result-oriented canine services under one trusted brand.',items:[{icon:'🐕',title:'Dog Training',desc:'Obedience training, behavioral correction, and rehabilitation tailored to each dog\'s unique temperament.',link:'training.html',image:''},{icon:'✂️',title:'Professional Grooming',desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments.',link:'grooming.html',image:''},{icon:'🏠',title:'Boarding & Kennels',desc:'Safe, comfortable boarding facilities with round-the-clock care and professional supervision.',link:'boarding.html',image:''},{icon:'🛒',title:'Premium Pet Store',desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products.',link:'store.html',image:''},{icon:'🌿',title:'A-1 Eco Cottages',desc:'A pet-friendly eco retreat in Shillong — comfortable cottages, nature trails, and a relaxing getaway.',link:'eco-cottages.html',image:''},{icon:'🎖️',title:'Working Dog Development',desc:'Future-ready working dog programs for security, detection, and public service sectors.',link:'training.html',image:''}]},
   whyUs:{label:'Why Choose Us',heading:'Vision · Strengths · Purpose',subtext:'To build a complete professional ecosystem for pets and working dogs in Northeast India — combining modern training, grooming, rehabilitation, veterinary support, and responsible pet care under one trusted platform.',items:[{icon:'🏔️',title:'Regional Pioneers',desc:'One of the few professionally growing canine-focused brands in Meghalaya and Northeast India.'},{icon:'🧠',title:'Personalized Approach',desc:'Every training program is customized based on each dog\'s unique temperament and needs.'},{icon:'🔄',title:'Complete Ecosystem',desc:'Training, grooming, rehabilitation, boarding, and pet store — all under one brand for seamless care.'},{icon:'🔭',title:'Long-Term Vision',desc:'Ecosystem focused on both companion pets and future working dog development.'},{icon:'❤️',title:'Passion-Driven',desc:'Founded from genuine love for dogs, backed by real hands-on experience and dedication.'},{icon:'🤝',title:'Community Trust',desc:'Built on professionalism, transparency, and quality care that pet owners trust.'}]},
   social:[{icon:'🧹',title:'Cleanliness Drives',desc:'Regular drives in dog walking areas for hygienic public spaces.'},{icon:'🗑️',title:'Dustbin Campaigns',desc:'Promoting dustbin installation in public pet walking zones.'},{icon:'📢',title:'Awareness Programs',desc:'Spreading awareness on responsible pet ownership and welfare.'},{icon:'🤲',title:'Ethical Practices',desc:'Encouraging humane training practices throughout our services.'}],
-  gallery:['images/review1.png','images/review2.png','images/review3.png','images/review4.png','images/review5.png','images/4081455907607392.jpg','images/2533343538804035.jpg','images/7177680652812423.jpg','images/welcome.jpeg','images/prevent-mats.jpg'],
-  testimonials:[{stars:5,quote:'"My German Shepherd went through the training program and the transformation has been incredible. The trainers are patient, knowledgeable, and truly care about the dogs."',name:'Arjun S., Shillong'},{stars:5,quote:'"The grooming service is outstanding! My Golden Retriever always comes back looking like a show dog. The team is gentle and my dog absolutely loves going there."',name:'Priya M., Nongkynrih'},{stars:5,quote:'"Finally found a place that has quality pet supplies AND expert services. The staff always gives great advice. Highly recommend to every pet owner."',name:'David K., Meghalaya'}],
+  gallery:{label:'Gallery',heading:'Moments from Our Journey',subtext:'',images:['images/review1.png','images/review2.png','images/review3.png','images/review4.png','images/review5.png','images/4081455907607392.jpg','images/2533343538804035.jpg','images/7177680652812423.jpg','images/welcome.jpeg','images/prevent-mats.jpg']},
+  testimonials:{label:'Testimonials',heading:'What Pet Parents Say',subtext:'',items:[{stars:5,quote:'"My German Shepherd went through the training program and the transformation has been incredible. The trainers are patient, knowledgeable, and truly care about the dogs."',name:'Arjun S., Shillong'},{stars:5,quote:'"The grooming service is outstanding! My Golden Retriever always comes back looking like a show dog. The team is gentle and my dog absolutely loves going there."',name:'Priya M., Nongkynrih'},{stars:5,quote:'"Finally found a place that has quality pet supplies AND expert services. The staff always gives great advice. Highly recommend to every pet owner."',name:'David K., Meghalaya'}]},
+  brandStatement:{tagline:'Professional Dog Training | Rehabilitation | Grooming | Boarding | Protection & Detection Training | Pet Store | Future Veterinary Services | Eco Pet-Friendly Stays',desc:'A-1 Enterprises is building a complete ecosystem for pets and working dogs by bringing training, rehabilitation, grooming, boarding, pet products, future veterinary care, and eco pet-friendly stays under one trusted brand.'},
+  a1Diff:{label:'The A-1 Difference',heading:'More Than a Service — A Complete Ecosystem',para1:'Instead of being just another pet service provider, A-1 Enterprises is building a complete ecosystem where pet owners can access training, rehabilitation, grooming, boarding, pet products, future veterinary care, and eco pet-friendly stays through one trusted brand.',para2:'This long-term vision sets us apart — every service is interconnected, every experience is seamless, and every pet receives consistent, high-quality care across the board.',image:'images/welcome.jpeg',btnText:'Explore Our Services',btnLink:'training.html',items:[{icon:'🎯',title:'End-to-End Care',desc:'Training, grooming, boarding, and supplies — all coordinated under one brand for a seamless experience.'},{icon:'🌄',title:'Northeast Focus',desc:'Built specifically for the pet community in Meghalaya and Northeast India, understanding local needs and challenges.'},{icon:'🔭',title:'Future-Ready Vision',desc:'Expanding into veterinary services, eco stays, and law enforcement collaborations to serve the region better.'},{icon:'🐾',title:'Working Dog Expertise',desc:'Specialized focus on both companion pets and working dog development for security and public service roles.'}]},
+  future:{label:'Coming Soon',heading:'Future Expansion',subtext:'Exciting new services and facilities on the horizon as we grow our ecosystem.',items:[{icon:'🏥',title:'Veterinary Clinic',desc:'An on-site veterinary clinic staffed with qualified professionals to provide comprehensive healthcare, vaccinations, check-ups, and emergency care for your pets — all under one roof.',image:'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',badge:'⏳ Coming Soon',link:''},{icon:'🌿',title:'A-1 Eco Cottages',desc:'A unique eco-friendly retreat where pets and owners can relax in nature. Complete with private cottages, play areas, walking trails, bonfire evenings, and comfortable accommodations.',image:'https://images.unsplash.com/photo-1440778303588-435521a205bc?auto=format&fit=crop&w=600&q=80',badge:'✨ Explore Now',link:'eco-cottages.html'},{icon:'🛒',title:'Expanded Pet Store',desc:'A larger, fully stocked retail space with an extended range of premium pet food, accessories, grooming supplies, toys, and health products — making one-stop shopping a reality.',image:'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=600&q=80',badge:'⏳ Coming Soon',link:''},{icon:'🎖️',title:'Advanced Working Dog Programs',desc:'Structured training and certification programs for working dogs in security, detection, and public service roles. Developing partnerships with agencies across the Northeast.',image:'https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?auto=format&fit=crop&w=600&q=80',badge:'⏳ Coming Soon',link:''},{icon:'🤝',title:'Government & Law Enforcement Collaborations',desc:'Building formal collaborations with law enforcement and government agencies to provide trained working dogs for security, detection, and public safety operations across the region.',image:'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=600&q=80',badge:'⏳ Coming Soon',link:''}]},
+  cta:{heading:'Ready to Start Your Pet\'s Journey with Us?',subtext:'Get in touch today — whether it\'s training, grooming, boarding, or just a question, we\'re here to help.',btnText:'WhatsApp Us Now',btnLink:'https://wa.me/9233485873',social:[{label:'📘 Facebook',url:'https://www.facebook.com/SANGPRETI/'},{label:'📸 Instagram',url:'https://instagram.com/boxerfosterhome'},{label:'▶️ YouTube',url:'https://youtu.be/Lgpqqi8ZEQI'},{label:'📍 Google Business',url:'https://g.co/kgs/knmDPK'}]},
+  offers:{enabled:true,items:[{image:'',title:'Summer Special',desc:'Get 20% off on all grooming services this season!',badge:'Limited Time Offer',link:'grooming.html'}]},
   footer:{copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.',tagline:'Building the future of pet and working dog services in Northeast India. Professional training, grooming, boarding, and pet care under one trusted brand.',fb:'https://www.facebook.com/SANGPRETI/',ig:'https://instagram.com/boxerfosterhome',yt:'https://youtu.be/Lgpqqi8ZEQI',gm:'https://g.co/kgs/knmDPK',email:'a1.enterprises8891@gmail.com',whatsapp:'https://wa.me/9233485873'}
 };
 
@@ -952,16 +957,26 @@ async function renderContentEditor(){
     <div class="content-section">
       <div class="sec-hd open" data-target="secGallery">Gallery Images <span class="arrow">▼</span></div>
       <div class="sec-bd open" id="secGallery">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="cGalLabel" value="${escHtml(data.gallery.label||'Gallery')}"></div>
+          <div class="cf-group"><label>Heading</label><input id="cGalHeading" value="${escHtml(data.gallery.heading||'Moments from Our Journey')}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="cGalSub" rows="2">${escHtml(data.gallery.subtext||'')}</textarea></div>
         <p style="font-size:.8rem;color:var(--forest-muted);margin-bottom:12px">Upload images or paste URLs (one per line):</p>
         <div class="gallery-upload-row"><input type="file" accept="image/jpeg, image/png, image/webp" class="gallery-upload-btn" data-target="cGallery"><span class="img-upload-status" style="font-size:.75rem;color:var(--forest-muted)"></span></div>
-        <div class="cf-group"><textarea id="cGallery" rows="6">${data.gallery.map(s=>escHtml(s)).join('\n')}</textarea></div>
+        <div class="cf-group"><textarea id="cGallery" rows="6">${(data.gallery.images||data.gallery||[]).map(s=>escHtml(s)).join('\n')}</textarea></div>
       </div>
     </div>
 
     <div class="content-section">
       <div class="sec-hd open" data-target="secTesti">Testimonials <span class="arrow">▼</span></div>
       <div class="sec-bd open" id="secTesti">
-        <div id="testiRepeater">${data.testimonials.map((item,i)=>renderTestiItem(item,i)).join('')}</div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="cTestiLabel" value="${escHtml(data.testimonials.label||'Testimonials')}"></div>
+          <div class="cf-group"><label>Heading</label><input id="cTestiHeading" value="${escHtml(data.testimonials.heading||'What Pet Parents Say')}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="cTestiSub" rows="2">${escHtml(data.testimonials.subtext||'')}</textarea></div>
+        <div id="testiRepeater">${(data.testimonials.items||data.testimonials||[]).map((item,i)=>renderTestiItem(item,i)).join('')}</div>
         <button class="cf-add" onclick="addTestiItem()">+ Add Testimonial</button>
       </div>
     </div>
@@ -983,6 +998,76 @@ async function renderContentEditor(){
           <div class="cf-group"><label>Email</label><input id="cFootEmail" value="${escHtml(data.footer.email)}"></div>
           <div class="cf-group"><label>WhatsApp URL</label><input id="cFootWa" value="${escHtml(data.footer.whatsapp)}"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- Brand Statement -->
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secBrandStatement">Brand Statement <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secBrandStatement">
+        <div class="cf-group"><label>Tagline Text</label><textarea id="cBrandTagline" rows="2">${escHtml(data.brandStatement.tagline)}</textarea></div>
+        <div class="cf-group"><label>Description</label><textarea id="cBrandDesc" rows="2">${escHtml(data.brandStatement.desc)}</textarea></div>
+      </div>
+    </div>
+
+    <!-- A-1 Difference -->
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secA1Diff">A-1 Difference <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secA1Diff">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="cA1Label" value="${escHtml(data.a1Diff.label)}"></div>
+          <div class="cf-group"><label>Heading</label><input id="cA1Heading" value="${escHtml(data.a1Diff.heading)}"></div>
+        </div>
+        <div class="cf-group"><label>Paragraph 1</label><textarea id="cA1Para1" rows="2">${escHtml(data.a1Diff.para1)}</textarea></div>
+        <div class="cf-group"><label>Paragraph 2</label><textarea id="cA1Para2" rows="2">${escHtml(data.a1Diff.para2)}</textarea></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Image URL</label><input id="cA1Image" value="${escHtml(data.a1Diff.image)}"></div>
+          <div class="cf-group"><label>Button Text</label><input id="cA1Btn" value="${escHtml(data.a1Diff.btnText)}"></div>
+        </div>
+        <div class="cf-group"><label>Button Link</label><input id="cA1Link" value="${escHtml(data.a1Diff.btnLink)}"></div>
+        <div id="a1Repeater">${data.a1Diff.items.map((item,i)=>renderA1Item(item,i)).join('')}</div>
+        <button class="cf-add" onclick="addA1Item()">+ Add Pillar</button>
+      </div>
+    </div>
+
+    <!-- Future Expansion -->
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secFuture">Future Expansion <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secFuture">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="cFutureLabel" value="${escHtml(data.future.label)}"></div>
+          <div class="cf-group"><label>Heading</label><input id="cFutureHeading" value="${escHtml(data.future.heading)}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="cFutureSub" rows="2">${escHtml(data.future.subtext)}</textarea></div>
+        <div id="futureRepeater">${data.future.items.map((item,i)=>renderFutureItem(item,i)).join('')}</div>
+        <button class="cf-add" onclick="addFutureItem()">+ Add Card</button>
+      </div>
+    </div>
+
+    <!-- CTA / Contact -->
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secCta">CTA / Contact <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secCta">
+        <div class="cf-group"><label>Heading</label><input id="cCtaHeading" value="${escHtml(data.cta.heading)}"></div>
+        <div class="cf-group"><label>Subtext</label><textarea id="cCtaSub" rows="2">${escHtml(data.cta.subtext)}</textarea></div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Button Text</label><input id="cCtaBtn" value="${escHtml(data.cta.btnText)}"></div>
+          <div class="cf-group"><label>Button Link</label><input id="cCtaLink" value="${escHtml(data.cta.btnLink)}"></div>
+        </div>
+        <div class="cf-group"><label>Social Links (one per line, format: label|url)</label><textarea id="cCtaSocial" rows="4">${data.cta.social.map(s=>escHtml(s.label)+'|'+escHtml(s.url)).join('\n')}</textarea></div>
+      </div>
+    </div>
+
+    <!-- Site-wide Offers -->
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secOffers">Site-wide Offers <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secOffers">
+        <div class="cf-group" style="flex-direction:row;align-items:center;gap:10px">
+          <label>Enable Offers Banner</label>
+          <input type="checkbox" id="cOffersEnabled" ${data.offers.enabled?'checked':''}>
+        </div>
+        <div id="offersRepeater">${data.offers.items.map((item,i)=>renderOfferItem(item,i)).join('')}</div>
+        <button class="cf-add" onclick="addOfferItem()">+ Add Offer</button>
       </div>
     </div>
   `;
@@ -1012,8 +1097,9 @@ function renderService(item,i){
     </div>
     <div class="cf-row">
       <div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">${escHtml(item.desc)}</textarea></div>
-      <div class="cf-group"><label>Link (e.g. training.html)</label><input class="r-link" value="${escHtml(item.link||'')}"></div>
+      <div class="cf-group"><label>Link</label><input class="r-link" value="${escHtml(item.link||'')}"></div>
     </div>
+    <div class="cf-group"><label>Image URL (leave blank for default)</label><input class="r-image" value="${escHtml(item.image||'')}"></div>
   </div>`;
 }
 function addService(){
@@ -1067,6 +1153,63 @@ function renderTestiItem(item,i){
 function addTestiItem(){
   const d=document.getElementById('testiRepeater');
   d.insertAdjacentHTML('beforeend',renderTestiItem({stars:5,quote:'"Great service!"',name:'Happy Client'},d.children.length));
+}
+
+// A-1 Difference repeater
+function renderA1Item(item,i){
+  return `<div class="cf-rpt-item">
+    <div class="rpt-hd"><span>Pillar ${i+1}</span><button class="rpt-del" onclick="removeRepeater(this,'a1Repeater')">✕ Remove</button></div>
+    <div class="cf-row">
+      <div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="${escHtml(item.icon)}"></div>
+      <div class="cf-group"><label>Title</label><input class="r-title" value="${escHtml(item.title)}"></div>
+    </div>
+    <div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">${escHtml(item.desc)}</textarea></div>
+  </div>`;
+}
+function addA1Item(){
+  const d=document.getElementById('a1Repeater');
+  d.insertAdjacentHTML('beforeend',renderA1Item({icon:'⭐',title:'New Pillar',desc:'Pillar description'},d.children.length));
+}
+
+// Future Expansion repeater
+function renderFutureItem(item,i){
+  return `<div class="cf-rpt-item">
+    <div class="rpt-hd"><span>Card ${i+1}</span><button class="rpt-del" onclick="removeRepeater(this,'futureRepeater')">✕ Remove</button></div>
+    <div class="cf-row">
+      <div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="${escHtml(item.icon)}"></div>
+      <div class="cf-group"><label>Title</label><input class="r-title" value="${escHtml(item.title)}"></div>
+    </div>
+    <div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">${escHtml(item.desc)}</textarea></div>
+    <div class="cf-row">
+      <div class="cf-group"><label>Image URL</label><input class="r-image" value="${escHtml(item.image||'')}"></div>
+      <div class="cf-group"><label>Badge Text (e.g. ⏳ Coming Soon)</label><input class="r-badge" value="${escHtml(item.badge||'')}"></div>
+    </div>
+    <div class="cf-group"><label>Link (optional, e.g. eco-cottages.html)</label><input class="r-link" value="${escHtml(item.link||'')}"></div>
+  </div>`;
+}
+function addFutureItem(){
+  const d=document.getElementById('futureRepeater');
+  d.insertAdjacentHTML('beforeend',renderFutureItem({icon:'🚀',title:'New Service',desc:'Description',image:'',badge:'Coming Soon',link:''},d.children.length));
+}
+
+// Offers repeater
+function renderOfferItem(item,i){
+  return `<div class="cf-rpt-item">
+    <div class="rpt-hd"><span>Offer ${i+1}</span><button class="rpt-del" onclick="removeRepeater(this,'offersRepeater')">✕ Remove</button></div>
+    <div class="cf-row">
+      <div class="cf-group"><label>Title</label><input class="r-title" value="${escHtml(item.title)}"></div>
+      <div class="cf-group"><label>Badge / Tag</label><input class="r-badge" value="${escHtml(item.badge||'')}"></div>
+    </div>
+    <div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">${escHtml(item.desc)}</textarea></div>
+    <div class="cf-row">
+      <div class="cf-group"><label>Image URL</label><input class="r-image" value="${escHtml(item.image||'')}"></div>
+      <div class="cf-group"><label>Link (optional)</label><input class="r-link" value="${escHtml(item.link||'')}"></div>
+    </div>
+  </div>`;
+}
+function addOfferItem(){
+  const d=document.getElementById('offersRepeater');
+  d.insertAdjacentHTML('beforeend',renderOfferItem({title:'New Offer',desc:'Offer description',image:'',badge:'New',link:''},d.children.length));
 }
 
 function removeRepeater(btn,containerId){
@@ -1817,15 +1960,36 @@ async function saveAllContent(){
     data.services.label=document.getElementById('cServLabel').value;
     data.services.heading=document.getElementById('cServHeading').value;
     data.services.subtext=document.getElementById('cServSub').value;
-    data.services.items=collectRepeaterData('servRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc',link:'.r-link'});
+    data.services.items=collectRepeaterData('servRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc',link:'.r-link',image:'.r-image'});
     data.whyUs.label=document.getElementById('cWhyLabel').value;
     data.whyUs.heading=document.getElementById('cWhyHeading').value;
     data.whyUs.subtext=document.getElementById('cWhySub').value;
     data.whyUs.items=collectRepeaterData('whyRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc'});
     data.social=collectRepeaterData('socialRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc'});
-    data.gallery=document.getElementById('cGallery').value.split('\n').map(function(s){return s.trim()}).filter(Boolean);
-    data.testimonials=collectRepeaterData('testiRepeater',{stars:'.r-stars',name:'.r-name',quote:'.r-quote'});
-    data.testimonials.forEach(function(t){t.stars=parseInt(t.stars)||5});
+    if(document.getElementById('cGalLabel')){
+      data.gallery.label=document.getElementById('cGalLabel').value;
+      data.gallery.heading=document.getElementById('cGalHeading').value;
+      data.gallery.subtext=document.getElementById('cGalSub').value;
+      data.gallery.images=document.getElementById('cGallery').value.split('\n').map(function(s){return s.trim()}).filter(Boolean);
+    }else{
+      // Fallback for old format where gallery was just an array
+      if(document.getElementById('cGallery')){
+        data.gallery=document.getElementById('cGallery').value.split('\n').map(function(s){return s.trim()}).filter(Boolean);
+      }
+    }
+    if(document.getElementById('cTestiLabel')){
+      data.testimonials.label=document.getElementById('cTestiLabel').value;
+      data.testimonials.heading=document.getElementById('cTestiHeading').value;
+      data.testimonials.subtext=document.getElementById('cTestiSub').value;
+      data.testimonials.items=collectRepeaterData('testiRepeater',{stars:'.r-stars',name:'.r-name',quote:'.r-quote'});
+      data.testimonials.items.forEach(function(t){t.stars=parseInt(t.stars)||5});
+    }else{
+      // Fallback for old format
+      if(document.getElementById('testiRepeater')){
+        data.testimonials=collectRepeaterData('testiRepeater',{stars:'.r-stars',name:'.r-name',quote:'.r-quote'});
+        data.testimonials.forEach(function(t){t.stars=parseInt(t.stars)||5});
+      }
+    }
     data.footer.copyright=document.getElementById('cFootCopyright').value;
     data.footer.tagline=document.getElementById('cFootTagline').value;
     data.footer.fb=document.getElementById('cFootFb').value;
@@ -1834,6 +1998,40 @@ async function saveAllContent(){
     data.footer.gm=document.getElementById('cFootGm').value;
     data.footer.email=document.getElementById('cFootEmail').value;
     data.footer.whatsapp=document.getElementById('cFootWa').value;
+
+    // New sections
+    if(document.getElementById('cBrandTagline')){
+      data.brandStatement.tagline=document.getElementById('cBrandTagline').value;
+      data.brandStatement.desc=document.getElementById('cBrandDesc').value;
+    }
+    if(document.getElementById('cA1Label')){
+      data.a1Diff.label=document.getElementById('cA1Label').value;
+      data.a1Diff.heading=document.getElementById('cA1Heading').value;
+      data.a1Diff.para1=document.getElementById('cA1Para1').value;
+      data.a1Diff.para2=document.getElementById('cA1Para2').value;
+      data.a1Diff.image=document.getElementById('cA1Image').value;
+      data.a1Diff.btnText=document.getElementById('cA1Btn').value;
+      data.a1Diff.btnLink=document.getElementById('cA1Link').value;
+      data.a1Diff.items=collectRepeaterData('a1Repeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc'});
+    }
+    if(document.getElementById('cFutureLabel')){
+      data.future.label=document.getElementById('cFutureLabel').value;
+      data.future.heading=document.getElementById('cFutureHeading').value;
+      data.future.subtext=document.getElementById('cFutureSub').value;
+      data.future.items=collectRepeaterData('futureRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc',image:'.r-image',badge:'.r-badge',link:'.r-link'});
+    }
+    if(document.getElementById('cCtaHeading')){
+      data.cta.heading=document.getElementById('cCtaHeading').value;
+      data.cta.subtext=document.getElementById('cCtaSub').value;
+      data.cta.btnText=document.getElementById('cCtaBtn').value;
+      data.cta.btnLink=document.getElementById('cCtaLink').value;
+      var ctaSocial=document.getElementById('cCtaSocial').value.split('\n').map(function(s){return s.trim()}).filter(Boolean);
+      data.cta.social=ctaSocial.map(function(s){var p=s.split('|');return {label:p[0]||'',url:p[1]||''};});
+    }
+    if(document.getElementById('cOffersEnabled')){
+      data.offers.enabled=document.getElementById('cOffersEnabled').checked;
+      data.offers.items=collectRepeaterData('offersRepeater',{title:'.r-title',desc:'.r-desc',image:'.r-image',badge:'.r-badge',link:'.r-link'});
+    }
   }
 
   // Collect training data if fields exist
@@ -1856,7 +2054,7 @@ async function saveAllContent(){
     data.eco=collectEcoData();
   }
 
-  saveContent(data);
+  await saveContent(data);
 
   const toast=document.getElementById('saveToast')||function(){
     var t=document.createElement('div');
@@ -1946,8 +2144,15 @@ document.addEventListener('change', async function(e){
 // ═══════════════════════════════════════════════
 
 async function renderBookingsDashboard() {
-  const bookings = await DB.getBookings();
-  const container = document.getElementById('bookingsContainer');
+  var container=document.getElementById('bookingsContainer');
+  var bookings;
+  try{
+    bookings=await DB.getBookings();
+  }catch(e){
+    console.error('[Admin] getBookings failed:',e);
+    container.innerHTML='<div class="table-wrap" style="padding:60px;text-align:center;color:var(--red)"><strong>Error loading bookings.</strong> Please check the console or try again.<br><br><button class="btn btn-ghost" onclick="renderBookingsDashboard()">Retry</button></div>';
+    return;
+  }
   if (!bookings || bookings.length === 0) {
     container.innerHTML = '<div class="table-wrap" style="padding:60px;text-align:center;color:var(--forest-muted)">No bookings yet. Bookings will appear here once customers submit forms on the site.</div>';
     return;
@@ -1983,8 +2188,8 @@ async function renderBookingsDashboard() {
       '<td>'+escHtml(o.phone||'—')+'</td>' +
       '<td>'+escHtml(d.name||'—')+'</td>' +
       '<td style="font-size:.8rem;text-align:center">' + (b.pickup_required ? '<span style="color:var(--forest);font-weight:600">✅ Yes</span>' : '<span style="color:var(--forest-muted)">—</span>') + (b.pickup_address ? '<br><span style="font-size:.7rem;color:var(--forest-muted);cursor:help" title="'+escHtml(b.pickup_address)+'">📍 <u>view</u></span>' : '') + '</td>' +
-      '<td><select class="status-select" data-id="'+b.booking_id+'">' +
-        STATUSES.map(function(s){return '<option value="'+s+'"'+(s===st?' selected':'')+'>'+s.charAt(0).toUpperCase()+s.slice(1)+'</option>'}).join('') +
+      '<td><select class="status-select" data-id="'+escHtml(b.id)+'">' +
+        STATUSES.map(function(s){return '<option value="'+escHtml(s)+'"'+(s===st?' selected':'')+'>'+escHtml(s.charAt(0).toUpperCase()+s.slice(1))+'</option>'}).join('') +
       '</select></td></tr>';
   });
   html += '</tbody></table></div>';

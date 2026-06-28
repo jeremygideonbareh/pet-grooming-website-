@@ -405,8 +405,8 @@
       if (result.error) throw result.error;
       return result.data || [];
     } catch (e) {
-      console.error('[DB] getBookings exception:', e);
-      return [];
+      console.error('[DB] getBookings error:', e);
+      throw e;
     }
   }
 
@@ -460,7 +460,7 @@
       var result = await supabase
         .from('bookings')
         .update({ status: status })
-        .eq('booking_id', bookingId);
+        .eq('id', bookingId);
       if (result.error) throw result.error;
       return { success: true };
     } catch (e) {

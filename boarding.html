@@ -518,34 +518,37 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const dogsRes=await sb.from('dogs').select('*').eq('owner_id',userId);
     const dogs=dogsRes.data||[];
     const dog=dogs&&dogs.length?dogs[0]:null;
-    let vacUrl='';
+    var vacData='',vacName='',vacType='';
     const vacFile=document.getElementById('bookVaccinationCard');
     if(vacFile&&vacFile.files&&vacFile.files[0]){
-      vacUrl=await DB.uploadVaccinationCard(vacFile.files[0])||'';
+      var f=vacFile.files[0];
+      var maxSize=5*1024*1024;
+      if(f.size>maxSize){alert('Vaccination card file is too large. Maximum size is 5MB.');throw new Error('File too large');}
+      var allowedTypes=['image/jpeg','image/png','image/webp','application/pdf'];
+      if(!allowedTypes.includes(f.type)){alert('Invalid file type. Please upload a JPG, PNG, WebP, or PDF file.');throw new Error('Invalid file type');}
+      vacName=f.name.replace(/^.*[\\\/]/,'');
+      vacType=f.type;
+      vacData=await new Promise(function(r,j){
+        var reader=new FileReader();
+        reader.onload=function(e){r(e.target.result.split(',')[1]);};
+        reader.onerror=function(){j(new Error('Failed to read vaccination card file'));};
+        reader.readAsDataURL(f);
+      });
     }
-    const dogId=dog?dog.dog_id:null;
-    if(dogId&&(da||dg||sk||vac||dew||al||tem||bh||vacUrl)){
-      await DB.findOrUpdateDog(userId,d,{dog_age:da,dog_gender:dg,sickness:sk,vaccination:vac,deworming:dew,allergy:al,temperament:tem,behavioral_issues:bh,vaccination_card_url:vacUrl});
+    const dogId=dog?(dog.dog_id||dog.id):null;
+    if(dogId&&(da||dg||sk||vac||dew||al||tem||bh)){
+      await DB.findOrUpdateDog(userId,d,{dog_age:da,dog_gender:dg,sickness:sk,vaccination:vac,deworming:dew,allergy:al,temperament:tem,behavioral_issues:bh});
     }
     var pickupReq=document.getElementById('bookPickupRequired').checked;
     var pickupAddr=pickupReq?document.getElementById('bookPickupAddress').value.trim():'';
-    await sb.from('bookings').insert({owner_id:userId,dog_id:dogId,service_category:'Boarding',service_specific:'',start_date:sd,end_date:ed,pickup_required:pickupReq,pickup_address:pickupAddr}).select();
-    let txt='Hi A-1 Enterprises! I would like to book a boarding stay.%0A%0A';
-    txt+='━━ CUSTOMER DETAILS ━━%0A';
-    txt+=`Name: ${n||owner.full_name||''}%0APhone: ${p||owner.phone||''}%0AWhatsApp: ${w||owner.whatsapp_number||''}%0AEmail: ${e2||owner.email||''}%0ALocation: ${loc||owner.location||''}%0A%0A`;
-    txt+='━━ DOG DETAILS ━━%0A';
-    txt+=`Dog: ${d||(dog?dog.name+'/'+dog.breed:'')}%0AAge: ${da||(dog?dog.age:'')}%0AGender: ${dg||(dog?dog.gender:'')}%0ASickness: ${sk||(dog?dog.sickness:'None')}%0AVaccinated: ${vac||(dog?dog.vaccination:'')}%0ADeworming: ${dew||(dog?dog.deworming_3_months:'')}%0AAllergies: ${al||(dog?dog.allergy:'None')}%0ATemperament: ${tem||(dog?dog.temperament:'')}%0ABehavioural: ${bh||(dog?dog.behavioral_issues:'None')}%0A%0A`;
-    txt+=`━━ BOOKING DETAILS ━━%0A`;
-    txt+=`From: ${sd}%0ATo: ${ed}%0ANotes: ${msg||'None'}`;
-    if(vacUrl)txt+=`%0AVaccination Card: ${vacUrl}`;
-    if(pickupReq){
-      txt+=`%0A%0A━━ PICK-UP & DROP ━━%0A`;
-      txt+=`Required: Yes%0A`;
-      txt+=`Address: ${encodeURIComponent(pickupAddr||'Not provided')}`;
-    }
-    window.open(`https://wa.me/9233485873?text=${txt}`,'_blank');
+    var bookRes=await sb.from('bookings').insert({owner_id:userId,dog_id:dogId,service_category:'Boarding',service_specific:'',start_date:sd,end_date:ed,pickup_required:pickupReq,pickup_address:pickupAddr,vaccination_card_data:vacData,vaccination_card_name:vacName,vaccination_card_type:vacType}).select();
+    if(bookRes.error)throw bookRes.error;
+    var parts=['Hi A-1 Enterprises! I would like to book a boarding stay.','','━━ CUSTOMER DETAILS ━━','Name: '+(n||owner.full_name||''),'Phone: '+(p||owner.phone||''),'WhatsApp: '+(w||owner.whatsapp_number||''),'Email: '+(e2||owner.email||''),'Location: '+(loc||owner.location||''),'','━━ DOG DETAILS ━━','Dog: '+(d||(dog?dog.name+'/'+dog.breed:'')),'Age: '+(da||(dog?dog.age:'')),'Gender: '+(dg||(dog?dog.gender:'')),'Sickness: '+(sk||(dog?dog.sickness:'None')),'Vaccinated: '+(vac||(dog?dog.vaccination:'')),'Deworming: '+(dew||(dog?dog.deworming_3_months:'')),'Allergies: '+(al||(dog?dog.allergy:'None')),'Temperament: '+(tem||(dog?dog.temperament:'')),'Behavioural: '+(bh||(dog?dog.behavioral_issues:'None')),'','━━ BOOKING DETAILS ━━','From: '+sd,'To: '+ed,'Notes: '+(msg||'None')];
+    if(vacName)parts.push('Vaccination Card: Attached (sent via email)');
+    if(pickupReq){parts.push('','━━ PICK-UP & DROP ━━','Required: Yes','Address: '+(pickupAddr||'Not provided'));}
+    window.open('https://wa.me/9233485873?text='+encodeURIComponent(parts.join('\n')),'_blank');
     closeBook();
-    setTimeout(function(){alert('Thank you for your boarding request. Our team will review your booking and contact you to confirm availability and finalise the details. Boarding rates may vary based on breed, size, duration of stay and any special care requirements. Think Pet 🐾 Think A-1')},500);
+    setTimeout(function(){alert('Thank you for your boarding request. Our team will review your booking and contact you to confirm availability and finalise the details. Boarding rates may vary based on breed, size, duration of stay and any special care requirements. Vaccination card will be sent via email shortly if one was attached. Think Pet 🐾 Think A-1')},500);
   }catch(err){
     console.error('[Booking] Failed:',err);
     alert('Something went wrong. Please try again.');

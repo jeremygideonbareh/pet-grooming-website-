@@ -78,6 +78,22 @@ Deno.serve(async (req) => {
       </html>
     `;
 
+    var attachments=[];
+    if(record.vaccination_card_data && record.vaccination_card_name){
+      var fileName=record.vaccination_card_name.replace(/^.*[\\\/]/,'').replace(/[<>:"|?*]/g,'_').substring(0,255);
+      var fileType=record.vaccination_card_type||'application/octet-stream';
+      var allowedTypes=['image/jpeg','image/png','image/webp','application/pdf'];
+      if(!allowedTypes.includes(fileType)){console.warn("[send-booking-email] Vaccination card type not allowed, skipping attachment:",fileType);}else{
+        var approxSize=(record.vaccination_card_data.length*0.75);
+        var maxBytes=5*1024*1024;
+        if(approxSize<maxBytes){
+          attachments.push({filename:fileName,content:record.vaccination_card_data,content_type:fileType});
+        }else{
+          console.warn("[send-booking-email] Vaccination card too large, skipping attachment:",approxSize+" bytes");
+        }
+      }
+    }
+
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -89,6 +105,7 @@ Deno.serve(async (req) => {
         to: "cloudlyconfusing@gmail.com",
         subject: `New Booking: ${record.service_specific || "Inquiry"} — ${record.service_category || "A-1 Enterprises"}`,
         html,
+        ...(attachments.length>0?{attachments}:{}),
       }),
     });
 
