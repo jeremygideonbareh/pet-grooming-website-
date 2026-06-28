@@ -19,7 +19,9 @@
   var SUPABASE_URL = 'https://hqgdifxecxrxhjsbavkl.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_4-UBFcXGsiLjHINRAfydTQ_lCVzE9OM';
 
-  var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { storageKey: 'a1_booking_auth' }
+  });
 
   /* ── Site Content ── */
 
