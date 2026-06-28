@@ -2171,11 +2171,13 @@ async function renderBookingsDashboard() {
     return;
   }
 
-  // Populate category filter
+  // Save selection, populate category filter, restore selection
+  var prevCat=catFilter.value;
   var catSet={};
   allBookings.forEach(function(b){if(b.service_category) catSet[b.service_category]=true});
   var cats=Object.keys(catSet).sort();
   catFilter.innerHTML='<option value="">All Categories</option>'+cats.map(function(c){return '<option value="'+escHtml(c)+'">'+escHtml(c)+'</option>'}).join('');
+  if(prevCat) catFilter.value=prevCat;
 
   // Read filters
   var selectedCat=catFilter.value;
