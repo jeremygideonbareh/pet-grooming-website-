@@ -404,7 +404,7 @@ input,textarea,select,button{font-family:inherit}
       <div class="dash-top">
         <h3>Product Inventory</h3>
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-          <input type="text" class="dash-search" id="dashSearch" placeholder="Search products...">
+          <input type="text" class="dash-search" id="dashSearch" placeholder="Search products..." oninput="dashQuery=this.value;renderDashboard()">
           <button class="dash-btn dash-btn-primary" id="addBtn">+ Add Product</button>
         </div>
       </div>
@@ -454,7 +454,7 @@ input,textarea,select,button{font-family:inherit}
         <select id="bookingCategoryFilter" style="padding:8px 14px;border-radius:10px;border:1px solid var(--sage-dark);background:var(--cream);font-family:inherit;font-size:.85rem;min-width:170px;color:var(--forest)">
           <option value="">All Categories</option>
         </select>
-        <input id="bookingSearchInput" type="text" placeholder="Search owner, dog, phone, service..." style="flex:1;min-width:200px;padding:8px 14px;border-radius:10px;border:1px solid var(--sage-dark);background:var(--cream);font-family:inherit;font-size:.85rem;color:var(--forest)">
+        <input id="bookingSearchInput" type="text" placeholder="Search owner, dog, phone, service..." oninput="renderBookingsDashboard()" style="flex:1;min-width:200px;padding:8px 14px;border-radius:10px;border:1px solid var(--sage-dark);background:var(--cream);font-family:inherit;font-size:.85rem;color:var(--forest)">
         <span id="bookingCount" style="font-size:.82rem;color:var(--forest-muted);white-space:nowrap"></span>
       </div>
       <div id="bookingsContainer"></div>
@@ -623,7 +623,6 @@ let dashQuery='';
 
 async function renderDashboard(){
   console.log('[Admin] renderDashboard() called');
-  if(!Auth.isAuthenticated())return;
   const products=await loadProducts();
   console.log('[Admin] products loaded:', products ? products.length : 0);
   if (!products || products.length === 0) {
@@ -843,10 +842,7 @@ document.getElementById('formModal').addEventListener('click',e=>{if(e.target===
 document.getElementById('deleteCancel').addEventListener('click',closeDeleteModal);
 document.getElementById('deleteModal').addEventListener('click',e=>{if(e.target===document.getElementById('deleteModal'))closeDeleteModal()});
 
-document.getElementById('dashSearch').addEventListener('input',function(){
-  dashQuery=this.value;
-  renderDashboard().then(function(){});
-});
+
 
 // ═══════════════════════════════════════════════
 // CONTENT EDITOR
@@ -2250,9 +2246,8 @@ async function renderBookingsDashboard() {
   });
 }
 
-// Bind filter/search for bookings
+// Bind filter for bookings
 document.getElementById('bookingCategoryFilter')&&document.getElementById('bookingCategoryFilter').addEventListener('change',function(){renderBookingsDashboard()});
-document.getElementById('bookingSearchInput')&&document.getElementById('bookingSearchInput').addEventListener('input',function(){renderBookingsDashboard()});
 
 // ═══════════════════════════════════════════════
 // INIT
