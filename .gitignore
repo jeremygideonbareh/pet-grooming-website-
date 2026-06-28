@@ -12,3 +12,8 @@ Thumbs.db
 .wrangler/
 a1-promo-video/
 clients photos/
+
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
