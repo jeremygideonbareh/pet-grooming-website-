@@ -129,9 +129,9 @@
           'https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?auto=format&fit=crop&w=600&q=80',
           'https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=600&q=80',
         ];
-        var svcId = (item.title || 'svc' + idx).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-        var card = div('serv-card');
-        card.dataset.svc = svcId;
+        var card = document.createElement('a');
+        card.className = 'serv-card';
+        card.href = item.link || '#';
         var img = document.createElement('img');
         img.src = item.image || SERVICE_IMAGES[idx] || SERVICE_IMAGES[0];
         img.alt = item.title || '';
@@ -145,8 +145,16 @@
         span.textContent = item.icon || 'A-1';
         var h3 = document.createElement('h3');
         h3.textContent = item.title || '';
+        var desc = document.createElement('p');
+        desc.className = 'serv-desc';
+        desc.textContent = (item.desc || '').substring(0, 110);
+        var arrow = document.createElement('span');
+        arrow.className = 'serv-arrow';
+        arrow.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Explore';
         body.appendChild(span);
         body.appendChild(h3);
+        body.appendChild(desc);
+        body.appendChild(arrow);
         card.appendChild(body);
         return card;
       });

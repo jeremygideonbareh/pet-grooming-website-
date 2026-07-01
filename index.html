@@ -221,44 +221,68 @@ ul{list-style:none}
 .founder-note p{font-size:.88rem;line-height:1.7;color:rgba(255,255,255,.8)}
 .founder-note .sign{display:block;margin-top:14px;font-weight:600;font-size:.85rem;color:var(--sunbeam)}
 
-/* â”€â”€ SERVICES GRID â”€â”€ */
+/* SERVICES GRID */
 .services{padding:80px 0;background:var(--vanilla-dark)}
 .services-header{text-align:center;margin-bottom:56px}
-.serv-grid{display:flex;flex-wrap:nowrap;gap:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
-.serv-grid::-webkit-scrollbar{display:none}
+.serv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .serv-card{
-  position:relative;border-radius:24px;overflow:hidden;cursor:pointer;
-  flex:1;min-width:260px;min-height:340px;display:flex;align-items:flex-end;scroll-snap-align:start;
-  transition:transform .4s ease,box-shadow .4s ease;
+  position:relative;border-radius:24px;overflow:hidden;display:block;text-decoration:none;
+  min-height:240px;cursor:pointer;
+  transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s cubic-bezier(.16,1,.3,1);
 }
-@media(min-width:1024px){.serv-card{min-height:420px;min-width:300px}}
-@media(max-width:640px){.serv-card{min-height:280px}.serv-card .serv-body{padding:20px 16px}}
-.serv-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(0,0,0,.15)}
-.serv-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.serv-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px -12px rgba(0,0,0,.2)}
+.serv-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s ease}
 .serv-card:hover img{transform:scale(1.08)}
 .serv-card .serv-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 40%,rgba(26,20,18,.85) 100%);
+  background:linear-gradient(180deg,transparent 25%,rgba(26,20,18,.9) 100%);
+  z-index:1;
 }
 .serv-card .serv-body{
-  position:relative;z-index:1;padding:24px 20px;width:100%;
+  position:relative;z-index:2;padding:20px;
+  display:flex;flex-direction:column;height:100%;justify-content:flex-end;
 }
-.serv-card .serv-body .serv-icon{font-size:.65rem;margin-bottom:6px;display:inline-block;padding:3px 12px;border-radius:60px;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-weight:600;letter-spacing:.03em;text-transform:uppercase}
-.serv-subs{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
-.serv-subs span{font-size:.6rem;padding:2px 8px;border-radius:60px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-weight:500;letter-spacing:.02em;color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.15)}
-
-/* â”€â”€ SERVICE MODAL â”€â”€ */
-.serv-modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(26,20,18,.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:24px}
-.serv-modal-overlay.open{display:flex}
-.serv-modal{background:rgba(255,255,255,.5);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,.2);border-radius:32px;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;padding:44px 36px;animation:modalIn .35s ease;box-shadow:0 32px 80px rgba(0,0,0,.12)}
-@keyframes modalIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
-.serv-modal .sm-icon{font-size:1.1rem;margin-bottom:16px;display:inline-block;padding:8px 20px;border-radius:60px;background:rgba(255,255,255,0.45);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-weight:700;letter-spacing:.03em;text-transform:uppercase}
-.serv-modal h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;letter-spacing:-.01em;color:var(--forest);margin-bottom:12px}
-.serv-modal p{font-size:.9rem;line-height:1.7;color:var(--forest-muted)}
-.serv-modal .sm-btn{display:inline-flex;align-items:center;gap:10px;margin-top:24px;padding:14px 28px;border-radius:60px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .3s ease;border:none;font-family:inherit;background:rgba(255,255,255,0.45);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.2);color:var(--forest);text-decoration:none}
-.serv-modal .sm-btn:hover{background:rgba(255,255,255,0.7);transform:translateY(-2px)}
-.serv-modal .sm-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.35);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:none;width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;color:var(--forest);transition:background .3s;display:flex;align-items:center;justify-content:center}
-.serv-modal .sm-close:hover{background:rgba(255,255,255,0.6)}
+.serv-card .serv-body .serv-icon{
+  display:inline-flex;align-items:center;gap:6px;width:fit-content;
+  font-size:.65rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  margin-bottom:8px;padding:4px 14px;border-radius:60px;color:#fff;
+  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.1);
+}
+.serv-card .serv-body h3{
+  font-family:Playfair Display,Georgia,serif;
+  font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:3px;line-height:1.2;
+}
+@media(max-width:640px){.serv-grid{grid-template-columns:1fr}}
+.serv-card .serv-body .serv-desc{
+  font-size:.78rem;line-height:1.5;color:rgba(255,255,255,.7);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.serv-card .serv-arrow{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:10px;font-size:.7rem;font-weight:600;color:rgba(255,255,255,.5);
+  letter-spacing:.03em;text-transform:uppercase;transition:all .4s ease;
+}
+.serv-card .serv-arrow svg{width:13px;height:13px;transition:transform .4s ease}
+.serv-card:hover .serv-arrow{color:#fff}
+.serv-card:hover .serv-arrow svg{transform:translateX(5px)}
+@media(min-width:1025px){
+  .serv-card{min-height:280px}
+  .serv-card:nth-child(1){grid-column:span 2;grid-row:span 2;min-height:480px}
+  .serv-card:nth-child(6){grid-column:span 3;min-height:220px}
+  .serv-card:nth-child(6) .serv-body h3{font-size:1rem}
+  .serv-card:nth-child(6) .serv-body .serv-icon{font-size:.6rem}
+}
+@media(max-width:1024px){
+  .serv-grid{grid-template-columns:repeat(2,1fr)}
+  .serv-card:nth-child(1){grid-column:span 2;min-height:340px}
+  .serv-card:nth-child(6){grid-column:span 2}
+}
+@media(max-width:640px){
+  .serv-card{min-height:220px}
+  .serv-card .serv-body{padding:16px}
+  .serv-card .serv-body h3{font-size:1rem}
+}
 
 /* â”€â”€ A-1 DIFFERENCE â”€â”€ */
 .a1-diff{padding:80px 0;background:var(--white)}
@@ -514,7 +538,6 @@ footer{
 }
 @media(max-width:900px){
   .about-grid,.training-grid,.grooming-grid,.boarding-grid,.a1-diff .a1-grid{grid-template-columns:1fr;gap:40px}
-  .serv-grid{display:grid;grid-template-columns:1fr;gap:14px;max-width:420px;margin-inline:auto}
   .vmg-grid,.usp-grid,.future-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
   .sr-grid{grid-template-columns:repeat(2,1fr)}
   .why-choose .wc-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
@@ -528,8 +551,6 @@ footer{
   .about,.services,.a1-diff,.training,.grooming-overview,.boarding,.gallery,.vmg,.why-choose,.testimonials,.future,.cta-section{padding-top:60px;padding-bottom:60px}
   .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
   .footer-brand{grid-column:1/-1}
-  .serv-modal{padding:32px 24px;margin:12px}
-  #smSubs{grid-template-columns:1fr!important}
 }
 @media(max-width:640px){
   .gallery-grid{grid-template-columns:repeat(2,1fr)}
@@ -544,7 +565,6 @@ footer{
   .future-card .future-body{padding:28px 20px}
   .usp{padding:60px 0}
   .social-resp{padding:60px 0}
-  #smSubs{grid-template-columns:1fr!important}
 }
 @media(max-width:360px){
   .hero{padding:60px 14px 30px}
@@ -664,8 +684,7 @@ footer{
     </div>
   </div>
 </section>
-
-<!-- ═══ SERVICES ═══ -->
+<!-- SERVICES -->
 <section class="services" id="services">
   <div class="container">
     <div class="services-header reveal">
@@ -674,36 +693,66 @@ footer{
       <p class="section-sub" style="margin-inline:auto">Professional, ethical, and result-oriented canine services under one trusted brand.</p>
     </div>
     <div class="serv-grid" id="servGrid">
-      <article class="serv-card reveal reveal-delay-1" data-svc="dog-training">
+      <a href="training.html" class="serv-card reveal reveal-delay-1">
         <img src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&w=1200&q=80" alt="Dog Training" loading="lazy">
         <div class="serv-overlay"></div>
         <div class="serv-body">
           <span class="serv-icon">A-1</span>
           <h3>Dog Training</h3>
-          <p style="font-size:.82rem;color:rgba(255,255,255,.8);margin-top:6px;line-height:1.5">Professional training, rehabilitation, grooming, boarding, and pet care services — all under one trusted brand.</p>
-          <div class="serv-subs"><span>Basic Obedience</span><span>Intermediate</span><span>Advanced</span><span>Rehabilitation</span><span>Protection Training</span><span>Detection Training</span><span>Grooming</span><span>Boarding &amp; Kennels</span><span>Pet Store</span><span>Working Dog Development</span></div>
+          <p class="serv-desc">Professional training, rehabilitation, grooming, boarding, and pet care services under one trusted brand.</p>
+          <span class="serv-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Explore</span>
         </div>
-      </article>
-      <article class="serv-card reveal reveal-delay-2" data-svc="grooming">
+      </a>
+      <a href="grooming.html" class="serv-card reveal reveal-delay-2">
         <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=1200&q=80" alt="Professional Grooming" loading="lazy">
         <div class="serv-overlay"></div>
         <div class="serv-body">
-          <span class="serv-icon">✂️</span>
+          <span class="serv-icon">A-1</span>
           <h3>Professional Grooming</h3>
-          <p style="font-size:.82rem;color:rgba(255,255,255,.8);margin-top:6px;line-height:1.5">Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments.</p>
-          <div class="serv-subs"><span>Full Grooming</span><span>Bath &amp; Brush</span><span>Nail &amp; Ear Care</span><span>Spa &amp; Shine</span><span>Pet Styling</span></div>
+          <p class="serv-desc">Full-service grooming with premium products baths, haircuts, nail care, and spa treatments.</p>
+          <span class="serv-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Explore</span>
         </div>
-      </article>
-      <article class="serv-card reveal reveal-delay-3" data-svc="pet-store">
+      </a>
+      <a href="boarding.html" class="serv-card reveal reveal-delay-3">
+        <img src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?auto=format&fit=crop&w=1200&q=80" alt="Boarding and Kennels" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body">
+          <span class="serv-icon">A-1</span>
+          <h3>Boarding and Kennels</h3>
+          <p class="serv-desc">Safe, comfortable boarding facilities with round-the-clock care and professional supervision.</p>
+          <span class="serv-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Explore</span>
+        </div>
+      </a>
+      <a href="store.html" class="serv-card reveal reveal-delay-1">
         <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=1200&q=80" alt="Premium Pet Store" loading="lazy">
         <div class="serv-overlay"></div>
         <div class="serv-body">
-          <span class="serv-icon">🛒</span>
+          <span class="serv-icon">A-1</span>
           <h3>Premium Pet Store</h3>
-          <p style="font-size:.82rem;color:rgba(255,255,255,.8);margin-top:6px;line-height:1.5">Curated selection of high-quality pet food, accessories, toys, and wellness products.</p>
-          <div class="serv-subs"><span>Premium Food</span><span>Accessories</span><span>Toys</span><span>Wellness</span></div>
+          <p class="serv-desc">Curated selection of high-quality pet food, accessories, toys, and wellness products.</p>
+          <span class="serv-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Explore</span>
         </div>
-      </article>
+      </a>
+      <a href="eco-cottages.html" class="serv-card reveal reveal-delay-2">
+        <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=1200&q=80" alt="A-1 Eco Cottages" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body">
+          <span class="serv-icon">A-1</span>
+          <h3>A-1 Eco Cottages</h3>
+          <p class="serv-desc">A pet-friendly eco retreat in Shillong comfortable cottages, nature trails, and a relaxing getaway.</p>
+          <span class="serv-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Explore</span>
+        </div>
+      </a>
+      <a href="training.html" class="serv-card reveal reveal-delay-3">
+        <img src="https://images.unsplash.com/photo-1560807707-8cc77767d783?auto=format&fit=crop&w=1200&q=80" alt="Working Dog Development" loading="lazy">
+        <div class="serv-overlay"></div>
+        <div class="serv-body">
+          <span class="serv-icon">A-1</span>
+          <h3>Working Dog Development</h3>
+          <p class="serv-desc">Future-ready working dog programs for security, detection, and public service sectors.</p>
+          <span class="serv-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Explore</span>
+        </div>
+      </a>
     </div>
   </div>
 </section>
@@ -1027,19 +1076,6 @@ footer{
       </div>
     </div>
   </div>
-</footer>
-
-<!-- ═══ SERVICE MODAL ═══ -->
-<div class="serv-modal-overlay" id="servModal">
-  <div class="serv-modal" style="position:relative;max-width:700px">
-    <button class="sm-close" id="smClose">âœ•</button>
-    <div class="sm-icon" id="smIcon"></div>
-    <h2 id="smTitle"></h2>
-    <p id="smDesc" style="margin-bottom:20px"></p>
-    <div id="smSubs" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px"></div>
-    <a href id="smLink" class="sm-btn">Explore All Services →</a>
-  </div>
-</div>
 
 <script>
 // â”€â”€ Gallery â”€â”€
@@ -1094,85 +1130,6 @@ window.addEventListener('scroll',()=>{
   floatingLogo.classList.toggle('scrolled',s);
 });
 
-// Service modal
-const SERV_DATA={
-  'dog-training':{
-    icon:'A-1',
-    title:'Dog Training',
-    desc:'Professional, ethical, and result-oriented canine services under one trusted brand. From basic obedience to advanced working dog development, A-1 Enterprises offers a complete ecosystem of dog training and pet care services.',
-    link:'training.html',
-    subs:[
-      {name:'Basic Obedience',icon:'🎯',desc:'Foundation training covering sit, stay, heel, recall, and basic manners for a well-behaved companion.'},
-      {name:'Intermediate',icon:'📈',desc:'Building on basics with advanced commands, leash manners, and improved focus in distracting environments.'},
-      {name:'Advanced',icon:'🏆',desc:'Off-leash control, complex commands, and precision handling for reliable real-world performance.'},
-      {name:'Rehabilitation',icon:'🩺',desc:'Specialized rehabilitation for dogs recovering from trauma, behavioral issues, or physical challenges.'},
-      {name:'Protection Training',icon:'🛡️',desc:'Advanced personal protection training building controlled, reliable protective behaviors with expert oversight.'},
-      {name:'Detection Training',icon:'🔍',desc:'Scent detection and tracking programs for security, search, and specialized working roles.'},
-      {name:'Grooming',icon:'✂️',desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments.'},
-      {name:'Boarding & Kennels',icon:'🏠',desc:'Safe, comfortable boarding facilities with round-the-clock care and professional supervision.'},
-      {name:'Pet Store',icon:'🛒',desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products.'},
-      {name:'Working Dog Development',icon:'🎖️',desc:'Future-ready working dog programs for security, detection, and public service sectors.'},
-    ]
-  },
-  'grooming':{
-    icon:'✂️',
-    title:'Professional Grooming',
-    desc:'Full-service grooming with premium products — baths, haircuts, nail care, and spa treatments for your beloved pet.',
-    link:'grooming.html',
-    subs:[
-      {name:'Full Grooming',icon:'✂️',desc:'Complete grooming service including bath, haircut, nail trim, ear cleaning, and styling.'},
-      {name:'Bath & Brush',icon:'🧴',desc:'Thorough bath with premium shampoo, conditioning, and complete brush-out for a shiny coat.'},
-      {name:'Nail & Ear Care',icon:'🩺',desc:'Professional nail trimming and ear cleaning to maintain your pet\'s health and comfort.'},
-      {name:'Spa & Shine',icon:'✨',desc:'Luxury spa treatment with moisturizing conditioners, paw balm, and finishing sprays.'},
-      {name:'Pet Styling',icon:'💄',desc:'Creative grooming and breed-specific styling for a polished, show-ready look.'},
-    ]
-  },
-  'pet-store':{
-    icon:'🛒',
-    title:'Premium Pet Store',
-    desc:'Curated selection of high-quality pet food, accessories, toys, and wellness products for your furry companion.',
-    link:'store.html',
-    subs:[
-      {name:'Premium Food',icon:'🍖',desc:'High-quality nutrition from trusted brands — dry food, wet food, and raw diet options.'},
-      {name:'Accessories',icon:'🎁',desc:'Collars, leashes, harnesses, beds, and travel gear for every breed and size.'},
-      {name:'Toys & Enrichment',icon:'🎯',desc:'Durable toys, puzzle feeders, and enrichment items to keep your pet entertained.'},
-      {name:'Wellness Products',icon:'💚',desc:'Supplements, flea/tick prevention, dental care, and grooming supplies for home use.'},
-    ]
-  }
-};
-const servModal=document.getElementById('servModal');
-const smClose=document.getElementById('smClose');
-const smIcon=document.getElementById('smIcon');
-const smTitle=document.getElementById('smTitle');
-const smDesc=document.getElementById('smDesc');
-const smLink=document.getElementById('smLink');
-document.getElementById('servGrid').addEventListener('click',function(e){
-  var card=e.target.closest('.serv-card');
-  if(!card){return}
-  var d=SERV_DATA[card.dataset.svc];
-  if(!d){return}
-  smIcon.textContent=d.icon;
-  smTitle.textContent=d.title;
-  smDesc.textContent=d.desc;
-  smLink.href=d.link;
-  var subsDiv=document.getElementById('smSubs');
-  if(d.subs){
-    subsDiv.innerHTML=d.subs.map(function(s){
-      return '<div style="background:var(--vanilla-dark);border-radius:14px;padding:14px;border:1px solid var(--sage-dark);display:flex;gap:10px;align-items:flex-start">'+
-        '<span style="font-size:1.3rem;flex-shrink:0">'+s.icon+'</span>'+
-        '<div><div style="font-weight:700;font-size:.82rem;margin-bottom:3px">'+s.name+'</div>'+
-        '<div style="font-size:.75rem;color:var(--forest-muted);line-height:1.4">'+s.desc+'</div></div></div>';
-    }).join('');
-  }else{
-    subsDiv.innerHTML='';
-  }
-  servModal.classList.add('open');
-  document.body.style.overflow='hidden';
-});
-const closeServModal=()=>{servModal.classList.remove('open');document.body.style.overflow=''};
-smClose.addEventListener('click',closeServModal);
-servModal.addEventListener('click',e=>{if(e.target===servModal)closeServModal()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeServModal()});
 
 // â”€â”€ Page loader (min 3s) â”€â”€
 const loader=document.getElementById('pageLoader');
