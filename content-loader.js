@@ -68,6 +68,15 @@
       overlay.textContent = 'View';
       item.appendChild(img);
       item.appendChild(overlay);
+      item.addEventListener('click', function(){
+        var lb = document.getElementById('lightbox');
+        var lbImg = document.getElementById('lbImg');
+        if(lb && lbImg){
+          lbImg.src = url;
+          lb.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+      });
       container.appendChild(item);
     });
   }
@@ -121,7 +130,7 @@
           'https://images.unsplash.com/photo-1553882809-a4f57e595701?auto=format&fit=crop&w=600&q=80',
         ];
         var svcId = (item.title || 'svc' + idx).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-        var card = div('serv-card reveal');
+        var card = div('serv-card');
         card.dataset.svc = svcId;
         var img = document.createElement('img');
         img.src = item.image || SERVICE_IMAGES[idx] || SERVICE_IMAGES[0];
@@ -854,5 +863,9 @@
     });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal:not(.active)').forEach(function(el) { ro.observe(el); });
+  /* Re-check after animations settle for any elements added late */
+  setTimeout(function(){
+    document.querySelectorAll('.reveal:not(.active)').forEach(function(el) { ro.observe(el); });
+  }, 300);
   document.dispatchEvent(new Event('contentLoaded'));
 })();
