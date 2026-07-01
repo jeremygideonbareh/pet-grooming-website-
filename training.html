@@ -554,7 +554,7 @@ async function handleMissingOwner(userId, session) {
     if (ownerRes.error) {
       console.error('[Booking] Owner recovery failed:', ownerRes.error.message);
       try{ sb.auth.signOut(); }catch(e){}
-      localStorage.clear();
+      localStorage.removeItem('a1_booking_auth');
       sessionStorage.clear();
       alert('Session error. Please sign in again.');
       window.location.replace(window.location.pathname);
@@ -583,10 +583,14 @@ bookBtn?.addEventListener('click',openBookModal);
 document.getElementById('heroBookBtn')?.addEventListener('click',e=>{e.preventDefault();openBookModal()});
 bookClose?.addEventListener('click',closeBook);
 bookOverlay?.addEventListener('click',e=>{if(e.target===bookOverlay)closeBook()});
+var _trainSubmitting = false;
 document.getElementById('bookingForm')?.addEventListener('submit',async function(e){
+  if (_trainSubmitting) return;
+  _trainSubmitting = true;
   e.preventDefault();
   const contactMethod=document.getElementById('bookContactMethod').value;
   const notes=document.getElementById('bookNotes').value;
+  if(notes&&notes.length>2000){alert('Notes are too long (max 2000 characters).');return}
   const btn=this.querySelector('.btn-send');
   const origText=btn?btn.textContent:'';
   if(btn){btn.textContent='Submitting...';btn.disabled=true}
@@ -639,6 +643,8 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     console.error('[Booking] Failed:',err);
     alert('Something went wrong. Please try again.');
     if(btn){btn.textContent=origText;btn.disabled=false}
+  }finally{
+    _trainSubmitting = false;
   }
 });
 

@@ -318,6 +318,14 @@
    */
   async function findOrUpdateDog(ownerId, dogName, healthData) {
     try {
+      var KEY_MAP = { dog_age:'age', dog_gender:'gender', dog_breed:'breed', deworming:'deworming_3_months' };
+      var norm = {};
+      for (var k in healthData) {
+        if (healthData.hasOwnProperty(k)) {
+          var col = KEY_MAP[k] || k;
+          norm[col] = healthData[k];
+        }
+      }
       var UPDATABLE = ['age','gender','breed','sickness','vaccination','deworming_3_months','allergy','temperament','vaccination_card_url','behavioral_issues'];
       var result = await supabase
         .from('dogs')
@@ -331,8 +339,8 @@
         var updates = {};
         for (var i = 0; i < UPDATABLE.length; i++) {
           var field = UPDATABLE[i];
-          if (!result.data[field] && healthData[field]) {
-            updates[field] = healthData[field];
+          if (!result.data[field] && norm[field]) {
+            updates[field] = norm[field];
           }
         }
         if (Object.keys(updates).length > 0) {
@@ -348,7 +356,7 @@
       var payload = { owner_id: ownerId, name: dogName };
       for (var j = 0; j < UPDATABLE.length; j++) {
         var f = UPDATABLE[j];
-        if (healthData[f]) payload[f] = healthData[f];
+        if (norm[f]) payload[f] = norm[f];
       }
       var ins = await supabase
         .from('dogs')

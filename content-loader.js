@@ -18,6 +18,7 @@
       val = val.replace(/<script[\s\S]*?<\/script>/gi, '');
       val = val.replace(/\son\w+\s*=\s*["'][^"']*["']/gi, '');
       val = val.replace(/\son\w+\s*=\s*\S+/gi, '');
+      val = val.replace(/\s+(?:href|src|srcdoc|action|formaction|xlink:href)\s*=\s*["'][^"']*(?:javascript|data|vbscript)\s*:[^"']*["']/gi, '');
       el.innerHTML = val;
     }
   }

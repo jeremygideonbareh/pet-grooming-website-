@@ -310,7 +310,7 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
         <ul class="details-list">
           <li><span class="ck">✓</span> Clean, sanitized facilities</li>
           <li><span class="ck">✓</span> Trained &amp; caring staff</li>
-          <li><span class="ck">✓</span> Individual &amp group play</li>
+          <li><span class="ck">✓</span> Individual &amp; group play</li>
           <li><span class="ck">✓</span> Regular photo updates</li>
           <li><span class="ck">✓</span> Medication administration</li>
           <li><span class="ck">✓</span> Flexible booking options</li>
@@ -463,8 +463,15 @@ function openBookModal(){
       if(!session?.user)return;
       const userId=session.user.id;
       const ownerRes=await sb.from('owners').select('*').eq('id',userId).single();
-      if(ownerRes.error)return;
-      const owner=ownerRes.data;
+      if(ownerRes.error){
+        if(ownerRes.error.code==='PGRST116'){
+          var recovered = await handleMissingOwner(userId, session);
+          if (!recovered) return;
+          var owner = recovered;
+        } else { return; }
+      } else {
+        var owner=ownerRes.data;
+      }
       const dogsRes=await sb.from('dogs').select('*').eq('owner_id',userId);
       const dogs=dogsRes.data||[];
       const dog=dogs&&dogs.length?dogs[0]:null;
@@ -495,13 +502,47 @@ function openBookModal(){
     }
   });
 }
+/* ── ZOMBIE SESSION RECOVERY ── */
+async function handleMissingOwner(userId, session) {
+  try {
+    var sb = Auth.supabase;
+    var email = session.user.email || '';
+    var ownerRes = await sb.from('owners').upsert({
+      id: userId,
+      full_name: email ? email.split('@')[0] : 'Guest',
+      email: email,
+      phone: ''
+    }, { onConflict: 'id', ignoreDuplicates: false }).select();
+    if (ownerRes.error) {
+      console.error('[Booking] Owner recovery failed:', ownerRes.error.message);
+      try{ sb.auth.signOut(); }catch(e){}
+      localStorage.removeItem('a1_booking_auth');
+      sessionStorage.clear();
+      alert('Session error. Please sign in again.');
+      window.location.replace(window.location.pathname);
+      return null;
+    }
+    console.log('[Booking] Owner record recovered for:', userId);
+    return ownerRes.data && ownerRes.data[0] ? ownerRes.data[0] : null;
+  } catch(e) {
+    console.error('[Booking] Owner recovery threw:', e.message);
+    alert('Session error. Please sign in again.');
+    window.location.replace(window.location.pathname);
+    return null;
+  }
+}
 bBtn?.addEventListener('click',openBookModal);
 bC?.addEventListener('click',closeBook);
 bO?.addEventListener('click',function(e){if(e.target===bO)closeBook()});
+var _bookingSubmitting = false;
 document.getElementById('bookingForm')?.addEventListener('submit',async function(e){
+  if (_bookingSubmitting) return;
+  _bookingSubmitting = true;
   e.preventDefault();
   function v(id){const el=document.getElementById(id);return el?el.value.trim():''}
   const n=v('bookName'),p=v('bookPhone'),w=v('bookWhatsApp'),e2=v('bookEmail'),loc=v('bookLocation'),d=v('bookPet'),da=v('bookDogAge'),dg=v('bookDogGender'),sk=v('bookSickness'),vac=v('bookVaccination'),dew=v('bookDeworming'),al=v('bookAllergy'),tem=v('bookTemperament'),bh=v('bookBehavioral'),sd=v('bookStartDate'),ed=v('bookEndDate'),msg=v('bookMsg');
+  if(msg&&msg.length>2000){alert('Notes are too long (max 2000 characters).');return}
+  if(loc&&loc.length>500){alert('Location is too long (max 500 characters).');return}
   const btn=this.querySelector('.btn-send');
   const origText=btn?btn.textContent:'';
   if(btn){btn.textContent='Submitting...';btn.disabled=true}
@@ -513,8 +554,15 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     if(!session?.user)throw new Error('Not authenticated');
     const userId=session.user.id;
     const ownerRes=await sb.from('owners').select('*').eq('id',userId).single();
-    if(ownerRes.error)throw new Error('Owner not found');
-    const owner=ownerRes.data;
+    if(ownerRes.error){
+      if(ownerRes.error.code==='PGRST116'){
+        var recovered = await handleMissingOwner(userId, session);
+        if (!recovered) return;
+        var owner = recovered;
+      } else { throw new Error('Owner not found'); }
+    } else {
+      var owner=ownerRes.data;
+    }
     const dogsRes=await sb.from('dogs').select('*').eq('owner_id',userId);
     const dogs=dogsRes.data||[];
     const dog=dogs&&dogs.length?dogs[0]:null;
@@ -541,6 +589,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     }
     var pickupReq=document.getElementById('bookPickupRequired').checked;
     var pickupAddr=pickupReq?document.getElementById('bookPickupAddress').value.trim():'';
+    if(pickupAddr&&pickupAddr.length>500){alert('Pickup address is too long (max 500 characters).');return}
     var bookRes=await sb.from('bookings').insert({owner_id:userId,dog_id:dogId,service_category:'Boarding',service_specific:'',start_date:sd,end_date:ed,pickup_required:pickupReq,pickup_address:pickupAddr,vaccination_card_data:vacData,vaccination_card_name:vacName,vaccination_card_type:vacType}).select();
     if(bookRes.error)throw bookRes.error;
     var parts=['Hi A-1 Enterprises! I would like to book a boarding stay.','','━━ CUSTOMER DETAILS ━━','Name: '+(n||owner.full_name||''),'Phone: '+(p||owner.phone||''),'WhatsApp: '+(w||owner.whatsapp_number||''),'Email: '+(e2||owner.email||''),'Location: '+(loc||owner.location||''),'','━━ DOG DETAILS ━━','Dog: '+(d||(dog?dog.name+'/'+dog.breed:'')),'Age: '+(da||(dog?dog.age:'')),'Gender: '+(dg||(dog?dog.gender:'')),'Sickness: '+(sk||(dog?dog.sickness:'None')),'Vaccinated: '+(vac||(dog?dog.vaccination:'')),'Deworming: '+(dew||(dog?dog.deworming_3_months:'')),'Allergies: '+(al||(dog?dog.allergy:'None')),'Temperament: '+(tem||(dog?dog.temperament:'')),'Behavioural: '+(bh||(dog?dog.behavioral_issues:'None')),'','━━ BOOKING DETAILS ━━','From: '+sd,'To: '+ed,'Notes: '+(msg||'None')];
@@ -553,6 +602,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     console.error('[Booking] Failed:',err);
     alert('Something went wrong. Please try again.');
   }finally{
+    _bookingSubmitting = false;
     if(btn){btn.textContent=origText;btn.disabled=false}
   }
 });

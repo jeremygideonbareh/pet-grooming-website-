@@ -901,7 +901,7 @@ async function handleMissingOwner(userId, session) {
     if (ownerRes.error) {
       console.error('[Booking] Owner recovery failed:', ownerRes.error.message);
       try{ sb.auth.signOut(); }catch(e){}
-      localStorage.clear();
+      localStorage.removeItem('a1_booking_auth');
       sessionStorage.clear();
       alert('Session error. Please sign in again.');
       window.location.replace(window.location.pathname);
@@ -928,7 +928,10 @@ if(bookOverlay)bookOverlay.addEventListener('click',e=>{if(e.target===bookOverla
 document.querySelectorAll('.groom-book-btn').forEach(function(b){
   b.addEventListener('click',function(){openBookModal(this.dataset.service)});
 });
+var _groomSubmitting = false;
 document.getElementById('bookingForm')?.addEventListener('submit',async function(e){
+  if (_groomSubmitting) return;
+  _groomSubmitting = true;
   e.preventDefault();
   const svc=document.getElementById('bookService').value;
   const date=document.getElementById('bookDate').value;
@@ -963,6 +966,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const dog=dogs&&dogs.length?dogs[0]:null;
     var pickupReq=document.getElementById('bookPickupRequired').checked;
     var pickupAddr=pickupReq?document.getElementById('bookPickupAddress').value.trim():'';
+    if(pickupAddr&&pickupAddr.length>500){alert('Pickup address is too long (max 500 characters).');return}
     var bookingPayload={owner_id:userId,dog_id:dog?(dog.dog_id||dog.id):null,service_category:'Grooming',service_specific:svc,start_date:date,time_slot:timeWindow,status:'pending',pickup_required:pickupReq,pickup_address:pickupAddr};
     console.log("Booking Payload:",bookingPayload);
     var bookingRes=await sb.from('bookings').insert(bookingPayload).select();
@@ -991,6 +995,8 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     console.error('[Booking] Failed:',err);
     alert('Something went wrong. Please try again.');
     if(btn){btn.textContent=origText;btn.disabled=false}
+  }finally{
+    _groomSubmitting = false;
   }
 });
 

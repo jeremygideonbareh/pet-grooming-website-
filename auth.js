@@ -130,9 +130,9 @@
       var result = await _supabase.auth.getSession();
       var session = result.data && result.data.session ? result.data.session : null;
       if (session) {
-        var createdAt = new Date(session.created_at).getTime();
-        if (Date.now() - createdAt > 24 * 60 * 60 * 1000) {
-          console.warn('[Auth] Session expired (>24h)');
+        var expiresAt = new Date(session.expires_at).getTime();
+        if (Date.now() > expiresAt) {
+          console.warn('[Auth] Session expired');
           await _supabase.auth.signOut();
           localStorage.removeItem('a1_booking_auth');
           return null;
@@ -318,12 +318,19 @@
   }
 
   /* ── Auth gate: run callback only if logged in ── */
+  var _authPending = false;
   async function requireAuth(callback) {
-    var session = await getSession();
-    if (session) {
-      callback();
-    } else {
-      showAuthModal(callback);
+    if (_authPending) return;
+    _authPending = true;
+    try {
+      var session = await getSession();
+      if (session) {
+        callback();
+      } else {
+        showAuthModal(callback);
+      }
+    } finally {
+      _authPending = false;
     }
   }
 
@@ -346,7 +353,6 @@
   async function handleLogout(e) {
     if (e) e.preventDefault();
     await signOut();
-    localStorage.removeItem('a1_booking_auth');
     sessionStorage.removeItem(SESSION_KEY);
     sessionStorage.removeItem('a1_admin_lockout');
     location.reload();
@@ -374,7 +380,6 @@
 
   /* ── Admin auth (Supabase email/password) ── */
   var SESSION_KEY = 'a1_admin_session';
-  var ADMIN_EMAILS = ['a1.enterprises8891@gmail.com', 'cloudlyconfusing@gmail.com', '9233485873@a1.com'];
   function isAuthenticated() {
     var raw = sessionStorage.getItem(SESSION_KEY);
     if (!raw) return false;
