@@ -1,11 +1,21 @@
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
+
 Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   try {
     const { record } = await req.json();
 
     if (!record) {
       return new Response(JSON.stringify({ error: "No record in payload" }), {
         status: 400,
-        headers: { "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -14,7 +24,7 @@ Deno.serve(async (req) => {
       console.error("[send-booking-email] RESEND_API_KEY not set");
       return new Response(JSON.stringify({ error: "Server config error" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -115,7 +125,7 @@ Deno.serve(async (req) => {
       console.error("[send-booking-email] Resend API Error:", res.status, JSON.stringify(errData));
       return new Response(JSON.stringify({ error: "Resend rejected", detail: errData }), {
         status: res.status,
-        headers: { "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -124,13 +134,13 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify({ success: true, id: data.id }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
     console.error("[send-booking-email] Unexpected error:", err);
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });
