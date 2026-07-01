@@ -111,7 +111,7 @@
       text('.about-text .about-quote', d.about.quoteText);
       text('.about-text .about-quote cite', d.about.quoteCite);
       text('.founder-note h4', d.about.founderNote);
-      text('.founder-note .section-sub', d.about.founderSub);
+      html('.founder-note .section-sub', d.about.founderSub);
       text('.founder-note .sign', d.about.founderSign);
     }
     if (d.services) {
