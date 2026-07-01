@@ -474,7 +474,12 @@ function openBookModal(){
       }
       const dogsRes=await sb.from('dogs').select('*').eq('owner_id',userId);
       const dogs=dogsRes.data||[];
-      const dog=dogs&&dogs.length?dogs[0]:null;
+    var dog=dogs&&dogs.length?dogs[0]:null;
+    if(!dog){
+      var dogIns=await sb.from('dogs').insert({owner_id:userId,name:owner.full_name?owner.full_name+"'s Pet":'My Pet'}).select().single();
+      if(dogIns.error)throw dogIns.error;
+      dog=dogIns.data;
+    }
       document.getElementById('bookName').value=owner.full_name||'';
       document.getElementById('bookPhone').value=owner.phone||'';
       document.getElementById('bookWhatsApp').value=owner.whatsapp_number||'';
@@ -565,7 +570,12 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     }
     const dogsRes=await sb.from('dogs').select('*').eq('owner_id',userId);
     const dogs=dogsRes.data||[];
-    const dog=dogs&&dogs.length?dogs[0]:null;
+    var dog=dogs&&dogs.length?dogs[0]:null;
+    if(!dog){
+      var dogIns=await sb.from('dogs').insert({owner_id:userId,name:owner.full_name?owner.full_name+"'s Pet":'My Pet'}).select().single();
+      if(dogIns.error)throw dogIns.error;
+      dog=dogIns.data;
+    }
     var vacData='',vacName='',vacType='';
     const vacFile=document.getElementById('bookVaccinationCard');
     if(vacFile&&vacFile.files&&vacFile.files[0]){

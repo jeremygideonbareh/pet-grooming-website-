@@ -619,7 +619,12 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const dogsRes=await sb.from('dogs').select('*').eq('owner_id',userId);
     if(dogsRes.error)console.error('[Booking] Dog lookup failed:',dogsRes.error.message);
     const dogs=dogsRes.data||[];
-    const dog=dogs&&dogs.length?dogs[0]:null;
+    var dog=dogs&&dogs.length?dogs[0]:null;
+    if(!dog){
+      var dogIns=await sb.from('dogs').insert({owner_id:userId,name:owner.full_name?owner.full_name+"'s Pet":'My Pet'}).select().single();
+      if(dogIns.error)throw dogIns.error;
+      dog=dogIns.data;
+    }
     const program=document.getElementById('bookProgram').value;
     var bookingPayload={owner_id:userId,dog_id:dog?(dog.dog_id||dog.id):null,service_category:'Training',service_specific:program,contact_method:contactMethod,status:'pending'};
     console.log("Booking Payload:",bookingPayload);

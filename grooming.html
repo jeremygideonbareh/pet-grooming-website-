@@ -964,7 +964,12 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const dogsRes=await sb.from('dogs').select('*').eq('owner_id',userId);
     if(dogsRes.error)console.error('[Booking] Dog lookup failed:',dogsRes.error.message);
     const dogs=dogsRes.data||[];
-    const dog=dogs&&dogs.length?dogs[0]:null;
+    var dog=dogs&&dogs.length?dogs[0]:null;
+    if(!dog){
+      var dogIns=await sb.from('dogs').insert({owner_id:userId,name:owner.full_name?owner.full_name+"'s Pet":'My Pet'}).select().single();
+      if(dogIns.error)throw dogIns.error;
+      dog=dogIns.data;
+    }
     var pickupReq=document.getElementById('bookPickupRequired').checked;
     var pickupAddr=pickupReq?document.getElementById('bookPickupAddress').value.trim():'';
     if(pickupAddr&&pickupAddr.length>500){alert('Pickup address is too long (max 500 characters).');return}
