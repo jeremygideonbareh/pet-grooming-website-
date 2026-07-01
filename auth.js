@@ -396,6 +396,16 @@
         return { success: false, error: 'This email is not authorized for admin access.' };
       }
       sessionStorage.setItem(SESSION_KEY, JSON.stringify({ expiry: Date.now() + 86400000 }));
+      var userId = result.data.user.id;
+      var ownerRes = await _supabase.from('owners').upsert({
+        id: userId,
+        full_name: 'Admin',
+        email: authedEmail,
+        phone: ''
+      }, { onConflict: 'id', ignoreDuplicates: true });
+      if (ownerRes.error) {
+        console.warn('[Auth] Admin owner upsert warning:', ownerRes.error.message);
+      }
       return { success: true };
     } catch (e) {
       var msg = e.message || 'Login failed';

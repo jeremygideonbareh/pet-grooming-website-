@@ -540,13 +540,34 @@ window.addEventListener('scroll',()=>{
   navIsland.classList.toggle('scrolled',s);
   floatingLogo.classList.toggle('scrolled',s);
 });
-/* ── ZOMBIE SESSION HEALER ── */
-function handleZombieSessionError(){
-  try{ Auth.supabase.auth.signOut(); }catch(e){}
-  localStorage.clear();
-  sessionStorage.clear();
-  alert('Your session was incomplete or has expired. We are refreshing the page so you can start fresh!');
-  window.location.replace(window.location.pathname);
+/* ── ZOMBIE SESSION RECOVERY ── */
+async function handleMissingOwner(userId, session) {
+  try {
+    var sb = Auth.supabase;
+    var email = session.user.email || '';
+    var ownerRes = await sb.from('owners').upsert({
+      id: userId,
+      full_name: email ? email.split('@')[0] : 'Guest',
+      email: email,
+      phone: ''
+    }, { onConflict: 'id', ignoreDuplicates: false }).select();
+    if (ownerRes.error) {
+      console.error('[Booking] Owner recovery failed:', ownerRes.error.message);
+      try{ sb.auth.signOut(); }catch(e){}
+      localStorage.clear();
+      sessionStorage.clear();
+      alert('Session error. Please sign in again.');
+      window.location.replace(window.location.pathname);
+      return null;
+    }
+    console.log('[Booking] Owner record recovered for:', userId);
+    return ownerRes.data && ownerRes.data[0] ? ownerRes.data[0] : null;
+  } catch(e) {
+    console.error('[Booking] Owner recovery threw:', e.message);
+    alert('Session error. Please sign in again.');
+    window.location.replace(window.location.pathname);
+    return null;
+  }
 }
 const loader=document.getElementById('pageLoader');
 window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'),400)});
@@ -580,13 +601,16 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     const ownerRes=await sb.from('owners').select('*').eq('id',userId).single();
     if(ownerRes.error){
       if(ownerRes.error.code==='PGRST116'){
-        handleZombieSessionError();
-        return;
+        var recovered = await handleMissingOwner(userId, session);
+        if (!recovered) return;
+        var owner = recovered;
+      } else {
+        console.error('[Booking] Owner lookup failed — message:',ownerRes.error.message,'| details:',ownerRes.error.details,'| hint:',ownerRes.error.hint,'| code:',ownerRes.error.code);
+        throw new Error('Owner profile not found');
       }
-      console.error('[Booking] Owner lookup failed — message:',ownerRes.error.message,'| details:',ownerRes.error.details,'| hint:',ownerRes.error.hint,'| code:',ownerRes.error.code);
-      throw new Error('Owner profile not found');
+    } else {
+      var owner=ownerRes.data;
     }
-    const owner=ownerRes.data;
     const dogsRes=await sb.from('dogs').select('*').eq('owner_id',userId);
     if(dogsRes.error)console.error('[Booking] Dog lookup failed:',dogsRes.error.message);
     const dogs=dogsRes.data||[];
