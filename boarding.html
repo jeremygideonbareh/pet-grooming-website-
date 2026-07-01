@@ -591,7 +591,10 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     var pickupAddr=pickupReq?document.getElementById('bookPickupAddress').value.trim():'';
     if(pickupAddr&&pickupAddr.length>500){alert('Pickup address is too long (max 500 characters).');return}
     var bookRes=await sb.from('bookings').insert({owner_id:userId,dog_id:dogId,service_category:'Boarding',service_specific:'',start_date:sd,end_date:ed,pickup_required:pickupReq,pickup_address:pickupAddr,vaccination_card_data:vacData,vaccination_card_name:vacName,vaccination_card_type:vacType}).select();
-    if(bookRes.error)throw bookRes.error;
+    if(bookRes.error){
+      console.error("[Booking] Insert Error Details:",JSON.stringify(bookRes.error));
+      throw bookRes.error;
+    }
     var parts=['Hi A-1 Enterprises! I would like to book a boarding stay.','','━━ CUSTOMER DETAILS ━━','Name: '+(n||owner.full_name||''),'Phone: '+(p||owner.phone||''),'WhatsApp: '+(w||owner.whatsapp_number||''),'Email: '+(e2||owner.email||''),'Location: '+(loc||owner.location||''),'','━━ DOG DETAILS ━━','Dog: '+(d||(dog?dog.name+'/'+dog.breed:'')),'Age: '+(da||(dog?dog.age:'')),'Gender: '+(dg||(dog?dog.gender:'')),'Sickness: '+(sk||(dog?dog.sickness:'None')),'Vaccinated: '+(vac||(dog?dog.vaccination:'')),'Deworming: '+(dew||(dog?dog.deworming_3_months:'')),'Allergies: '+(al||(dog?dog.allergy:'None')),'Temperament: '+(tem||(dog?dog.temperament:'')),'Behavioural: '+(bh||(dog?dog.behavioral_issues:'None')),'','━━ BOOKING DETAILS ━━','From: '+sd,'To: '+ed,'Notes: '+(msg||'None')];
     if(vacName)parts.push('Vaccination Card: Attached (sent via email)');
     if(pickupReq){parts.push('','━━ PICK-UP & DROP ━━','Required: Yes','Address: '+(pickupAddr||'Not provided'));}

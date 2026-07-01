@@ -610,6 +610,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
         var owner = recovered;
       } else {
         console.error('[Booking] Owner lookup failed — message:',ownerRes.error.message,'| details:',ownerRes.error.details,'| hint:',ownerRes.error.hint,'| code:',ownerRes.error.code);
+        console.error('[Booking] Owner lookup full error:',JSON.stringify(ownerRes.error));
         throw new Error('Owner profile not found');
       }
     } else {
@@ -625,7 +626,8 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     var bookingRes=await sb.from('bookings').insert(bookingPayload).select();
     if(bookingRes.error){
       console.error("Booking Insert Failed:",bookingRes.error);
-      alert('Something went wrong. Please try again.');
+      console.error("Booking Insert Error Details:",JSON.stringify(bookingRes.error));
+      alert('Booking failed: '+(bookingRes.error.message||'Unknown error')+'. Please check console and contact support.');
       if(btn){btn.textContent=origText;btn.disabled=false}
       return;
     }
