@@ -268,24 +268,22 @@ ul{list-style:none}
 @media(min-width:1025px){
   .serv-card{min-height:280px}
   .serv-card:nth-child(1){grid-column:span 2;grid-row:span 2;min-height:480px}
-  .serv-card:nth-child(6){grid-column:span 3;min-height:220px}
-  .serv-card:nth-child(6) .serv-body h3{font-size:1rem}
-  .serv-card:nth-child(6) .serv-body .serv-icon{font-size:.6rem}
+  .serv-card:nth-child(6){min-height:280px}
 }
 @media(max-width:1024px){
   .serv-grid{grid-template-columns:repeat(2,1fr)}
   .serv-card:nth-child(1){grid-column:span 2;min-height:340px}
-  .serv-card:nth-child(6){grid-column:span 2}
 }
 @media(max-width:640px){
-  .serv-grid{grid-template-columns:1fr;gap:10px}
+  .serv-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .serv-card:nth-child(1){grid-column:span 2;min-height:240px}
   .services-header{margin-bottom:32px}
-  .serv-card{min-height:200px}
+  .serv-card{min-height:180px}
   .serv-card .serv-body{padding:14px 16px}
-  .serv-card .serv-body h3{font-size:1rem}
-  .serv-card .serv-body .serv-icon{font-size:.6rem;padding:3px 10px;margin-bottom:6px}
-  .serv-card .serv-body .serv-desc{font-size:.75rem}
-  .serv-card .serv-arrow{margin-top:6px;font-size:.65rem}
+  .serv-card .serv-body h3{font-size:.9rem}
+  .serv-card .serv-body .serv-icon{font-size:.55rem;padding:3px 10px;margin-bottom:6px}
+  .serv-card .serv-body .serv-desc{font-size:.7rem}
+  .serv-card .serv-arrow{margin-top:6px;font-size:.6rem}
 }
 
 /* â”€â”€ A-1 DIFFERENCE â”€â”€ */
