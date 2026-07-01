@@ -253,7 +253,6 @@ ul{list-style:none}
   font-family:Playfair Display,Georgia,serif;
   font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:3px;line-height:1.2;
 }
-@media(max-width:640px){.serv-grid{grid-template-columns:1fr}}
 .serv-card .serv-body .serv-desc{
   font-size:.78rem;line-height:1.5;color:rgba(255,255,255,.7);
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
@@ -279,9 +278,14 @@ ul{list-style:none}
   .serv-card:nth-child(6){grid-column:span 2}
 }
 @media(max-width:640px){
-  .serv-card{min-height:220px}
-  .serv-card .serv-body{padding:16px}
+  .serv-grid{grid-template-columns:1fr;gap:10px}
+  .services-header{margin-bottom:32px}
+  .serv-card{min-height:200px}
+  .serv-card .serv-body{padding:14px 16px}
   .serv-card .serv-body h3{font-size:1rem}
+  .serv-card .serv-body .serv-icon{font-size:.6rem;padding:3px 10px;margin-bottom:6px}
+  .serv-card .serv-body .serv-desc{font-size:.75rem}
+  .serv-card .serv-arrow{margin-top:6px;font-size:.65rem}
 }
 
 /* â”€â”€ A-1 DIFFERENCE â”€â”€ */

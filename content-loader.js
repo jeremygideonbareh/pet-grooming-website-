@@ -86,7 +86,6 @@
     if (d.hero) {
       text('.hero-content h1', d.hero.headline);
       text('.hero-badge', d.hero.badge);
-      text('.hero-btns .btn-primary', d.hero.btnText);
       var heroVideo = document.querySelector('.hero-bg');
       if (heroVideo) {
         if (d.hero.bgImage) heroVideo.poster = d.hero.bgImage;
