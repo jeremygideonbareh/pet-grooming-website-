@@ -130,7 +130,7 @@
       var result = await _supabase.auth.getSession();
       var session = result.data && result.data.session ? result.data.session : null;
       if (session) {
-        var expiresAt = new Date(session.expires_at).getTime();
+        var expiresAt = new Date(session.expires_at * 1000).getTime();
         if (Date.now() > expiresAt) {
           console.warn('[Auth] Session expired');
           await _supabase.auth.signOut();
