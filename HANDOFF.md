@@ -2259,3 +2259,46 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - Added re-check observer for any late-added `.reveal` elements
 
 **Files changed:** `index.html`, `content-loader.js`, `HANDOFF.md`
+
+### Session 18 — Services Section Rebuild (Bento Grid + Direct Page Links)
+
+**Date:** July 1, 2026
+
+**Changes:**
+
+**1. index.html — Services section rebuilt:**
+- Replaced horizontal-scroll flex layout with CSS Grid asymmetric bento
+- Desktop (>1024px): Dog Training spans 2×2 (hero card), remaining 4 in 3-col row, Working Dog full-width
+- Tablet (768-1024px): 2-column grid
+- Mobile (<768px): Single column stack
+- Each card is an `<a>` tag linking directly to its respective service page
+- Cards have: background image, gradient overlay, icon badge, title, description (2-line clamp), animated hover arrow
+- Removed all service modal HTML (`.serv-modal-overlay`, `.serv-modal`, etc.)
+- Removed `SERV_DATA` + modal click handler dead code (~75 lines of JS)
+- Cleaned up responsive breakpoints (removed dead `.serv-modal` and `#smSubs` refs)
+
+**2. content-loader.js — `applyHome()` card renderer updated:**
+- Creates `<a>` elements instead of `<div>` cards
+- Sets `card.href = item.link` for native navigation
+- Adds description paragraph (`.serv-desc`) and arrow indicator (`.serv-arrow`)
+- Truncates descriptions to 110 chars max
+
+**Layout:**
+```
+Desktop (3-col bento):          Tablet (2-col):       Mobile (<640px):
+┌─────────┬──────┐             ┌──────────┬──────┐    ┌──────────┐
+│ Dog     │ Pet  │             │ Dog (2c) │ Pet  │    │ Dog      │
+│ Training│ Store│             ├──────────┼──────┤    ├──────────┤
+│ (2×2)   │      │             │ Grooming │Board │    │ Grooming │
+├────┬────┼──────┤             ├──────────┼──────┤    ├──────────┤
+│Grm │Brd │ Eco  │             │ Eco      │Work  │    │ Boarding │
+├────┴────┴──────┤             └──────────┴──────┘    ├──────────┤
+│  Working Dog   │                                     │ Pet Store│
+└────────────────┘                                     ├──────────┤
+                                                        │ Eco      │
+                                                        ├──────────┤
+                                                        │ Working  │
+                                                        └──────────┘
+```
+
+**Files changed:** `index.html`, `content-loader.js`, `HANDOFF.md`
