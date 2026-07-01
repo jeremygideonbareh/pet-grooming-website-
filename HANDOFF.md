@@ -2302,3 +2302,35 @@ Desktop (3-col bento):          Tablet (2-col):       Mobile (<640px):
 ```
 
 **Files changed:** `index.html`, `content-loader.js`, `HANDOFF.md`
+---
+
+## Session 19 â€” Critical Bug Fixes
+
+**Goal:** Fix the booking flow for admin users (missing owners record), repair broken dog health data updates, and harden security.
+
+### Critical Fixes
+
+**C1 â€” Session expiry check (`auth.js:133`):** Changed from `session.created_at` to `session.expires_at` â€” previously force-logged out 24h after login, even for active users.
+
+**C2 â€” Dog health data never updated (`db.js:321`):** `findOrUpdateDog()` had key mismatch (DB columns `age`,`gender`,`deworming_3_months` vs caller keys `dog_age`,`dog_gender`,`deworming`). Added `KEY_MAP` to normalize.
+
+**C3 â€” `localStorage.clear()` on recovery:** All 3 booking pages now use `localStorage.removeItem('a1_booking_auth')` instead of `.clear()`.
+
+**C4 â€” Input length validation:** Added max-length checks (notes 2000, location 500, pickup 500) on all 3 booking forms before DB insert.
+
+### Security
+
+**H2 â€” `requireAuth()` race condition:** Added `_authPending` mutex guard (`auth.js:321`).
+
+**H3 â€” XSS bypass via `javascript:` URLs:** Added regex to strip `javascript:`,`data:`,`vbscript:` from URL attributes in `html()` sanitizer (`content-loader.js:21`).
+
+**H4 â€” Duplicate `ADMIN_EMAILS`:** Removed second declaration (`auth.js:377`).
+
+### Other
+
+- **M7**: Removed redundant `localStorage.removeItem()` from `handleLogout()` (already in `signOut()`)
+- **L7**: Fixed `&amp group` â†’ `&amp; group` in boarding.html
+- **L10**: Added booking debounce flags to all 3 forms to prevent rapid-click duplicates
+- **boarding.html**: Added `handleMissingOwner()` + PGRST116 recovery in both `openBookModal()` pre-fill and submit handler
+
+**Files changed:** `auth.js`, `boarding.html`, `grooming.html`, `training.html`, `db.js`, `content-loader.js`, `HANDOFF.md`
