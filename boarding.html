@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Boarding & Kennels — A-1 Enterprises | Shillong</title>
+  <title>Boarding & Kennels ï¿½ A-1 Enterprises | Shillong</title>
   <meta name="description" content="Safe, comfortable pet boarding and kennel facilities by A-1 Enterprises in Shillong, Meghalaya. 24/7 supervision, care, and professional attention.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -335,7 +335,7 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
 <footer>
   <div class="container">
     <div class="footer-inner">
-      <span>© 2026 A-1 Enterprises. Passion Turned Profession.</span>
+      <span>ï¿½ 2026 A-1 Enterprises. Passion Turned Profession.</span>
       <div class="links">
         <a href="index.html">Home</a>
         <a href="training.html">Training</a>
@@ -391,10 +391,10 @@ window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'
     <p class="sub">Your profile is on file. Just select your dates and any special notes.</p>
     <div id="profileSummary" class="boarding-summary" style="display:none">
       <h4>Your Profile</h4>
-      <div class="row"><span>Owner</span><strong id="summaryName">—</strong></div>
-      <div class="row"><span>Phone</span><strong id="summaryPhone">—</strong></div>
-      <div class="row"><span>Dog</span><strong id="summaryDog">—</strong></div>
-      <div class="row"><span>Breed</span><strong id="summaryBreed">—</strong></div>
+      <div class="row"><span>Owner</span><strong id="summaryName">ï¿½</strong></div>
+      <div class="row"><span>Phone</span><strong id="summaryPhone">ï¿½</strong></div>
+      <div class="row"><span>Dog</span><strong id="summaryDog">ï¿½</strong></div>
+      <div class="row"><span>Breed</span><strong id="summaryBreed">ï¿½</strong></div>
     </div>
     <form id="bookingForm">
       <input type="hidden" id="bookName">
@@ -497,10 +497,10 @@ function openBookModal(){
       const ps=document.getElementById('profileSummary');
       if(ps){
         ps.style.display='block';
-        document.getElementById('summaryName').textContent=owner.full_name||'—';
-        document.getElementById('summaryPhone').textContent=owner.phone||'—';
-        document.getElementById('summaryDog').textContent=dog?dog.name||'—':'—';
-        document.getElementById('summaryBreed').textContent=dog?dog.breed||'—':'—';
+        document.getElementById('summaryName').textContent=owner.full_name||'ï¿½';
+        document.getElementById('summaryPhone').textContent=owner.phone||'ï¿½';
+        document.getElementById('summaryDog').textContent=dog?dog.name||'ï¿½':'ï¿½';
+        document.getElementById('summaryBreed').textContent=dog?dog.breed||'ï¿½':'ï¿½';
       }
     }catch(err){
       console.error('[Auth] Profile load error:',err);
@@ -595,7 +595,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     }
     const dogId=dog?(dog.dog_id||dog.id):null;
     if(dogId&&(da||dg||sk||vac||dew||al||tem||bh)){
-      await DB.findOrUpdateDog(userId,d,{dog_age:da,dog_gender:dg,sickness:sk,vaccination:vac,deworming:dew,allergy:al,temperament:tem,behavioral_issues:bh});
+      await DB.findOrUpdateDog(userId,dog.name,{dog_age:da,dog_gender:dg,sickness:sk,vaccination:vac,deworming:dew,allergy:al,temperament:tem,behavioral_issues:bh});
     }
     var pickupReq=document.getElementById('bookPickupRequired').checked;
     var pickupAddr=pickupReq?document.getElementById('bookPickupAddress').value.trim():'';
@@ -614,6 +614,10 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     }
     closeBook();
     setTimeout(function(){alert('Thank you for your boarding request. Our team has been notified and will contact you to confirm availability. Think Pet ?? Think A-1')},500);
+  }catch(err){
+    console.error('[Booking] Failed:',err);
+    alert('Something went wrong. Please try again.');
+    if(btn){btn.textContent=origText;btn.disabled=false}
   }finally{
     _bookingSubmitting = false;
     if(btn){btn.textContent=origText;btn.disabled=false}

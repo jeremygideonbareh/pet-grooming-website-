@@ -647,6 +647,9 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     }
 
     document.getElementById('bookingSuccess').style.display='block';
+    if(btn){btn.textContent=origText;btn.disabled=false}
+  }catch(err){
+    console.error('[Booking] Failed:',err);
     alert('Something went wrong. Please try again.');
     if(btn){btn.textContent=origText;btn.disabled=false}
   }finally{

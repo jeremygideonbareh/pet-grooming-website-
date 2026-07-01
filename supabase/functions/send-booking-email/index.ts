@@ -28,11 +28,12 @@ Deno.serve(async (req) => {
       });
     }
 
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+
     // Look up owner details
     var ownerName = "\u2014", ownerPhone = "\u2014", ownerWhatsApp = "\u2014", ownerEmail = "\u2014", ownerLocation = "\u2014";
     try {
-      const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
-      const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
       if (supabaseUrl && supabaseKey && record.owner_id) {
         const ownerRes = await fetch(supabaseUrl + "/rest/v1/owners?id=eq." + record.owner_id + "&select=full_name,phone,whatsapp_number,email,location", {
           headers: { "apikey": supabaseKey, "Authorization": "Bearer " + supabaseKey },
@@ -55,7 +56,7 @@ Deno.serve(async (req) => {
     var dogName = "\u2014", dogBreed = "\u2014", dogAge = "\u2014", dogGender = "\u2014", dogSickness = "\u2014", dogVaccination = "\u2014", dogDeworming = "\u2014", dogAllergy = "\u2014", dogTemperament = "\u2014", dogBehavioral = "\u2014";
     try {
       if (supabaseUrl && supabaseKey && record.dog_id) {
-        const dogRes = await fetch(supabaseUrl + "/rest/v1/dogs?dog_id=eq." + record.dog_id + "&select=name,breed,age,gender,sickness,vaccination,deworming_3_months,allergy,temperament,behavioral_issues", {
+        const dogRes = await fetch(supabaseUrl + "/rest/v1/dogs?id=eq." + record.dog_id + "&select=name,breed,age,gender,sickness,vaccination,deworming_3_months,allergy,temperament,behavioral_issues", {
           headers: { "apikey": supabaseKey, "Authorization": "Bearer " + supabaseKey },
         });
         if (dogRes.ok) {
@@ -75,7 +76,7 @@ Deno.serve(async (req) => {
           }
         }
       }
-    } catch (_) { /* dog lookup failed non-fatally */ }
+    } catch (e) { console.error("[send-booking-email] Dog lookup failed:", e); }
 
     var dateStr = record.start_date || "";
     if (record.time_slot) dateStr += " (" + record.time_slot + ")";
@@ -217,6 +218,9 @@ Deno.serve(async (req) => {
 });
 
 function escapeHtml(text) {
+  if (text === undefined || text === null) return "";
+  if (typeof text === "boolean") return text ? "Yes" : "No";
+  if (typeof text !== "string") text = String(text);
   if (!text) return "";
   return text
     .replace(/&/g, "&amp;")
