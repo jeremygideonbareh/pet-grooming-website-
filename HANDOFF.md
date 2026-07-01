@@ -2219,3 +2219,43 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 5. URL auto-fills; thumbnail preview appears below
 
 **Files changed:** `index.html`, `admin.html`, `HANDOFF.md`
+
+### Session 17 — Mobile Debug: Hamburger, Service Grid, Cards, Gallery Lightbox
+
+**Date:** July 1, 2026
+
+**Bugs found and fixed:**
+
+**1. Hamburger menu dead on index.html (CRITICAL):**
+- The hamburger HTML elements (`#hamburger`, `#mobileNav`) existed but no JavaScript wired them together
+- All 5 other pages had the toggle handler; index.html was missing it entirely
+- Added hamburger click handler + close-on-link-click logic
+
+**2. Stray `</div>` breaking DOM (index.html):**
+- Orphaned `</div>` closing tag at line 611 inside `<nav>` with no matching opener
+- Corrupted the DOM tree affecting layout and event handling
+- Removed the stray tag
+
+**3. Service grid collapse on mobile:**
+- `.serv-grid` was `display:flex;flex-wrap:nowrap` (horizontal scroll) at all sizes
+- 900px breakpoint tried `grid-template-columns:1fr` but had no effect on flex container
+- `max-width:420px` constrained container width while cards had `min-width:220px` each
+- Only first card ("Dog Training") was visible on phones; rest scrolled off-screen
+- Fix: Added `display:grid` at 900px breakpoint, removed `min-width:220px` on mobile
+
+**4. Missing scroll shadow (index.html):**
+- Nav-island and floating-logo never got `.scrolled` class because scroll handler was missing
+- All other pages had this; index.html didn't
+
+**5. Gallery lightbox broken with admin data (content-loader.js):**
+- `galImg()` replaced `#galleryGrid` via `innerHTML = ''` destroying old items
+- New gallery items had no lightbox click handlers
+- Fix: Added `item.addEventListener('click')` inside `galImg()` that opens the lightbox
+
+**6. Service cards invisible when admin data loads (content-loader.js):**
+- Dynamically created service cards had `class="serv-card reveal"` (opacity: 0)
+- IntersectionObserver fix was unreliable — cards stayed invisible
+- Fix: Removed `reveal` class from service cards created by `applyHome()`
+- Added re-check observer for any late-added `.reveal` elements
+
+**Files changed:** `index.html`, `content-loader.js`, `HANDOFF.md`
