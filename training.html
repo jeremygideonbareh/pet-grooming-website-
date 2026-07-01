@@ -641,7 +641,7 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
 
     try {
       await sb.functions.invoke('send-booking-email', {
-        body: { record: { owner_id:userId, dog_id:dog?(dog.dog_id||dog.id):null, service_category:'Training', service_specific:program, contact_method:contactMethod, status:'pending' } }
+        body: { record: { owner_id:userId, dog_id:dog?(dog.dog_id||dog.id):null, service_category:'Training', service_specific:program, contact_method:contactMethod, notes:notes, status:'pending' } }
       });
     } catch(e) {
       console.error('[Booking] Email notification failed:', e);
