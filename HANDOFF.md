@@ -2387,3 +2387,19 @@ Desktop (3-col bento):          Tablet (2-col):       Mobile (<640px):
 - `grooming.html` — conflict check before insert, friendly duplicate error message
 - `admin.html` — edit button column, booking edit modal with date/slot/notes editing, conflict warning
 - `HANDOFF.md` — Session 20 summary
+
+### Session 21 — Fix RLS-Blocked Slot Availability Check
+
+**Date:** July 7, 2026
+
+**Bug:** `checkSlotAvailability()` in `db.js` used the user's authenticated Supabase client. RLS on `bookings` only shows own bookings (`auth.uid() = owner_id`), so it couldn't see other users' bookings → always returned `available: true` → INSERT hit unique index `idx_bookings_slot_unique` → confusing "was just booked by someone else" error even when slot was free.
+
+**Fix:**
+1. Created `supabase/functions/check-booking-availability/index.ts` — Supabase Edge Function that queries bookings with `service_role` key (bypasses RLS), seeing ALL bookings regardless of owner
+2. Deployed to Supabase via `supabase functions deploy`
+3. Rewrote `DB.checkSlotAvailability()` in `db.js` to call the edge function via `supabase.functions.invoke()` instead of client-side query
+
+**Files changed:**
+- `supabase/functions/check-booking-availability/index.ts` — NEW edge function
+- `db.js` — rewrote `checkSlotAvailability()` to use edge function
+- `HANDOFF.md` — Session 21 summary
