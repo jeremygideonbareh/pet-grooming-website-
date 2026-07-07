@@ -515,22 +515,15 @@
    */
   async function checkSlotAvailability(category, date, timeSlot, excludeBookingId) {
     try {
-      var query = supabase
-        .from('bookings')
-        .select('id, status')
-        .eq('service_category', category)
-        .eq('start_date', date)
-        .eq('time_slot', timeSlot)
-        .in('status', ['pending', 'confirmed']);
-      if (excludeBookingId) {
-        query = query.neq('id', excludeBookingId);
+      var result = await supabase.functions.invoke('check-booking-availability', {
+        body: { service_category: category, start_date: date, time_slot: timeSlot, exclude_booking_id: excludeBookingId || undefined }
+      });
+      if (result.error) {
+        console.error('[DB] checkSlotAvailability edge function error:', result.error);
+        if(typeof Sentry!=='undefined')Sentry.captureException(result.error);
+        return { available: false, error: typeof result.error === 'string' ? result.error : result.error.message || 'Edge function error' };
       }
-      var result = await query.maybeSingle();
-      if (result.error && result.error.code !== 'PGRST116') throw result.error;
-      return {
-        available: !result.data,
-        existingBooking: result.data || null
-      };
+      return result.data;
     } catch (e) {
       console.error('[DB] checkSlotAvailability error:', e);
       if(typeof Sentry!=='undefined')Sentry.captureException(e);
