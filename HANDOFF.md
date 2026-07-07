@@ -1213,7 +1213,15 @@ This prevents `.git/` (exposes your entire git history!), markdown files, and Wr
 In Pages dashboard → your project → **Custom domains** → **Set up a custom domain** → enter your domain.
 
 ### Worker vs Pages
-The project previously used a Cloudflare Worker deployment at `aenterprisewebsite.cloudlyconfusing.workers.dev`. This was replaced by Cloudflare Pages for simpler static hosting. The Worker can be deleted from the Cloudflare dashboard to avoid confusion.
+The project previously used a Cloudflare Worker deployment at `aenterprisewebsite.cloudlyconfusing.workers.dev` (which had a 25 MiB asset limit). This was replaced by **Cloudflare Pages** (`a1-enterprises.pages.dev`) for proper static hosting. The old Worker has been deleted.
+
+### Credentials
+- **Cloudflare API Token**: stored locally at `~/.config/opencode/secrets/cloudflare.txt` (NOT in git)
+- **Cloudflare Account ID**: `6450bfe26bbac5dbfa679d5af793705d`
+- **Supabase project ref**: `hqgdifxecxrxhjsbavkl`
+- **Supabase anon key**: in `auth.js` (publishable, client-side safe with RLS)
+- **Resend API key**: stored as Supabase Edge Function secret `RESEND_API_KEY`
+- **Notification email**: `cloudlyconfusing@gmail.com` (stored as `NOTIFICATION_EMAIL` secret)
 
 ---
 
