@@ -2403,3 +2403,19 @@ Desktop (3-col bento):          Tablet (2-col):       Mobile (<640px):
 - `supabase/functions/check-booking-availability/index.ts` — NEW edge function
 - `db.js` — rewrote `checkSlotAvailability()` to use edge function
 - `HANDOFF.md` — Session 21 summary
+
+### Session 22 — A1 Enterprise Mobile Optimization
+
+**Date:** July 7, 2026
+
+**Changes:**
+
+1. **Hero background image** — Added `@media(max-width:768px)` override loading `w=640` instead of `w=1920`, saving ~500KB on mobile
+2. **`.container` padding** — Added `padding:0 16px` at 480px and `0 14px` at 360px (was always 24px)
+3. **Backdrop-filter** — Disabled on `.feature-card` and `.features-list li` at <768px for smoother scrolling on mid-range phones
+4. **Hero padding jump** — Fixed 80px→100px increase at 768px, now stays at 80px
+5. **Footer** — Stacked vertically with centered text at <480px, links justified center with reduced gap
+
+**Files changed:**
+- `eco-cottages.html` — all mobile CSS fixes
+- `HANDOFF.md` — Session 22 summary
