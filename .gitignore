@@ -10,5 +10,6 @@ Thumbs.db
 # Junk files
 .github/workflows/
 .wrangler/
+.opencode/
 a1-promo-video/
 clients photos/
