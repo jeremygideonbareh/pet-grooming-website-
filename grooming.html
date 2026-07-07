@@ -2,6 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script src="https://browser.sentry-cdn.com/7.120.3/bundle.tracing.min.js" integrity="sha384-xeXUc9z8cJbRsjOleYBHEV9rZIBCcyXc8fd62MHA/aosms+xLqnFIIQPTmGNCUm3" crossorigin="anonymous"></script>
+  <script>
+  Sentry.init({
+    dsn:'https://a52c0999f33bfcce09fad26459d4839e@o4511678068686848.ingest.de.sentry.io/4511678075633744',
+    environment:'production',
+    tracesSampleRate:0.1,
+    denyUrls:[/cdn\.jsdelivr\.net/,/cdnjs\.cloudflare\.com/],
+    beforeSend:function(event){
+      if(event.user)delete event.user.email;
+      if(event.request&&event.request.data){
+        delete event.request.data.password;
+        delete event.request.data.password_confirm;
+        delete event.request.data.phone;
+        delete event.request.data.full_name;
+        delete event.request.data.location;
+        delete event.request.data.dog_name;
+        delete event.request.data.whatsapp_number;
+      }
+      if(event.request&&event.request.headers){
+        if(event.request.headers.Authorization)event.request.headers.Authorization='[REDACTED]';
+      }
+      if(event.breadcrumbs){
+        event.breadcrumbs.forEach(function(b){
+          if(b.data){
+            delete b.data.password;
+            delete b.data.phone;
+            delete b.data.full_name;
+            delete b.data.location;
+            delete b.data.dog_name;
+            delete b.data.whatsapp_number;
+          }
+        });
+      }
+      return event;
+    }
+  })
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>A-1Pet Shop And Grooming � Shillong</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
@@ -911,6 +948,7 @@ async function handleMissingOwner(userId, session) {
     return ownerRes.data && ownerRes.data[0] ? ownerRes.data[0] : null;
   } catch(e) {
     console.error('[Booking] Owner recovery threw:', e.message);
+    if(typeof Sentry!=='undefined')Sentry.captureException(e);
     alert('Session error. Please sign in again.');
     window.location.replace(window.location.pathname);
     return null;
@@ -973,13 +1011,28 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     var pickupReq=document.getElementById('bookPickupRequired').checked;
     var pickupAddr=pickupReq?document.getElementById('bookPickupAddress').value.trim():'';
     if(pickupAddr&&pickupAddr.length>500){alert('Pickup address is too long (max 500 characters).');return}
+    if(typeof Sentry!=='undefined'){Sentry.addBreadcrumb({message:'Grooming booking submitted',category:'booking',level:'info'})}
+    if(date&&timeWindow&&typeof DB!=='undefined'&&DB.checkSlotAvailability){
+      var avail=await DB.checkSlotAvailability('Grooming',date,timeWindow);
+      if(avail.error){
+        console.warn('[Booking] Slot check failed, proceeding:',avail.error);
+      }else if(!avail.available){
+        alert('This time slot ('+timeWindow+' on '+date+') is already booked. Please choose another date or time.');
+        if(btn){btn.textContent=origText;btn.disabled=false}_groomSubmitting=false;return;
+      }
+    }
     var bookingPayload={owner_id:userId,dog_id:dog?(dog.dog_id||dog.id):null,service_category:'Grooming',service_specific:svc,start_date:date,time_slot:timeWindow,status:'pending',pickup_required:pickupReq,pickup_address:pickupAddr};
     console.log("Booking Payload:",bookingPayload);
     var bookingRes=await sb.from('bookings').insert(bookingPayload).select();
     if(bookingRes.error){
       console.error("Booking Insert Failed:",bookingRes.error);
       console.error("Booking Insert Error Details:",JSON.stringify(bookingRes.error));
-      alert('Booking failed: '+(bookingRes.error.message||'Unknown error')+'. Please check console and contact support.');
+      var msg=bookingRes.error.message||'Unknown error';
+      if(bookingRes.error.code==='23505'||msg.indexOf('duplicate key')!==-1||msg.indexOf('already exists')!==-1){
+        alert('This time slot ('+timeWindow+' on '+date+') was just booked by someone else. Please choose another date or time.');
+      }else{
+        alert('Booking failed: '+msg+'. Please check console and contact support.');
+      }
       if(btn){btn.textContent=origText;btn.disabled=false}
       return;
     }
@@ -991,11 +1044,13 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
       });
     } catch(e) {
       console.error('[Booking] Email notification failed:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
     }
 
     document.getElementById('bookingSuccess').style.display='block';
   }catch(err){
     console.error('[Booking] Failed:',err);
+    if(typeof Sentry!=='undefined')Sentry.captureException(err);
     alert('Something went wrong. Please try again.');
     if(btn){btn.textContent=origText;btn.disabled=false}
   }finally{

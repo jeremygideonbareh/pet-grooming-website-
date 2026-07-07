@@ -2,6 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script src="https://browser.sentry-cdn.com/7.120.3/bundle.tracing.min.js" integrity="sha384-xeXUc9z8cJbRsjOleYBHEV9rZIBCcyXc8fd62MHA/aosms+xLqnFIIQPTmGNCUm3" crossorigin="anonymous"></script>
+  <script>
+  Sentry.init({
+    dsn:'https://a52c0999f33bfcce09fad26459d4839e@o4511678068686848.ingest.de.sentry.io/4511678075633744',
+    environment:'production',
+    tracesSampleRate:0.1,
+    denyUrls:[/cdn\.jsdelivr\.net/,/cdnjs\.cloudflare\.com/],
+    beforeSend:function(event){
+      if(event.user)delete event.user.email;
+      if(event.request&&event.request.data){
+        delete event.request.data.password;
+        delete event.request.data.password_confirm;
+        delete event.request.data.phone;
+        delete event.request.data.full_name;
+        delete event.request.data.location;
+        delete event.request.data.dog_name;
+        delete event.request.data.whatsapp_number;
+      }
+      if(event.request&&event.request.headers){
+        if(event.request.headers.Authorization)event.request.headers.Authorization='[REDACTED]';
+      }
+      if(event.breadcrumbs){
+        event.breadcrumbs.forEach(function(b){
+          if(b.data){
+            delete b.data.password;
+            delete b.data.phone;
+            delete b.data.full_name;
+            delete b.data.location;
+            delete b.data.dog_name;
+            delete b.data.whatsapp_number;
+          }
+        });
+      }
+      return event;
+    }
+  })
+  (function(){var p=new URLSearchParams(location.search);if(p.has('sentry-test')){var tag=p.get('sentry-test')||'admin';Sentry.captureException(new Error('Sentry test error from '+tag+' - ignore'));Sentry.captureMessage('Sentry test message from '+tag+' - ignore','info');console.log('[Sentry Test] Sent error+message from',tag);}})()
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel — A1-Enterprises</title>
   <meta name="robots" content="noindex,nofollow">
@@ -462,6 +500,62 @@ input,textarea,select,button{font-family:inherit}
   </div>
 </div>
 
+<!-- ── BOOKING EDIT MODAL ── -->
+<div class="modal-overlay" id="bookingEditModal" style="display:none">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:800;color:var(--forest)">Edit Booking</h2>
+      <button class="close-btn" id="bookingEditClose">&times;</button>
+    </div>
+    <form id="bookingEditForm" autocomplete="off" style="padding:20px 0 0">
+      <input type="hidden" id="editBookingId" value="">
+      <div class="form-group">
+        <label>Service Category</label>
+        <input type="text" id="editBookingCategory" readonly style="background:var(--vanilla-dark);color:var(--forest-muted);cursor:not-allowed">
+      </div>
+      <div class="form-group">
+        <label for="editBookingService">Service Specific</label>
+        <input type="text" id="editBookingService" maxlength="100">
+      </div>
+      <div class="form-group">
+        <label for="editBookingDate">Start Date</label>
+        <input type="date" id="editBookingDate">
+      </div>
+      <div class="form-group">
+        <label for="editBookingSlot">Time Slot</label>
+        <select id="editBookingSlot">
+          <option value="">— Not applicable —</option>
+          <option value="Morning">Morning (9 AM – 12 PM)</option>
+          <option value="Afternoon">Afternoon (12 PM – 5 PM)</option>
+          <option value="Evening">Evening (5 PM – 8 PM)</option>
+        </select>
+      </div>
+      <div class="form-group" id="editEndDateGroup" style="display:none">
+        <label for="editBookingEndDate">End Date</label>
+        <input type="date" id="editBookingEndDate">
+      </div>
+      <div class="form-group">
+        <label for="editBookingStatus">Status</label>
+        <select id="editBookingStatus">
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="editBookingNotes">Admin Notes</label>
+        <textarea id="editBookingNotes" rows="3" maxlength="1000" placeholder="Internal notes about this booking..."></textarea>
+      </div>
+      <div id="bookingEditConflict" style="display:none;padding:10px 14px;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;margin-bottom:12px;font-size:.82rem;color:#856404"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="bookingEditCancel">Cancel</button>
+        <button type="submit" class="btn-save" id="bookingEditSave">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- ── ADD/EDIT MODAL ── -->
 <div class="modal-overlay" id="formModal">
   <div class="modal">
@@ -534,22 +628,24 @@ input,textarea,select,button{font-family:inherit}
 // ADMIN ACCESS CHECK
 // ═══════════════════════════════════════════════
 async function checkAdminAccess(){
-  document.getElementById('adminLoading').style.display='block';
+  var loadingEl=document.getElementById('adminLoading');
+  if(loadingEl)loadingEl.style.display='block';
   try {
     var admin = await Auth.isAdmin();
     if(admin){
-      document.getElementById('adminLoading').style.display='none';
+      if(loadingEl)loadingEl.style.display='none';
       document.getElementById('accessDenied').style.display='none';
       document.getElementById('dashboard').style.display='block';
       document.getElementById('sessionInfo').textContent='Session active';
       await renderDashboard();
     }else{
-      document.getElementById('adminLoading').style.display='none';
+      if(loadingEl)loadingEl.style.display='none';
       document.getElementById('accessDenied').style.display='flex';
       document.getElementById('dashboard').style.display='none';
     }
   } catch(e) {
-    document.getElementById('adminLoading').style.display='none';
+    if(typeof Sentry!=='undefined')Sentry.captureException(e);
+    if(loadingEl)loadingEl.style.display='none';
     document.getElementById('accessDenied').style.display='flex';
     document.getElementById('dashboard').style.display='none';
   }
@@ -726,10 +822,15 @@ async function openEdit(id){
   document.getElementById('prodPrice').value=p.price;
   document.getElementById('prodCat').value=p.cat;
   document.getElementById('prodDesc').value=p.desc||'';
+  var preview=document.getElementById('imgPreview');
   if(p.img){
-    document.getElementById('imgPreview').innerHTML=`<img src="${p.img}" alt="Preview">`;
+    preview.innerHTML='';
+    var img=document.createElement('img');
+    img.src=p.img;
+    img.alt='Preview';
+    preview.appendChild(img);
   }else{
-    document.getElementById('imgPreview').innerHTML='<span style="font-size:.6rem;padding:4px">No image</span>';
+    preview.innerHTML='<span style="font-size:.6rem;padding:4px">No image</span>';
   }
   document.getElementById('formModal').classList.add('open');
 }
@@ -751,13 +852,18 @@ document.getElementById('imgInput').addEventListener('change',async function(){
     uploadedImageData=url;
     preview.innerHTML=`<img src="${url}" alt="Preview">`;
   }catch(e){
-    preview.innerHTML='<span style="font-size:.6rem;padding:4px">' + (e.message || 'Upload failed') + '</span>';
+    preview.innerHTML='';
+    var span=document.createElement('span');
+    span.style.cssText='font-size:.6rem;padding:4px';
+    span.textContent=e.message||'Upload failed';
+    preview.appendChild(span);
   }
 });
 
 // ── Save product ──
 document.getElementById('productForm').addEventListener('submit',async function(e){
   e.preventDefault();
+  if(typeof Sentry!=='undefined'){Sentry.addBreadcrumb({message:'Product save started',category:'admin',level:'info'})}
   const products=await loadProducts();
   const name=document.getElementById('prodName').value.trim();
   const price=document.getElementById('prodPrice').value.trim();
@@ -816,6 +922,7 @@ function closeDeleteModal(){
 
 document.getElementById('deleteConfirm').addEventListener('click',async function(){
   if(!deleteProductId)return;
+  if(typeof Sentry!=='undefined'){Sentry.addBreadcrumb({message:'Product deleted: '+deleteProductId,category:'admin',level:'warning'})}
   let products=await loadProducts();
   products=products.filter(function(x){return x.id!==deleteProductId});
   await saveProducts(products);
@@ -848,6 +955,8 @@ document.getElementById('deleteModal').addEventListener('click',e=>{if(e.target=
 // CONTENT EDITOR
 // ═══════════════════════════════════════════════
 
+var _allBookings;
+
 const DEFAULT_CONTENT={
   hero:{headline:'A-1 Enterprises',badge:'Since 2020 · Shillong, Meghalaya',bgImage:'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1920&q=80',videoUrl:'',posterUrl:'',btnText:'Explore Services'},
   about:{label:'About A-1 Enterprises',heading:'Passion Turned Profession',para1:'A-1 Enterprises was founded from pure passion, dedication, and a lifelong connection with dogs. What began as a hobby during college days gradually transformed into a professional venture with a vision to elevate pet care and canine training standards in Meghalaya and across Northeast India.',para2:'From a small dream driven by love for dogs to becoming one of Meghalaya\'s growing canine service providers, A-1 Enterprises is committed to building a complete ecosystem for pets, training, grooming, boarding, rehabilitation, and future working dog development.',para3:'The founders personally experienced the challenges faced by pet parents, including housing limitations and the lack of professional canine facilities in the region. Instead of allowing those struggles to become obstacles, they became the motivation behind building something meaningful for the pet community.',para4:'Professionally established in 2020, A-1 Enterprises has steadily grown into a trusted name in dog training, grooming, rehabilitation, and pet services while continuously expanding its long-term vision of creating a complete pet ecosystem.',image:'images/welcome.jpeg',quoteText:'"We started as college students and passionate pet parents who were often thrown out of rental houses for having too many dogs. What began as an obsession and passion for dogs eventually turned into a profession, and later into a larger vision for the Northeast."',quoteCite:'— Founder, A-1 Enterprises',founderNote:'"A-1 Enterprises was built from passion, struggle, and dedication towards dogs. What started as a personal obsession gradually evolved into a profession, and today, into a larger vision of creating a complete ecosystem for pets and working dogs in the Northeast."',founderSub:'Founded by <strong style="color:var(--sunbeam)">Mrs. Francisca S. Sangma</strong>, with the unwavering support of her family whose shared vision and encouragement continue to play a vital role in the growth of A-1 Enterprises.',founderSign:'— Founder, A-1 Enterprises'},
@@ -864,20 +973,22 @@ const DEFAULT_CONTENT={
   footer:{copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.',tagline:'Building the future of pet and working dog services in Northeast India. Professional training, grooming, boarding, and pet care under one trusted brand.',fb:'https://www.facebook.com/SANGPRETI/',ig:'https://instagram.com/boxerfosterhome',yt:'https://youtu.be/Lgpqqi8ZEQI',gm:'https://g.co/kgs/knmDPK',email:'a1.enterprises8891@gmail.com',whatsapp:'https://wa.me/9233485873'}
 };
 
+function deepMerge(target,source){
+  Object.keys(source).forEach(function(k){
+    if(source[k]&&typeof source[k]==='object'&&!Array.isArray(source[k])&&target[k]&&typeof target[k]==='object'&&!Array.isArray(target[k])){
+      deepMerge(target[k],source[k]);
+    }else{
+      target[k]=source[k];
+    }
+  });
+  return target;
+}
+
 async function loadContent(){
   const data=await DB.getSiteContent();
   if(!data) return JSON.parse(JSON.stringify(DEFAULT_CONTENT));
-  // Deep merge: fill missing top-level keys from defaults
   var merged=JSON.parse(JSON.stringify(DEFAULT_CONTENT));
-  Object.keys(data).forEach(function(k){
-    if(data[k]&&typeof data[k]==='object'&&!Array.isArray(data[k])&&merged[k]){
-      Object.keys(data[k]).forEach(function(sk){
-        merged[k][sk]=data[k][sk];
-      });
-    }else{
-      merged[k]=data[k];
-    }
-  });
+  deepMerge(merged,data);
   return merged;
 }
 
@@ -1310,7 +1421,14 @@ async function renderTrainingEditor(){
       <div class="sec-bd open" id="trHero">
         <div class="cf-group"><label>Heading</label><input id="trHeroHead" value="${escHtml(s.hero.heading)}"></div>
         <div class="cf-group"><label>Subtext</label><textarea id="trHeroSub" rows="2">${escHtml(s.hero.subtext)}</textarea></div>
-        <div class="cf-group"><label>Background Image URL</label><input id="trHeroBg" value="${escHtml(s.hero.bgImage)}"></div>
+        <div class="cf-group"><label>Background Image URL</label>
+          <div class="img-upload-row">
+            <input id="trHeroBg" value="${escHtml(s.hero.bgImage)}">
+            <input type="file" accept="image/jpeg, image/png, image/webp" class="content-upload-btn" data-target="trHeroBg">
+            <span class="img-upload-status"></span>
+          </div>
+          <div class="img-upload-preview"${s.hero.bgImage?'':' style="display:none"'}><img src="${escHtml(s.hero.bgImage)}" onerror="this.parentNode.style.display='none'"></div>
+        </div>
       </div>
     </div>
     <div class="content-section">
@@ -1360,7 +1478,14 @@ async function renderTrainingEditor(){
         <div class="cf-group"><label>Paragraph 1</label><textarea id="trApprPara1" rows="3">${escHtml(s.approach.para1)}</textarea></div>
         <div class="cf-group"><label>Paragraph 2</label><textarea id="trApprPara2" rows="3">${escHtml(s.approach.para2)}</textarea></div>
         <div class="cf-group"><label>Benefits (one per line)</label><textarea id="trApprBenefits" rows="5">${s.approach.benefits.map(function(b){return escHtml(b)}).join('\n')}</textarea></div>
-        <div class="cf-group"><label>Image URL</label><input id="trApprImage" value="${escHtml(s.approach.image)}"></div>
+        <div class="cf-group"><label>Image URL</label>
+          <div class="img-upload-row">
+            <input id="trApprImage" value="${escHtml(s.approach.image)}">
+            <input type="file" accept="image/jpeg, image/png, image/webp" class="content-upload-btn" data-target="trApprImage">
+            <span class="img-upload-status"></span>
+          </div>
+          <div class="img-upload-preview"${s.approach.image?'':' style="display:none"'}><img src="${escHtml(s.approach.image)}" onerror="this.parentNode.style.display='none'"></div>
+        </div>
       </div>
     </div>
     <div class="content-section">
@@ -1380,8 +1505,9 @@ async function renderTrainingEditor(){
         <div class="cf-group"><label>Copyright Text</label><input id="trFootCopyright" value="${escHtml(s.footer.copyright)}"></div>
       </div>
     </div>
-    <button class="cf-save" id="saveAllBtnTr" class="cf-save" style="margin-top:0">💾 Save Training</button>
+    <button class="cf-save" id="saveAllBtnTr" style="margin-top:0">💾 Save Training</button>
   `;
+  document.getElementById('saveAllBtnTr').addEventListener('click',async function(){await saveAllContent();});
   document.querySelectorAll('#trainingEditor .sec-hd').forEach(function(hd){
     hd.addEventListener('click',function(){
       hd.classList.toggle('open');
@@ -1470,7 +1596,14 @@ async function renderGroomingEditor(){
     <div class="content-section">
       <div class="sec-hd open" data-target="grAb">About Section <span class="arrow">▼</span></div>
       <div class="sec-bd open" id="grAb">
-        <div class="cf-group"><label>Image URL</label><input id="grAbImg" value="${escHtml(s.about.image)}"></div>
+        <div class="cf-group"><label>Image URL</label>
+          <div class="img-upload-row">
+            <input id="grAbImg" value="${escHtml(s.about.image)}">
+            <input type="file" accept="image/jpeg, image/png, image/webp" class="content-upload-btn" data-target="grAbImg">
+            <span class="img-upload-status"></span>
+          </div>
+          <div class="img-upload-preview"${s.about.image?'':' style="display:none"'}><img src="${escHtml(s.about.image)}" onerror="this.parentNode.style.display='none'"></div>
+        </div>
         <div class="cf-row">
           <div class="cf-group"><label>Welcome Heading</label><input id="grAbWelcHead" value="${escHtml(s.about.welcomeHeading)}"></div>
           <div class="cf-group"><label>Welcome Paragraph</label><textarea id="grAbWelcPara" rows="2">${escHtml(s.about.welcomePara)}</textarea></div>
@@ -1512,7 +1645,14 @@ async function renderGroomingEditor(){
           <div class="cf-group"><label>Heading</label><input id="grRevHead" value="${escHtml(s.reviews.heading)}"></div>
         </div>
         <div class="cf-group"><label>Subtext</label><textarea id="grRevSub" rows="2">${escHtml(s.reviews.subtext)}</textarea></div>
-        <div class="cf-group"><label>Background Image URL</label><input id="grRevBg" value="${escHtml(s.reviews.bgImage)}"></div>
+        <div class="cf-group"><label>Background Image URL</label>
+          <div class="img-upload-row">
+            <input id="grRevBg" value="${escHtml(s.reviews.bgImage)}">
+            <input type="file" accept="image/jpeg, image/png, image/webp" class="content-upload-btn" data-target="grRevBg">
+            <span class="img-upload-status"></span>
+          </div>
+          <div class="img-upload-preview"${s.reviews.bgImage?'':' style="display:none"'}><img src="${escHtml(s.reviews.bgImage)}" onerror="this.parentNode.style.display='none'"></div>
+        </div>
         <div id="grRevRepeater">${s.reviews.items.map(function(item,i){return renderGrRevItem(item,i)}).join('')}</div>
         <button class="cf-add" onclick="addGrRevItem()">+ Add Review</button>
       </div>
@@ -1550,8 +1690,9 @@ async function renderGroomingEditor(){
         </div>
       </div>
     </div>
-    <button class="cf-save" id="saveAllBtnGr" class="cf-save" style="margin-top:0">💾 Save Grooming</button>
+    <button class="cf-save" id="saveAllBtnGr" style="margin-top:0">💾 Save Grooming</button>
   `;
+  document.getElementById('saveAllBtnGr').addEventListener('click',async function(){await saveAllContent();});
   document.querySelectorAll('#groomingEditor .sec-hd').forEach(function(hd){
     hd.addEventListener('click',function(){
       hd.classList.toggle('open');
@@ -1603,7 +1744,14 @@ async function renderBoardingEditor(){
       <div class="sec-bd open" id="boHero">
         <div class="cf-group"><label>Heading</label><input id="boHeroHead" value="${escHtml(s.hero.heading)}"></div>
         <div class="cf-group"><label>Subtext</label><textarea id="boHeroSub" rows="2">${escHtml(s.hero.subtext)}</textarea></div>
-        <div class="cf-group"><label>Background Image URL</label><input id="boHeroBg" value="${escHtml(s.hero.bgImage)}"></div>
+        <div class="cf-group"><label>Background Image URL</label>
+          <div class="img-upload-row">
+            <input id="boHeroBg" value="${escHtml(s.hero.bgImage)}">
+            <input type="file" accept="image/jpeg, image/png, image/webp" class="content-upload-btn" data-target="boHeroBg">
+            <span class="img-upload-status"></span>
+          </div>
+          <div class="img-upload-preview"${s.hero.bgImage?'':' style="display:none"'}><img src="${escHtml(s.hero.bgImage)}" onerror="this.parentNode.style.display='none'"></div>
+        </div>
       </div>
     </div>
     <div class="content-section">
@@ -1626,7 +1774,14 @@ async function renderBoardingEditor(){
           <div class="cf-group"><label>Title</label><input id="boDetTitle" value="${escHtml(s.details.title)}"></div>
         </div>
         <div class="cf-group"><label>Paragraph</label><textarea id="boDetPara" rows="3">${escHtml(s.details.paragraph)}</textarea></div>
-        <div class="cf-group"><label>Image URL</label><input id="boDetImg" value="${escHtml(s.details.image)}"></div>
+        <div class="cf-group"><label>Image URL</label>
+          <div class="img-upload-row">
+            <input id="boDetImg" value="${escHtml(s.details.image)}">
+            <input type="file" accept="image/jpeg, image/png, image/webp" class="content-upload-btn" data-target="boDetImg">
+            <span class="img-upload-status"></span>
+          </div>
+          <div class="img-upload-preview"${s.details.image?'':' style="display:none"'}><img src="${escHtml(s.details.image)}" onerror="this.parentNode.style.display='none'"></div>
+        </div>
         <div class="cf-group"><label>Details List (one per line)</label><textarea id="boDetList" rows="6">${s.details.detailsList.map(function(d){return escHtml(d)}).join('\n')}</textarea></div>
         <div class="cf-group"><label>Button Text</label><input id="boDetBtn" value="${escHtml(s.details.btnText)}"></div>
       </div>
@@ -1648,8 +1803,9 @@ async function renderBoardingEditor(){
         <div class="cf-group"><label>Copyright Text</label><input id="boFootCopy" value="${escHtml(s.footer.copyright)}"></div>
       </div>
     </div>
-    <button class="cf-save" id="saveAllBtnBo" class="cf-save" style="margin-top:0">💾 Save Boarding</button>
+    <button class="cf-save" id="saveAllBtnBo" style="margin-top:0">💾 Save Boarding</button>
   `;
+  document.getElementById('saveAllBtnBo').addEventListener('click',async function(){await saveAllContent();});
   document.querySelectorAll('#boardingEditor .sec-hd').forEach(function(hd){
     hd.addEventListener('click',function(){
       hd.classList.toggle('open');
@@ -1702,7 +1858,14 @@ async function renderEcoEditor(){
       <div class="sec-bd open" id="ecHero">
         <div class="cf-group"><label>Heading</label><input id="ecHeroHead" value="${escHtml(s.hero.heading)}"></div>
         <div class="cf-group"><label>Subtext</label><textarea id="ecHeroSub" rows="2">${escHtml(s.hero.subtext)}</textarea></div>
-        <div class="cf-group"><label>Background Image URL</label><input id="ecHeroBg" value="${escHtml(s.hero.bgImage)}"></div>
+        <div class="cf-group"><label>Background Image URL</label>
+          <div class="img-upload-row">
+            <input id="ecHeroBg" value="${escHtml(s.hero.bgImage)}">
+            <input type="file" accept="image/jpeg, image/png, image/webp" class="content-upload-btn" data-target="ecHeroBg">
+            <span class="img-upload-status"></span>
+          </div>
+          <div class="img-upload-preview"${s.hero.bgImage?'':' style="display:none"'}><img src="${escHtml(s.hero.bgImage)}" onerror="this.parentNode.style.display='none'"></div>
+        </div>
       </div>
     </div>
     <div class="content-section">
@@ -1740,7 +1903,14 @@ async function renderEcoEditor(){
         <div class="cf-group"><label>Paragraph 1</label><textarea id="ecDetPara1" rows="3">${escHtml(s.details.para1)}</textarea></div>
         <div class="cf-group"><label>Paragraph 2</label><textarea id="ecDetPara2" rows="3">${escHtml(s.details.para2)}</textarea></div>
         <div class="cf-group"><label>Features List (one per line)</label><textarea id="ecDetList" rows="6">${s.details.featuresList.map(function(f){return escHtml(f)}).join('\n')}</textarea></div>
-        <div class="cf-group"><label>Image URL</label><input id="ecDetImg" value="${escHtml(s.details.image)}"></div>
+        <div class="cf-group"><label>Image URL</label>
+          <div class="img-upload-row">
+            <input id="ecDetImg" value="${escHtml(s.details.image)}">
+            <input type="file" accept="image/jpeg, image/png, image/webp" class="content-upload-btn" data-target="ecDetImg">
+            <span class="img-upload-status"></span>
+          </div>
+          <div class="img-upload-preview"${s.details.image?'':' style="display:none"'}><img src="${escHtml(s.details.image)}" onerror="this.parentNode.style.display='none'"></div>
+        </div>
       </div>
     </div>
     <div class="content-section">
@@ -1760,8 +1930,9 @@ async function renderEcoEditor(){
         <div class="cf-group"><label>Copyright Text</label><input id="ecFootCopy" value="${escHtml(s.footer.copyright)}"></div>
       </div>
     </div>
-    <button class="cf-save" id="saveAllBtnEc" class="cf-save" style="margin-top:0">💾 Save Eco Changes</button>
+    <button class="cf-save" id="saveAllBtnEc" style="margin-top:0">💾 Save Eco Changes</button>
   `;
+  document.getElementById('saveAllBtnEc').addEventListener('click',async function(){await saveAllContent();});
   document.querySelectorAll('#ecoEditor .sec-hd').forEach(function(hd){
     hd.addEventListener('click',function(){
       hd.classList.toggle('open');
@@ -1771,11 +1942,13 @@ async function renderEcoEditor(){
 }
 
 function renderEcFeatItem(item,i){
-  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Feature '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'ecFeatRepeater\')">✕ Remove</button></div><div class="cf-row"><div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="'+escHtml(item.icon)+'"></div><div class="cf-group"><label>Title</label><input class="r-title" value="'+escHtml(item.title)+'"></div></div><div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Feature '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'ecFeatRepeater\')">✕ Remove</button></div>'+
+    renderImageUploadWidget(item.img)+
+    '<div class="cf-row"><div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="'+escHtml(item.icon)+'"></div><div class="cf-group"><label>Title</label><input class="r-title" value="'+escHtml(item.title)+'"></div></div><div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
 }
 function addEcFeatItem(){
   var d=document.getElementById('ecFeatRepeater');
-  d.insertAdjacentHTML('beforeend',renderEcFeatItem({icon:'🏡',title:'New Feature',desc:'Feature description'},d.children.length));
+  d.insertAdjacentHTML('beforeend',renderEcFeatItem({icon:'🏡',title:'New Feature',desc:'Feature description',img:''},d.children.length));
 }
 
 // ── Collect training data ──
@@ -1938,7 +2111,7 @@ function collectEcoData(){
       label:document.getElementById('ecFeatLabel').value,
       title:document.getElementById('ecFeatTitle').value,
       subtext:document.getElementById('ecFeatSub').value,
-      items:collectRepeaterData('ecFeatRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc'})
+      items:collectRepeaterData('ecFeatRepeater',{img:'.r-img',icon:'.r-icon',title:'.r-title',desc:'.r-desc'})
     },
     gallery:{
       label:document.getElementById('ecGalLabel').value,
@@ -1970,11 +2143,9 @@ function collectEcoData(){
 document.getElementById('saveContentBtn').addEventListener('click',async function(){
   await saveAllContent();
 });
-document.addEventListener('click',async function(e){
-  if(e.target && e.target.id.match(/^saveAllBtn(Tr|Gr|Bo|Ec)$/)) await saveAllContent();
-});
 
 async function saveAllContent(){
+  if(typeof Sentry!=='undefined'){Sentry.addBreadcrumb({message:'Content save started',category:'admin',level:'info'})}
   // Start with existing saved data, fall back to defaults
   const data=await loadContent();
 
@@ -2177,6 +2348,7 @@ document.addEventListener('change', async function(e){
         if (img) img.src = url;
       }
     } catch (err) {
+      if(typeof Sentry!=='undefined')Sentry.captureException(err);
       status.textContent = '❌ ' + (err.message || 'Failed');
     }
     target.value = '';
@@ -2218,8 +2390,10 @@ async function renderBookingsDashboard() {
   var allBookings;
   try{
     allBookings=await DB.getBookings();
+    _allBookings=allBookings;
   }catch(e){
     console.error('[Admin] getBookings failed:',e);
+    if(typeof Sentry!=='undefined')Sentry.captureException(e);
     container.innerHTML='<div class="table-wrap" style="padding:60px;text-align:center;color:var(--red)"><strong>Error loading bookings.</strong> Please check the console or try again.<br><br><button class="btn btn-ghost" onclick="renderBookingsDashboard()">Retry</button></div>';
     return;
   }
@@ -2275,7 +2449,7 @@ async function renderBookingsDashboard() {
 
   var STATUSES=['pending','confirmed','completed','cancelled'];
   html+='<div class="table-wrap"><table class="prod-table bookings-table"><thead><tr>' +
-    '<th>Date Received</th><th>Service Category</th><th>Specific Service</th><th>Date / Time</th><th>Owner Name</th><th>Phone Number</th><th>Dog Name</th><th>Pick-up</th><th>Status</th>' +
+    '<th>Date Received</th><th>Service Category</th><th>Specific Service</th><th>Date / Time</th><th>Owner Name</th><th>Phone Number</th><th>Dog Name</th><th>Pick-up</th><th>Status</th><th style="width:60px">Edit</th>' +
     '</tr></thead><tbody>';
   bookings.forEach(function(b){
     var o=b.owners||{};
@@ -2295,7 +2469,8 @@ async function renderBookingsDashboard() {
       '<td style="font-size:.8rem;text-align:center">'+(b.pickup_required?'<span style="color:var(--forest);font-weight:600">✅ Yes</span>':'<span style="color:var(--forest-muted)">—</span>')+(b.pickup_address?'<br><span style="font-size:.7rem;color:var(--forest-muted);cursor:help" title="'+escHtml(b.pickup_address)+'">📍 <u>view</u></span>':'')+'</td>' +
       '<td><select class="status-select" data-id="'+escHtml(b.id)+'">'+
         STATUSES.map(function(s){return '<option value="'+escHtml(s)+'"'+(s===st?' selected':'')+'>'+escHtml(s.charAt(0).toUpperCase()+s.slice(1))+'</option>'}).join('')+
-      '</select></td></tr>';
+      '</select></td>' +
+      '<td style="text-align:center"><button class="dash-btn dash-btn-sm booking-edit-btn" data-id="'+escHtml(b.id)+'" style="font-size:1rem;padding:4px 10px;cursor:pointer;background:var(--vanilla-dark);border:1px solid var(--sage-dark);border-radius:8px;color:var(--forest)" title="Edit booking">✏️</button></td></tr>';
   });
   html+='</tbody></table></div>';
   container.innerHTML=html;
@@ -2311,6 +2486,91 @@ async function renderBookingsDashboard() {
 
 // Bind filter for bookings
 document.getElementById('bookingCategoryFilter')&&document.getElementById('bookingCategoryFilter').addEventListener('change',function(){renderBookingsDashboard()});
+
+// ── Booking Edit Modal ──
+
+function openBookingEdit(bookingId){
+  var allBookings=_allBookings||[];
+  var booking=allBookings.find(function(b){return String(b.id)===String(bookingId)});
+  if(!booking){alert('Booking not found.');return}
+  document.getElementById('editBookingId').value=booking.id;
+  document.getElementById('editBookingCategory').value=booking.service_category||'';
+  document.getElementById('editBookingService').value=booking.service_specific||'';
+  document.getElementById('editBookingDate').value=booking.start_date||'';
+  document.getElementById('editBookingSlot').value=booking.time_slot||'';
+  document.getElementById('editBookingStatus').value=booking.status||'pending';
+  document.getElementById('editBookingNotes').value=booking.admin_notes||'';
+  document.getElementById('editBookingEndDate').value=booking.end_date||'';
+  document.getElementById('editEndDateGroup').style.display=booking.service_category==='Boarding'?'block':'none';
+  document.getElementById('bookingEditConflict').style.display='none';
+  document.getElementById('bookingEditModal').style.display='flex';
+}
+function closeBookingEdit(){
+  document.getElementById('bookingEditModal').style.display='none';
+}
+document.getElementById('bookingEditClose')&&document.getElementById('bookingEditClose').addEventListener('click',closeBookingEdit);
+document.getElementById('bookingEditCancel')&&document.getElementById('bookingEditCancel').addEventListener('click',closeBookingEdit);
+document.getElementById('bookingEditModal')&&document.getElementById('bookingEditModal').addEventListener('click',function(e){if(e.target===this)closeBookingEdit()});
+
+// Delegate edit button clicks (buttons rendered dynamically)
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('.booking-edit-btn');
+  if(btn) openBookingEdit(btn.dataset.id);
+});
+
+document.getElementById('bookingEditForm')&&document.getElementById('bookingEditForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  if(typeof Sentry!=='undefined'){Sentry.addBreadcrumb({message:'Booking update started',category:'admin',level:'info'})}
+  var btn=document.getElementById('bookingEditSave');
+  if(btn){btn.disabled=true;btn.textContent='Saving...'}
+  var id=document.getElementById('editBookingId').value;
+  var updates={
+    service_specific:document.getElementById('editBookingService').value.trim(),
+    start_date:document.getElementById('editBookingDate').value,
+    time_slot:document.getElementById('editBookingSlot').value,
+    status:document.getElementById('editBookingStatus').value,
+    admin_notes:document.getElementById('editBookingNotes').value.trim(),
+    end_date:document.getElementById('editBookingEndDate').value
+  };
+  // Conflict check when date/time/slot changed
+  var conflictEl=document.getElementById('bookingEditConflict');
+  conflictEl.style.display='none';
+  if(updates.start_date&&updates.time_slot&&typeof DB!=='undefined'&&DB.checkSlotAvailability){
+    var category=document.getElementById('editBookingCategory').value;
+    if(category){
+      var avail=await DB.checkSlotAvailability(category,updates.start_date,updates.time_slot,id);
+      if(avail.error){
+        console.warn('[Admin] Slot check failed, proceeding:',avail.error);
+      }else if(!avail.available){
+        conflictEl.innerHTML='⚠️ <strong>Slot Conflict:</strong> '+updates.time_slot+' on '+updates.start_date+' is already booked by another '+avail.existingBooking.status+' booking. Saving will still proceed but may cause double-booking.';
+        conflictEl.style.display='block';
+      }
+    }
+  }
+  try{
+    var result=await DB.updateBooking(id,updates);
+    if(result.success){
+      closeBookingEdit();
+      await renderBookingsDashboard();
+      // Toast
+      var t=document.getElementById('bookingEditToast')||function(){
+        var el=document.createElement('div');
+        el.id='bookingEditToast';
+        el.style.cssText='position:fixed;bottom:24px;right:24px;padding:14px 24px;background:var(--forest);color:var(--white);border-radius:12px;font-size:.85rem;font-weight:600;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.15);transition:opacity .3s';
+        el.textContent='✅ Booking updated successfully!';
+        document.body.appendChild(el);
+        return el;
+      }();
+      t.style.opacity='1';
+      setTimeout(function(){t.style.opacity='0';},2500);
+    }
+  }catch(err){
+    console.error('[Admin] Booking update failed:',err);
+    if(typeof Sentry!=='undefined')Sentry.captureException(err);
+    alert('Failed to update booking: '+(err.message||'Unknown error'));
+  }
+  if(btn){btn.disabled=false;btn.textContent='Save Changes'}
+});
 
 // ═══════════════════════════════════════════════
 // INIT

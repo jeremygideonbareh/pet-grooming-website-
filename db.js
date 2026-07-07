@@ -16,12 +16,16 @@
   'use strict';
 
   /* ── Supabase client ── */
-  var SUPABASE_URL = 'https://hqgdifxecxrxhjsbavkl.supabase.co';
-  var SUPABASE_ANON_KEY = 'sb_publishable_4-UBFcXGsiLjHINRAfydTQ_lCVzE9OM';
-
-  var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { storageKey: 'a1_booking_auth' }
-  });
+  var supabase = null;
+  if (typeof window.Auth !== 'undefined' && window.Auth.supabase) {
+    supabase = window.Auth.supabase;
+  } else if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+    var SUPABASE_URL = 'https://hqgdifxecxrxhjsbavkl.supabase.co';
+    var SUPABASE_ANON_KEY = 'sb_publishable_4-UBFcXGsiLjHINRAfydTQ_lCVzE9OM';
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { storageKey: 'a1_booking_auth' }
+    });
+  }
 
   /* ── Site Content ── */
 
@@ -43,6 +47,7 @@
       return result.data ? result.data.data : null;
     } catch (e) {
       console.error('[DB] getSiteContent exception:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       return null;
     }
   }
@@ -65,6 +70,7 @@
       }
     } catch (e) {
       console.error('[DB] saveSiteContent exception:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
     }
   }
 
@@ -87,6 +93,7 @@
       return result.data || [];
     } catch (e) {
       console.error('[DB] getProducts exception:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       return [];
     }
   }
@@ -134,6 +141,7 @@
       }
     } catch (e) {
       console.error('[DB] saveAllProducts exception:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
     }
   }
 
@@ -151,6 +159,7 @@
       }
     } catch (e) {
       console.error('[DB] addProduct exception:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
     }
   }
 
@@ -170,6 +179,7 @@
       }
     } catch (e) {
       console.error('[DB] updateProduct exception:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
     }
   }
 
@@ -188,6 +198,7 @@
       }
     } catch (e) {
       console.error('[DB] deleteProduct exception:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
     }
   }
 
@@ -213,6 +224,7 @@
       return result.data || null;
     } catch (e) {
       console.error('[DB] getProfile exception:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       return null;
     }
   }
@@ -234,6 +246,7 @@
       }
     } catch (e) {
       console.error('[DB] upsertProfile exception:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
     }
   }
 
@@ -264,6 +277,7 @@
       return urlResult.data ? urlResult.data.publicUrl : null;
     } catch (e) {
       console.error('[DB] uploadVaccinationCard exception:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       return null;
     }
   }
@@ -305,6 +319,7 @@
       return ins.data.owner_id;
     } catch (e) {
       console.error('[DB] findOrCreateOwner error:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       throw e;
     }
   }
@@ -367,6 +382,7 @@
       return ins.data.dog_id;
     } catch (e) {
       console.error('[DB] findOrUpdateDog error:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       throw e;
     }
   }
@@ -389,6 +405,8 @@
         time_slot: bookingData.time_slot || '',
         end_date: bookingData.end_date || '',
         contact_method: bookingData.contact_method || '',
+        pickup_required: !!bookingData.pickup_required,
+        pickup_address: bookingData.pickup_address || '',
         status: 'pending'
       };
       var result = await supabase
@@ -398,6 +416,7 @@
       return { success: true };
     } catch (e) {
       console.error('[DB] insertBooking error:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       throw e;
     }
   }
@@ -416,6 +435,7 @@
       return result.data || [];
     } catch (e) {
       console.error('[DB] getBookings error:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       throw e;
     }
   }
@@ -436,6 +456,7 @@
       return result.data || null;
     } catch (e) {
       console.error('[DB] getOwnerByPhone error:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       return null;
     }
   }
@@ -455,6 +476,7 @@
       return result.data || [];
     } catch (e) {
       console.error('[DB] getDogsByOwner error:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       return [];
     }
   }
@@ -475,6 +497,64 @@
       return { success: true };
     } catch (e) {
       console.error('[DB] updateBookingStatus error:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
+      throw e;
+    }
+  }
+
+  /* ── Booking Slot Availability ── */
+
+  /**
+   * Check if a time slot is available for booking.
+   * Returns false if another pending/confirmed booking exists for same category+date+slot.
+   * @param {string} category - Service category (e.g. 'Grooming')
+   * @param {string} date - Start date string
+   * @param {string} timeSlot - Time slot (Morning/Afternoon/Evening)
+   * @param {string} [excludeBookingId] - Optional booking ID to exclude from check (for admin edits)
+   * @returns {Promise<{available: boolean, existingBooking: Object|null, error?: string}>}
+   */
+  async function checkSlotAvailability(category, date, timeSlot, excludeBookingId) {
+    try {
+      var query = supabase
+        .from('bookings')
+        .select('id, status')
+        .eq('service_category', category)
+        .eq('start_date', date)
+        .eq('time_slot', timeSlot)
+        .in('status', ['pending', 'confirmed']);
+      if (excludeBookingId) {
+        query = query.neq('id', excludeBookingId);
+      }
+      var result = await query.maybeSingle();
+      if (result.error && result.error.code !== 'PGRST116') throw result.error;
+      return {
+        available: !result.data,
+        existingBooking: result.data || null
+      };
+    } catch (e) {
+      console.error('[DB] checkSlotAvailability error:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
+      return { available: false, error: e.message };
+    }
+  }
+
+  /**
+   * Update arbitrary fields on a booking record.
+   * @param {number|string} bookingId
+   * @param {Object} updates - Fields to update (start_date, time_slot, status, admin_notes, etc.)
+   * @returns {Promise<{success: boolean}>}
+   */
+  async function updateBooking(bookingId, updates) {
+    try {
+      var result = await supabase
+        .from('bookings')
+        .update(updates)
+        .eq('id', bookingId);
+      if (result.error) throw result.error;
+      return { success: true };
+    } catch (e) {
+      console.error('[DB] updateBooking error:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       throw e;
     }
   }
@@ -498,7 +578,9 @@
     getBookings:           getBookings,
     updateBookingStatus:   updateBookingStatus,
     getOwnerByPhone:       getOwnerByPhone,
-    getDogsByOwner:        getDogsByOwner
+    getDogsByOwner:        getDogsByOwner,
+    checkSlotAvailability: checkSlotAvailability,
+    updateBooking:         updateBooking
   };
 
   /**
@@ -528,6 +610,7 @@
       console.log('[DB TEST] 🧹 Product cleaned up');
     } catch (e) {
       console.error('[DB TEST] ❌ Products test failed:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
     }
 
     // ── 2. Site content: write + read back ──
@@ -550,6 +633,7 @@
       console.log('[DB TEST] 🧹 Site content restored to empty');
     } catch (e) {
       console.error('[DB TEST] ❌ Site content test failed:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
     }
 
     console.log('[DB TEST] 🏁 Finished. Check the logs above for ✅ or ❌');

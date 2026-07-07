@@ -40,6 +40,7 @@
           (blob.size / 1024).toFixed(1) + 'KB');
       } catch (e) {
         console.warn('[UPLOAD] Compression failed, uploading original:', e);
+        if(typeof Sentry!=='undefined')Sentry.captureException(e);
         blob = file;
       }
     }
@@ -52,8 +53,9 @@
       throw new Error(msg);
     }
 
-    // Generate a unique file name: timestamp + random string + original extension
-    var ext = (file.name.match(/\.[^.]+$/) || ['.jpg'])[0];
+    // Generate a unique file name: timestamp + random string + MIME-based extension
+    var mimeExt = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp' };
+    var ext = mimeExt[file.type] || '.jpg';
     var fileName = Date.now() + '_' + Math.random().toString(36).slice(2, 8) + ext;
 
     try {
@@ -87,6 +89,7 @@
 
     } catch (e) {
       console.error('[UPLOAD] ❌ Upload failed:', e.message || e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       throw e;
     }
   }
@@ -122,7 +125,7 @@
         ctx.drawImage(img, 0, 0, w, h);
 
         // Output WebP if supported, else JPEG
-        var mime = (canvas.toDataURL('image/webp').indexOf('image/webp') === 0) ? 'image/webp' : 'image/jpeg';
+        var mime = (canvas.toDataURL('image/webp').indexOf('image/webp') !== -1) ? 'image/webp' : 'image/jpeg';
 
         canvas.toBlob(function (blob) {
           if (blob) resolve(blob);
@@ -132,6 +135,7 @@
 
       img.onerror = function () {
         URL.revokeObjectURL(url);
+        if(typeof Sentry!=='undefined')Sentry.captureException(new Error('Failed to decode image'));
         reject(new Error('Failed to decode image'));
       };
 

@@ -2334,3 +2334,48 @@ Desktop (3-col bento):          Tablet (2-col):       Mobile (<640px):
 - **boarding.html**: Added `handleMissingOwner()` + PGRST116 recovery in both `openBookModal()` pre-fill and submit handler
 
 **Files changed:** `auth.js`, `boarding.html`, `grooming.html`, `training.html`, `db.js`, `content-loader.js`, `HANDOFF.md`
+
+### Session 20 — Double-Booking Prevention + Admin Booking Edit
+
+**Date:** July 4, 2026
+
+**Summary:** Added database-level double-booking prevention for Grooming time slots and an admin booking edit modal for modifying booking details.
+
+**Changes:**
+
+1. **Supabase migration** (`supabase/migrations/20260704000001_booking_conflicts_admin.sql`):
+   - Created partial unique index `idx_bookings_slot_unique` on `bookings(service_category, start_date, time_slot)` where status is `pending` or `confirmed` and `time_slot` is not null/empty — prevents two active bookings from occupying the same slot
+   - Added `admin_notes TEXT DEFAULT ''` column to `bookings` table for internal admin comments
+
+2. **db.js** — Two new functions:
+   - `checkSlotAvailability(category, date, timeSlot, excludeBookingId?)` — queries for existing pending/confirmed bookings on the same slot; supports optional booking ID exclusion for admin edits
+   - `updateBooking(bookingId, updates)` — general-purpose update for any booking fields (date, slot, status, notes, etc.)
+   - Both exported on `window.DB`
+
+3. **grooming.html** — Conflict check added:
+   - Before booking insert, calls `DB.checkSlotAvailability()` for the selected date + time slot
+   - If slot is taken: shows alert with specific message, aborts submission
+   - If check fails (network error): logs warning, proceeds (fail-open)
+   - Insert error handling enhanced: detects PostgreSQL unique violation (code 23505) and shows friendly slot-taken message instead of generic error
+
+4. **admin.html** — Booking Edit Modal:
+   - Added ✏️ Edit button to each booking row in the Bookings dashboard
+   - New edit modal with fields: Service Category (read-only), Service Specific, Start Date, Time Slot (Morning/Afternoon/Evening), End Date (shown for Boarding), Status, Admin Notes
+   - Conflict warning when admin changes a Grooming slot to an already-booked one (non-blocking — admin can override)
+   - Toast notification on successful save
+   - End Date field visibility toggles automatically for Boarding bookings
+   - `window._allBookings` populated by `renderBookingsDashboard()` for modal lookup
+
+**Key design decisions:**
+- Conflict prevention only applies to Grooming (the only service with time_slot). Training (enquiry-based) and Boarding (date range) are unaffected.
+- Two layers of protection: client-side check + database unique index — race condition is caught at the DB level
+- Admin slot change conflict is a warning, not a block — admins can override if needed
+- Cancelled/completed bookings free the slot (excluded from unique index)
+- All existing booking flows unchanged; all changes are additive
+
+**Files changed:**
+- `supabase/migrations/20260704000001_booking_conflicts_admin.sql` — NEW: unique index + admin_notes column
+- `db.js` — added `checkSlotAvailability()`, `updateBooking()`, exported both
+- `grooming.html` — conflict check before insert, friendly duplicate error message
+- `admin.html` — edit button column, booking edit modal with date/slot/notes editing, conflict warning
+- `HANDOFF.md` — Session 20 summary

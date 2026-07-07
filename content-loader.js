@@ -12,14 +12,16 @@
     var el = document.querySelector(sel);
     if (el && val !== undefined && val !== null) el.textContent = val;
   }
+  function sanitizeHtml(val) {
+    return val
+      .replace(/<script[\s\S]*?<\/script>/gi, '')
+      .replace(/\son\w+\s*=\s*(?:"[^"]*"|'[^']*'|`[^`]*`|[^\s>]+)/gi, '')
+      .replace(/\s+(?:href|src|srcdoc|action|formaction|xlink:href)\s*=\s*(?:"[^"]*?(?:javascript|data|vbscript):[^"]*"|'[^']*?(?:javascript|data|vbscript):[^']*'|`[^`]*?(?:javascript|data|vbscript):[^`]*`|[^\s>]*?(?:javascript|data|vbscript):[^\s>]*)/gi, '');
+  }
   function html(sel, val) {
     var el = document.querySelector(sel);
     if (el && val !== undefined && val !== null) {
-      val = val.replace(/<script[\s\S]*?<\/script>/gi, '');
-      val = val.replace(/\son\w+\s*=\s*["'][^"']*["']/gi, '');
-      val = val.replace(/\son\w+\s*=\s*\S+/gi, '');
-      val = val.replace(/\s+(?:href|src|srcdoc|action|formaction|xlink:href)\s*=\s*["'][^"']*(?:javascript|data|vbscript)\s*:[^"']*["']/gi, '');
-      el.innerHTML = val;
+      el.innerHTML = sanitizeHtml(val);
     }
   }
   function attr(sel, attrName, val) {
@@ -28,7 +30,7 @@
   }
   function styleBg(sel, url) {
     var el = document.querySelector(sel);
-    if (el && url !== undefined && url !== null) el.style.backgroundImage = 'url(' + url + ')';
+    if (el && url !== undefined && url !== null) el.style.backgroundImage = 'url("' + url.replace(/["\\]/g, '') + '")';
   }
   function imgSrc(sel, src) {
     var el = document.querySelector(sel);
@@ -111,7 +113,7 @@
       text('.about-text .about-quote', d.about.quoteText);
       text('.about-text .about-quote cite', d.about.quoteCite);
       text('.founder-note h4', d.about.founderNote);
-      html('.founder-note .section-sub', d.about.founderSub);
+      text('.founder-note .section-sub', d.about.founderSub);
       text('.founder-note .sign', d.about.founderSign);
     }
     if (d.services) {
@@ -381,11 +383,10 @@
     if (s.programs) {
       text('.content-section .container .section-label', s.programs.label);
       var titles = document.querySelectorAll('.content-section .container .section-title');
-      if (titles.length >= 1) titles[0].innerHTML = (s.programs.title||'').replace(/<script[\s\S]*?<\/script>/gi,'');
+      if (titles.length >= 1) titles[0].innerHTML = sanitizeHtml(s.programs.title||'');
       var subs = document.querySelectorAll('.content-section .container .section-sub');
       if (subs.length >= 1) subs[0].textContent = s.programs.subtext;
       if (s.programs.items && s.programs.items.length) {
-        console.log('[Content] Rendering ' + s.programs.items.length + ' program cards');
         clearAndFill('.programs', s.programs.items, function(item) {
           var card = div('program-card');
           var imgDiv = div('card-img');
@@ -479,7 +480,7 @@
       var approachLabel = document.querySelector('.approach-grid .section-label');
       if (approachLabel && s.approach.label) approachLabel.textContent = s.approach.label;
       var approachTitle = document.querySelector('.approach-grid .section-title');
-      if (approachTitle && s.approach.title) approachTitle.innerHTML = s.approach.title.replace(/<script[\s\S]*?<\/script>/gi,'');
+      if (approachTitle && s.approach.title) approachTitle.innerHTML = sanitizeHtml(s.approach.title);
       var approachParas = document.querySelectorAll('.approach-grid .section-sub');
       if (approachParas.length >= 1 && s.approach.para1) approachParas[0].textContent = s.approach.para1;
       if (approachParas.length >= 2 && s.approach.para2) approachParas[1].textContent = s.approach.para2;
@@ -519,7 +520,7 @@
       text('.hero .hero-badge', s.hero.badge);
       var h1 = document.querySelector('.hero h1');
       if (h1) {
-        h1.innerHTML = ((s.hero.headingMain||'') + '<br>').replace(/<script[\s\S]*?<\/script>/gi,'');
+        h1.innerHTML = sanitizeHtml((s.hero.headingMain||'') + '<br>');
         var em = h1.querySelector('em');
         if (!em) { em = document.createElement('em'); h1.appendChild(em); }
         em.textContent = s.hero.headingEm || '';
@@ -678,7 +679,7 @@
     if (s.features) {
       text('.content-section .container .section-label', s.features.label);
       var titles = document.querySelectorAll('.content-section .container .section-title');
-      if (titles.length >= 1) titles[0].innerHTML = (s.features.title||'').replace(/<script[\s\S]*?<\/script>/gi,'');
+      if (titles.length >= 1) titles[0].innerHTML = sanitizeHtml(s.features.title||'');
       var subs = document.querySelectorAll('.content-section .container .section-sub');
       if (subs.length >= 1) subs[0].textContent = s.features.subtext;
       if (s.features.items) {
@@ -751,7 +752,7 @@
     if (s.features) {
       text('.content-section .container .section-label', s.features.label);
       var titles = document.querySelectorAll('.content-section .container .section-title');
-      if (titles.length >= 1) titles[0].innerHTML = (s.features.title||'').replace(/<script[\s\S]*?<\/script>/gi,'');
+      if (titles.length >= 1) titles[0].innerHTML = sanitizeHtml(s.features.title||'');
       var subs = document.querySelectorAll('.content-section .container .section-sub');
       if (subs.length >= 1) subs[0].textContent = s.features.subtext;
       if (s.features.items) {
@@ -817,7 +818,7 @@
         var dlabels = detailContainers[2].querySelectorAll('.section-label');
         if (dlabels.length) dlabels[0].textContent = s.details.label;
         var dtitles = detailContainers[2].querySelectorAll('.section-title');
-        if (dtitles.length) dtitles[0].innerHTML = (s.details.title||'').replace(/<script[\s\S]*?<\/script>/gi,'');
+        if (dtitles.length) dtitles[0].innerHTML = sanitizeHtml(s.details.title||'');
         var dsubs = detailContainers[2].querySelectorAll('.section-sub');
         if (dsubs.length >= 1 && s.details.paragraph) dsubs[0].textContent = s.details.paragraph;
         if (dsubs.length >= 2 && s.details.para2) dsubs[1].textContent = s.details.para2;

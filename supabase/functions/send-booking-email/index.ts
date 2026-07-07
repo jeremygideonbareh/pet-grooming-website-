@@ -1,10 +1,16 @@
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") || "https://a1enterprises.in";
+
+function getCorsHeaders(origin) {
+  return {
+    'Access-Control-Allow-Origin': origin === ALLOWED_ORIGIN ? origin : ALLOWED_ORIGIN,
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  };
+}
 
 Deno.serve(async (req) => {
+  var origin = req.headers.get("origin") || ALLOWED_ORIGIN;
+  var corsHeaders = getCorsHeaders(origin);
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
@@ -183,8 +189,8 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "onboarding@resend.dev",
-        to: "cloudlyconfusing@gmail.com",
+        from: Deno.env.get("RESEND_FROM_EMAIL") || "onboarding@resend.dev",
+        to: Deno.env.get("NOTIFICATION_EMAIL") || "cloudlyconfusing@gmail.com",
         subject: `New Booking: ${record.service_specific || "Inquiry"} \u2014 ${record.service_category || "A-1 Enterprises"}`,
         html,
         ...(attachments.length>0?{attachments}:{}),

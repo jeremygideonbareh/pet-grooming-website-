@@ -46,6 +46,7 @@
           var si = await _supabase.auth.signInWithPassword({ email: email, password: password });
           if (si.error) console.warn('[Auth] Post-signup sign-in failed (DB inserts may be blocked by RLS):', si.error.message);
         } catch (siErr) {
+          if(typeof Sentry!=='undefined')Sentry.captureException(siErr);
           console.warn('[Auth] Post-signup sign-in threw:', siErr.message);
         }
       }
@@ -58,9 +59,11 @@
         whatsapp_number: profile.whatsapp || phone,
         location: profile.location || ''
       };
+      var profileErrors = [];
       var ownerRes = await _supabase.from('owners').insert(ownerPayload).select();
       if (ownerRes.error) {
         console.error('[Auth] OWNER INSERT FAILED — message:', ownerRes.error.message, '| details:', ownerRes.error.details, '| hint:', ownerRes.error.hint, '| code:', ownerRes.error.code);
+        profileErrors.push('Owner profile could not be saved: ' + (ownerRes.error.message || 'unknown error'));
       } else {
         console.log('[Auth] Owner record created with id:', userId);
       }
@@ -82,15 +85,18 @@
       var dogRes = await _supabase.from('dogs').insert(dogPayload).select();
       if (dogRes.error) {
         console.error('[Auth] DOG INSERT FAILED — message:', dogRes.error.message, '| details:', dogRes.error.details, '| hint:', dogRes.error.hint, '| code:', dogRes.error.code);
+        profileErrors.push('Dog profile could not be saved: ' + (dogRes.error.message || 'unknown error'));
       } else if (dogRes.data && dogRes.data.length > 0) {
         console.log('[Auth] Dog record created. dog_id:', dogRes.data[0].id);
       } else {
+        profileErrors.push('Dog insert returned no data — RLS or column mismatch');
         console.warn('[Auth] Dog insert returned no data. Check RLS policies and column names on the dogs table.');
       }
 
-      return { success: true, user: result.data.user, session: result.data.session };
+      return { success: true, user: result.data.user, session: result.data.session, profileError: profileErrors.length > 0 ? profileErrors.join('; ') : null };
     } catch (e) {
       console.error('[Auth] signUp error:', e.message || e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       return { success: false, error: e.message || 'Sign-up failed' };
     }
   }
@@ -105,6 +111,7 @@
       return { success: true, user: result.data.user, session: result.data.session };
     } catch (e) {
       console.error('[Auth] signIn error:', e.message || e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       return { success: false, error: e.message || 'Login failed' };
     }
   }
@@ -119,6 +126,7 @@
       return { success: true };
     } catch (e) {
       console.error('[Auth] signOut error:', e.message || e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       return { success: false, error: e.message || 'Sign-out failed' };
     }
   }
@@ -141,6 +149,7 @@
       return session;
     } catch (e) {
       console.error('[Auth] getSession error:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       return null;
     }
   }
@@ -151,9 +160,14 @@
       if (!_supabase) return null;
       var result = await _supabase.auth.getUser();
       if (result.error) throw result.error;
-      return result.data ? result.data.user : null;
+      var user = result.data ? result.data.user : null;
+      if (user && typeof Sentry !== 'undefined') {
+        Sentry.setUser({ id: user.id, email: user.email });
+      }
+      return user;
     } catch (e) {
       console.error('[Auth] getUser error:', e);
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       return null;
     }
   }
@@ -163,7 +177,10 @@
   /* ── Extract phone from auth email ── */
   function getPhoneFromUser(user) {
     if (!user || !user.email) return '';
-    return user.email.replace('@a1.com', '');
+    if (user.email.endsWith('@a1.com')) {
+      return user.email.slice(0, -7);
+    }
+    return '';
   }
 
   /* ── Check if current user is admin ── */
@@ -177,7 +194,7 @@
 
   /* ── Auth state listener ── */
   function onAuthStateChange(callback) {
-    if (!_supabase) return { unsubscribe: function() {} };
+    if (!_supabase) return { data: { subscription: { unsubscribe: function() {} } } };
     return _supabase.auth.onAuthStateChange(callback);
   }
 
@@ -413,6 +430,7 @@
       }
       return { success: true };
     } catch (e) {
+      if(typeof Sentry!=='undefined')Sentry.captureException(e);
       var msg = e.message || 'Login failed';
       if (msg.indexOf('Invalid login credentials') !== -1) msg = 'Invalid email or password.';
       return { success: false, error: msg };

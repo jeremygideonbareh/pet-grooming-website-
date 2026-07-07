@@ -2,6 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script src="https://browser.sentry-cdn.com/7.120.3/bundle.tracing.min.js" integrity="sha384-xeXUc9z8cJbRsjOleYBHEV9rZIBCcyXc8fd62MHA/aosms+xLqnFIIQPTmGNCUm3" crossorigin="anonymous"></script>
+  <script>
+  Sentry.init({
+    dsn:'https://a52c0999f33bfcce09fad26459d4839e@o4511678068686848.ingest.de.sentry.io/4511678075633744',
+    environment:'production',
+    tracesSampleRate:0.1,
+    denyUrls:[/cdn\.jsdelivr\.net/,/cdnjs\.cloudflare\.com/],
+    beforeSend:function(event){
+      if(event.user)delete event.user.email;
+      if(event.request&&event.request.data){
+        delete event.request.data.password;
+        delete event.request.data.password_confirm;
+        delete event.request.data.phone;
+        delete event.request.data.full_name;
+        delete event.request.data.location;
+        delete event.request.data.dog_name;
+        delete event.request.data.whatsapp_number;
+      }
+      if(event.request&&event.request.headers){
+        if(event.request.headers.Authorization)event.request.headers.Authorization='[REDACTED]';
+      }
+      if(event.breadcrumbs){
+        event.breadcrumbs.forEach(function(b){
+          if(b.data){
+            delete b.data.password;
+            delete b.data.phone;
+            delete b.data.full_name;
+            delete b.data.location;
+            delete b.data.dog_name;
+            delete b.data.whatsapp_number;
+          }
+        });
+      }
+      return event;
+    }
+  })
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Boarding & Kennels � A-1 Enterprises | Shillong</title>
   <meta name="description" content="Safe, comfortable pet boarding and kennel facilities by A-1 Enterprises in Shillong, Meghalaya. 24/7 supervision, care, and professional attention.">
