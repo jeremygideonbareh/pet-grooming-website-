@@ -67,6 +67,7 @@ ul{list-style:none}
 
 /* ── HERO ── */
 .page-hero{background:linear-gradient(135deg,rgba(26,20,18,.75),rgba(26,20,18,.55)),url('https://images.unsplash.com/photo-1440778303588-435521a205bc?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;text-align:center;color:#fff}
+@media(max-width:768px){.page-hero{background:linear-gradient(135deg,rgba(26,20,18,.75),rgba(26,20,18,.55)),url('https://images.unsplash.com/photo-1440778303588-435521a205bc?auto=format&fit=crop&w=640&q=80') center/cover no-repeat}}
 .page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:900;letter-spacing:-.02em}
 .page-hero p{font-size:1rem;color:rgba(255,255,255,.7);max-width:560px;margin:14px auto 0;line-height:1.6}
 
@@ -150,7 +151,8 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
 @media(max-width:768px){
   .features-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
   .content-section{padding:60px 0}
-  .page-hero{padding:100px 24px 60px}
+  .page-hero{padding:80px 24px 60px}
+  .feature-card,.features-list li{backdrop-filter:none;-webkit-backdrop-filter:none}
 }
 @media(max-width:640px){
   .page-hero{padding:90px 20px 50px}
@@ -162,6 +164,7 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
   .cta-section h2{font-size:clamp(1.4rem,5vw,1.8rem)}
 }
 @media(max-width:480px){
+  .container{padding:0 16px}
   .page-hero{padding:80px 16px 40px}
   .content-section{padding:40px 0}
   .section-title{font-size:clamp(1.4rem,5vw,1.6rem)}
@@ -173,8 +176,11 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
   .features-list li{font-size:.82rem;padding:10px 12px}
   .cta-section{padding:50px 0}
   .btn{padding:12px 24px;font-size:.82rem}
+  .footer-inner{flex-direction:column;text-align:center}
+  .footer-inner .links{gap:12px;flex-wrap:wrap;justify-content:center}
 }
 @media(max-width:360px){
+  .container{padding:0 14px}
   .page-hero{padding:72px 14px 32px}
   .page-hero h1{font-size:clamp(1.4rem,5vw,1.6rem)}
   .content-section{padding:32px 0}
