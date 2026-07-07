@@ -2404,7 +2404,7 @@ Desktop (3-col bento):          Tablet (2-col):       Mobile (<640px):
 - `db.js` — rewrote `checkSlotAvailability()` to use edge function
 - `HANDOFF.md` — Session 21 summary
 
-### Session 22 — A1 Enterprise Mobile Optimization
+### Session 22 — A1 Enterprise
 
 **Date:** July 7, 2026
 
