@@ -2,4 +2,5 @@
 .gitignore
 .wrangler/
 *.md
-scrolling efffect/
+.opencode/
+scrolling effect/
