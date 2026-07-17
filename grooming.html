@@ -57,8 +57,8 @@ body{
 img{display:block;max-width:100%;height:auto}
 
 /* -- FLOATING LOGO -- */
-.floating-logo{position:fixed;top:12px;left:16px;z-index:1001;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.15);border-radius:60px;padding:6px 16px 6px 6px;font-family:'Playfair Display',serif;font-weight:800;font-size:1rem;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.15);transition:box-shadow .3s ease;text-decoration:none;white-space:nowrap}
-.floating-logo img{width:32px;height:32px;border-radius:50%;object-fit:cover}
+.floating-logo{position:fixed;top:12px;left:16px;z-index:1001;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.15);border-radius:60px;padding:6px 16px 6px 6px;font-family:'Playfair Display',serif;font-weight:800;font-size:1rem;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.15);transition:box-shadow .3s ease;text-decoration:none;white-space:nowrap;overflow:hidden}
+.floating-logo img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0}
 .floating-logo.scrolled{box-shadow:0 4px 20px rgba(0,0,0,.25)}
 .nav-island{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.08);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.1);border-radius:60px;padding:6px 20px;display:flex;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.1);transition:box-shadow .3s ease}
 .nav-island.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.2)}
@@ -81,7 +81,7 @@ img{display:block;max-width:100%;height:auto}
 .mobile-nav .btn-whatsapp{margin-top:12px;padding:12px 28px;border-radius:60px;display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);font-weight:600;font-size:.9rem;text-decoration:none}
 .whatsapp-fab{position:fixed;bottom:24px;right:24px;z-index:1001;width:56px;height:56px;border-radius:50%;background:var(--whatsapp);color:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.35);transition:all .3s ease;text-decoration:none}
 .whatsapp-fab:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(37,211,102,.4)}
-@media(max-width:1024px){.nav-island .nav-links{display:none}.nav-island .nav-social{display:none}.hamburger{display:flex}.floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}.floating-logo img{width:28px;height:28px}.nav-island{padding:4px 10px;top:10px}.whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}}
+@media(max-width:1024px){.nav-island .nav-links{display:none}.nav-island .nav-social{display:none}.hamburger{display:flex}.floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}.floating-logo img{width:28px;height:28px}.floating-logo{display:none}.nav-island{padding:4px 10px;top:10px}.whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}}
 
 /* -- BOOKING MODAL -- */
 .booking-overlay{position:fixed;inset:0;z-index:2000;background:rgba(26,20,18,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:24px}
@@ -201,7 +201,7 @@ img{display:block;max-width:100%;height:auto}
 .hero-social a:hover{background:rgba(255,255,255,0.25);transform:translateY(-2px)}
 .hero-social svg{width:18px;height:18px}
 @media(max-width:1024px){.hero-social{top:16px;right:16px;gap:8px}.hero-social a{width:32px;height:32px}.hero-social svg{width:16px;height:16px}}
-@media(max-width:640px){.hero-social{top:12px;right:12px;gap:6px}.hero-social a{width:28px;height:28px}.hero-social svg{width:14px;height:14px}}
+@media(max-width:640px){.hero-social{top:12px;right:12px;gap:6px;display:none}.hero-social a{width:28px;height:28px}.hero-social svg{width:14px;height:14px}}
 .hero-overlay{
   position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(14,10,8,.15) 0%,rgba(14,10,8,.55) 100%);
@@ -538,7 +538,7 @@ footer .fb{font-size:1.1rem;font-weight:900;color:#2E241F;margin-bottom:6px}
   </div>
 </div>
 
-<a href="index.html" class="floating-logo" id="floatingLogo"><img src="images/logo1.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
+<a href="index.html" class="floating-logo" id="floatingLogo"><img src="images/logo1.jpeg" alt="A-1 Enterprises" loading="lazy"><span class="flogo-text">A-1 Enterprises</span></a>
 <nav class="nav-island" id="navIsland">
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>

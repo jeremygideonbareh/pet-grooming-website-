@@ -144,9 +144,9 @@ ul{list-style:none}
   font-family:'Playfair Display',Georgia,serif;
   font-weight:800;font-size:1rem;color:var(--forest);
   box-shadow:0 4px 20px rgba(0,0,0,.04);
-  transition:box-shadow .3s ease;text-decoration:none;white-space:nowrap;
+  transition:box-shadow .3s ease;text-decoration:none;white-space:nowrap;overflow:hidden;
 }
-.floating-logo img{width:32px;height:32px;border-radius:50%;object-fit:cover}
+.floating-logo img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0}
 .floating-logo.scrolled{box-shadow:0 4px 20px rgba(0,0,0,.08)}
 
 /* â”€â”€ FLOATING NAV ISLAND â”€â”€ */
@@ -213,7 +213,7 @@ ul{list-style:none}
 .hero-social a:hover{background:rgba(255,255,255,0.25);transform:translateY(-2px)}
 .hero-social svg{width:18px;height:18px}
 @media(max-width:1024px){.hero-social{top:16px;right:16px;gap:8px}.hero-social a{width:32px;height:32px}.hero-social svg{width:16px;height:16px}}
-@media(max-width:640px){.hero-social{top:12px;right:12px;gap:6px}.hero-social a{width:28px;height:28px}.hero-social svg{width:14px;height:14px}}
+@media(max-width:640px){.hero-social{top:12px;right:12px;gap:6px;display:none}.hero-social a{width:28px;height:28px}.hero-social svg{width:14px;height:14px}}
 .hero-content{
   position:relative;z-index:2;text-align:center;
   max-width:820px;width:100%;
@@ -860,7 +860,7 @@ footer{
         <div class="founder-note">
           <h4>✦ Founder's Note</h4>
           <p>"A-1 Enterprises was built from passion, struggle, and dedication towards dogs. What started as a personal obsession gradually evolved into a profession, and today, into a larger vision of creating a complete ecosystem for pets and working dogs in the Northeast."</p>
-          <p class="section-sub" style="color:rgba(255,255,255,.6);margin-top:10px;font-size:.82rem">Founded by <strong style="color:var(--sunbeam)">Mrs. Francisca S. Sangma</strong>, with the unwavering support of her family whose shared vision and encouragement continue to play a vital role in the growth of A-1 Enterprises.</p>
+          <p class="section-sub" style="color:rgba(255,255,255,.6);margin-top:10px;font-size:.82rem">Founded by <strong style="color:var(--sunbeam)">Mrs. Francisca S. Sangma</strong>, with the unwavering support of her husband (co-founder) whose shared vision and encouragement continue to play a vital role in the growth of A-1 Enterprises.</p>
           <span class="sign">— Founder, A-1 Enterprises</span>
         </div>
       </div>
@@ -879,7 +879,7 @@ footer{
         </div>
         <div class="wc-item reveal reveal-delay-2">
           <div class="icon">🎯</div>
-          <h4>Personalized Training Programs</h4>
+          <h4>Proven Science based Training Programs</h4>
           <p>Every dog is unique. We design custom training plans based on temperament, behavior, and specific goals for lasting results.</p>
         </div>
         <div class="wc-item reveal reveal-delay-3">
@@ -1206,6 +1206,10 @@ document.addEventListener('DOMContentLoaded', function(){
 document.addEventListener('contentLoaded', function(){
   if(typeof Kinetic==='undefined')return;
   Kinetic.revealSection('.gallery-item');
+  // Fix: Ensure testimonials grid is visible after dynamic content load
+  var testGrid=document.querySelector('.test-grid');
+  if(testGrid){gsap.set(testGrid,{opacity:1,y:0});}
+  Kinetic.revealSection('.test-card');
   // Fix gallery lightbox for dynamically loaded items
   document.querySelectorAll('#galleryGrid .gallery-item, #galleryGrid img').forEach(function(item){
     item.addEventListener('click', function(){

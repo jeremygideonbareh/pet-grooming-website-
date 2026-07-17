@@ -80,8 +80,8 @@ ul{list-style:none}
 @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── FLOATING LOGO ── */
-.floating-logo{position:fixed;top:12px;left:16px;z-index:1001;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.65);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.25);border-radius:60px;padding:6px 16px 6px 6px;font-family:'Playfair Display',serif;font-weight:800;font-size:1rem;color:var(--forest);box-shadow:0 4px 20px rgba(0,0,0,.04);transition:box-shadow .3s ease;text-decoration:none;white-space:nowrap}
-.floating-logo img{width:32px;height:32px;border-radius:50%;object-fit:cover}
+.floating-logo{position:fixed;top:12px;left:16px;z-index:1001;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.65);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.25);border-radius:60px;padding:6px 16px 6px 6px;font-family:'Playfair Display',serif;font-weight:800;font-size:1rem;color:var(--forest);box-shadow:0 4px 20px rgba(0,0,0,.04);transition:box-shadow .3s ease;text-decoration:none;white-space:nowrap;overflow:hidden}
+.floating-logo img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0}
 .floating-logo.scrolled{box-shadow:0 4px 20px rgba(0,0,0,.08)}
 .nav-island{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.6);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.25);border-radius:60px;padding:6px 20px;display:flex;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.04);transition:box-shadow .3s ease}
 .nav-island.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.1)}
@@ -100,7 +100,7 @@ ul{list-style:none}
 .mobile-nav .btn-whatsapp{margin-top:12px;padding:12px 28px;border-radius:60px;display:inline-flex;align-items:center;gap:8px;background:var(--whatsapp);color:var(--white);font-weight:600;font-size:.9rem;text-decoration:none}
 .whatsapp-fab{position:fixed;bottom:24px;right:24px;z-index:1001;width:56px;height:56px;border-radius:50%;background:var(--whatsapp);color:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.35);transition:all .3s ease;text-decoration:none}
 .whatsapp-fab:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(37,211,102,.4)}
-@media(max-width:1024px){.nav-island .nav-links{display:none}.hamburger{display:flex}.floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}.floating-logo img{width:28px;height:28px}.nav-island{padding:4px 10px;top:10px}.whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}}
+@media(max-width:1024px){.nav-island .nav-links{display:none}.nav-island .nav-social{display:none}.hamburger{display:flex}.floating-logo{font-size:.85rem;padding:4px 12px 4px 4px;top:10px;left:12px}.floating-logo img{width:28px;height:28px}.floating-logo{display:none}.nav-island{padding:4px 10px;top:10px}.whatsapp-fab{width:48px;height:48px;bottom:16px;right:16px}}
 
 /* ── CONTENT ── */
 .content-section{padding:80px 0}
@@ -193,7 +193,7 @@ footer{background:var(--forest-light);padding:48px 0 28px;color:rgba(255,255,255
 </head>
 <body data-page="eco">
 <div id="pageLoader" class="page-loader"><div class="loader-content" style="text-align:center"><img src="images/logo1.jpeg" alt="A-1 Enterprises" style="width:40vw;max-width:400px;height:auto;border-radius:24px;object-fit:contain;margin:0 auto 28px;display:block;animation:slideUp .6s ease both"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.01em;animation:slideUp .6s ease .15s both">A-1 Enterprises</div><div style="font-size:.85rem;color:var(--sunbeam);margin-bottom:4px;animation:slideUp .6s ease .3s both">Passion Turned Profession</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);animation:slideUp .6s ease .45s both">Eco Cottages</div></div><div class="loader-bar"></div></div>
-<a href="index.html" class="floating-logo" id="floatingLogo"><img src="images/logo1.jpeg" alt="A-1 Enterprises" loading="lazy">A-1 Enterprises</a>
+<a href="index.html" class="floating-logo" id="floatingLogo"><img src="images/logo1.jpeg" alt="A-1 Enterprises" loading="lazy"><span class="flogo-text">A-1 Enterprises</span></a>
 <nav class="nav-island" id="navIsland">
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
