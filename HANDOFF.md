@@ -1,4 +1,4 @@
-﻿# A-1 Enterprises Website — Complete Handover & Architecture Guide
+# A-1 Enterprises Website — Complete Handover & Architecture Guide
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
@@ -1215,14 +1215,34 @@ In Pages dashboard → your project → **Custom domains** → **Set up a custom
 ### Worker vs Pages
 The project previously used a Cloudflare Worker deployment at `aenterprisewebsite.cloudlyconfusing.workers.dev` (which had a 25 MiB asset limit). This was replaced by **Cloudflare Pages** (`a1-enterprises.pages.dev`) for proper static hosting. The old Worker has been deleted.
 
-### Credentials
-- **Cloudflare API Token**: stored locally at `~/.config/opencode/secrets/cloudflare.txt` (NOT in git)
-- **Cloudflare Account ID**: `6450bfe26bbac5dbfa679d5af793705d`
+### Cloudflare Accounts & Tokens (IMPORTANT — two distinct accounts)
+
+The domain `a-1enterprises.co.in` and the Pages deployment are on **two different Cloudflare accounts**. Do NOT mix up their tokens.
+
+| Token file (under `~/.config/opencode/secrets/`) | Account | Owner | Scope | Use |
+|---|---|---|---|---|
+| `cloudflare.txt` | `6450bfe26bbac5dbfa679d5af793705d` | **Dev** (cloudlyconfusing) | Account → Workers & Pages → Edit | Pages deployment of `a1-enterprises.pages.dev` |
+| `cloudflare-client-dns.txt` | `622c2cd74bf224b35a0ef487ec16f0e5` | **Client** (A1.enterprises8891@gmail.com) | Zone → Read + DNS → Edit on `a-1enterprises.co.in` only | DNS records for Resend email verification (SPF, DKIM CNAMEs, MX, resend-verify TXT) |
+
+**Key facts:**
+- Client's zone ID: `ec05bfba958285e98b4a82facefeaf44`
+- Zone is actively delegated to Cloudflare nameservers `alice.ns.cloudflare.com` + `kobe.ns.cloudflare.com`
+- The dev's token (`cloudflare.txt`) **cannot see the client's zone** — it only manages the Pages project. Any DNS work on `a-1enterprises.co.in` requires the client's token.
+- Neither token is in git; both live under `~/.config/opencode/secrets/`.
+
+### Resend Accounts & Keys
+
+| Key file (under `~/.config/opencode/secrets/`) | Owner | Use |
+|---|---|---|
+| `resend-a1-client.txt` | **Client** (`a1.enterprises8891@gmail.com` — signed up themselves in July 2026) | A-1 production booking notifications only; sending domain `mail.a-1enterprises.co.in` |
+
+Dev's pre-existing Resend account (key not stored in project; used for OTHER clients) remains separate.
+
+### Other Credentials
 - **Supabase project ref**: `hqgdifxecxrxhjsbavkl`
 - **Supabase anon key**: in `auth.js` (publishable, client-side safe with RLS)
-- **Resend API key**: stored as Supabase Edge Function secret `RESEND_API_KEY`
-- **Notification email**: `cloudlyconfusing@gmail.com` (stored as `NOTIFICATION_EMAIL` secret)
-
+- **Notification email**: `a1.enterprises8891@gmail.com` (stored as `NOTIFICATION_EMAIL` secret), CC `cloudlyconfusing@gmail.com` (stored as `NOTIFICATION_CC` secret)
+- **From email**: `A-1 Enterprises <noreply@mail.a-1enterprises.co.in>` (stored as `RESEND_FROM_EMAIL` secret)
 ---
 
 ## Security Notes
@@ -1954,7 +1974,8 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 **Bugs fixed:**
 
 **1. Universal GSAP kinetic.js bug (ALL pages):**
-- kinetic.js:133 — evealSection() used gsap.from(el, {opacity:0}) which animates TO the current computed value. Since CSS .reveal already sets opacity:0, GSAP animated  →0 — elements stayed permanently invisible.
+- kinetic.js:133 — 
+evealSection() used gsap.from(el, {opacity:0}) which animates TO the current computed value. Since CSS .reveal already sets opacity:0, GSAP animated  →0 — elements stayed permanently invisible.
 - **Fix:** Changed to gsap.fromTo(el, {opacity:0, y:60}, {y:0, opacity:1, ...}) — always animates to explicit opacity:1.
 
 **2. Hero overlay removed (index.html):**
@@ -1983,7 +2004,8 @@ The `git push` triggers Cloudflare Pages auto-deploy.
 - Fixed by kinetic.js romTo fix + contentLoaded duplicate removal.
 
 ### Files changed (Session 10):
-- kinetic.js — gsap.from() → gsap.fromTo() in evealSection
+- kinetic.js — gsap.from() → gsap.fromTo() in 
+evealSection
 - index.html — hero overlay removed, gallery uses 13 client photos, IntersectionObserver removed
 - 	raining.html — IntersectionObserver removed, duplicate contentLoaded handler removed
 - grooming.html — duplicate contentLoaded handler removed
@@ -2419,3 +2441,43 @@ Desktop (3-col bento):          Tablet (2-col):       Mobile (<640px):
 **Files changed:**
 - `eco-cottages.html` — all mobile CSS fixes
 - `HANDOFF.md` — Session 22 summary
+
+### Session 23 — Production booking email pipeline wired
+
+**Date:** July 21, 2026
+
+**Summary:** Customer booking notifications now flow from a verified sender to the client's inbox. The pipeline is fully server-side (no more client-side `sb.functions.invoke` calls).
+
+**What was done:**
+1. **Secrets infrastructure** — 4 secrets files created/relabeled under `~/.config/opencode/secrets/` distinguishing client-owned accounts from dev's. HANDOFF.md Credentials section rewritten as 2-account table.
+2. **Resend sending domain** — `mail.a-1enterprises.co.in` created on client-owned Resend account. DNS records (DKIM TXT, SPF MX, SPF TXT) pushed to Cloudflare via client's DNS token. Domain verified successfully.
+3. **Edge function patched** — `send-booking-email/index.ts` fixed: `ALLOWED_ORIGIN` default → `https://a-1enterprises.co.in`, conditional CC support for `cloudlyconfusing@gmail.com`, From default → `A-1 Enterprises <noreply@mail.a-1enterprises.co.in>`.
+4. **Edge function deployed** — v19 ACTIVE, `--no-verify-jwt` set. 5 secrets configured: `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `NOTIFICATION_EMAIL`, `NOTIFICATION_CC`, `ALLOWED_ORIGIN`.
+5. **Trigger consolidation** — Both legacy INSERT triggers on `bookings` dropped. Legacy `send_booking_email_trigger()` function dropped. Service-role JWT stored in Supabase vault (`send_booking_ef_jwt`). New clean trigger `trg_send_booking_email` fires on INSERT, reads JWT from vault, calls edge function via `net.http_post`. One trigger, one function, no hardcoded tokens.
+6. **HTML cleanup** — `sb.functions.invoke('send-booking-email', ...)` removed from `boarding.html`, `grooming.html`, `training.html` (3 client-side call sites, all dead code now).
+7. **Admin user seeded** — `a1.enterprises8891@gmail.com` created via Auth Admin API with `email_confirm=true`.
+8. **End-to-end test** — Test booking inserted; `net._http_response` showed 200; email accepted by Resend. Test row cleaned up.
+9. **DNS records added to Cloudflare:** `resend._domainkey.mail.a-1enterprises.co.in` (DKIM TXT), `send.mail.a-1enterprises.co.in` (MX → `feedback-smtp.us-east-1.amazonses.com`), `send.mail.a-1enterprises.co.in` (SPF TXT).
+
+**Email flow:**
+```
+Customer submits booking → DB INSERT → trigger trg_send_booking_email fires
+→ reads JWT from vault → net.http_post → Edge Function send-booking-email
+→ fetch owner+dog details via service-role key → build HTML email
+→ POST to Resend API → email sent: From="A-1 Enterprises <noreply@mail.a-1enterprises.co.in>"
+  To=a1.enterprises8891@gmail.com, CC=cloudlyconfusing@gmail.com
+```
+
+**Files changed:**
+- `supabase/functions/send-booking-email/index.ts` — patched (ALLOWED_ORIGIN, CC, From)
+- `supabase/migrations/20260721000001_clean_booking_email_trigger.sql` — NEW migration
+- `boarding.html` — removed client-side email invoke
+- `grooming.html` — removed client-side email invoke
+- `training.html` — removed client-side email invoke
+- `HANDOFF.md` — credentials section + session 23 summary
+
+**Key decisions:**
+- Using `mail.a-1enterprises.co.in` subdomain (not root)
+- Client's Resend key replaced with full-access key `re_gxk2YEeF_C1oXy7u8FYaPChyS6HofrUGS`
+- Service-role JWT in vault (not in code); rotation is one `vault.update_secret()` call
+- Exactly one trigger, no duplicates (2 legacy triggers + 3 client-side invokes all removed)
