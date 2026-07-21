@@ -2478,6 +2478,6 @@ Customer submits booking → DB INSERT → trigger trg_send_booking_email fires
 
 **Key decisions:**
 - Using `mail.a-1enterprises.co.in` subdomain (not root)
-- Client's Resend key replaced with full-access key `re_gxk2YEeF_C1oXy7u8FYaPChyS6HofrUGS`
+- Client's Resend key replaced with new full-access key
 - Service-role JWT in vault (not in code); rotation is one `vault.update_secret()` call
 - Exactly one trigger, no duplicates (2 legacy triggers + 3 client-side invokes all removed)
