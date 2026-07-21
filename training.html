@@ -675,13 +675,6 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     }
     document.getElementById('bookingForm').style.display='none';
 
-    try {
-      await sb.functions.invoke('send-booking-email', {
-        body: { record: { owner_id:userId, dog_id:dog?(dog.dog_id||dog.id):null, service_category:'Training', service_specific:program, contact_method:contactMethod, notes:notes, status:'pending' } }
-      });
-    } catch(e) {
-      console.error('[Booking] Email notification failed:', e);
-    }
 
     document.getElementById('bookingSuccess').style.display='block';
     if(btn){btn.textContent=origText;btn.disabled=false}

@@ -1038,14 +1038,6 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
     }
     document.getElementById('bookingForm').style.display='none';
 
-    try {
-      await sb.functions.invoke('send-booking-email', {
-        body: { record: { owner_id:userId, dog_id:dog?(dog.dog_id||dog.id):null, service_category:'Grooming', service_specific:svc, start_date:date, time_slot:timeWindow, status:'pending', pickup_required:pickupReq, pickup_address:pickupAddr } }
-      });
-    } catch(e) {
-      console.error('[Booking] Email notification failed:', e);
-      if(typeof Sentry!=='undefined')Sentry.captureException(e);
-    }
 
     document.getElementById('bookingSuccess').style.display='block';
   }catch(err){

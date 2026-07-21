@@ -642,13 +642,6 @@ document.getElementById('bookingForm')?.addEventListener('submit',async function
       console.error("[Booking] Insert Error Details:",JSON.stringify(bookRes.error));
       throw bookRes.error;
     }
-    try {
-      await sb.functions.invoke('send-booking-email', {
-        body: { record: { owner_id:userId, dog_id:dogId, service_category:'Boarding', service_specific:'', start_date:sd, end_date:ed, notes:msg, pickup_required:pickupReq, pickup_address:pickupAddr, vaccination_card_data:vacData, vaccination_card_name:vacName, vaccination_card_type:vacType } }
-      });
-    } catch(e) {
-      console.error('[Booking] Email notification failed:', e);
-    }
     closeBook();
     setTimeout(function(){alert('Thank you for your boarding request. Our team has been notified and will contact you to confirm availability. Think Pet ?? Think A-1')},500);
   }catch(err){

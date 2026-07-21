@@ -1,4 +1,4 @@
-const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") || "https://a1enterprises.in";
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") || "https://a-1enterprises.co.in";
 
 function getCorsHeaders(origin) {
   return {
@@ -182,19 +182,22 @@ Deno.serve(async (req) => {
       }
     }
 
+    const ccEmail = Deno.env.get("NOTIFICATION_CC");
+    const emailBody = {
+      from: Deno.env.get("RESEND_FROM_EMAIL") || "A-1 Enterprises <noreply@mail.a-1enterprises.co.in>",
+      to: Deno.env.get("NOTIFICATION_EMAIL") || "a1.enterprises8891@gmail.com",
+      subject: `New Booking: ${record.service_specific || "Inquiry"} \u2014 ${record.service_category || "A-1 Enterprises"}`,
+      html,
+      ...(attachments.length > 0 ? { attachments } : {}),
+      ...(ccEmail ? { cc: ccEmail } : {}),
+    };
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${resendApiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        from: Deno.env.get("RESEND_FROM_EMAIL") || "onboarding@resend.dev",
-        to: Deno.env.get("NOTIFICATION_EMAIL") || "cloudlyconfusing@gmail.com",
-        subject: `New Booking: ${record.service_specific || "Inquiry"} \u2014 ${record.service_category || "A-1 Enterprises"}`,
-        html,
-        ...(attachments.length>0?{attachments}:{}),
-      }),
+      body: JSON.stringify(emailBody),
     });
 
     if (!res.ok) {
