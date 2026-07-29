@@ -487,18 +487,22 @@ input,textarea,select,button{font-family:inherit}
 
     <div id="tabTraining" class="tab-content">
       <div class="content-editor" id="trainingEditor"></div>
+      <button class="cf-save" id="saveTrainingBtn">💾 Save Training Changes</button>
     </div>
 
     <div id="tabGrooming" class="tab-content">
       <div class="content-editor" id="groomingEditor"></div>
+      <button class="cf-save" id="saveGroomingBtn">💾 Save Grooming Changes</button>
     </div>
 
     <div id="tabBoarding" class="tab-content">
       <div class="content-editor" id="boardingEditor"></div>
+      <button class="cf-save" id="saveBoardingBtn">💾 Save Boarding Changes</button>
     </div>
 
     <div id="tabEco" class="tab-content">
       <div class="content-editor" id="ecoEditor"></div>
+      <button class="cf-save" id="saveEcoBtn">💾 Save Eco Cottages Changes</button>
     </div>
 
     <div id="tabBookings" class="tab-content">
@@ -2233,6 +2237,18 @@ function collectEcoData(){
 
 // ── Save content ──
 document.getElementById('saveContentBtn').addEventListener('click',async function(){
+  await saveAllContent();
+});
+document.getElementById('saveTrainingBtn').addEventListener('click',async function(){
+  await saveAllContent();
+});
+document.getElementById('saveGroomingBtn').addEventListener('click',async function(){
+  await saveAllContent();
+});
+document.getElementById('saveBoardingBtn').addEventListener('click',async function(){
+  await saveAllContent();
+});
+document.getElementById('saveEcoBtn').addEventListener('click',async function(){
   await saveAllContent();
 });
 
