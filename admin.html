@@ -887,7 +887,6 @@ document.getElementById('imgInput').addEventListener('change',async function(){
 document.getElementById('productForm').addEventListener('submit',async function(e){
   e.preventDefault();
   if(typeof Sentry!=='undefined'){Sentry.addBreadcrumb({message:'Product save started',category:'admin',level:'info'})}
-  const products=await loadProducts();
   const name=document.getElementById('prodName').value.trim();
   const price=document.getElementById('prodPrice').value.trim();
   const cat=document.getElementById('prodCat').value;
@@ -898,34 +897,32 @@ document.getElementById('productForm').addEventListener('submit',async function(
 
   const catLabel=getCatLabel(cat);
 
-  if(editId){
-    // Edit existing
-    const idx=products.findIndex(x=>x.id===editId);
-    if(idx!==-1){
-      products[idx].name=name;
-      products[idx].price=price;
-      products[idx].cat=cat;
-      products[idx].catLabel=catLabel;
-      products[idx].desc=desc;
-      if(uploadedImageData)products[idx].img=uploadedImageData;
+  try {
+    if(editId){
+      // Edit existing - use direct update
+      const updates={name,price,cat,catLabel,desc};
+      if(uploadedImageData)updates.img=uploadedImageData;
+      await DB.updateProduct(editId,updates);
+    }else{
+      // New product - use direct insert
+      const newProduct={
+        id:generateId(),
+        name,
+        price,
+        cat,
+        catLabel,
+        desc,
+        img:uploadedImageData||'',
+      };
+      await DB.addProduct(newProduct);
     }
-  }else{
-    // New product
-    products.push({
-      id:generateId(),
-      name,
-      price,
-      cat,
-      catLabel,
-      desc,
-      img:uploadedImageData||'',
-    });
+    uploadedImageData=null;
+    closeFormModal();
+    await renderDashboard();
+  } catch(e) {
+    console.error('[Admin] Save product failed:',e);
+    alert('Save failed: '+(e.message||e));
   }
-
-  await saveProducts(products);
-  uploadedImageData=null;
-  closeFormModal();
-  await renderDashboard();
 });
 
 // ── Delete ──
