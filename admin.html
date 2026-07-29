@@ -886,6 +886,7 @@ document.getElementById('imgInput').addEventListener('change',async function(){
 // ── Save product ──
 document.getElementById('productForm').addEventListener('submit',async function(e){
   e.preventDefault();
+  console.log('[Admin] Product form submitted, editId:', document.getElementById('editId').value);
   if(typeof Sentry!=='undefined'){Sentry.addBreadcrumb({message:'Product save started',category:'admin',level:'info'})}
   const name=document.getElementById('prodName').value.trim();
   const price=document.getElementById('prodPrice').value.trim();
