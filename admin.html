@@ -417,9 +417,17 @@ input,textarea,select,button{font-family:inherit}
 <div id="accessDenied" class="login-overlay" style="display:none">
   <div class="login-card">
     <div class="lock-icon">🔒</div>
-    <h1>Access Denied</h1>
-    <p style="margin-bottom:20px">You are not authorized to access this page.</p>
-    <a href="index.html" style="display:inline-block;padding:12px 28px;border-radius:60px;background:var(--sunbeam);color:var(--forest);font-weight:700;font-size:.9rem;text-decoration:none">Go Home</a>
+    <h1>Admin Login</h1>
+    <p style="margin-bottom:20px;color:var(--text-muted);font-size:.85rem">Sign in with your admin credentials</p>
+    <div style="display:flex;flex-direction:column;gap:12px;max-width:320px;margin:0 auto">
+      <input type="email" id="adminEmail" placeholder="Admin Email" autocomplete="email" style="padding:10px 14px;border-radius:8px;border:1px solid var(--sage-dark);background:var(--cream);font-size:.9rem;outline:none;width:100%;box-sizing:border-box">
+      <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password" style="padding:10px 14px;border-radius:8px;border:1px solid var(--sage-dark);background:var(--cream);font-size:.9rem;outline:none;width:100%;box-sizing:border-box">
+      <button onclick="handleAdminLogin()" style="padding:10px 20px;border-radius:60px;background:var(--sunbeam);color:var(--forest);font-weight:700;font-size:.9rem;border:none;cursor:pointer;transition:opacity .2s">Sign In</button>
+      <p id="loginError" style="color:#d32f2f;font-size:.8rem;display:none"></p>
+    </div>
+    <p style="margin-top:20px;font-size:.8rem;color:var(--text-muted)">
+      <a href="index.html" style="color:var(--sage)">← Back to site</a>
+    </p>
   </div>
 </div>
 
