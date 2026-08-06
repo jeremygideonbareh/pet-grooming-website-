@@ -55,6 +55,7 @@
   /**
    * Save all site content.
    * @param {Object} dataObj - The full content object.
+   * @throws {Error} If the upsert fails — never silently succeeds.
    */
   async function saveSiteContent(dataObj) {
     try {
@@ -67,10 +68,13 @@
         }, { onConflict: 'id' });
       if (result.error) {
         console.error('[DB] saveSiteContent error:', result.error);
+        throw new Error('[DB] saveSiteContent failed: ' + result.error.message + ' (code ' + result.error.code + ')');
       }
+      return result;
     } catch (e) {
       console.error('[DB] saveSiteContent exception:', e);
       if(typeof Sentry!=='undefined')Sentry.captureException(e);
+      throw e;
     }
   }
 

@@ -1095,6 +1095,7 @@ async function loadContent(){
 }
 
 async function saveContent(data){
+  // DB.saveSiteContent throws on failure — let it propagate so callers can surface real errors.
   await DB.saveSiteContent(data);
 }
 
@@ -2383,13 +2384,29 @@ async function saveAllContent(){
     data.eco=collectEcoData();
   }
 
-  await saveContent(data);
+  try {
+    await saveContent(data);
+  } catch (e) {
+    console.error('[admin] saveAllContent failed:', e);
+    const errToast=document.getElementById('saveToast')||function(){
+      var t=document.createElement('div');
+      t.id='saveToast';t.className='cf-toast';t.textContent='';
+      document.body.appendChild(t);return t;
+    }();
+    errToast.style.background='#d33';
+    errToast.textContent='❌ Save failed: '+(e&&e.message?e.message:e);
+    errToast.classList.add('show');
+    setTimeout(function(){errToast.classList.remove('show')},4000);
+    return;
+  }
 
   const toast=document.getElementById('saveToast')||function(){
     var t=document.createElement('div');
     t.id='saveToast';t.className='cf-toast';t.textContent='✅ All content saved!';
     document.body.appendChild(t);return t;
   }();
+  toast.style.background='';
+  toast.textContent='✅ All content saved!';
   toast.classList.add('show');
   setTimeout(function(){toast.classList.remove('show')},2500);
 }
