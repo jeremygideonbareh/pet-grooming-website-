@@ -1653,9 +1653,9 @@ async function renderGroomingEditor(){
   const content=await loadContent();
   const data=content.grooming||{};
   const defaults={
-    hero:{badge:'★ 5.0 · 20 Ratings',headingMain:'A-1Pet Shop',headingEm:'And Grooming',subtext:'Nongkynrih, Shillong — Professional pet grooming services your furry friend will love.',btnText:'📞 CONTACT NOW',posterUrl:'images/herosection.jpg',videoUrl:'images/herosectionvideo.mp4'},
-    about:{image:'images/welcome.jpeg',welcomeHeading:'WELCOME',welcomePara:'A-1Pet Shop And Grooming in Nongkynrih, Shillong is a top destination for pet grooming services...',hours:[
-      {day:'Monday',time:'Closed'},{day:'Tuesday',time:'10:00 am – 7:00 pm'},{day:'Wednesday',time:'10:00 am – 7:00 pm'},{day:'Thursday',time:'10:00 am – 7:00 pm'},{day:'Friday',time:'10:00 am – 7:00 pm'},{day:'Saturday',time:'10:00 am – 7:00 pm'},{day:'Sunday',time:'11:00 am – 5:00 pm'}
+    hero:{badge:'★ 5.0 · 20 Ratings',headingMain:'A-1Pet Shop',headingEm:'And Grooming',subtext:'Nongrimmaw Laitumkhrah Shillong-793011 — Professional pet grooming services your furry friend will love.',btnText:'📞 CONTACT NOW',posterUrl:'images/herosection.jpg',videoUrl:'images/herosectionvideo.mp4'},
+    about:{image:'images/welcome.jpeg',welcomeHeading:'WELCOME',welcomePara:'A-1Pet Shop And Grooming in Nongrimmaw Laitumkhrah Shillong-793011 is a top destination for pet grooming services...',hours:[
+      {day:'Monday',time:'10:00am-5:00pm'},{day:'Tuesday',time:'10:00 am - 5:00 pm'},{day:'Wednesday',time:'10:00 am - 5:00 pm'},{day:'Thursday',time:'10:00 am - 5:00 pm'},{day:'Friday',time:'10:00 am - 5:00 pm'},{day:'Saturday',time:'10:00 am - 5:00 pm'},{day:'Sunday',time:'closed'}
     ],stats:[{num:'5.0',label:'Rating'},{num:'20',label:'Reviews'},{num:'🐾',label:'Grooming'}]},
     services:{badge:'Our services',heading:'What we can do<br>for your pet',desc:'From baths to full grooming, we provide quality pet care tailored to your furry friend\'s needs.',btnText:'See our services',items:[
       {img:'images/4081455907607392.jpg',label:'Full grooming'},{img:'images/prevent-mats.jpg',label:'Bath & brush'},{img:'images/2533343538804035.jpg',label:'Nail & ear care'},{img:'images/7177680652812423.jpg',label:'Spa & shine'},{img:'images/review1.png',label:'Pet styling'}
@@ -1665,7 +1665,7 @@ async function renderGroomingEditor(){
       {name:'HAPPY CLIENT',stars:'★★★★★',text:'"Absolutely love this place! My dog always comes out looking and feeling amazing."'},{name:'PET PARENT',stars:'★★★★★',text:'"Professional groomers who genuinely care. The best in Nongkynrih."'}
     ]},
     cta:{heading:'Ready to spoil<br>your fur baby?',subtext:'Book an appointment at A-1Pet Shop And Grooming today.',btnText:'📞 CONTACT NOW'},
-    footer:{brand:'A-1 Enterprises',tagline:'Building the future of pet and working dog services in Northeast India.',copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.',fb:'https://www.facebook.com/SANGPRETI/',ig:'https://instagram.com/boxerfosterhome',yt:'https://youtu.be/Lgpqqi8ZEQI',gm:'https://g.co/kgs/knmDPK',address1:'A-1Pet Shop And Grooming',address2:'Nongkynrih, Shillong',address3:'Tue–Sat 10–7 · Sun 11–5',whatsApp:'https://wa.me/9362762050',email:'a1.enterprises8891@gmail.com'}
+    footer:{brand:'A-1 Enterprises',tagline:'Building the future of pet and working dog services in Northeast India.',copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.',fb:'https://www.facebook.com/SANGPRETI/',ig:'https://instagram.com/boxerfosterhome',yt:'https://youtu.be/Lgpqqi8ZEQI',gm:'https://g.co/kgs/knmDPK',address1:'A-1Pet Shop And Grooming',address2:'Nongrimmaw Laitumkhrah Shillong-793011',address3:'Monday to Saturday 10:00am to 5:00pm  Sunday closed',address4:'',brandSmall:'Nongrimmaw Laitumkhrah Shillong-793011',whatsApp:'https://wa.me/9233485873',email:'a1.enterprises8891@gmail.com'}
   };
   const s=Object.keys(data).length?data:defaults;
   const ed=document.getElementById('groomingEditor');
@@ -1675,7 +1675,7 @@ async function renderGroomingEditor(){
       <div class="sec-bd open" id="grLoad">
         <div class="cf-row">
           <div class="cf-group"><label>Brand Text</label><input id="grLoadBrand" value="${escHtml(s.hero.headingMain+'<br>And Grooming')}"></div>
-          <div class="cf-group"><label>Brand Small</label><input id="grLoadSmall" value="Nongkynrih, Shillong"></div>
+          <div class="cf-group"><label>Brand Small</label><input id="grLoadSmall" value="Nongrimmaw Laitumkhrah Shillong-793011"></div>
         </div>
       </div>
     </div>
@@ -1786,6 +1786,7 @@ async function renderGroomingEditor(){
         <div class="cf-group"><label>Address Line 1</label><input id="grFootAddr1" value="${escHtml(s.footer.address1||'')}"></div>
         <div class="cf-group"><label>Address Line 2</label><input id="grFootAddr2" value="${escHtml(s.footer.address2||'')}"></div>
         <div class="cf-group"><label>Address Line 3</label><input id="grFootAddr3" value="${escHtml(s.footer.address3||'')}"></div>
+        <div class="cf-group"><label>Address Line 4</label><input id="grFootAddr4" value="${escHtml(s.footer.address4||'')}"></div>
         <div class="cf-row">
           <div class="cf-group"><label>WhatsApp URL</label><input id="grFootWa" value="${escHtml(s.footer.whatsApp||s.footer.whatsapp||'')}"></div>
           <div class="cf-group"><label>Email</label><input id="grFootEmail" value="${escHtml(s.footer.email)}"></div>
@@ -2161,6 +2162,8 @@ function collectGroomingData(){
       address1:document.getElementById('grFootAddr1').value,
       address2:document.getElementById('grFootAddr2').value,
       address3:document.getElementById('grFootAddr3').value,
+      address4:document.getElementById('grFootAddr4').value,
+      brandSmall:document.getElementById('grLoadSmall').value,
       whatsapp:document.getElementById('grFootWa').value,
       email:document.getElementById('grFootEmail').value
     }

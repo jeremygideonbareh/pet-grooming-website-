@@ -664,6 +664,20 @@
         var cpEl = Array.from(copyright.querySelectorAll('*')).filter(function(el) { return el.textContent.indexOf('©') !== -1; });
         if (cpEl.length) cpEl[0].textContent = s.footer.copyright;
       }
+      var addr1 = document.querySelector('#footAddr1');
+      if (addr1 && s.footer.address1) addr1.textContent = s.footer.address1;
+      var addr2 = document.querySelector('#footAddr2');
+      if (addr2 && s.footer.address2) addr2.textContent = s.footer.address2;
+      var addr3 = document.querySelector('#footAddr3');
+      if (addr3 && s.footer.address3) addr3.textContent = s.footer.address3;
+      var addr4 = document.querySelector('#footAddr4');
+      if (addr4 && s.footer.address4) addr4.textContent = s.footer.address4;
+      var footWa = document.querySelector('#footWa');
+      if (footWa && (s.footer.whatsApp || s.footer.whatsapp)) footWa.href = s.footer.whatsApp || s.footer.whatsapp;
+      var footEmail = document.querySelector('#footEmail');
+      if (footEmail && s.footer.email) footEmail.href = 'mailto:' + s.footer.email;
+      var loadBrandSmall = document.querySelector('#loadBrandSmall');
+      if (loadBrandSmall && s.footer.brandSmall) loadBrandSmall.textContent = s.footer.brandSmall;
     }
   }
 
