@@ -1229,6 +1229,10 @@ async function renderContentEditor(){
           <div class="cf-group"><label>Email</label><input id="cFootEmail" value="${escHtml(data.footer.email)}"></div>
           <div class="cf-group"><label>WhatsApp URL</label><input id="cFootWa" value="${escHtml(data.footer.whatsapp)}"></div>
         </div>
+        <div class="cf-row">
+          <div class="cf-group"><label>Address</label><input id="cFootAddress" value="${escHtml(data.footer.address||'')}"></div>
+          <div class="cf-group"><label>Hours</label><input id="cFootHours" value="${escHtml(data.footer.hours||'')}"></div>
+        </div>
       </div>
     </div>
 
@@ -2328,6 +2332,8 @@ async function saveAllContent(){
     data.footer.gm=document.getElementById('cFootGm').value;
     data.footer.email=document.getElementById('cFootEmail').value;
     data.footer.whatsapp=document.getElementById('cFootWa').value;
+    if(document.getElementById('cFootAddress')) data.footer.address=document.getElementById('cFootAddress').value;
+    if(document.getElementById('cFootHours')) data.footer.hours=document.getElementById('cFootHours').value;
 
     // New sections
     if(document.getElementById('cBrandTagline')){

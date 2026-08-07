@@ -242,6 +242,10 @@
         var waLink = contactItems[2].querySelector('a');
         if (waLink && d.footer.whatsapp) waLink.href = d.footer.whatsapp;
       }
+      var homeAddr = document.querySelector('#homeAddr');
+      if (homeAddr && d.footer.address) homeAddr.textContent = d.footer.address;
+      var homeHours = document.querySelector('#homeHours');
+      if (homeHours && d.footer.hours) homeHours.textContent = d.footer.hours;
     }
     if(d.brandStatement){
       text('.brand-tagline', d.brandStatement.tagline);
