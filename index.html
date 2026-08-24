@@ -531,6 +531,33 @@ ul{list-style:none}
 .why-choose .wc-sr-item h4{font-size:.85rem;font-weight:600;margin-bottom:4px;color:var(--forest)}
 .why-choose .wc-sr-item p{font-size:.78rem;color:var(--forest-muted);line-height:1.4}
 
+/* ── RECOGNITION & MILESTONE ── */
+.recognition{padding:80px 0;background:var(--white)}
+.recognition .recognition-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+.recognition .recognition-item{background:rgba(255,255,255,0.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:20px;padding:22px 18px;border:1px solid rgba(255,255,255,0.25);transition:transform .3s ease;text-align:center}
+.recognition .recognition-item:hover{transform:translateY(-4px)}
+.recognition .recognition-item .icon{font-size:1.5rem;margin-bottom:8px}
+.recognition .recognition-item h4{font-size:.88rem;font-weight:700;margin-bottom:4px;color:var(--forest)}
+.recognition .recognition-item p{font-size:.8rem;color:var(--forest-muted);line-height:1.5}
+.recognition .certificates-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.recognition .certificate-item{position:relative;border-radius:14px;overflow:hidden;cursor:pointer;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.08);transition:transform .3s ease}
+.recognition .certificate-item:hover{transform:scale(1.03)}
+.recognition .certificate-item img{width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.recognition .certificate-item .cert-title{padding:10px 12px;font-size:.9rem;font-weight:600;text-align:center;color:var(--forest)}
+
+/* Recognition milestone image */
+.recognition-item img {
+  display: block;
+  max-width: 100%;
+  max-height: 380px;
+  width: auto;
+  height: auto;
+  margin: 12px auto 8px;
+  border-radius: 12px;
+  object-fit: contain;
+}
+.recognition-item.has-image { cursor: pointer; }
+
 /* â”€â”€ FOOTER â”€â”€ */
 footer{
   background:var(--forest-light);padding:64px 0 32px;
@@ -581,6 +608,8 @@ footer{
   .vmg-grid,.usp-grid,.future-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
   .sr-grid{grid-template-columns:repeat(2,1fr)}
   .why-choose .wc-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
+  .recognition .recognition-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
+  .certificates-grid{grid-template-columns:repeat(2,1fr)}
   .why-choose .wc-sr{grid-template-columns:repeat(2,1fr)}
   .test-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
   .gallery-grid{grid-template-columns:repeat(3,1fr)}
@@ -588,17 +617,18 @@ footer{
   .gallery-item:nth-child(2){grid-column:span 1;grid-row:span 1}
 }
 @media(max-width:768px){
-  .about,.services,.a1-diff,.training,.grooming-overview,.boarding,.gallery,.vmg,.why-choose,.testimonials,.future,.cta-section{padding-top:60px;padding-bottom:60px}
+  .about,.services,.a1-diff,.training,.grooming-overview,.boarding,.gallery,.vmg,.why-choose,.testimonials,.future,.cta-section,.recognition{padding-top:60px;padding-bottom:60px}
   .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
   .footer-brand{grid-column:1/-1}
 }
 @media(max-width:640px){
   .gallery-grid{grid-template-columns:repeat(2,1fr)}
+  .certificates-grid{grid-template-columns:1fr;max-width:320px;margin-inline:auto}
   .vmg-grid,.sr-grid{grid-template-columns:1fr}
   .why-choose .wc-sr{grid-template-columns:1fr}
   .training-list,.boarding-features{grid-template-columns:1fr}
   .hero{padding:70px 24px 50px}
-  .about,.services,.a1-diff,.training,.grooming-overview,.boarding,.gallery,.vmg,.why-choose,.testimonials,.future,.cta-section{padding-top:50px;padding-bottom:50px}
+  .about,.services,.a1-diff,.training,.grooming-overview,.boarding,.gallery,.vmg,.why-choose,.testimonials,.future,.cta-section,.recognition{padding-top:50px;padding-bottom:50px}
   .hero-content h1{font-size:clamp(2rem,7vw,3rem)}
   .section-title{font-size:clamp(1.5rem,5vw,1.8rem)}
   .founder-note{padding:24px 20px}
@@ -934,6 +964,35 @@ footer{
         </div>
       </div>
       <div class="wc-sr"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ RECOGNITION & MILESTONE ═══════════════ -->
+<section class="recognition" id="recognition">
+  <div class="container">
+    <div class="recognition-header reveal" style="text-align:center">
+      <span class="section-label">Recognition &amp; Milestone</span>
+      <h2 class="section-title">Milestones That Matter</h2>
+      <p class="section-sub" style="margin-inline:auto">Official recognition and milestones achieved by A-1 Enterprises.</p>
+    </div>
+    <div class="recognition-grid reveal reveal-delay-2" id="recognitionGrid">
+      <div class="recognition-item reveal">
+        <div class="icon">🏆</div>
+        <h4>Recognised Among Meghalaya's Top 75 Startups – 2026</h4>
+        <p>A-1 Enterprises recognised among Top 75 Startups of Meghalaya 2026, selected for incubation under PRIME Meghalaya via Chief Minister's E-Championship Challenge 6.0.</p>
+      </div>
+      <div class="recognition-item reveal">
+        <div class="icon">🎖️</div>
+        <h4>PRIME Meghalaya Incubation | 2026</h4>
+        <p>Selected for incubation under PRIME Meghalaya, the flagship startup support programme of the Government of Meghalaya.</p>
+      </div>
+    </div>
+    <div class="certificates-block" id="certificatesBlock" style="display:none">
+      <div class="certificates-header reveal" style="text-align:center;margin-top:48px">
+        <h3 class="section-title">Certifications</h3>
+      </div>
+      <div class="certificates-grid reveal reveal-delay-2" id="certificatesGrid"></div>
     </div>
   </div>
 </section>
