@@ -486,17 +486,8 @@
       }
     }
     if (s.gallery) {
-      var galContainers = document.querySelectorAll('.content-section .container');
-      if (galContainers.length >= 2) {
-        var glabels = galContainers[1].querySelectorAll('.section-label');
-        if (glabels.length) glabels[0].textContent = s.gallery.label;
-        var gtitles = galContainers[1].querySelectorAll('.section-title');
-        if (gtitles.length) gtitles[0].textContent = s.gallery.title;
-        var gsubs = galContainers[1].querySelectorAll('.section-sub');
-        if (gsubs.length) gsubs[0].textContent = s.gallery.subtext;
-      }
       if (s.gallery.images && s.gallery.images.length) {
-        var gal = document.querySelector('.train-gal');
+        var gal = document.querySelector('.client-gal');
         if (gal) {
           gal.innerHTML = '';
           var validImgs = s.gallery.images.filter(function(u) { return u; });
@@ -557,57 +548,6 @@
           return card;
         });
       }
-    }
-    if (s.process) {
-      var procs = document.querySelectorAll('.content-section .container');
-      if (procs.length >= 3) {
-        var plabels = procs[2].querySelectorAll('.section-label');
-        if (plabels.length) plabels[0].textContent = s.process.label;
-        var ptitles = procs[2].querySelectorAll('.section-title');
-        if (ptitles.length) ptitles[0].textContent = s.process.title;
-        var psubs = procs[2].querySelectorAll('.section-sub');
-        if (psubs.length) psubs[0].textContent = s.process.subtext;
-      }
-      if (s.process.steps) {
-        clearAndFill('.process-grid', s.process.steps, function(item) {
-          var step = div('process-step');
-          var num = div('step-num');
-          num.textContent = item.num || '';
-          var h4 = document.createElement('h4');
-          h4.textContent = item.title || '';
-          var p = document.createElement('p');
-          p.textContent = item.desc || '';
-          step.appendChild(num);
-          step.appendChild(h4);
-          step.appendChild(p);
-          return step;
-        });
-      }
-    }
-    if (s.approach) {
-      var approachLabel = document.querySelector('.approach-grid .section-label');
-      if (approachLabel && s.approach.label) approachLabel.textContent = s.approach.label;
-      var approachTitle = document.querySelector('.approach-grid .section-title');
-      if (approachTitle && s.approach.title) approachTitle.innerHTML = sanitizeHtml(s.approach.title);
-      var approachParas = document.querySelectorAll('.approach-grid .section-sub');
-      if (approachParas.length >= 1 && s.approach.para1) approachParas[0].textContent = s.approach.para1;
-      if (approachParas.length >= 2 && s.approach.para2) approachParas[1].textContent = s.approach.para2;
-      if (s.approach.benefits) {
-        var benefitsList = document.querySelector('.benefits');
-        if (benefitsList) {
-          benefitsList.innerHTML = '';
-          s.approach.benefits.forEach(function(b) {
-            var li = document.createElement('li');
-            var ck = document.createElement('span');
-            ck.className = 'ck';
-            ck.textContent = '✓';
-            li.appendChild(ck);
-            li.appendChild(document.createTextNode(' ' + b));
-            benefitsList.appendChild(li);
-          });
-        }
-      }
-      imgSrc('.approach-image img', s.approach.image);
     }
     if (s.cta) {
       text('.cta-section h2', s.cta.heading);
