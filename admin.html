@@ -1067,6 +1067,7 @@ const DEFAULT_CONTENT={
   social:[{icon:'🧹',title:'Cleanliness Drives',desc:'Regular drives in dog walking areas for hygienic public spaces.'},{icon:'🗑️',title:'Dustbin Campaigns',desc:'Promoting dustbin installation in public pet walking zones.'},{icon:'📢',title:'Awareness Programs',desc:'Spreading awareness on responsible pet ownership and welfare.'},{icon:'🤲',title:'Ethical Practices',desc:'Encouraging humane training practices throughout our services.'}],
   gallery:{label:'Gallery',heading:'Moments from Our Journey',subtext:'',images:['images/review1.png','images/review2.png','images/review3.png','images/review4.png','images/review5.png','images/4081455907607392.jpg','images/2533343538804035.jpg','images/7177680652812423.jpg','images/welcome.jpeg','images/prevent-mats.jpg']},
   testimonials:{label:'Testimonials',heading:'What Pet Parents Say',subtext:'',items:[{stars:5,quote:'"My German Shepherd went through the training program and the transformation has been incredible. The trainers are patient, knowledgeable, and truly care about the dogs."',name:'Arjun S., Shillong'},{stars:5,quote:'"The grooming service is outstanding! My Golden Retriever always comes back looking like a show dog. The team is gentle and my dog absolutely loves going there."',name:'Priya M., Nongkynrih'},{stars:5,quote:'"Finally found a place that has quality pet supplies AND expert services. The staff always gives great advice. Highly recommend to every pet owner."',name:'David K., Meghalaya'}]},
+  recognition:{label:'Recognition & Milestone',heading:'Milestones That Matter',subtext:'Official recognition and milestones achieved by A-1 Enterprises.',items:[{icon:'🏆',title:"Recognised Among Meghalaya's Top 75 Startups – 2026",desc:"A-1 Enterprises recognised among Top 75 Startups of Meghalaya 2026, selected for incubation under PRIME Meghalaya via Chief Minister's E-Championship Challenge 6.0."},{icon:'🎖️',title:'PRIME Meghalaya Incubation | 2026',desc:'Selected for incubation under PRIME Meghalaya, the flagship startup support programme of the Government of Meghalaya.'}],certificates:[]},
   brandStatement:{tagline:'Professional Dog Training | Rehabilitation | Grooming | Boarding | Protection & Detection Training | Pet Store | Future Veterinary Services | Eco Pet-Friendly Stays',desc:'A-1 Enterprises is building a complete ecosystem for pets and working dogs by bringing training, rehabilitation, grooming, boarding, pet products, future veterinary care, and eco pet-friendly stays under one trusted brand.'},
   a1Diff:{label:'The A-1 Difference',heading:'More Than a Service — A Complete Ecosystem',para1:'Instead of being just another pet service provider, A-1 Enterprises is building a complete ecosystem where pet owners can access training, rehabilitation, grooming, boarding, pet products, future veterinary care, and eco pet-friendly stays through one trusted brand.',para2:'This long-term vision sets us apart — every service is interconnected, every experience is seamless, and every pet receives consistent, high-quality care across the board.',image:'images/welcome.jpeg',btnText:'Explore Our Services',btnLink:'training.html',items:[{icon:'🎯',title:'End-to-End Care',desc:'Training, grooming, boarding, and supplies — all coordinated under one brand for a seamless experience.'},{icon:'🌄',title:'Northeast Focus',desc:'Built specifically for the pet community in Meghalaya and Northeast India, understanding local needs and challenges.'},{icon:'🔭',title:'Future-Ready Vision',desc:'Expanding into veterinary services, eco stays, and law enforcement collaborations to serve the region better.'},{icon:'🐾',title:'Working Dog Expertise',desc:'Specialized focus on both companion pets and working dog development for security and public service roles.'}]},
   future:{label:'Coming Soon',heading:'Future Expansion',subtext:'Exciting new services and facilities on the horizon as we grow our ecosystem.',items:[{icon:'🏥',title:'Veterinary Clinic',desc:'An on-site veterinary clinic staffed with qualified professionals to provide comprehensive healthcare, vaccinations, check-ups, and emergency care for your pets — all under one roof.',image:'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',badge:'⏳ Coming Soon',link:''},{icon:'🌿',title:'A-1 Eco Cottages',desc:'A unique eco-friendly retreat where pets and owners can relax in nature. Complete with private cottages, play areas, walking trails, bonfire evenings, and comfortable accommodations.',image:'https://images.unsplash.com/photo-1440778303588-435521a205bc?auto=format&fit=crop&w=600&q=80',badge:'✨ Explore Now',link:'eco-cottages.html'},{icon:'🛒',title:'Expanded Pet Store',desc:'A larger, fully stocked retail space with an extended range of premium pet food, accessories, grooming supplies, toys, and health products — making one-stop shopping a reality.',image:'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=600&q=80',badge:'⏳ Coming Soon',link:''},{icon:'🎖️',title:'Advanced Working Dog Programs',desc:'Structured training and certification programs for working dogs in security, detection, and public service roles. Developing partnerships with agencies across the Northeast.',image:'https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?auto=format&fit=crop&w=600&q=80',badge:'⏳ Coming Soon',link:''},{icon:'🤝',title:'Government & Law Enforcement Collaborations',desc:'Building formal collaborations with law enforcement and government agencies to provide trained working dogs for security, detection, and public safety operations across the region.',image:'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=600&q=80',badge:'⏳ Coming Soon',link:''}]},
@@ -1209,6 +1210,32 @@ async function renderContentEditor(){
         <div class="cf-group"><label>Subtext</label><textarea id="cTestiSub" rows="2">${escHtml(data.testimonials.subtext||'')}</textarea></div>
         <div id="testiRepeater">${(data.testimonials.items||data.testimonials||[]).map((item,i)=>renderTestiItem(item,i)).join('')}</div>
         <button class="cf-add" onclick="addTestiItem()">+ Add Testimonial</button>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secRecognition">Recognition &amp; Milestone <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secRecognition">
+        <div class="cf-row">
+          <div class="cf-group"><label>Section Label</label><input id="cRecLabel" value="${escHtml(data.recognition.label||'Recognition & Milestone')}"></div>
+          <div class="cf-group"><label>Heading</label><input id="cRecHeading" value="${escHtml(data.recognition.heading||'Milestones That Matter')}"></div>
+        </div>
+        <div class="cf-group"><label>Subtext</label><textarea id="cRecSub" rows="2">${escHtml(data.recognition.subtext||'')}</textarea></div>
+        <div id="recognitionRepeater">${(data.recognition.items||data.recognition||[]).map((item,i)=>renderRecognitionItem(item,i)).join('')}</div>
+        <button class="cf-add" onclick="addRecognitionItem()">+ Add Milestone</button>
+        <div class="cf-group" style="margin-top:14px"><label>Certifications (photos)</label></div>
+        <div id="certificatesRepeater">${(data.recognition.certificates||[]).map((item,i)=>renderCertificateItem(item,i)).join('')}</div>
+        <button class="cf-add" onclick="addCertificateItem()">+ Add Certificate</button>
+      </div>
+    </div>
+
+    <!-- Global Certificates (shared across Home, Training, Grooming) -->
+    <div class="content-section">
+      <div class="sec-hd open" data-target="secGlobalCert">Global Certificates <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="secGlobalCert">
+        <p style="font-size:.8rem;color:var(--forest-muted);margin-bottom:12px">These certificates appear on Home, Training, and Grooming pages. Page-specific sections override these.</p>
+        <div id="globalCertificatesRepeater">${(data.certificates||[]).map((item,i)=>renderGlobalCertItem(item,i)).join('')}</div>
+        <button class="cf-add" onclick="addGlobalCertItem()">+ Add Certificate</button>
       </div>
     </div>
 
@@ -1404,6 +1431,62 @@ function addTestiItem(){
   d.insertAdjacentHTML('beforeend',renderTestiItem({stars:5,quote:'"Great service!"',name:'Happy Client'},d.children.length));
 }
 
+// Recognition & Milestone repeater
+function renderRecognitionItem(item,i){
+  return `<div class="cf-rpt-item">
+    <div class="rpt-hd"><span>Milestone ${i+1}</span><button class="rpt-del" onclick="removeRepeater(this,'recognitionRepeater')">✕ Remove</button></div>
+    <div class="cf-row">
+      <div class="cf-group"><label>Icon (emoji)</label><input class="r-icon" value="${escHtml(item.icon)}"></div>
+      <div class="cf-group"><label>Title</label><input class="r-title" value="${escHtml(item.title)}"></div>
+    </div>
+    <div class="cf-group"><label>Description</label><textarea class="r-desc" rows="2">${escHtml(item.desc)}</textarea></div>
+    ${renderImageUploadWidget(item.image)}
+  </div>`;
+}
+function addRecognitionItem(){
+  const d=document.getElementById('recognitionRepeater');
+  d.insertAdjacentHTML('beforeend',renderRecognitionItem({icon:'🏆',title:'New Milestone',desc:'Milestone description',image:''},d.children.length));
+}
+
+// Certifications repeater (photos under Recognition & Milestone)
+function renderCertificateItem(item,i){
+  return `<div class="cf-rpt-item">
+    <div class="rpt-hd"><span>Certificate ${i+1}</span><button class="rpt-del" onclick="removeRepeater(this,'certificatesRepeater')">✕ Remove</button></div>
+    <div class="cf-group"><label>Caption (optional)</label><input class="r-title" value="${escHtml(item.title||'')}"></div>
+    <div class="cf-group"><label>Certificate Photo</label>
+      <div class="img-upload-row">
+        <input class="r-image" value="${escHtml(item.image||'')}">
+        <input type="file" accept="image/jpeg, image/png, image/webp" class="image-upload-btn">
+        <span class="img-upload-status">${item.image?'Uploaded':'No file'}</span>
+      </div>
+      <div class="img-upload-preview"${item.image?'':' style="display:none"'}><img src="${escHtml(item.image||'')}" onerror="this.parentNode.style.display='none'"></div>
+    </div>
+  </div>`;
+}
+function addCertificateItem(){
+  const d=document.getElementById('certificatesRepeater');
+  d.insertAdjacentHTML('beforeend',renderCertificateItem({title:'',image:''},d.children.length));
+}
+function renderGlobalCertItem(item,i){
+  return `<div class="cf-rpt-item">
+    <div class="rpt-hd"><span>Certificate ${i+1}</span><button class="rpt-del" onclick="removeRepeater(this,'globalCertificatesRepeater')">✕ Remove</button></div>
+    <div class="cf-group"><label>Title (optional)</label><input class="r-title" value="${escHtml(item.title||'')}"></div>
+    <div class="cf-group"><label>Certificate Photo</label>
+      <div class="img-upload-row">
+        <input class="r-img" value="${escHtml(item.image||'')}">
+        <input type="file" accept="image/jpeg, image/png, image/webp" class="image-upload-btn">
+        <span class="img-upload-status">${item.image?'Uploaded':'No file'}</span>
+      </div>
+      <div class="img-upload-preview"${item.image?'':' style="display:none"'}><img src="${escHtml(item.image||'')}" onerror="this.parentNode.style.display='none'"></div>
+    </div>
+    <div class="cf-group"><label>Description (optional)</label><textarea class="r-desc" rows="2">${escHtml(item.desc||'')}</textarea></div>
+  </div>`;
+}
+function addGlobalCertItem(){
+  const d=document.getElementById('globalCertificatesRepeater');
+  d.insertAdjacentHTML('beforeend',renderGlobalCertItem({title:'',image:'',desc:''},d.children.length));
+}
+
 // A-1 Difference repeater
 function renderA1Item(item,i){
   return `<div class="cf-rpt-item">
@@ -1518,7 +1601,8 @@ async function renderTrainingEditor(){
     ]},
     approach:{label:'Our Approach',title:'Built on Trust,<br>Backed by Experience',para1:'Our training philosophy combines modern canine science with real-world experience. Every dog is unique, and we treat them as individuals — not as cases.',para2:'Every training program is customized based on each dog\'s unique temperament, learning style, and specific behavioral needs.',benefits:['Proven Science based plans','Positive reinforcement methods','Temperament-based approach','Owner involvement & education','Progress tracking & updates','Post-training support'],image:'images/4081455907607392.jpg'},
     cta:{heading:'Ready to Transform<br>Your Dog\'s Behavior?',subtext:'Get in touch with us today to discuss your dog\'s training needs.',btnText:'Chat on WhatsApp',btnLink:'https://wa.me/9362762050'},
-    footer:{copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.'}
+    footer:{copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.'},
+    certificates:[]
   };
   const s=Object.keys(data).length?data:defaults;
   const ed=document.getElementById('trainingEditor');
@@ -1561,6 +1645,13 @@ async function renderTrainingEditor(){
         <p style="font-size:.8rem;color:var(--forest-muted);margin-bottom:12px">Upload images or paste URLs (one per line):</p>
         <div class="gallery-upload-row"><input type="file" accept="image/jpeg, image/png, image/webp" class="gallery-upload-btn" data-target="trGalImgs"><span class="img-upload-status" style="font-size:.75rem;color:var(--forest-muted)"></span></div>
         <div class="cf-group"><textarea id="trGalImgs" rows="6">${s.gallery.images.map(function(u){return escHtml(u)}).join('\n')}</textarea></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="trCert">Certifications Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="trCert">
+        <div id="trCertRepeater">${(s.certificates||[]).map(function(item,i){return renderTrCertItem(item,i)}).join('')}</div>
+        <button class="cf-add" onclick="addTrCertItem()">+ Add Certificate</button>
       </div>
     </div>
     <div class="content-section">
@@ -1652,6 +1743,15 @@ function addTrStepItem(){
   var d=document.getElementById('trStepRepeater');
   d.insertAdjacentHTML('beforeend',renderTrStepItem({num:(d.children.length+1).toString(),title:'New Step',desc:'Step description'},d.children.length));
 }
+function renderTrCertItem(item,i){
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Certificate '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'trCertRepeater\')">✕ Remove</button></div>'+
+    renderImageUploadWidget(item.image)+
+    '<div class="cf-group"><label>Title (optional)</label><input class="r-title" value="'+escHtml(item.title)+'"></div><div class="cf-group"><label>About this Certification</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
+}
+function addTrCertItem(){
+  var d=document.getElementById('trCertRepeater');
+  d.insertAdjacentHTML('beforeend',renderTrCertItem({title:'',image:'',desc:''},d.children.length));
+}
 
 // ── Grooming Editor ──
 async function renderGroomingEditor(){
@@ -1670,7 +1770,8 @@ async function renderGroomingEditor(){
       {name:'HAPPY CLIENT',stars:'★★★★★',text:'"Absolutely love this place! My dog always comes out looking and feeling amazing."'},{name:'PET PARENT',stars:'★★★★★',text:'"Professional groomers who genuinely care. The best in Nongkynrih."'}
     ]},
     cta:{heading:'Ready to spoil<br>your fur baby?',subtext:'Book an appointment at A-1Pet Shop And Grooming today.',btnText:'📞 CONTACT NOW'},
-    footer:{brand:'A-1 Enterprises',tagline:'Building the future of pet and working dog services in Northeast India.',copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.',fb:'https://www.facebook.com/SANGPRETI/',ig:'https://instagram.com/boxerfosterhome',yt:'https://youtu.be/Lgpqqi8ZEQI',gm:'https://g.co/kgs/knmDPK',address1:'A-1Pet Shop And Grooming',address2:'Nongrimmaw Laitumkhrah Shillong-793011',address3:'Monday to Saturday 10:00am to 5:00pm  Sunday closed',address4:'',brandSmall:'Nongrimmaw Laitumkhrah Shillong-793011',whatsApp:'https://wa.me/9233485873',email:'a1.enterprises8891@gmail.com'}
+    footer:{brand:'A-1 Enterprises',tagline:'Building the future of pet and working dog services in Northeast India.',copyright:'© 2026 A-1 Enterprises. Passion Turned Profession.',fb:'https://www.facebook.com/SANGPRETI/',ig:'https://instagram.com/boxerfosterhome',yt:'https://youtu.be/Lgpqqi8ZEQI',gm:'https://g.co/kgs/knmDPK',address1:'A-1Pet Shop And Grooming',address2:'Nongrimmaw Laitumkhrah Shillong-793011',address3:'Monday to Saturday 10:00am to 5:00pm  Sunday closed',address4:'',brandSmall:'Nongrimmaw Laitumkhrah Shillong-793011',whatsApp:'https://wa.me/9774062455',email:'a1.enterprises8891@gmail.com'},
+    certificates:[]
   };
   const s=Object.keys(data).length?data:defaults;
   const ed=document.getElementById('groomingEditor');
@@ -1742,6 +1843,13 @@ async function renderGroomingEditor(){
         <p style="font-size:.8rem;color:var(--forest-muted);margin-bottom:12px">Upload images or paste URLs (one per line):</p>
         <div class="gallery-upload-row"><input type="file" accept="image/jpeg, image/png, image/webp" class="gallery-upload-btn" data-target="grGalImgs"><span class="img-upload-status" style="font-size:.75rem;color:var(--forest-muted)"></span></div>
         <div class="cf-group"><textarea id="grGalImgs" rows="6">${s.gallery.images.map(function(u){return escHtml(u)}).join('\n')}</textarea></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="sec-hd open" data-target="grCert">Certifications Section <span class="arrow">▼</span></div>
+      <div class="sec-bd open" id="grCert">
+        <div id="grCertRepeater">${(s.certificates||[]).map(function(item,i){return renderGrCertItem(item,i)}).join('')}</div>
+        <button class="cf-add" onclick="addGrCertItem()">+ Add Certificate</button>
       </div>
     </div>
     <div class="content-section">
@@ -1824,6 +1932,15 @@ function renderGrRevItem(item,i){
 function addGrRevItem(){
   var d=document.getElementById('grRevRepeater');
   d.insertAdjacentHTML('beforeend',renderGrRevItem({name:'Happy Client',stars:'★★★★★',text:'"Great service!"'},d.children.length));
+}
+function renderGrCertItem(item,i){
+  return '<div class="cf-rpt-item"><div class="rpt-hd"><span>Certificate '+(i+1)+'</span><button class="rpt-del" onclick="removeRepeater(this,\'grCertRepeater\')">✕ Remove</button></div>'+
+    renderImageUploadWidget(item.image)+
+    '<div class="cf-group"><label>Title (optional)</label><input class="r-title" value="'+escHtml(item.title)+'"></div><div class="cf-group"><label>About this Certification</label><textarea class="r-desc" rows="2">'+escHtml(item.desc)+'</textarea></div></div>';
+}
+function addGrCertItem(){
+  var d=document.getElementById('grCertRepeater');
+  d.insertAdjacentHTML('beforeend',renderGrCertItem({title:'',image:'',desc:''},d.children.length));
 }
 
 // ── Boarding Editor ──
@@ -2079,6 +2196,7 @@ function collectTrainingData(){
       subtext:document.getElementById('trGalSub').value,
       images:document.getElementById('trGalImgs').value.split('\n').map(function(s){return s.trim()}).filter(Boolean)
     },
+    certificates:collectRepeaterData('trCertRepeater',{title:'.r-title',image:'.r-img',desc:'.r-desc'}),
     process:{
       label:document.getElementById('trProcLabel').value,
       title:document.getElementById('trProcTitle').value,
@@ -2144,6 +2262,7 @@ function collectGroomingData(){
       subtext:document.getElementById('grGalSub').value,
       images:document.getElementById('grGalImgs').value.split('\n').map(function(s){return s.trim()}).filter(Boolean)
     },
+    certificates:collectRepeaterData('grCertRepeater',{title:'.r-title',image:'.r-img',desc:'.r-desc'}),
     reviews:{
       badge:document.getElementById('grRevBadge').value,
       heading:document.getElementById('grRevHead').value,
@@ -2323,6 +2442,16 @@ async function saveAllContent(){
         data.testimonials=collectRepeaterData('testiRepeater',{stars:'.r-stars',name:'.r-name',quote:'.r-quote'});
         data.testimonials.forEach(function(t){t.stars=parseInt(t.stars)||5});
       }
+    }
+    if(document.getElementById('cRecLabel')){
+      data.recognition.label=document.getElementById('cRecLabel').value;
+      data.recognition.heading=document.getElementById('cRecHeading').value;
+      data.recognition.subtext=document.getElementById('cRecSub').value;
+      data.recognition.items=collectRepeaterData('recognitionRepeater',{icon:'.r-icon',title:'.r-title',desc:'.r-desc',image:'.r-img'});
+      data.recognition.certificates=collectRepeaterData('certificatesRepeater',{title:'.r-title',image:'.r-image'});
+    }
+    if(document.getElementById('globalCertificatesRepeater')){
+      data.certificates=collectRepeaterData('globalCertificatesRepeater',{title:'.r-title',image:'.r-img',desc:'.r-desc'});
     }
     data.footer.copyright=document.getElementById('cFootCopyright').value;
     data.footer.tagline=document.getElementById('cFootTagline').value;
