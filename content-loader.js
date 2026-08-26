@@ -513,7 +513,7 @@
         }
       }
     }
-    var certs = (d.certificates && d.certificates.length) ? d.certificates : (s.certificates || []);
+    var certs = (s.certificates && s.certificates.length) ? s.certificates : (d.certificates || []);
     if (certs.length) {
       var trCertSec = document.querySelector('.cert-section');
       if (trCertSec) {
@@ -666,7 +666,7 @@
         }
       }
     }
-    var certs = (d.certificates && d.certificates.length) ? d.certificates : (s.certificates || []);
+    var certs = (s.certificates && s.certificates.length) ? s.certificates : (d.certificates || []);
     if (certs.length) {
       var grCertSec = document.querySelector('.cert-section');
       if (grCertSec) {
