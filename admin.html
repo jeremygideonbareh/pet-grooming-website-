@@ -798,38 +798,54 @@ async function renderCategories(){
 async function addCategory(name){
   name=(name||'').trim();
   if(!name)return;
-  var id=generateCatId(name);
-  _categories.push({id:id,label:name});
-  await DB.saveCategories(_categories);
-  renderCategories();
+  try{
+    var id=generateCatId(name);
+    _categories=_categories||[];
+    _categories.push({id:id,label:name});
+    await DB.saveCategories(_categories);
+    renderCategories();
+  }catch(e){
+    console.error('[Admin] addCategory failed:',e);
+    alert('Failed to add category: '+(e.message||e));
+  }
 }
 
 async function renameCategory(id,newLabel){
   newLabel=(newLabel||'').trim();
   if(!newLabel)return;
-  var cat=_categories.find(function(c){return c.id===id});
-  if(cat)cat.label=newLabel;
-  await DB.saveCategories(_categories);
-  var products=await DB.getProducts();
-  for(var i=0;i<products.length;i++){
-    if(products[i].cat===id&&products[i].catLabel!==newLabel){
-      await DB.updateProduct(products[i].id,{catLabel:newLabel});
+  try{
+    var cat=_categories.find(function(c){return c.id===id});
+    if(cat)cat.label=newLabel;
+    await DB.saveCategories(_categories);
+    var products=await DB.getProducts();
+    for(var i=0;i<products.length;i++){
+      if(products[i].cat===id&&products[i].catLabel!==newLabel){
+        await DB.updateProduct(products[i].id,{catLabel:newLabel});
+      }
     }
+    renderCategories();
+    renderDashboard();
+  }catch(e){
+    console.error('[Admin] renameCategory failed:',e);
+    alert('Failed to rename category: '+(e.message||e));
   }
-  renderCategories();
-  renderDashboard();
 }
 
 async function deleteCategory(id){
-  var products=await DB.getProducts();
-  var used=products.filter(function(p){return p.cat===id});
-  if(used.length>0){
-    alert('Cannot delete "'+getCatLabel(id)+'" — '+used.length+' product(s) use this category. Move them to another category first.');
-    return;
+  try{
+    var products=await DB.getProducts();
+    var used=products.filter(function(p){return p.cat===id});
+    if(used.length>0){
+      alert('Cannot delete "'+getCatLabel(id)+'" — '+used.length+' product(s) use this category. Move them to another category first.');
+      return;
+    }
+    _categories=_categories.filter(function(c){return c.id!==id});
+    await DB.saveCategories(_categories);
+    renderCategories();
+  }catch(e){
+    console.error('[Admin] deleteCategory failed:',e);
+    alert('Failed to delete category: '+(e.message||e));
   }
-  _categories=_categories.filter(function(c){return c.id!==id});
-  await DB.saveCategories(_categories);
-  renderCategories();
 }
 
 document.getElementById('addCatBtn').addEventListener('click',async function(){

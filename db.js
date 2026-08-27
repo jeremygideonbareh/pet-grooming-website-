@@ -97,12 +97,12 @@
     try {
       var content = await getSiteContent();
       if (content && Array.isArray(content.categories) && content.categories.length > 0) {
-        return content.categories;
+        return content.categories.map(function(c){return {id:c.id,label:c.label};});
       }
-      return DEFAULT_CATEGORIES;
+      return DEFAULT_CATEGORIES.map(function(c){return {id:c.id,label:c.label};});
     } catch(e) {
       console.error('[DB] getCategories error:', e);
-      return DEFAULT_CATEGORIES;
+      return DEFAULT_CATEGORIES.map(function(c){return {id:c.id,label:c.label};});
     }
   }
 
@@ -112,7 +112,10 @@
    */
   async function saveCategories(categories) {
     try {
-      var content = await getSiteContent() || {};
+      var content = await getSiteContent();
+      if (!content) {
+        throw new Error('Cannot save categories: site content not found in DB. Content may not have been initialized yet.');
+      }
       content.categories = categories;
       await saveSiteContent(content);
     } catch(e) {

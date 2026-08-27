@@ -1,0 +1,112 @@
+/admin
+  Content-Type: text/html; charset=utf-8
+
+/boarding
+  Content-Type: text/html; charset=utf-8
+
+/eco-cottages
+  Content-Type: text/html; charset=utf-8
+
+/grooming
+  Content-Type: text/html; charset=utf-8
+
+/
+  Content-Type: text/html; charset=utf-8
+
+/store
+  Content-Type: text/html; charset=utf-8
+
+/training
+  Content-Type: text/html; charset=utf-8
+
+/*.html
+  Content-Type: text/html; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.htm
+  Content-Type: text/html; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.js
+  Content-Type: text/javascript; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.mjs
+  Content-Type: text/javascript; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.css
+  Content-Type: text/css; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.json
+  Content-Type: application/json
+
+/*.map
+  Content-Type: application/json
+
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+
+/*.txt
+  Content-Type: text/plain; charset=utf-8
+
+/*.xml
+  Content-Type: application/xml
+
+/*.svg
+  Content-Type: image/svg+xml
+
+/*.webmanifest
+  Content-Type: application/manifest+json
+
+/*.png
+  Content-Type: image/png
+
+/*.jpg
+  Content-Type: image/jpeg
+
+/*.jpeg
+  Content-Type: image/jpeg
+
+/*.gif
+  Content-Type: image/gif
+
+/*.webp
+  Content-Type: image/webp
+
+/*.ico
+  Content-Type: image/x-icon
+
+/*.pdf
+  Content-Type: application/pdf
+
+/*.woff
+  Content-Type: font/woff
+
+/*.woff2
+  Content-Type: font/woff2
+
+/*.ttf
+  Content-Type: font/ttf
+
+/*.otf
+  Content-Type: font/otf
+
+/*.mp4
+  Content-Type: video/mp4
+
+/*.webm
+  Content-Type: video/webm
+
+/*.mp3
+  Content-Type: audio/mpeg
+
+/*.zip
+  Content-Type: application/zip
+
+/*.gz
+  Content-Type: application/gzip
+
+/*.wasm
+  Content-Type: application/wasm
