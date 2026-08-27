@@ -586,7 +586,7 @@ async function loadProducts(){
 }
 
 // ── Render ──
-const ALL_CATEGORIES=[
+const DEFAULT_CATEGORIES=[
   {id:'dog-food',label:'Food'},
   {id:'treats',label:'Treats'},
   {id:'toys',label:'Toys'},
@@ -595,15 +595,47 @@ const ALL_CATEGORIES=[
   {id:'health',label:'Health'},
 ];
 
-// Populate category buttons
-const catContainer=document.getElementById('categoryFilters');
-ALL_CATEGORIES.forEach(c=>{
-  const btn=document.createElement('button');
-  btn.className='cat-btn';
-  btn.dataset.cat=c.id;
-  btn.textContent=c.label;
-  catContainer.appendChild(btn);
-});
+let _storeCategories=null;
+
+function escapeHtml(text){
+  var d=document.createElement('div');
+  d.textContent=text;
+  return d.innerHTML;
+}
+
+async function loadStoreCategories(){
+  if(typeof DB!=='undefined'&&DB.getCategories){
+    try{
+      _storeCategories=await DB.getCategories();
+      if(!_storeCategories||!_storeCategories.length)_storeCategories=DEFAULT_CATEGORIES;
+    }catch(e){console.warn('[Store] loadStoreCategories error:',e);_storeCategories=DEFAULT_CATEGORIES;}
+  }else{_storeCategories=DEFAULT_CATEGORIES;}
+  return _storeCategories;
+}
+
+function buildCategoryButtons(){
+  var container=document.getElementById('categoryFilters');
+  container.innerHTML='<button class="cat-btn active" data-cat="all">All</button>';
+  var cats=_storeCategories||DEFAULT_CATEGORIES;
+  cats.forEach(function(c){
+    var btn=document.createElement('button');
+    btn.className='cat-btn';
+    btn.dataset.cat=c.id;
+    btn.textContent=c.label;
+    container.appendChild(btn);
+  });
+}
+
+function buildFooterCategoryLinks(){
+  var lists=document.querySelectorAll('footer ul');
+  var targetList=null;
+  lists.forEach(function(ul){if(ul.querySelector('[data-cat]'))targetList=ul;});
+  if(!targetList)return;
+  var cats=_storeCategories||DEFAULT_CATEGORIES;
+  targetList.innerHTML=cats.map(function(c){
+    return '<li><a href="#" data-cat="'+c.id+'">'+escapeHtml(c.label)+'</a></li>';
+  }).join('');
+}
 
 let currentCategory='all';
 let currentQuery='';
@@ -653,14 +685,30 @@ async function render(){
   });
 }
 
-// ── Category clicks ──
-document.querySelectorAll('.cat-btn').forEach(btn=>{
-  btn.addEventListener('click',async function(){
+// ── Category clicks (event delegation) ──
+document.addEventListener('click',async function(e){
+  var catBtn=e.target.closest('.cat-btn');
+  if(catBtn){
+    e.preventDefault();
     document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('active')});
-    btn.classList.add('active');
-    currentCategory=btn.dataset.cat;
+    catBtn.classList.add('active');
+    currentCategory=catBtn.dataset.cat;
     await render();
-  });
+    return;
+  }
+  var catLink=e.target.closest('[data-cat]');
+  if(catLink&&catLink.closest('footer')){
+    e.preventDefault();
+    var cat=catLink.dataset.cat;
+    document.querySelectorAll('.cat-btn').forEach(function(b){
+      b.classList.toggle('active',b.dataset.cat===cat);
+    });
+    currentCategory=cat;
+    document.getElementById('searchInput').value='';
+    currentQuery='';
+    await render();
+    window.scrollTo({top:document.querySelector('.store-hero').offsetHeight-60,behavior:'smooth'});
+  }
 });
 
 // ── Search ──
@@ -720,22 +768,6 @@ document.getElementById('inquiryForm').addEventListener('submit', e => {
   closeInquiry();
 });
 
-// ── Footer category links ──
-document.querySelectorAll('[data-cat]').forEach(link=>{
-  link.addEventListener('click',async function(e){
-    e.preventDefault();
-    const cat=link.dataset.cat;
-    document.querySelectorAll('.cat-btn').forEach(function(b){
-      b.classList.toggle('active',b.dataset.cat===cat);
-    });
-    currentCategory=cat;
-    document.getElementById('searchInput').value='';
-    currentQuery='';
-    await render();
-    window.scrollTo({top:document.querySelector('.store-hero').offsetHeight-60,behavior:'smooth'});
-  });
-});
-
 // ── Nav scroll ──
 const navIsland=document.getElementById('navIsland');
 const floatingLogo=document.getElementById('floatingLogo');
@@ -766,7 +798,12 @@ const loader=document.getElementById('pageLoader');
 window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'),400)});
 
 // ── Init ──
-(async function(){ await render(); })();
+(async function(){
+  await loadStoreCategories();
+  buildCategoryButtons();
+  buildFooterCategoryLinks();
+  await render();
+})();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>

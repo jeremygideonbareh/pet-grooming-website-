@@ -78,6 +78,50 @@
     }
   }
 
+  /* ── Categories ── */
+
+  var DEFAULT_CATEGORIES = [
+    {id:'dog-food', label:'Dog Food'},
+    {id:'treats',   label:'Treats'},
+    {id:'toys',     label:'Toys'},
+    {id:'accessories', label:'Accessories'},
+    {id:'grooming', label:'Grooming'},
+    {id:'health',   label:'Health'}
+  ];
+
+  /**
+   * Get store categories from site_content.
+   * @returns {Promise<Array>} Array of {id,label}.
+   */
+  async function getCategories() {
+    try {
+      var content = await getSiteContent();
+      if (content && Array.isArray(content.categories) && content.categories.length > 0) {
+        return content.categories;
+      }
+      return DEFAULT_CATEGORIES;
+    } catch(e) {
+      console.error('[DB] getCategories error:', e);
+      return DEFAULT_CATEGORIES;
+    }
+  }
+
+  /**
+   * Save store categories into site_content (preserving all other content).
+   * @param {Array} categories - Array of {id,label}.
+   */
+  async function saveCategories(categories) {
+    try {
+      var content = await getSiteContent() || {};
+      content.categories = categories;
+      await saveSiteContent(content);
+    } catch(e) {
+      console.error('[DB] saveCategories error:', e);
+      if(typeof Sentry!=='undefined') Sentry.captureException(e);
+      throw e;
+    }
+  }
+
   /* ── Products ── */
 
   /**
@@ -561,6 +605,8 @@
     supabase: supabase,
     getSiteContent:        getSiteContent,
     saveSiteContent:       saveSiteContent,
+    getCategories:         getCategories,
+    saveCategories:        saveCategories,
     getProducts:           getProducts,
     saveAllProducts:       saveAllProducts,
     addProduct:            addProduct,
