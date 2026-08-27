@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <script src="https://browser.sentry-cdn.com/7.120.3/bundle.tracing.min.js" integrity="sha384-xeXUc9z8cJbRsjOleYBHEV9rZIBCcyXc8fd62MHA/aosms+xLqnFIIQPTmGNCUm3" crossorigin="anonymous"></script>
   <script>
-  Sentry.init({
+  if(typeof Sentry!=='undefined'){Sentry.init({
     dsn:'https://a52c0999f33bfcce09fad26459d4839e@o4511678068686848.ingest.de.sentry.io/4511678075633744',
     environment:'production',
     tracesSampleRate:0.1,
@@ -37,7 +37,7 @@
       }
       return event;
     }
-  })
+  })}
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pet Store — A1-Enterprises | Shillong</title>
@@ -515,8 +515,8 @@ footer{
   </div>
 </footer>
 
-<script src="db.js"></script>
-<script src="content-loader.js"></script>
+<script src="db.js?v=2"></script>
+<script src="content-loader.js?v=2"></script>
 <script>
 // ── Products data (from localStorage, seeded if empty) ──
 const DEFAULT_PRODUCTS=[
