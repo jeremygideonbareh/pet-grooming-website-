@@ -1400,7 +1400,7 @@ async function renderContentEditor(){
         </div>
         <div class="cf-row">
           <div class="cf-group"><label>Email</label><input id="cFootEmail" value="${escHtml(data.footer.email)}"></div>
-          <div class="cf-group"><label>WhatsApp URL</label><input id="cFootWa" value="${escHtml(data.footer.whatsapp)}"></div>
+          <div class="cf-group"><label>Footer WhatsApp Link (homepage footer)</label><input id="cFootWa" placeholder="https://wa.me/9774062455" value="${escHtml(data.footer.whatsapp)}"></div>
         </div>
         <div class="cf-row">
           <div class="cf-group"><label>Address</label><input id="cFootAddress" value="${escHtml(data.footer.address||'')}"></div>
@@ -1467,7 +1467,7 @@ async function renderContentEditor(){
         <div class="cf-group"><label>Subtext</label><textarea id="cCtaSub" rows="2">${escHtml(data.cta.subtext)}</textarea></div>
         <div class="cf-row">
           <div class="cf-group"><label>Button Text</label><input id="cCtaBtn" value="${escHtml(data.cta.btnText)}"></div>
-          <div class="cf-group"><label>Button Link</label><input id="cCtaLink" value="${escHtml(data.cta.btnLink)}"></div>
+          <div class="cf-group"><label>Button Link (homepage CTA button — NOT the footer)</label><input id="cCtaLink" value="${escHtml(data.cta.btnLink)}"></div>
         </div>
         <div class="cf-group"><label>Social Links (one per line, format: label|url)</label><textarea id="cCtaSocial" rows="4">${data.cta.social.map(s=>escHtml(s.label)+'|'+escHtml(s.url)).join('\n')}</textarea></div>
       </div>
@@ -1839,7 +1839,7 @@ async function renderTrainingEditor(){
         <div class="cf-group"><label>Subtext</label><textarea id="trCtaSub" rows="2">${escHtml(s.cta.subtext)}</textarea></div>
         <div class="cf-row">
           <div class="cf-group"><label>Button Text</label><input id="trCtaBtn" value="${escHtml(s.cta.btnText)}"></div>
-          <div class="cf-group"><label>Button Link</label><input id="trCtaLink" value="${escHtml(s.cta.btnLink)}"></div>
+          <div class="cf-group"><label>Button Link (Training page CTA button)</label><input id="trCtaLink" placeholder="https://wa.me/9774062455" value="${escHtml(s.cta.btnLink)}"></div>
         </div>
       </div>
     </div>
@@ -2047,7 +2047,7 @@ async function renderGroomingEditor(){
         <div class="cf-group"><label>Address Line 3</label><input id="grFootAddr3" value="${escHtml(s.footer.address3||'')}"></div>
         <div class="cf-group"><label>Address Line 4</label><input id="grFootAddr4" value="${escHtml(s.footer.address4||'')}"></div>
         <div class="cf-row">
-          <div class="cf-group"><label>WhatsApp URL</label><input id="grFootWa" value="${escHtml(s.footer.whatsApp||s.footer.whatsapp||'')}"></div>
+          <div class="cf-group"><label>Footer WhatsApp Link (Grooming page footer)</label><input id="grFootWa" placeholder="https://wa.me/9774062455" value="${escHtml(s.footer.whatsApp||s.footer.whatsapp||'')}"></div>
           <div class="cf-group"><label>Email</label><input id="grFootEmail" value="${escHtml(s.footer.email)}"></div>
         </div>
       </div>
@@ -2599,16 +2599,20 @@ async function saveAllContent(){
     if(document.getElementById('globalCertificatesRepeater')){
       data.certificates=collectRepeaterData('globalCertificatesRepeater',{title:'.r-title',image:'.r-img',desc:'.r-desc'});
     }
-    data.footer.copyright=document.getElementById('cFootCopyright').value;
-    data.footer.tagline=document.getElementById('cFootTagline').value;
-    data.footer.fb=document.getElementById('cFootFb').value;
-    data.footer.ig=document.getElementById('cFootIg').value;
-    data.footer.yt=document.getElementById('cFootYt').value;
-    data.footer.gm=document.getElementById('cFootGm').value;
-    data.footer.email=document.getElementById('cFootEmail').value;
-    data.footer.whatsapp=document.getElementById('cFootWa').value;
-    if(document.getElementById('cFootAddress')) data.footer.address=document.getElementById('cFootAddress').value;
-    if(document.getElementById('cFootHours')) data.footer.hours=document.getElementById('cFootHours').value;
+    function setField(obj, key, id){
+      var el = document.getElementById(id);
+      if (el) obj[key] = el.value;
+    }
+    setField(data.footer,'copyright','cFootCopyright');
+    setField(data.footer,'tagline','cFootTagline');
+    setField(data.footer,'fb','cFootFb');
+    setField(data.footer,'ig','cFootIg');
+    setField(data.footer,'yt','cFootYt');
+    setField(data.footer,'gm','cFootGm');
+    setField(data.footer,'email','cFootEmail');
+    setField(data.footer,'whatsapp','cFootWa');
+    setField(data.footer,'address','cFootAddress');
+    setField(data.footer,'hours','cFootHours');
 
     // New sections
     if(document.getElementById('cBrandTagline')){
